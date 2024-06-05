@@ -1,4 +1,4 @@
 package com.backend.mapper.post;
 
-public class PostMapper {
+public interface PostMapper {
 }

@@ -1,4 +1,4 @@
 package com.backend.mapper.comment;
 
-public class CommentMapper {
+public interface CommentMapper {
 }
