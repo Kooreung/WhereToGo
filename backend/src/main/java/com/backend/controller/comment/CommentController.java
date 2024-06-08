@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/comment")
 public class CommentController {
     final CommentService service;
-
+    
     @PostMapping("add")
-    public void getComment(@RequestBody Comment comment) {
+    public void getComment(Comment comment) {
         System.out.println("comment = " + comment);
-        service.add();
+        service.add(comment);
     }
 
     @PostMapping("list/{postId}")

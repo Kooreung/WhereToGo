@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Button, Textarea } from "@chakra-ui/react";
 import axios from "axios";
 
-function CommentWrite(props) {
+function CommentWrite() {
   const [comment, setComment] = useState("");
   console.log("comment", comment);
 

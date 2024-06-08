@@ -8,7 +8,8 @@ function CommentEdit(props) {
         <Textarea />
       </Box>
       <Box>
-        <Button></Button>
+        <Button>확인</Button>
+        <Button>취소</Button>
       </Box>
     </Box>
   );
