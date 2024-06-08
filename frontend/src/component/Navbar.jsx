@@ -1,7 +1,9 @@
 import React from "react";
 import { Box, Center, Flex } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 function Navbar() {
+  const navigate = useNavigate();
   return (
     <Flex
       align={"center"}
@@ -23,6 +25,13 @@ function Navbar() {
         <Box>회원가입/목록</Box>
         <Box>로그인/아웃</Box>
         <Box>프로필</Box>
+        <Box
+          onClick={() => {
+            navigate("/comment");
+          }}
+        >
+          댓글연습
+        </Box>
       </Flex>
     </Flex>
   );
