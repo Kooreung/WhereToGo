@@ -4,6 +4,7 @@ import com.backend.domain.member.Member;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public interface MemberMapper {
             FROM member
             where id = #{memberId};
             """)
-    Member getById(int memberId);
+    Member selectById(int memberId);
 
 
     @Select("""
@@ -47,4 +48,14 @@ public interface MemberMapper {
             order by member_id ASC
             """)
     List<Member> selectAll();
+
+
+    @Update("""
+            UPDATE member 
+            SET
+                password = #{password},
+                nick_name = #{nickName}
+            WHERE id = #{id}
+            """)
+    int update(Member member);
 }

@@ -10,6 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,7 +45,14 @@ public class MemberController {
 
     // 회원 수정
     @PutMapping("edit")
-    public void edit() {
+    public ResponseEntity edit(@RequestBody Member member,
+                     Authentication authentication) {
+        if(service.hasAccessModify(member,authentication)){
+            Map<String, Object> result = service.modify(member, authentication);
+            return ResponseEntity.ok(result);
+        }else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
 
     }
 
