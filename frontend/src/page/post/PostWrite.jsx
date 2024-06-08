@@ -11,7 +11,7 @@ function PostWrite(props) {
             지도
           </Box>
           <Box {...GuideLineMediumBanner} w={500}>
-            추가
+            추가 dsadas
           </Box>
         </Box>
         <Box>
