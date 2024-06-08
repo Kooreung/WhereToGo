@@ -86,4 +86,17 @@ public class MemberController {
         }
     }
 
+    @DeleteMapping("{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity delete(
+            @RequestBody Member member,
+            Authentication authentication) {
+        if (service.hasAccess(member, authentication)) {
+            service.delete(member.getMemberId());
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
 }

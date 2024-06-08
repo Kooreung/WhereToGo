@@ -1,10 +1,7 @@
 package com.backend.mapper.member;
 
 import com.backend.domain.member.Member;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -58,4 +55,11 @@ public interface MemberMapper {
             WHERE id = #{id}
             """)
     int update(Member member);
+
+
+    @Delete("""
+            DELETE FROM member
+            where id = #{memberId}
+            """)
+    int deleteByid(Integer memberId);
 }

@@ -38,6 +38,20 @@ public class MemberService {
         return self || isAdmin;
     }
 
+    public boolean hasAccess(Member member, Authentication authentication) {
+        if (!member.getMemberId().toString().equals(authentication.getName())) {
+            return false;
+        }
+
+        Member dbMember = mapper.selectById(member.getMemberId());
+
+        if (dbMember == null) {
+            return false;
+        }
+
+        return passwordEncoder.matches(member.getPassword(), dbMember.getPassword());
+    }
+
     public Member getById(int memberId) {
         return mapper.selectById(memberId);
     }
@@ -83,5 +97,11 @@ public class MemberService {
         JwtClaimsSet jwtClaimsSet = jwtClaimsSetBuilder.build();
         token = jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
         return Map.of("token", token);
+    }
+
+    public void delete(Integer memberId) {
+        //탈퇴시 게시물 삭제 안할것이기 때문에 댓글,회원정보만 삭제
+
+        mapper.deleteByid(memberId);
     }
 }
