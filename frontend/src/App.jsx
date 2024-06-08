@@ -1,4 +1,4 @@
-import { NaverMapSample } from "./NaverMapSample.jsx";
+import NaverMapSample from "./NaverMapSample.jsx";
 
 function App() {
   return (
