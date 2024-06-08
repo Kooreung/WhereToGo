@@ -7,6 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
@@ -30,5 +32,9 @@ public class MemberService {
 
     public Member getById(int memberId) {
         return mapper.getById(memberId);
+    }
+
+    public List<Member> memberList() {
+        return mapper.selectAll();
     }
 }

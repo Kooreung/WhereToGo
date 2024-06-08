@@ -5,8 +5,11 @@ import com.backend.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,8 +55,9 @@ public class MemberController {
 
     // 회원 목록 보기
     @GetMapping("list")
-    public void list() {
-
+    @PreAuthorize("hasAuthority('admin')")
+    public List<Member> list() {
+        return service.memberList();
     }
 
     // 회원 정보 보기
