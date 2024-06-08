@@ -3,6 +3,9 @@ package com.backend.controller.member;
 import com.backend.domain.member.Member;
 import com.backend.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -54,9 +57,20 @@ public class MemberController {
     }
 
     // 회원 정보 보기
-    @GetMapping("{memberId")
-    public void getMemberId() {
+    @GetMapping("{memberId}")
+    public ResponseEntity getMemberId(@PathVariable int memberId,
+                                              Authentication authentication) {
+        if(!service.hasAccess(memberId,authentication)){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
 
+        Member member = service.getById(memberId);
+
+        if(member == null){
+            return ResponseEntity.notFound().build();
+        }else{
+            return ResponseEntity.ok(member);
+        }
     }
 
 }
