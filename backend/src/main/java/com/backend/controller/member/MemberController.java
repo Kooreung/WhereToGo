@@ -3,6 +3,7 @@ package com.backend.controller.member;
 import com.backend.domain.member.Member;
 import com.backend.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,14 +20,22 @@ public class MemberController {
 
     // 이메일 중복확인
     @GetMapping(value = "check", params = "email")
-    public void CheckEmail() {
-
+    public ResponseEntity checkEmail(@RequestParam("email") String email) {
+        Member member = service.getByEmail(email);
+        if (member == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(email);
     }
 
     // 닉네임 중복확인
     @GetMapping(value = "check", params = "nickName")
-    public void CheckNickName() {
-
+    public ResponseEntity CheckNickName(@RequestParam("nickName") String nickName) {
+        Member member = service.getByNickName(nickName);
+        if (member == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(nickName);
     }
 
     // 로그인
