@@ -4,13 +4,16 @@ import com.backend.domain.member.Member;
 import com.backend.domain.member.MemberProfile;
 import com.backend.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,8 +45,17 @@ public class MemberService {
     String srcPrefix;
 
     public void add(Member member) {
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
         mapper.insert(member);
     }
+
+
+    public Member getByEmail(String email) {
+        return mapper.selectByEmail(email);
+    }
+
+    public Member getByNickName(String nickName) {
+        return mapper.selectByNickName(nickName);
 
     public boolean hasAccess(Integer id, Authentication authentication) {
         boolean self = authentication.getName().equals(id.toString());
@@ -153,5 +165,41 @@ public class MemberService {
 
         s3Client.deleteObject(objectRequest);
         mapper.deleteByid(memberId);
+    }
+
+    public boolean validate(Member member) {
+        if (member.getEmail() == null || member.getEmail().isBlank()) {
+            return false;
+        }
+
+        if (member.getPassword() == null || member.getPassword().isBlank()) {
+            return false;
+        }
+
+        if (member.getName() == null || member.getName().isBlank()) {
+            return false;
+        }
+
+        if (member.getNickName() == null || member.getNickName().isBlank()) {
+            return false;
+        }
+
+        if (member.getGender() == null || member.getGender().isBlank()) {
+            return false;
+        }
+
+        if (member.getBirth() == null) {
+            return false;
+        }
+
+        if (member.getPhoneNumber() == null || member.getPhoneNumber().isBlank()) {
+            return false;
+        }
+
+        if (member.getAddress() == null || member.getAddress().isBlank()) {
+            return false;
+        }
+
+        return true;
     }
 }
