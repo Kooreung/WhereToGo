@@ -22,8 +22,6 @@ export function PostView() {
       .get(`/api/post/${postId}`)
       .then((res) => {
         setPost(res.data.post);
-        console.log(postId);
-        console.log(post);
       })
       .catch();
   }, []);
@@ -66,13 +64,7 @@ export function PostView() {
           </Box>
           <Box>
             <Box align={"left"} my={10}>
-              <Button
-              // onClick={handleClickSave}
-              // isLoading={loading}
-              // isDisabled={disableSaveButton}
-              >
-                등록
-              </Button>
+              <Button>등록</Button>
               <Button>취소</Button>
             </Box>
           </Box>

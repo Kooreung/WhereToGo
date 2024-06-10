@@ -13,13 +13,15 @@ function Navbar() {
       border={"red dotted 1px"}
       height={20}
     >
-      <Flex gap={3}>
+      <Flex gap={3} onClick={() => navigate("/")} cursor={"pointer"}>
         <Box>로고</Box>
         <Box>홈페이지 제목</Box>
       </Flex>
       <Center gap={12}>
         <Box>MD Pick</Box>
-        <Box>회원 게시판</Box>
+        <Box onClick={() => navigate("/post/list")} cursor={"pointer"}>
+          회원 게시판
+        </Box>
       </Center>
       <Flex gap={3}>
         <Box>회원가입/목록</Box>
@@ -31,6 +33,7 @@ function Navbar() {
           onClick={() => {
             navigate("/comment");
           }}
+          cursor={"pointer"}
         >
           댓글연습
         </Box>
