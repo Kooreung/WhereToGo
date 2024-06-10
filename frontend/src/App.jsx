@@ -1,9 +1,9 @@
-import NaverMapSample from "./NaverMapSample.jsx";
+import NaverMapAdd from "./NaverMapAdd.jsx";
 
 function App() {
   return (
     <>
-      <NaverMapSample />
+      <NaverMapAdd />
     </>
   );
 }

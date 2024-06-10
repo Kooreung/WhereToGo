@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Button } from "@chakra-ui/react";
+import axios from "axios"; // Kakao Map 스크립트 로드 함수
 
 // Kakao Map 스크립트 로드 함수
 const loadKakaoMapScript = (appKey, libraries = []) => {
@@ -141,6 +143,17 @@ const KakaoMapSearch = () => {
     setSelectedPlaces(newSelectedPlaces);
   };
 
+  function saveSelectedPlacesToServer() {
+    axios
+      .post("/api/place/add", { selectedPlaces })
+      .then((response) => {
+        console.log("장소가 성공적으로 서버에 전송되었습니다.");
+      })
+      .catch((error) => {
+        console.error("장소를 서버에 전송하는 중 오류가 발생했습니다:", error);
+      });
+  }
+
   return (
     <div>
       <input
@@ -182,6 +195,7 @@ const KakaoMapSearch = () => {
               <button onClick={() => removePlace(index)}>삭제하기</button>
             </li>
           ))}
+          <Button onClick={saveSelectedPlacesToServer}>제출</Button>
         </ul>
       </div>
     </div>
