@@ -1,9 +1,8 @@
 package com.backend.mapper.member;
 
 import com.backend.domain.member.Member;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+import java.util.List;
 
 @Mapper
 public interface MemberMapper {
@@ -14,6 +13,7 @@ public interface MemberMapper {
             """)
     int insert(Member member);
 
+// 이메일 중복 체크
     @Select("""
             SELECT *
             FROM Member
@@ -21,10 +21,56 @@ public interface MemberMapper {
             """)
     Member selectByEmail(String email);
 
+// 닉네임 중복 체크
     @Select("""
             SELECT *
             FROM Member
             WHERE nick_name = #{nickName}
             """)
     Member selectByNickName(String nickName);
+
+    @Select("""
+            SELECT member_id, 
+                   email, 
+                   password, 
+                   nick_name, 
+                   name, 
+                   gender, 
+                   birth, 
+                   address, 
+                   phone_number
+            FROM member
+            where id = #{memberId};
+            """)
+    Member selectById(int memberId);
+
+    @Select("""
+            SELECT member_id, 
+                   email, 
+                   password, 
+                   nick_name, 
+                   name, 
+                   gender, 
+                   birth, 
+                   address, 
+                   phone_number
+            FROM member
+            order by member_id ASC
+            """)
+    List<Member> selectAll();
+
+    @Update("""
+            UPDATE member 
+            SET
+                password = #{password},
+                nick_name = #{nickName}
+            WHERE id = #{id}
+            """)
+    int update(Member member);
+
+    @Delete("""
+            DELETE FROM member
+            where id = #{memberId}
+            """)
+    int deleteByid(Integer memberId);
 }
