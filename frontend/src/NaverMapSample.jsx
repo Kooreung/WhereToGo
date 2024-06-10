@@ -66,29 +66,50 @@ const KakaoMapSearch = () => {
   }, [map, places]);
 
   useEffect(() => {
-    if (map && selectedPlaces.length > 1) {
-      const newPolylines = selectedPlaces.map((place, index) => {
-        if (index === selectedPlaces.length - 1) return null; // Skip the last place
-        const polyline = new window.kakao.maps.Polyline({
-          map: map,
-          path: [
+    if (map) {
+      // Remove existing polylines
+      polylines.forEach((polyline) => polyline.setMap(null));
+
+      if (selectedPlaces.length > 1) {
+        const bounds = new window.kakao.maps.LatLngBounds();
+        const newPolylines = selectedPlaces.map((place, index) => {
+          if (index === selectedPlaces.length - 1) return null; // Skip the last place
+          const polyline = new window.kakao.maps.Polyline({
+            map: map,
+            path: [
+              new window.kakao.maps.LatLng(
+                selectedPlaces[index].y,
+                selectedPlaces[index].x,
+              ),
+              new window.kakao.maps.LatLng(
+                selectedPlaces[index + 1].y,
+                selectedPlaces[index + 1].x,
+              ),
+            ],
+            strokeWeight: 3,
+            strokeColor: "#FF0000",
+            strokeOpacity: 0.7,
+            strokeStyle: "solid",
+          });
+          bounds.extend(
             new window.kakao.maps.LatLng(
               selectedPlaces[index].y,
               selectedPlaces[index].x,
             ),
+          );
+          bounds.extend(
             new window.kakao.maps.LatLng(
               selectedPlaces[index + 1].y,
               selectedPlaces[index + 1].x,
             ),
-          ],
-          strokeWeight: 3,
-          strokeColor: "#FF0000",
-          strokeOpacity: 0.7,
-          strokeStyle: "solid",
+          );
+          return polyline;
         });
-        return polyline;
-      });
-      setPolylines(newPolylines.filter((polyline) => polyline !== null));
+        setPolylines(newPolylines.filter((polyline) => polyline !== null));
+        map.setBounds(bounds);
+      } else {
+        setPolylines([]);
+      }
     }
   }, [map, selectedPlaces]);
 
@@ -115,6 +136,11 @@ const KakaoMapSearch = () => {
     }
   };
 
+  const removePlace = (index) => {
+    const newSelectedPlaces = selectedPlaces.filter((_, i) => i !== index);
+    setSelectedPlaces(newSelectedPlaces);
+  };
+
   return (
     <div>
       <input
@@ -133,12 +159,9 @@ const KakaoMapSearch = () => {
         <h2>검색 결과</h2>
         <ul>
           {places.map((place, index) => (
-            <li
-              key={index}
-              onClick={() => selectPlace(place)}
-              style={{ cursor: "pointer", color: "blue" }}
-            >
+            <li key={index} style={{ cursor: "pointer", color: "blue" }}>
               {place.place_name}
+              <button onClick={() => selectPlace(place)}>추가하기</button>
             </li>
           ))}
         </ul>
@@ -156,14 +179,10 @@ const KakaoMapSearch = () => {
               >
                 상세 정보
               </a>
+              <button onClick={() => removePlace(index)}>삭제하기</button>
             </li>
           ))}
         </ul>
-        {selectedPlaces.length < 3 && (
-          <div>
-            <button onClick={() => setSearchTerm("")}>다른 장소 검색</button>
-          </div>
-        )}
       </div>
     </div>
   );
