@@ -28,6 +28,14 @@ public class MemberService {
         mapper.insert(member);
     }
 
+
+    public Member getByEmail(String email) {
+        return mapper.selectByEmail(email);
+    }
+
+    public Member getByNickName(String nickName) {
+        return mapper.selectByNickName(nickName);
+
     public boolean hasAccess(Integer id, Authentication authentication) {
         boolean self = authentication.getName().equals(id.toString());
 

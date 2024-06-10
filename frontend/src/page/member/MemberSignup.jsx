@@ -2,13 +2,16 @@ import {
   Box,
   Button,
   FormControl,
+  FormHelperText,
   FormLabel,
   Input,
+  InputGroup,
   Radio,
   RadioGroup,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function MemberSignup() {
   const [email, setEmail] = useState("");
@@ -20,6 +23,47 @@ export function MemberSignup() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isCheckEmail, setIsCheckEmail] = useState(false);
+  const [isEmailDuplicate, setIsEmailDuplicate] = useState(false);
+  const [isCheckNickName, setIsCheckNickName] = useState(false);
+  const [isNickNameDuplicate, setIsNickNameDuplicate] = useState(false);
+  const toast = useToast();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (email) {
+        axios
+          .get(`/api/member/check?email=${email}`)
+          .then(() => {
+            setIsEmailDuplicate(true);
+            setIsCheckEmail(false);
+          })
+          .catch((err) => {
+            if (err.response.status === 404) {
+              setIsCheckEmail(true);
+              setIsEmailDuplicate(false);
+            }
+          });
+      }
+
+      if (nickName) {
+        axios
+          .get(`/api/member/check?nickName=${nickName}`)
+          .then(() => {
+            setIsNickNameDuplicate(true);
+            setIsCheckNickName(false);
+          })
+          .catch((err) => {
+            if (err.response.status === 404) {
+              setIsCheckNickName(true);
+              setIsNickNameDuplicate(false);
+            }
+          });
+      }
+    }, 500); // 500ms 디바운싱 // 나중에 100~150정도로 바꿀 예정
+
+    return () => clearTimeout(timer);
+  }, [email, nickName]);
 
   function handleClick() {
     setIsLoading(true);
@@ -35,8 +79,20 @@ export function MemberSignup() {
         phoneNumber,
         address,
       })
-      .then(() => {})
-      .catch(() => {})
+      .then(() => {
+        toast({
+          description: "회원가입이 성공적으로 완료되었습니다.",
+          status: "success",
+          position: "top",
+        });
+      })
+      .catch(() => {
+        toast({
+          description: "입력값을 확인해 주세요.",
+          status: "error",
+          position: "top",
+        });
+      })
       .finally(() => setIsLoading(false));
   }
 
@@ -47,7 +103,19 @@ export function MemberSignup() {
         <Box>
           <FormControl>
             <FormLabel>이메일</FormLabel>
-            <Input onChange={(e) => setEmail(e.target.value)} />
+            <InputGroup>
+              <Input value={email} onChange={(e) => setEmail(e.target.value)} />
+            </InputGroup>
+            {isEmailDuplicate && (
+              <FormHelperText color="red">
+                이메일이 중복되었습니다.
+              </FormHelperText>
+            )}
+            {!isEmailDuplicate && isCheckEmail && (
+              <FormHelperText color="green">
+                사용 가능한 이메일입니다.
+              </FormHelperText>
+            )}
           </FormControl>
         </Box>
         <Box>
@@ -65,7 +133,22 @@ export function MemberSignup() {
         <Box>
           <FormControl>
             <FormLabel>닉네임</FormLabel>
-            <Input onChange={(e) => setNickName(e.target.value)} />
+            <InputGroup>
+              <Input
+                value={nickName}
+                onChange={(e) => setNickName(e.target.value)}
+              />
+            </InputGroup>
+            {isNickNameDuplicate && (
+              <FormHelperText color="red">
+                닉네임이 중복되었습니다.
+              </FormHelperText>
+            )}
+            {!isNickNameDuplicate && isCheckNickName && (
+              <FormHelperText color="green">
+                사용 가능한 닉네임입니다.
+              </FormHelperText>
+            )}
           </FormControl>
         </Box>
         <Box>
