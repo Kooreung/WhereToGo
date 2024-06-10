@@ -14,12 +14,12 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
-import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +43,7 @@ public class MemberService {
     @Value("${image.src.prefix}")
     String srcPrefix;
 
-    public void add(Member member, MultipartFile newProfile) throws IOException {
+    public void add(Member member, File newProfile) throws IOException {
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         mapper.insert(member);
 
@@ -56,11 +56,31 @@ public class MemberService {
                     .acl(ObjectCannedACL.PUBLIC_READ)
                     .build();
             s3Client.putObject(objectRequest,
-                    RequestBody.fromInputStream(newProfile.getInputStream(), newProfile.getSize()));
+                    RequestBody.fromInputStream(newProfile, newProfile.));
             mapper.profileAdd(member.getMemberId(), newProfile.getOriginalFilename());
         } else if (newProfile == null) {
-            //가입시 이미지를 선택하지 않았다면 기본 이미지로 설정
-            mapper.profileAdd(1, "basicProfile");
+            // else 일때 s3에 저장된 기본 프로필 사진을 가져와서 사용하려면 다음과 같이 할 수 있습니다:
+
+            String defaultProfileKey = "prj3/defaultProfile";
+// 기본 프로필 사진을 가져오기 위한 GetObjectRequest 생성
+            GetObjectRequest defaultProfileRequest = GetObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(defaultProfileKey)
+                    .build();
+// s3로부터 기본 프로필 사진을 가져옴
+            ResponseInputStream<GetObjectResponse> defaultProfileResponse = s3Client.getObject(defaultProfileRequest);
+
+// 가져온 기본 프로필 사진을 member의 프로필로 저장
+            PutObjectRequest objectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key("prj3/" + member.getMemberId() + "/defaultProfile")
+                    .acl(ObjectCannedACL.PUBLIC_READ)
+                    .build();
+            s3Client.putObject(objectRequest, RequestBody.fromInputStream(defaultProfileResponse, defaultProfileResponse.response().contentLength()));
+
+// mapper를 사용하여 member의 프로필 정보를 업데이트
+            mapper.profileAdd(member.getMemberId(), "defaultProfile");
+
         }
 
     }
@@ -103,8 +123,11 @@ public class MemberService {
         Member member = mapper.selectById(memberId);
         result.put("member", member);
 
-        MemberProfile file = mapper.getProfileByMemberId(memberId);
-        result.put("profile", file);
+        MemberProfile memberProfile = new MemberProfile();
+        memberProfile.setName(mapper.getProfileByMemberId(memberId));
+        String src = STR."prj3/\{member.getMemberId()}/\{memberProfile.getName()}";
+        memberProfile.setSrc(src);
+        result.put("profile", memberProfile);
 
         return result;
     }

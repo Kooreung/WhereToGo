@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class MemberController {
     @PostMapping("signup")
     public ResponseEntity signup(@RequestBody Member member,
                                  @RequestParam(value = "addFileList", required = false)
-                                 MultipartFile newProfile) throws IOException {
+                                 File newProfile) throws IOException {
         if (service.validate(member)) {
             service.add(member, newProfile);
             return ResponseEntity.ok().build();

@@ -1,7 +1,6 @@
 package com.backend.mapper.member;
 
 import com.backend.domain.member.Member;
-import com.backend.domain.member.MemberProfile;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -98,11 +97,11 @@ public interface MemberMapper {
 
 
     @Select("""
-            SELECT * 
+            SELECT profile_name 
             from profile 
             where member_id = #{memberId}
             """)
-    MemberProfile getProfileByMemberId(int memberId);
+    String getProfileByMemberId(int memberId);
 
 
     @Update("""
