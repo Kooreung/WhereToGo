@@ -1,5 +1,6 @@
 package com.backend.controller.post;
 
+import com.backend.domain.post.Post;
 import com.backend.service.post.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +14,8 @@ public class PostController {
 
     // 게시글 추가 | 작성 Controller
     @PostMapping("add")
-    public void postAdd() {
-        postService.add();
+    public void postAdd(Post post) {
+        postService.add(post);
     }
 
     // 게시글 목록 Controller

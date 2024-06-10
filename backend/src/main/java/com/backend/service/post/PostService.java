@@ -1,5 +1,6 @@
 package com.backend.service.post;
 
+import com.backend.domain.post.Post;
 import com.backend.mapper.post.PostMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,8 +13,8 @@ public class PostService {
 
     private final PostMapper postMapper;
 
-    public void add () {
-        postMapper.insert();
+    public void add(Post post) {
+        postMapper.insert(post);
     }
 
 }
