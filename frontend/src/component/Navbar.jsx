@@ -24,7 +24,9 @@ function Navbar() {
       <Flex gap={3}>
         <Box>회원가입/목록</Box>
         <Box>로그인/아웃</Box>
-        <Box>프로필</Box>
+        <Center onClick={() => navigate("/memberinfo")} cursor={"pointer"}>
+          프로필
+        </Center>
         <Box
           onClick={() => {
             navigate("/comment");
