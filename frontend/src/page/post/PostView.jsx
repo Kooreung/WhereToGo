@@ -1,7 +1,14 @@
 import React from "react";
+import { Flex } from "@chakra-ui/react";
 
-function PostView(props) {
-  return <div></div>;
+export function PostView(props) {
+  // useEffect(() => {
+  //   axios
+  //     .get(`api/post/${id}`)
+  //     .then((res) => {})
+  //     .catch()
+  //     .finally();
+  // }, []);
+
+  return <Flex>ㅋㅋ</Flex>;
 }
-
-export default PostView;

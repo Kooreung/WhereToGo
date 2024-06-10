@@ -13,10 +13,7 @@ public class PostService {
 
     private final PostMapper postMapper;
 
-    public void add(Post post) {
-        postMapper.insert(post);
-    }
-
+    // 게시글 작성 시 제목, 내용 공백 확인
     public boolean validate(Post post) {
         if (post.getTitle() == null || post.getTitle().isBlank()) {
             return false;
@@ -25,5 +22,15 @@ public class PostService {
             return false;
         }
         return true;
+    }
+
+    // 게시글 추가 서비스
+    public void add(Post post) {
+        postMapper.insert(post);
+    }
+
+    // 게시글 조회 서비스
+    public void get(Integer postId) {
+        Post post = postMapper.selectById(postId);
     }
 }

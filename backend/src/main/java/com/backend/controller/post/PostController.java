@@ -43,7 +43,9 @@ public class PostController {
 
     // 게시글 조회 Controller
     @GetMapping("{postId}")
-    public void postRead() {
+    public ResponseEntity postRead(@PathVariable Integer postId) {
+        postService.get(postId);
+        return ResponseEntity.ok().build();
     }
 
     // 게시글 삭제 Controller
