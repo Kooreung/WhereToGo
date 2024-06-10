@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -39,5 +40,10 @@ public class PostService {
         result.put("post", post);
 
         return result;
+    }
+
+    // 게시글 리스트 서비스
+    public List<Post> list() {
+        return postMapper.selectAllPage();
     }
 }

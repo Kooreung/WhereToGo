@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -30,7 +31,8 @@ public class PostController {
 
     // 게시글 목록 Controller
     @GetMapping("list")
-    public void postList() {
+    public List<Post> postList() {
+        return postService.list();
     }
 
     // 게시글 MD추천 목록 Controller
