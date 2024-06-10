@@ -17,4 +17,13 @@ public class PostService {
         postMapper.insert(post);
     }
 
+    public boolean validate(Post post) {
+        if (post.getTitle() == null || post.getTitle().isBlank()) {
+            return false;
+        }
+        if (post.getContent() == null || post.getContent().isBlank()) {
+            return false;
+        }
+        return true;
+    }
 }

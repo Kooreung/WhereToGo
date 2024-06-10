@@ -3,6 +3,7 @@ package com.backend.controller.post;
 import com.backend.domain.post.Post;
 import com.backend.service.post.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,8 +15,15 @@ public class PostController {
 
     // 게시글 추가 | 작성 Controller
     @PostMapping("add")
-    public void postAdd(Post post) {
-        postService.add(post);
+    public ResponseEntity postAdd(Post post) {
+        if (postService.validate(post)) {
+            postService.add(post);
+            System.out.println("post = " + post);
+            return ResponseEntity.ok().build();
+        } else {
+            System.out.println("post = " + post);
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     // 게시글 목록 Controller

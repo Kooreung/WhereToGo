@@ -22,7 +22,11 @@ function PostWrite(props) {
     setLoading(true);
     axios
       .postForm("/post/add", { title, content })
-      .then(navigate("/"))
+      .then(() => {
+        navigate("/");
+        console.log(title);
+        console.log(content);
+      })
       .catch()
       .finally(() => setLoading(false));
   }

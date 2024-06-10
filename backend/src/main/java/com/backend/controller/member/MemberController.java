@@ -20,7 +20,7 @@ public class MemberController {
     // 이메일 중복확인
     @GetMapping(value = "check", params = "email")
     public void CheckEmail() {
-        
+
     }
 
     // 닉네임 중복확인
@@ -54,7 +54,7 @@ public class MemberController {
     }
 
     // 회원 정보 보기
-    @GetMapping("{memberId")
+    @GetMapping("{memberId}")
     public void getMemberId() {
 
     }
