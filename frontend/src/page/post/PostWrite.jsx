@@ -12,7 +12,7 @@ import { GuideLineMediumBanner } from "../../CustomStyles.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function PostWrite(props) {
+function PostWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,12 +30,12 @@ function PostWrite(props) {
   }
 
   let disableSaveButton = false;
-  // if (title.trim().length === 0) {
-  //   disableSaveButton = true;
-  // }
-  // if (content.trim().length === 0) {
-  //   disableSaveButton = true;
-  // }
+  if (title.trim().length === 0) {
+    disableSaveButton = true;
+  }
+  if (content.trim().length === 0) {
+    disableSaveButton = true;
+  }
 
   return (
     <Box>
