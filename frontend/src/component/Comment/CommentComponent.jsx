@@ -4,7 +4,7 @@ import CommentWrite from "./CommentWrite.jsx";
 import CommentList from "./CommentList.jsx";
 import CommentEdit from "./CommentEdit.jsx";
 
-function CommentComponent(props) {
+export function CommentComponent(props) {
   return (
     <Box>
       <Box>Comment</Box>

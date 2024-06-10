@@ -4,16 +4,13 @@ import com.backend.domain.member.Member;
 import com.backend.domain.member.MemberProfile;
 import com.backend.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,10 +31,9 @@ public class MemberService {
     private final MemberMapper mapper;
     final BCryptPasswordEncoder passwordEncoder;
     final JwtEncoder jwtEncoder;
-    private MemberProfile memberProfile;
+    //    private MemberProfile memberProfile;
     final S3Client s3Client;
-
-
+    
     @Value("${aws.s3.bucket.name}")
     String bucketName;
 
@@ -49,13 +45,13 @@ public class MemberService {
         mapper.insert(member);
     }
 
-
     public Member getByEmail(String email) {
         return mapper.selectByEmail(email);
     }
 
     public Member getByNickName(String nickName) {
         return mapper.selectByNickName(nickName);
+    }
 
     public boolean hasAccess(Integer id, Authentication authentication) {
         boolean self = authentication.getName().equals(id.toString());
@@ -131,7 +127,7 @@ public class MemberService {
             mapper.profileUpdate(member.getMemberId());
 
             String prevProfileName = mapper.getProfileNameByMemberId(member.getMemberId());
-            String key2 = STR."prj2/\{member.getMemberId()}/\{prevProfileName}";
+            String key2 = STR."prj3/\{member.getMemberId()}/\{prevProfileName}";
             DeleteObjectRequest objectRequest2 = DeleteObjectRequest.builder()
                     .bucket(bucketName)
                     .key(key)
