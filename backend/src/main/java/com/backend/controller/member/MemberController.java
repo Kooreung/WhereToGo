@@ -14,8 +14,13 @@ public class MemberController {
 
     // 회원가입
     @PostMapping("signup")
-    public void signup(@RequestBody Member member) {
-        service.add(member);
+    public ResponseEntity signup(@RequestBody Member member) {
+        if (service.validate(member)) {
+            service.add(member);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     // 이메일 중복확인
