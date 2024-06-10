@@ -1,5 +1,6 @@
 package com.backend.service.comment;
 
+import com.backend.domain.comment.Comment;
 import com.backend.mapper.comment.CommentMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentService {
     final CommentMapper mapper;
 
-    public void add() {
-        mapper.insert();
+    public void add(Comment comment) {
+        mapper.insert(comment);
     }
 
     public void list() {
