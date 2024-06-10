@@ -9,10 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -54,27 +54,22 @@ public class MemberController {
     // 로그인
     @PostMapping("login")
     public void login() {
-
     }
 
     // 회원 수정
     @PutMapping("edit")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity edit(@RequestBody Member member,
-                     Authentication authentication) {
-        if(service.hasAccessModify(member,authentication)){
-            Map<String, Object> result = service.modify(member, authentication);
+                               @RequestParam(value = "addFileList", required = false)
+                               MultipartFile newProfile, Authentication authentication) {
+        if (service.hasAccessModify(member, authentication)) {
+            Map<String, Object> result = service.modify(member, authentication, newProfile);
             return ResponseEntity.ok(result);
-        }else {
+        } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-
     }
-
-    // 회원 삭제
-    @DeleteMapping("{id}")
-    public void delete() {
-
-    }
+    
 
     // 회원 목록 보기
     @GetMapping("list")
@@ -86,16 +81,16 @@ public class MemberController {
     // 회원 정보 보기
     @GetMapping("{memberId}")
     public ResponseEntity getMemberId(@PathVariable int memberId,
-                                              Authentication authentication) {
-        if(!service.hasAccess(memberId,authentication)){
+                                      Authentication authentication) {
+        if (!service.hasAccess(memberId, authentication)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        Member member = service.getById(memberId);
+        Map<String, Object> member = service.getById(memberId);
 
-        if(member == null){
+        if (member == null) {
             return ResponseEntity.notFound().build();
-        }else{
+        } else {
             return ResponseEntity.ok(member);
         }
     }

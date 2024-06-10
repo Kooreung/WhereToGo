@@ -1,6 +1,7 @@
 package com.backend.mapper.member;
 
 import com.backend.domain.member.Member;
+import com.backend.domain.member.MemberProfile;
 import org.apache.ibatis.annotations.*;
 import java.util.List;
 
@@ -73,4 +74,32 @@ public interface MemberMapper {
             where id = #{memberId}
             """)
     int deleteByid(Integer memberId);
+
+    @Update("""
+            update member
+
+            """)
+    int profileUpdate(Integer memberId);
+
+    @Select("""
+            SELECT name
+            from Profile
+            where member_id = #{memberId}
+            """)
+    String getProfileNameByMemberId(Integer memberId);
+
+    @Delete("""
+            DELETE FROM profile
+            WHERE member_id=#{boardId}
+              AND name=#{fileName}
+            """)
+    int deleteFileByBoardIdAndName(Integer boardId, String fileName);
+
+
+    @Select("""
+            SELECT * 
+            from profile 
+            where member_id = #{memberId}
+            """)
+    MemberProfile getProfileByMemberId(int memberId);
 }
