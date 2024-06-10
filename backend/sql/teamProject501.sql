@@ -15,6 +15,9 @@ ALTER TABLE Member
 ALTER TABLE Member
     MODIFY password VARCHAR(100);
 
+ALTER TABLE Member
+    MODIFY phone_number VARCHAR(20);
+
 INSERT INTO Member (email, password, nick_name, name, gender, birth, address, phone_number)
 VALUES (123, 123, 123, 123, 123, 123, 123, 123);
 
