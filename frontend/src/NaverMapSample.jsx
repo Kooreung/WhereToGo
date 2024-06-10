@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import { Button } from "@chakra-ui/react";
 
 // Kakao Map 스크립트 로드 함수
 const loadKakaoMapScript = (appKey, libraries = []) => {
@@ -112,6 +114,25 @@ const KakaoMapSearch = () => {
       }
     }
   }, [map, selectedPlaces]);
+  // 새로운 함수: DB에서 선택된 장소 정보 가져오기
+  const fetchSelectedPlacesFromDB = () => {
+    // 이 부분에 DB에서 선택된 장소 정보를 가져오는 API 호출 로직 추가
+    // 예를 들어, Axios 라이브러리를 사용하여 서버 API를 호출하는 방법:
+    axios
+      .get("/api/comment/add", {})
+      .then((response) => {
+        const selectedPlacesData = response.data; // 서버에서 받은 선택된 장소 정보
+        setSelectedPlaces(selectedPlacesData); // 선택된 장소 업데이트
+      })
+      .catch((error) => {
+        console.error("Error fetching selected places:", error);
+      });
+  };
+
+  useEffect(() => {
+    // 컴포넌트가 마운트될 때 DB에서 선택된 장소 정보 가져오기
+    fetchSelectedPlacesFromDB();
+  }, []);
 
   const searchPlaces = () => {
     if (!ps || !searchTerm) return;
@@ -183,6 +204,7 @@ const KakaoMapSearch = () => {
             </li>
           ))}
         </ul>
+        <Button>제출</Button>
       </div>
     </div>
   );
