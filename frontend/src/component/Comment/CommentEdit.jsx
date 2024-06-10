@@ -4,6 +4,7 @@ import { Box, Button, Textarea } from "@chakra-ui/react";
 function CommentEdit(props) {
   return (
     <Box>
+      Comment수정
       <Box>
         <Textarea />
       </Box>
