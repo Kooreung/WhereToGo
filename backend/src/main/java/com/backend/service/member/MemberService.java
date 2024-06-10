@@ -4,24 +4,23 @@ import com.backend.domain.member.Member;
 import com.backend.domain.member.MemberProfile;
 import com.backend.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,9 +43,26 @@ public class MemberService {
     @Value("${image.src.prefix}")
     String srcPrefix;
 
-    public void add(Member member) {
+    public void add(Member member, MultipartFile newProfile) throws IOException {
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         mapper.insert(member);
+
+        if (newProfile != null && !newProfile.isEmpty()) {
+            //가입시 선택한 이미지가 있다면 해당 이미지로 s3에 저장후 사용
+            String key = STR."prj3/\{member.getMemberId()}/\{newProfile.getOriginalFilename()}";
+            PutObjectRequest objectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .acl(ObjectCannedACL.PUBLIC_READ)
+                    .build();
+            s3Client.putObject(objectRequest,
+                    RequestBody.fromInputStream(newProfile.getInputStream(), newProfile.getSize()));
+            mapper.profileAdd(member.getMemberId(), newProfile.getOriginalFilename());
+        } else if (newProfile == null) {
+            //가입시 이미지를 선택하지 않았다면 기본 이미지로 설정
+            mapper.profileAdd(1, "basicProfile");
+        }
+
     }
 
 
@@ -56,6 +72,7 @@ public class MemberService {
 
     public Member getByNickName(String nickName) {
         return mapper.selectByNickName(nickName);
+    }
 
     public boolean hasAccess(Integer id, Authentication authentication) {
         boolean self = authentication.getName().equals(id.toString());
@@ -128,10 +145,10 @@ public class MemberService {
                     .key(key)
                     .acl(ObjectCannedACL.PUBLIC_READ)
                     .build();
-            mapper.profileUpdate(member.getMemberId());
+            mapper.profileUpdate(member.getMemberId(), newProfile.getOriginalFilename());
 
             String prevProfileName = mapper.getProfileNameByMemberId(member.getMemberId());
-            String key2 = STR."prj2/\{member.getMemberId()}/\{prevProfileName}";
+            String key2 = STR."prj3/\{member.getMemberId()}/\{prevProfileName}";
             DeleteObjectRequest objectRequest2 = DeleteObjectRequest.builder()
                     .bucket(bucketName)
                     .key(key)

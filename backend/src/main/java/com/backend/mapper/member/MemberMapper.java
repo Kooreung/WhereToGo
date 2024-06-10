@@ -3,6 +3,7 @@ package com.backend.mapper.member;
 import com.backend.domain.member.Member;
 import com.backend.domain.member.MemberProfile;
 import org.apache.ibatis.annotations.*;
+
 import java.util.List;
 
 @Mapper
@@ -14,7 +15,7 @@ public interface MemberMapper {
             """)
     int insert(Member member);
 
-// 이메일 중복 체크
+    // 이메일 중복 체크
     @Select("""
             SELECT *
             FROM Member
@@ -22,7 +23,7 @@ public interface MemberMapper {
             """)
     Member selectByEmail(String email);
 
-// 닉네임 중복 체크
+    // 닉네임 중복 체크
     @Select("""
             SELECT *
             FROM Member
@@ -75,11 +76,11 @@ public interface MemberMapper {
             """)
     int deleteByid(Integer memberId);
 
-    @Update("""
-            update member
-
+    @Insert("""
+            insert into profile(member_id,profile_name)
+            values(#{memberId},#{profileName})
             """)
-    int profileUpdate(Integer memberId);
+    int profileAdd(Integer memberId, String profileName);
 
     @Select("""
             SELECT name
@@ -102,4 +103,12 @@ public interface MemberMapper {
             where member_id = #{memberId}
             """)
     MemberProfile getProfileByMemberId(int memberId);
+
+
+    @Update("""
+            update profile
+            set profile_name = #{profileName}
+            where member_id = #{memberId}
+            """)
+    int profileUpdate(Integer memberId, String profileName);
 }

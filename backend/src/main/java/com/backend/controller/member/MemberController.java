@@ -3,7 +3,6 @@ package com.backend.controller.member;
 import com.backend.domain.member.Member;
 import com.backend.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -22,9 +22,11 @@ public class MemberController {
 
     // 회원가입
     @PostMapping("signup")
-    public ResponseEntity signup(@RequestBody Member member) {
+    public ResponseEntity signup(@RequestBody Member member,
+                                 @RequestParam(value = "addFileList", required = false)
+                                 MultipartFile newProfile) throws IOException {
         if (service.validate(member)) {
-            service.add(member);
+            service.add(member, newProfile);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();
@@ -69,7 +71,7 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
-    
+
 
     // 회원 목록 보기
     @GetMapping("list")
