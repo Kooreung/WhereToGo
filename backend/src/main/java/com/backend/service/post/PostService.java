@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 @Transactional(rollbackFor = Exception.class)
 @RequiredArgsConstructor
@@ -30,7 +33,11 @@ public class PostService {
     }
 
     // 게시글 조회 서비스
-    public void get(Integer postId) {
+    public Map<String, Object> get(Integer postId) {
         Post post = postMapper.selectById(postId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("post", post);
+
+        return result;
     }
 }

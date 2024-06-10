@@ -23,7 +23,7 @@ const router = createBrowserRouter([
       { path: "memberinfo", element: <MemberInfo /> },
       { path: "comment", element: <CommentComponent /> },
       { path: "post/write", element: <PostWrite /> },
-      { path: "post/:id", element: <PostView /> },
+      { path: "post/:postId", element: <PostView /> },
     ],
   },
 ]);

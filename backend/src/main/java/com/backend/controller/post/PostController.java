@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/post")
 @RequiredArgsConstructor
@@ -44,8 +46,14 @@ public class PostController {
     // 게시글 조회 Controller
     @GetMapping("{postId}")
     public ResponseEntity postRead(@PathVariable Integer postId) {
-        postService.get(postId);
-        return ResponseEntity.ok().build();
+        Map<String, Object> result = postService.get(postId);
+
+        if (result.get("post") == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        System.out.println("result = " + result);
+        return ResponseEntity.ok().body(result);
+
     }
 
     // 게시글 삭제 Controller

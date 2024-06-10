@@ -17,9 +17,10 @@ public interface PostMapper {
 
     // 게시글 조회 매퍼
     @Select("""
-            SELECT *
-            FROM Post
-            WHERE Post.post_id = #{id}
+            SELECT p.post_id, p.title, p.content, p.create_date, p.view
+            FROM Post p JOIN Member m
+            ON p.member_id = m.member_id
+            WHERE p.post_id = #{postId}
             """)
     Post selectById(Integer postId);
 }
