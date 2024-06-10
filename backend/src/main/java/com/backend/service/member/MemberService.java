@@ -3,12 +3,14 @@ package com.backend.service.member;
 import com.backend.domain.member.Member;
 import com.backend.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,7 @@ public class MemberService {
     final JwtEncoder jwtEncoder;
 
     public void add(Member member) {
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
         mapper.insert(member);
     }
 
@@ -111,5 +114,41 @@ public class MemberService {
         //탈퇴시 게시물 삭제 안할것이기 때문에 댓글,회원정보만 삭제
 
         mapper.deleteByid(memberId);
+    }
+
+    public boolean validate(Member member) {
+        if (member.getEmail() == null || member.getEmail().isBlank()) {
+            return false;
+        }
+
+        if (member.getPassword() == null || member.getPassword().isBlank()) {
+            return false;
+        }
+
+        if (member.getName() == null || member.getName().isBlank()) {
+            return false;
+        }
+
+        if (member.getNickName() == null || member.getNickName().isBlank()) {
+            return false;
+        }
+
+        if (member.getGender() == null || member.getGender().isBlank()) {
+            return false;
+        }
+
+        if (member.getBirth() == null) {
+            return false;
+        }
+
+        if (member.getPhoneNumber() == null || member.getPhoneNumber().isBlank()) {
+            return false;
+        }
+
+        if (member.getAddress() == null || member.getAddress().isBlank()) {
+            return false;
+        }
+
+        return true;
     }
 }

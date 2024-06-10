@@ -12,6 +12,16 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import {
+  emailPattern,
+  passwordPattern,
+  phoneNumberPattern,
+} from "../../Regex.jsx";
+
+const isValidEmail = (email) => emailPattern.test(email);
+const isValidPassword = (password) => passwordPattern.test(password);
+const isValidPhoneNumber = (phoneNumber) =>
+  phoneNumberPattern.test(phoneNumber);
 
 export function MemberSignup() {
   const [email, setEmail] = useState("");
@@ -27,11 +37,15 @@ export function MemberSignup() {
   const [isEmailDuplicate, setIsEmailDuplicate] = useState(false);
   const [isCheckNickName, setIsCheckNickName] = useState(false);
   const [isNickNameDuplicate, setIsNickNameDuplicate] = useState(false);
+  const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
+  const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(true);
   const toast = useToast();
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (email) {
+      if (email && isValidEmail(email)) {
+        setIsEmailValid(true);
         axios
           .get(`/api/member/check?email=${email}`)
           .then(() => {
@@ -44,6 +58,10 @@ export function MemberSignup() {
               setIsEmailDuplicate(false);
             }
           });
+      } else if (email) {
+        setIsEmailValid(false);
+        setIsCheckEmail(false);
+        setIsEmailDuplicate(false);
       }
 
       if (nickName) {
@@ -60,12 +78,31 @@ export function MemberSignup() {
             }
           });
       }
-    }, 500); // 500ms 디바운싱 // 나중에 100~150정도로 바꿀 예정
+    }, 500); // 500ms 디바운싱
 
     return () => clearTimeout(timer);
   }, [email, nickName]);
 
   function handleClick() {
+    setIsEmailValid(isValidEmail(email));
+    setIsPasswordValid(isValidPassword(password));
+    setIsPhoneNumberValid(isValidPhoneNumber(phoneNumber));
+
+    if (
+      !isValidEmail(email) ||
+      !isValidPassword(password) ||
+      !isValidPhoneNumber(phoneNumber) ||
+      isEmailDuplicate ||
+      isNickNameDuplicate
+    ) {
+      toast({
+        description: "입력값을 확인해 주세요.",
+        status: "error",
+        position: "top",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     axios
@@ -81,7 +118,7 @@ export function MemberSignup() {
       })
       .then(() => {
         toast({
-          description: "회원가입이 성공적으로 완료되었습니다.",
+          description: "회원가입이 완료되었습니다.",
           status: "success",
           position: "top",
         });
@@ -104,14 +141,25 @@ export function MemberSignup() {
           <FormControl>
             <FormLabel>이메일</FormLabel>
             <InputGroup>
-              <Input value={email} onChange={(e) => setEmail(e.target.value)} />
+              <Input
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setIsEmailValid(isValidEmail(e.target.value));
+                }}
+              />
             </InputGroup>
-            {isEmailDuplicate && (
+            {!isEmailValid && (
               <FormHelperText color="red">
-                이메일이 중복되었습니다.
+                올바른 이메일 형식이 아닙니다.
               </FormHelperText>
             )}
-            {!isEmailDuplicate && isCheckEmail && (
+            {isEmailDuplicate && (
+              <FormHelperText color="red">
+                사용할 수 없는 이메일입니다. 다른 이메일을 입력해 주세요.
+              </FormHelperText>
+            )}
+            {!isEmailDuplicate && isCheckEmail && isEmailValid && (
               <FormHelperText color="green">
                 사용 가능한 이메일입니다.
               </FormHelperText>
@@ -121,7 +169,19 @@ export function MemberSignup() {
         <Box>
           <FormControl>
             <FormLabel>비밀번호</FormLabel>
-            <Input onChange={(e) => setPassword(e.target.value)} />
+            <Input
+              type="password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setIsPasswordValid(isValidPassword(e.target.value));
+              }}
+            />
+            {!isPasswordValid && (
+              <FormHelperText color="red">
+                비밀번호는 8-20자 사이의 영문자와 숫자를 포함해야 합니다.
+              </FormHelperText>
+            )}
           </FormControl>
         </Box>
         <Box>
@@ -141,7 +201,7 @@ export function MemberSignup() {
             </InputGroup>
             {isNickNameDuplicate && (
               <FormHelperText color="red">
-                닉네임이 중복되었습니다.
+                사용할 수 없는 닉네임입니다. 다른 닉네임을 입력해 주세요.
               </FormHelperText>
             )}
             {!isNickNameDuplicate && isCheckNickName && (
@@ -169,7 +229,18 @@ export function MemberSignup() {
         <Box>
           <FormControl>
             <FormLabel>전화번호</FormLabel>
-            <Input onChange={(e) => setPhoneNumber(e.target.value)} />
+            <Input
+              value={phoneNumber}
+              onChange={(e) => {
+                setPhoneNumber(e.target.value);
+                setIsPhoneNumberValid(isValidPhoneNumber(e.target.value));
+              }}
+            />
+            {!isPhoneNumberValid && (
+              <FormHelperText color="red">
+                올바른 전화번호 형식이 아닙니다.
+              </FormHelperText>
+            )}
           </FormControl>
         </Box>
         <Box>
