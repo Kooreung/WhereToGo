@@ -15,7 +15,7 @@ import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/member")
+@RequestMapping("/api/member")
 public class MemberController {
     final MemberService service;
 
@@ -28,7 +28,7 @@ public class MemberController {
     // 이메일 중복확인
     @GetMapping(value = "check", params = "email")
     public void CheckEmail() {
-        
+
     }
 
     // 닉네임 중복확인
