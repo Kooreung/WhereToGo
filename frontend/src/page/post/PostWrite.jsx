@@ -21,11 +21,9 @@ function PostWrite(props) {
   function handleClickSave() {
     setLoading(true);
     axios
-      .postForm("/post/add", { title, content })
+      .postForm("/api/post/add", { title, content })
       .then(() => {
         navigate("/");
-        console.log(title);
-        console.log(content);
       })
       .catch()
       .finally(() => setLoading(false));

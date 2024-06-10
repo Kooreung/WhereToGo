@@ -8,8 +8,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface PostMapper {
 
     @Insert("""
-            INSERT INTO Post (title, content)
-            VALUES (#{title}, #{content})
+            INSERT INTO Post (title, content, member_id)
+            VALUES (#{title}, #{content}, 1)
             """)
     void insert(Post post);
 }
