@@ -1,8 +1,10 @@
 package com.backend.service.member;
 
 import com.backend.domain.member.Member;
+import com.backend.domain.member.MemberProfile;
 import com.backend.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -11,7 +13,13 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,9 +28,18 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MemberService {
 
-    final MemberMapper mapper;
+    private final MemberMapper mapper;
     final BCryptPasswordEncoder passwordEncoder;
     final JwtEncoder jwtEncoder;
+    private MemberProfile memberProfile;
+    final S3Client s3Client;
+
+
+    @Value("${aws.s3.bucket.name}")
+    String bucketName;
+
+    @Value("${image.src.prefix}")
+    String srcPrefix;
 
     public void add(Member member) {
         mapper.insert(member);
@@ -52,8 +69,15 @@ public class MemberService {
         return passwordEncoder.matches(member.getPassword(), dbMember.getPassword());
     }
 
-    public Member getById(int memberId) {
-        return mapper.selectById(memberId);
+    public Map<String, Object> getById(int memberId) {
+        Map<String, Object> result = new HashMap<>();
+        Member member = mapper.selectById(memberId);
+        result.put("member", member);
+
+        MemberProfile file = mapper.getProfileByMemberId(memberId);
+        result.put("profile", file);
+
+        return result;
     }
 
     public List<Member> memberList() {
@@ -61,21 +85,21 @@ public class MemberService {
     }
 
     public boolean hasAccessModify(Member member, Authentication authentication) {
-        if(!authentication.getName().equals(member.getMemberId().toString())){
+        if (!authentication.getName().equals(member.getMemberId().toString())) {
             return false;
         }
         Member dbMember = mapper.selectById(member.getMemberId());
-        if(dbMember == null){
+        if (dbMember == null) {
             return false;
         }
 
-        if(!passwordEncoder.matches(member.getPassword(), dbMember.getPassword())){
+        if (!passwordEncoder.matches(member.getPassword(), dbMember.getPassword())) {
             return false;
         }
         return true;
     }
 
-    public Map<String, Object> modify(Member member, Authentication authentication) {
+    public Map<String, Object> modify(Member member, Authentication authentication, MultipartFile newProfile) {
         if (member.getPassword() != null && member.getPassword().length() > 0) {
             // 패스워드가 입력되었으니 바꾸기
             member.setPassword(passwordEncoder.encode(member.getPassword()));
@@ -83,6 +107,25 @@ public class MemberService {
             // 입력 안됐으니 기존 값으로 유지
             Member dbMember = mapper.selectById(member.getMemberId());
             member.setPassword(dbMember.getPassword());
+        }
+
+        if (newProfile != null && !newProfile.isEmpty()) {
+            String key = STR."prj3/\{member.getMemberId()}/\{newProfile.getOriginalFilename()}";
+            PutObjectRequest objectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .acl(ObjectCannedACL.PUBLIC_READ)
+                    .build();
+            mapper.profileUpdate(member.getMemberId());
+
+            String prevProfileName = mapper.getProfileNameByMemberId(member.getMemberId());
+            String key2 = STR."prj2/\{member.getMemberId()}/\{prevProfileName}";
+            DeleteObjectRequest objectRequest2 = DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .build();
+            s3Client.deleteObject(objectRequest2);
+            mapper.deleteFileByBoardIdAndName(member.getMemberId(), prevProfileName);
         }
         mapper.update(member);
 
@@ -100,8 +143,15 @@ public class MemberService {
     }
 
     public void delete(Integer memberId) {
+        String fileName = mapper.getProfileNameByMemberId(memberId);
         //탈퇴시 게시물 삭제 안할것이기 때문에 댓글,회원정보만 삭제
+        String key = STR."prj3/\{memberId}/\{fileName}";
+        DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .build();
 
+        s3Client.deleteObject(objectRequest);
         mapper.deleteByid(memberId);
     }
 }
