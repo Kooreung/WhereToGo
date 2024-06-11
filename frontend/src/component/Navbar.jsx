@@ -19,7 +19,7 @@ function Navbar() {
       </Flex>
       <Center gap={12}>
         <Box>MD Pick</Box>
-        <Box onClick={() => navigate("/post/list")} cursor={"pointer"}>
+        <Box onClick={() => navigate("/post/list?1")} cursor={"pointer"}>
           회원 게시판
         </Box>
       </Center>
