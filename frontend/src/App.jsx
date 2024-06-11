@@ -8,7 +8,8 @@ import { MemberInfo } from "./page/member/MemberInfo.jsx"; // 라우터 설정
 import { MemberSignup } from "./page/member/MemberSignup.jsx";
 import { CommentComponent } from "./component/Comment/CommentComponent.jsx";
 import { PostView } from "./page/post/PostView.jsx";
-import PostList from "./page/post/PostList.jsx"; // 라우터 설정
+import PostList from "./page/post/PostList.jsx";
+import { PostEdit } from "./page/post/PostEdit.jsx";
 
 // 라우터 설정
 const router = createBrowserRouter([
@@ -24,6 +25,7 @@ const router = createBrowserRouter([
       { path: "memberinfo", element: <MemberInfo /> },
       { path: "comment", element: <CommentComponent /> },
       { path: "post/write", element: <PostWrite /> },
+      { path: "post/:postId/edit", element: <PostEdit /> },
       { path: "post/list", element: <PostList /> },
       { path: "post/:postId", element: <PostView /> },
     ],

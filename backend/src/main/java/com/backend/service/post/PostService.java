@@ -46,4 +46,9 @@ public class PostService {
     public List<Post> list() {
         return postMapper.selectAllPage();
     }
+
+    // 게시글 수정 서비스
+    public void edit(Post post) {
+        postMapper.update(post);
+    }
 }

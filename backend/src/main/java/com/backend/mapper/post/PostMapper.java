@@ -4,6 +4,7 @@ import com.backend.domain.post.Post;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -26,6 +27,7 @@ public interface PostMapper {
             """)
     Post selectById(Integer postId);
 
+    // 게시글 리스트 매퍼
     @Select("""
             SELECT p.post_id, p.title, p.content, m.nick_name
             FROM Post p JOIN Member m ON p.member_id = m.member_id
@@ -33,4 +35,12 @@ public interface PostMapper {
             ORDER BY p.post_id DESC
             """)
     List<Post> selectAllPage();
+
+    // 게시글 수정 매퍼
+    @Update("""
+            UPDATE Post
+            SET title=#{title}, content=#{content}
+            WHERE post_id=#{postId}
+            """)
+    void update(Post post);
 }

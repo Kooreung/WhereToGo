@@ -55,7 +55,6 @@ public class PostController {
         }
         System.out.println("result = " + result);
         return ResponseEntity.ok().body(result);
-
     }
 
     // 게시글 삭제 Controller
@@ -64,8 +63,11 @@ public class PostController {
     }
 
     // 게시글 수정 Controller
-    @GetMapping("edit/{postId}")
-    public void postEdit() {
+    @PutMapping("edit")
+    public void postEdit(Post post) {
+        if (postService.validate(post)) {
+            postService.edit(post);
+        }
     }
 
     // 게시글 좋아요 Controller
