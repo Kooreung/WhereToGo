@@ -10,12 +10,13 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { GuideLineMediumBanner } from "../../CustomStyles.jsx";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 export function PostView() {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -64,7 +65,9 @@ export function PostView() {
           </Box>
           <Box>
             <Box align={"left"} my={10}>
-              <Button>등록</Button>
+              <Button onClick={() => navigate(`/post/${postId}/edit`)}>
+                수정
+              </Button>
               <Button>취소</Button>
             </Box>
           </Box>
