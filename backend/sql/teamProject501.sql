@@ -32,3 +32,7 @@ VALUES (123, 123, 123, 123, 123, 123, 123, 123);
 
 SELECT *
 FROM Member;
+
+delete
+from Member
+where member_id = 56;

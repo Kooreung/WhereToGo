@@ -19,7 +19,6 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -43,20 +42,20 @@ public class MemberService {
     @Value("${image.src.prefix}")
     String srcPrefix;
 
-    public void add(Member member, File newProfile) throws IOException {
+    public void add(Member member, MultipartFile newProfile) throws IOException {
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         mapper.insert(member);
 
-        if (newProfile != null && newProfile.length() > 0) {
+        if (newProfile != null && !newProfile.isEmpty()) {
             // 이미지가 있는 경우 S3에 저장
-            String key = String.format("prj3/%s/%s", member.getMemberId(), newProfile.getName());
+            String key = String.format("prj3/%s/%s", member.getMemberId(), newProfile.getOriginalFilename());
             PutObjectRequest objectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(key)
                     .acl(ObjectCannedACL.PUBLIC_READ)
                     .build();
-            s3Client.putObject(objectRequest, RequestBody.fromFile(newProfile));
-            mapper.profileAdd(member.getMemberId(), newProfile.getName());
+            s3Client.putObject(objectRequest, RequestBody.fromInputStream(newProfile.getInputStream(), newProfile.getSize()));
+            mapper.profileAdd(member.getMemberId(), newProfile.getOriginalFilename());
         } else {
             // 프로필 이미지가 없는 경우 기본 프로필 이미지 사용
             String defaultProfileKey = "prj3/defaultProfile";
