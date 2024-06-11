@@ -47,42 +47,34 @@ public class MemberService {
         member.setPassword(passwordEncoder.encode(member.getPassword()));
         mapper.insert(member);
 
-        if (newProfile != null && !newProfile.isEmpty()) {
-            //가입시 선택한 이미지가 있다면 해당 이미지로 s3에 저장후 사용
-            String key = STR."prj3/\{member.getMemberId()}/\{newProfile.getOriginalFilename()}";
+        if (newProfile != null && newProfile.length() > 0) {
+            // 이미지가 있는 경우 S3에 저장
+            String key = String.format("prj3/%s/%s", member.getMemberId(), newProfile.getName());
             PutObjectRequest objectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(key)
                     .acl(ObjectCannedACL.PUBLIC_READ)
                     .build();
-            s3Client.putObject(objectRequest,
-                    RequestBody.fromInputStream(newProfile, newProfile.));
-            mapper.profileAdd(member.getMemberId(), newProfile.getOriginalFilename());
-        } else if (newProfile == null) {
-            // else 일때 s3에 저장된 기본 프로필 사진을 가져와서 사용하려면 다음과 같이 할 수 있습니다:
-
+            s3Client.putObject(objectRequest, RequestBody.fromFile(newProfile));
+            mapper.profileAdd(member.getMemberId(), newProfile.getName());
+        } else {
+            // 프로필 이미지가 없는 경우 기본 프로필 이미지 사용
             String defaultProfileKey = "prj3/defaultProfile";
-// 기본 프로필 사진을 가져오기 위한 GetObjectRequest 생성
             GetObjectRequest defaultProfileRequest = GetObjectRequest.builder()
                     .bucket(bucketName)
                     .key(defaultProfileKey)
                     .build();
-// s3로부터 기본 프로필 사진을 가져옴
             ResponseInputStream<GetObjectResponse> defaultProfileResponse = s3Client.getObject(defaultProfileRequest);
 
-// 가져온 기본 프로필 사진을 member의 프로필로 저장
             PutObjectRequest objectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
-                    .key("prj3/" + member.getMemberId() + "/defaultProfile")
+                    .key(String.format("prj3/%s/defaultProfile", member.getMemberId()))
                     .acl(ObjectCannedACL.PUBLIC_READ)
                     .build();
             s3Client.putObject(objectRequest, RequestBody.fromInputStream(defaultProfileResponse, defaultProfileResponse.response().contentLength()));
 
-// mapper를 사용하여 member의 프로필 정보를 업데이트
             mapper.profileAdd(member.getMemberId(), "defaultProfile");
-
         }
-
     }
 
 
