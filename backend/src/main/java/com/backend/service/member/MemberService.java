@@ -32,10 +32,9 @@ public class MemberService {
     private final MemberMapper mapper;
     final BCryptPasswordEncoder passwordEncoder;
     final JwtEncoder jwtEncoder;
-    private MemberProfile memberProfile;
+    //    private MemberProfile memberProfile;
     final S3Client s3Client;
-
-
+    
     @Value("${aws.s3.bucket.name}")
     String bucketName;
 
@@ -75,7 +74,6 @@ public class MemberService {
             mapper.profileAdd(member.getMemberId(), "defaultProfile");
         }
     }
-
 
     public Member getByEmail(String email) {
         return mapper.selectByEmail(email);
