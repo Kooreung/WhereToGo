@@ -1,10 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Button } from "@chakra-ui/react";
-import axios from "axios"; // Kakao Map 스크립트 로드 함수
+import axios from "axios";
 
-// Kakao Map 스크립트 로드 함수
 const loadKakaoMapScript = (appKey, libraries = []) => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const existingScript = document.getElementById("kakao-map-script");
 
     if (!existingScript) {
@@ -15,6 +13,9 @@ const loadKakaoMapScript = (appKey, libraries = []) => {
       script.id = "kakao-map-script";
       script.onload = () => {
         window.kakao.maps.load(resolve);
+      };
+      script.onerror = () => {
+        reject(new Error("Kakao map script failed to load"));
       };
       document.head.appendChild(script);
     } else {
@@ -35,19 +36,23 @@ const KakaoMapSearch = () => {
   const [polylines, setPolylines] = useState([]);
 
   useEffect(() => {
-    loadKakaoMapScript(kakaoMapAppKey, ["services"]).then(() => {
-      const container = mapRef.current;
-      const options = {
-        center: new window.kakao.maps.LatLng(33.450701, 126.570667),
-        level: 3,
-      };
+    loadKakaoMapScript(kakaoMapAppKey, ["services"])
+      .then(() => {
+        const container = mapRef.current;
+        const options = {
+          center: new window.kakao.maps.LatLng(33.450701, 126.570667),
+          level: 3,
+        };
 
-      const map = new window.kakao.maps.Map(container, options);
-      setMap(map);
+        const map = new window.kakao.maps.Map(container, options);
+        setMap(map);
 
-      const placesService = new window.kakao.maps.services.Places();
-      setPs(placesService);
-    });
+        const placesService = new window.kakao.maps.services.Places();
+        setPs(placesService);
+      })
+      .catch((error) => {
+        console.error("Kakao map script loading error: ", error);
+      });
   }, [kakaoMapAppKey]);
 
   useEffect(() => {
@@ -69,13 +74,12 @@ const KakaoMapSearch = () => {
 
   useEffect(() => {
     if (map) {
-      // Remove existing polylines
       polylines.forEach((polyline) => polyline.setMap(null));
 
       if (selectedPlaces.length > 1) {
         const bounds = new window.kakao.maps.LatLngBounds();
         const newPolylines = selectedPlaces.map((place, index) => {
-          if (index === selectedPlaces.length - 1) return null; // Skip the last place
+          if (index === selectedPlaces.length - 1) return null;
           const polyline = new window.kakao.maps.Polyline({
             map: map,
             path: [
@@ -145,7 +149,17 @@ const KakaoMapSearch = () => {
 
   function saveSelectedPlacesToServer() {
     axios
-      .post("/api/place/add", { selectedPlaces })
+      .post(
+        "/api/place/add",
+        selectedPlaces.map((place) => ({
+          placeName: place.place_name,
+          placeUrl: place.place_url,
+          address: place.address,
+          category: place.category,
+          latitude: parseFloat(place.y),
+          longitude: parseFloat(place.x),
+        })),
+      )
       .then((response) => {
         console.log("장소가 성공적으로 서버에 전송되었습니다.");
       })
@@ -153,7 +167,6 @@ const KakaoMapSearch = () => {
         console.error("장소를 서버에 전송하는 중 오류가 발생했습니다:", error);
       });
   }
-
   return (
     <div>
       <input
@@ -195,8 +208,8 @@ const KakaoMapSearch = () => {
               <button onClick={() => removePlace(index)}>삭제하기</button>
             </li>
           ))}
-          <Button onClick={saveSelectedPlacesToServer}>제출</Button>
         </ul>
+        <button onClick={saveSelectedPlacesToServer}>제출</button>
       </div>
     </div>
   );
