@@ -22,7 +22,7 @@ public class PlaceController {
     public ResponseEntity<String> addPlace(@RequestBody List<Place> places) {
         try {
             for (Place place : places) {
-                service.selectadd(place);
+                service.addPlace(place);
                 System.out.println("place = " + place);
             }
             return ResponseEntity.ok("장소가 성공적으로 추가되었습니다.");

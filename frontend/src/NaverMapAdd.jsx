@@ -154,7 +154,7 @@ const KakaoMapSearch = () => {
         selectedPlaces.map((place) => ({
           placeName: place.place_name,
           placeUrl: place.place_url,
-          address: place.address,
+          address: place.address_name,
           category: place.category,
           latitude: parseFloat(place.y),
           longitude: parseFloat(place.x),

@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface PlaceMapper {
     @Insert("""
-            INSERT INTO Place (place_name, place_url, address, category, latitude, longitude)
+            INSERT INTO Place (placeName, placeUrl, address, category, latitude, longitude)
             VALUES (#{placeName}, #{placeUrl}, #{address}, #{category}, #{latitude}, #{longitude})
             """)
     int insert(Place place);

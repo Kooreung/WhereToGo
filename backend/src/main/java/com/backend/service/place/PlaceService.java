@@ -10,9 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(rollbackFor = Exception.class)
 @RequiredArgsConstructor
 public class PlaceService {
-    final PlaceMapper mapper;
 
-    public void selectadd(Place place) {
+    private final PlaceMapper mapper;
+
+    @Transactional
+    public void addPlace(Place place) {
         mapper.insert(place);
     }
 }
