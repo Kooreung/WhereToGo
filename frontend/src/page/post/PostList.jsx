@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
+  Button,
   Center,
   Divider,
   Flex,
@@ -41,6 +42,7 @@ function PostList() {
       <Flex w={{ base: 700, lg: 1000 }} direction="column">
         {/* 상단 회원 인기글 페이지 */}
         <Box>
+          <Button onClick={() => navigate(`/post/write`)}>임시 글쓰기</Button>
           <Divider orientation={"horizontal"} my={3} />
           <Box {...GuideLineMediumBanner} h={50} fontSize={"lg"} my={3}>
             회원 인기글
