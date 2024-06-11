@@ -25,11 +25,16 @@ function PostList() {
 
   useEffect(() => {
     axios.get(`/api/post/list`).then((res) => {
-      setPostList(res.data);
+      setPostList(res.data.postList);
+      setPageInfo(res.data.pageInfo);
       console.log(res.data);
-      // setPageInfo(res.data.pageInfo);
     });
   }, []);
+
+  // const pageNumbers = [];
+  // for (let i = pageInfo.leftpageNumber; i < pageInfo.rightPageNumber; i++) {
+  //   pageNumbers.push(i);
+  // }
 
   return (
     <Center>
@@ -129,6 +134,8 @@ function PostList() {
             </Tbody>
           </Table>
         </Box>
+
+        {/* 페이지 */}
       </Flex>
     </Center>
   );

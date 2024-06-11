@@ -13,34 +13,42 @@ public interface PostMapper {
 
     // 게시글 추가 매퍼
     @Insert("""
-            INSERT INTO Post (title, content, member_id)
+            INSERT INTO Post (title, content, memberid)
             VALUES (#{title}, #{content}, 1)
             """)
     int insert(Post post);
 
     // 게시글 조회 매퍼
     @Select("""
-            SELECT p.post_id, p.title, p.content, p.create_date, p.view
+            SELECT p.postid, p.title, p.content, p.createdate, p.view
             FROM Post p JOIN Member m
-            ON p.member_id = m.member_id
-            WHERE p.post_id = #{postId}
+            ON p.memberid = m.memberid
+            WHERE p.postid = #{postId}
             """)
     Post selectById(Integer postId);
 
     // 게시글 리스트 매퍼
     @Select("""
-            SELECT p.post_id, p.title, p.content, m.nick_name
-            FROM Post p JOIN Member m ON p.member_id = m.member_id
-            GROUP BY p.post_id
-            ORDER BY p.post_id DESC
+            SELECT p.postid, p.title, p.content, m.nickname
+            FROM Post p JOIN Member m ON p.memberid = m.memberid
+            GROUP BY p.postid
+            ORDER BY p.postid DESC
+            LIMIT #{offset}, 5
             """)
-    List<Post> selectAllPage();
+    List<Post> selectAllPost(Integer offset);
+
+    // 게시글 리스트 카운트 매퍼
+    @Select("""
+            SELECT COUNT(p.postid)
+            FROM Post p JOIN Member m ON p.memberid = m.memberid
+            """)
+    Integer countAllPost();
 
     // 게시글 수정 매퍼
     @Update("""
             UPDATE Post
             SET title=#{title}, content=#{content}
-            WHERE post_id=#{postId}
+            WHERE postid=#{postId}
             """)
     void update(Post post);
 }

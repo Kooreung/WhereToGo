@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -43,8 +42,25 @@ public class PostService {
     }
 
     // 게시글 리스트 서비스
-    public List<Post> list() {
-        return postMapper.selectAllPage();
+    public Map<String, Object> list(Integer page) {
+        // 페이징 내용
+        Map pageInfo = new HashMap();
+
+        Integer countAllPost = postMapper.countAllPost();
+        Integer offset = (page - 1) * 10;
+        Integer lastPageNumber = (countAllPost - 1) / 10 + 1;
+        Integer leftPageNumber = (page - 1) / 10 * 10 + 1;
+        Integer rightPageNumber = leftPageNumber + 9;
+
+        Integer prevPageNumber = leftPageNumber - 1;
+        Integer nextPageNumber = rightPageNumber + 1;
+
+        pageInfo.put("currentPageNumber", page);
+        pageInfo.put("lastPageNumber", lastPageNumber);
+        pageInfo.put("leftPageNumber", leftPageNumber);
+        pageInfo.put("rightPageNumber", rightPageNumber);
+
+        return Map.of("pageInfo", pageInfo, "postList", postMapper.selectAllPost(offset));
     }
 
     // 게시글 수정 서비스

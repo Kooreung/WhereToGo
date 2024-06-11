@@ -78,7 +78,7 @@ export function PostEdit() {
             <Box align={"left"} my={10}>
               <FormControl>
                 <FormLabel>작성자</FormLabel>
-                <Input defaultValue={post.nick_name} readOnly></Input>
+                <Input defaultValue={post.nickName} readOnly></Input>
               </FormControl>
             </Box>
             <Box align={"left"} my={10}>

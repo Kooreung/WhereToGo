@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -29,10 +28,21 @@ public class PostController {
         }
     }
 
+    // 게시글 조회 Controller
+    @GetMapping("{postId}")
+    public ResponseEntity postRead(@PathVariable Integer postId) {
+        Map<String, Object> result = postService.get(postId);
+        if (result.get("post") == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok().body(result);
+    }
+
     // 게시글 목록 Controller
     @GetMapping("list")
-    public List<Post> postList() {
-        return postService.list();
+    public Map<String, Object> postList(
+            @RequestParam(defaultValue = "1") Integer page) {
+        return postService.list(page);
     }
 
     // 게시글 MD추천 목록 Controller
@@ -43,18 +53,6 @@ public class PostController {
     // 게시글 인기글 목록 Controller
     @GetMapping("list/recommend")
     public void postListRecommend() {
-    }
-
-    // 게시글 조회 Controller
-    @GetMapping("{postId}")
-    public ResponseEntity postRead(@PathVariable Integer postId) {
-        Map<String, Object> result = postService.get(postId);
-
-        if (result.get("post") == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        System.out.println("result = " + result);
-        return ResponseEntity.ok().body(result);
     }
 
     // 게시글 삭제 Controller
