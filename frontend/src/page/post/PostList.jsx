@@ -12,10 +12,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import {
-  GuideLineLargeBanner,
-  GuideLineMediumBanner,
-} from "../../CustomStyles.jsx";
+import { GuideLineMediumBanner } from "../../CustomStyles.jsx";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 
@@ -27,9 +24,9 @@ function PostList() {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    axios.get(`/post/list`).then((res) => {
+    axios.get(`/api/post/list`).then((res) => {
       setPostList(res.data);
-      console.log(postList);
+      console.log(res.data);
       // setPageInfo(res.data.pageInfo);
     });
   }, []);
@@ -58,20 +55,21 @@ function PostList() {
         </Box>
 
         {/* 회원 게시글 페이지 */}
-        <Box {...GuideLineLargeBanner} h={{ base: 700 }}>
+        <Box>
           <Table>
             <Thead></Thead>
             <Tbody>
               {postList.map((post) => (
                 <Tr
                   key={post.postId}
-                  // onClick={() => navigate(`/post/${post.post_id}`)}
+                  onClick={() => navigate(`/post/${postId}`)}
                   cursor={"pointer"}
                 >
                   <Td>
                     <Grid
                       {...GuideLineMediumBanner}
                       w={"700"}
+                      h={"200"}
                       templateColumns={"repeat(6, 1fr)"}
                       templateRows={"repeat(4, 1fr)"}
                     >
@@ -80,49 +78,49 @@ function PostList() {
                         rowSpan={1}
                         border={"1px dotted yellow"}
                       >
-                        {/*{post.title}*/}
+                        {post.title}
                       </GridItem>
                       <GridItem
                         colSpan={2}
                         rowSpan={1}
                         border={"1px dotted yellow"}
                       >
-                        {/*{post.nickName}*/}
+                        {post.nickName}
                       </GridItem>
                       <GridItem
                         colSpan={1}
                         rowSpan={1}
                         border={"1px dotted yellow"}
                       >
-                        {/*{post.view}*/}
+                        {post.view}
                       </GridItem>
                       <GridItem
                         colSpan={1}
                         rowSpan={2}
                         border={"1px dotted yellow"}
                       >
-                        {/*{post.like}*/}
+                        {post.like}
                       </GridItem>
                       <GridItem
                         colSpan={2}
                         rowSpan={3}
                         border={"1px dotted yellow"}
                       >
-                        {/*{post.thumbnail}*/}
+                        {post.thumbnail}
                       </GridItem>
                       <GridItem
                         colSpan={3}
                         rowSpan={3}
                         border={"1px dotted yellow"}
                       >
-                        {/*{post.content}*/}
+                        {post.content}
                       </GridItem>
                       <GridItem
                         colSpan={1}
                         rowSpan={2}
                         border={"1px dotted yellow"}
                       >
-                        {/*{post.comment}*/}
+                        {post.comment}
                       </GridItem>
                     </Grid>
                   </Td>
