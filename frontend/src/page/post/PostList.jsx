@@ -60,6 +60,12 @@ function PostList() {
     navigate(`/post/list/?type=${searchType}&keyword=${searchKeyword}`);
   }
 
+  // 페이지 버튼 클릭 시
+  function handlePageButtonClick(pageNumber) {
+    searchParams.set("page", pageNumber);
+    navigate(`/post/list?${searchParams}`);
+  }
+
   return (
     <Center>
       <Flex w={{ base: 700, lg: 1000 }} direction="column">
@@ -211,7 +217,12 @@ function PostList() {
         <Box>
           <Center>
             {pageNumbers.map((pageNumber) => (
-              <Button key={pageNumber}>{pageNumber}</Button>
+              <Button
+                key={pageNumber}
+                onClick={() => handlePageButtonClick(pageNumber)}
+              >
+                {pageNumber}
+              </Button>
             ))}
           </Center>
         </Box>

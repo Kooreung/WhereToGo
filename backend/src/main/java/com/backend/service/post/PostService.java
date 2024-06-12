@@ -47,7 +47,7 @@ public class PostService {
         Map pageInfo = new HashMap();
 
         Integer countAllPost = postMapper.countAllPost(searchType, searchKeyword);
-        Integer offset = (page - 1) * 10;
+        Integer offset = (page - 1) * 5;
         Integer lastPageNumber = (countAllPost - 1) / 10 + 1;
         Integer leftPageNumber = (page - 1) / 10 * 10 + 1;
         Integer rightPageNumber = leftPageNumber + 9;
