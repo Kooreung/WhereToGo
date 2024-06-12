@@ -25,8 +25,9 @@ public class CommentController {
     }
 
     @PutMapping("edit")
-    public void getCommentEdit() {
-        service.edit();
+    public void getCommentEdit(@RequestBody Comment comment) {
+        System.out.println("comment = " + comment);
+        service.edit(comment);
     }
 
     @DeleteMapping("delete")

@@ -1,15 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, Textarea } from "@chakra-ui/react";
+import axios from "axios";
 
-function CommentEdit() {
+function CommentEdit({ comment }) {
+  const [reWriteComment, setReWriteComment] = useState();
+
+  function handleEditSubmit() {
+    axios
+      .put("/api/comment/edit", {
+        comment: reWriteComment,
+      })
+      .then((res) => {});
+  }
+
   return (
     <Box>
       Comment수정
       <Box>
-        <Textarea />
+        <Textarea
+          value={reWriteComment}
+          onChange={(e) => setReWriteComment(e.target.value)}
+        />
       </Box>
       <Box>
-        <Button>확인</Button>
+        <Button onClick={handleEditSubmit}>확인</Button>
         <Button>취소</Button>
       </Box>
     </Box>

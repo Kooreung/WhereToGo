@@ -22,8 +22,8 @@ public class CommentService {
         return mapper.selectByPostId(postId);
     }
 
-    public void edit() {
-        mapper.update();
+    public void edit(Comment comment) {
+        mapper.update(comment);
     }
 
     public void delete() {

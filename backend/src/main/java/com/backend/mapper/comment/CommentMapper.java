@@ -4,6 +4,7 @@ import com.backend.domain.comment.Comment;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -22,7 +23,10 @@ public interface CommentMapper {
             """)
     List<Comment> selectByPostId(Integer postId);
 
-    void update();
+    @Update("""
+            UPDATE Comment SET comment=#{comment} WHERE postId=#{postId}
+            """)
+    void update(Comment comment);
 
     void delete();
 
