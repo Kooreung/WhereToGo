@@ -68,7 +68,7 @@ export function PostView() {
               <Button onClick={() => navigate(`/post/${postId}/edit`)}>
                 수정
               </Button>
-              <Button>취소</Button>
+              <Button>삭제</Button>
             </Box>
           </Box>
         </Box>

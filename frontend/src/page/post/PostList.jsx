@@ -17,13 +17,14 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { GuideLineMediumBanner } from "../../CustomStyles.jsx";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 function PostList() {
   const navigate = useNavigate();
+  const { postId } = useParams();
   const [postList, setPostList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   const [searchParams] = useSearchParams();
@@ -91,7 +92,7 @@ function PostList() {
                 {postList.map((post) => (
                   <Tr
                     key={post.postId}
-                    onClick={() => navigate(`/post/${postId}`)}
+                    onClick={() => navigate(`/post/${post.postId}`)}
                     cursor={"pointer"}
                   >
                     <Td>

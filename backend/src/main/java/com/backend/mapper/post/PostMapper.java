@@ -20,7 +20,7 @@ public interface PostMapper {
 
     // 게시글 조회 매퍼
     @Select("""
-            SELECT p.postid, p.title, p.content, p.createdate, p.view
+            SELECT p.postid, p.title, p.content, p.createdate, p.view, m.nickname
             FROM Post p JOIN Member m
             ON p.memberid = m.memberid
             WHERE p.postid = #{postId}
