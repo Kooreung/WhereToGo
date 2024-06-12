@@ -86,6 +86,8 @@ function PostWrite() {
                 등록
               </Button>
               <Button>취소</Button>
+              {/* Todo 게시글 작성 중 취소 필요 */}
+              {/* Todo 게시글 작성 중 임시저장 필요 */}
             </Box>
           </Box>
         </Box>

@@ -20,7 +20,7 @@ public interface PostMapper {
 
     // 게시글 조회 매퍼
     @Select("""
-            SELECT p.postid, p.title, p.content, p.createdate, p.view
+            SELECT p.postid, p.title, p.content, p.createdate, p.view, m.nickname
             FROM Post p JOIN Member m
             ON p.memberid = m.memberid
             WHERE p.postid = #{postId}
@@ -29,20 +29,48 @@ public interface PostMapper {
 
     // 게시글 리스트 매퍼
     @Select("""
+            <script>
             SELECT p.postid, p.title, p.content, m.nickname
             FROM Post p JOIN Member m ON p.memberid = m.memberid
+            <where>
+                <if test="searchType != null">
+                    <bind name="pattern" value="'%' + searchKeyword + '%'"/>
+                    <if test="searchType =='all' || searchType =='title'">
+                        OR p.title LIKE #{pattern}
+                        OR p.content LIKE #{pattern}
+                    </if>
+                    <if test="searchType == 'all' || searchType == 'nickName'">
+                        OR m.nickname LIKE #{pattern}
+                    </if>
+                </if>
+            </where>
             GROUP BY p.postid
             ORDER BY p.postid DESC
             LIMIT #{offset}, 5
+            </script>
             """)
-    List<Post> selectAllPost(Integer offset);
+    List<Post> selectAllPost(Integer offset, String searchType, String searchKeyword);
 
     // 게시글 리스트 카운트 매퍼
     @Select("""
+            <script>
             SELECT COUNT(p.postid)
             FROM Post p JOIN Member m ON p.memberid = m.memberid
+                <where>
+                    <if test="searchType != null">
+                        <bind name="pattern" value="'%' + searchKeyword + '%'"/>
+                        <if test="searchType =='all' || searchType =='title'">
+                            OR p.title LIKE #{pattern}
+                            OR p.content LIKE #{pattern}
+                        </if>
+                        <if test="searchType == 'all' || searchType == 'nickName'">
+                            OR m.nickname LIKE #{pattern}
+                        </if>
+                    </if>
+                </where>
+            </script>
             """)
-    Integer countAllPost();
+    Integer countAllPost(String searchType, String searchKeyword);
 
     // 게시글 수정 매퍼
     @Update("""

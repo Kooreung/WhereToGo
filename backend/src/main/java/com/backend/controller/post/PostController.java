@@ -41,8 +41,10 @@ public class PostController {
     // 게시글 목록 Controller
     @GetMapping("list")
     public Map<String, Object> postList(
-            @RequestParam(defaultValue = "1") Integer page) {
-        return postService.list(page);
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(value = "type", required = false) String searchType,
+            @RequestParam(value = "keyword", defaultValue = "") String searchKeyword) {
+        return postService.list(page, searchType, searchKeyword);
     }
 
     // 게시글 MD추천 목록 Controller
