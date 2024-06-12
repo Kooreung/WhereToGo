@@ -55,7 +55,13 @@ public class MemberController {
 
     // 로그인
     @PostMapping("login")
-    public void login() {
+    public ResponseEntity login(@RequestBody Member member) {
+        Map<String, Object> map = service.getToken(member);
+        
+        if (map == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(map);
     }
 
     // 회원 수정
