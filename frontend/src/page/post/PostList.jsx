@@ -74,60 +74,67 @@ function PostList() {
                 >
                   <Td>
                     <Grid
-                      {...GuideLineMediumBanner}
+                      bg={"lightblue"}
                       w={"700"}
                       h={"200"}
                       templateColumns={"repeat(6, 1fr)"}
-                      templateRows={"repeat(4, 1fr)"}
+                      templateRows={"repeat(3, 1fr)"}
                     >
                       <GridItem
                         colSpan={2}
                         rowSpan={1}
                         border={"1px dotted yellow"}
+                        alignContent={"center"}
                       >
-                        {post.title}
+                        <Flex>닉네임 {post.nickName}</Flex>
                       </GridItem>
                       <GridItem
-                        colSpan={2}
+                        colSpan={3}
                         rowSpan={1}
                         border={"1px dotted yellow"}
+                        alignContent={"center"}
                       >
-                        {post.nickName}
+                        <Flex>제목 {post.title}</Flex>
                       </GridItem>
                       <GridItem
                         colSpan={1}
                         rowSpan={1}
                         border={"1px dotted yellow"}
+                        alignContent={"center"}
                       >
-                        {post.view}
-                      </GridItem>
-                      <GridItem
-                        colSpan={1}
-                        rowSpan={2}
-                        border={"1px dotted yellow"}
-                      >
-                        {post.like}
+                        <Flex>조회수 {post.view}</Flex>
                       </GridItem>
                       <GridItem
                         colSpan={2}
                         rowSpan={3}
                         border={"1px dotted yellow"}
+                        alignContent={"center"}
                       >
-                        {post.thumbnail}
+                        <Flex>썸네일 {post.thumbnail}</Flex>
                       </GridItem>
                       <GridItem
                         colSpan={3}
                         rowSpan={3}
                         border={"1px dotted yellow"}
+                        alignContent={"center"}
                       >
                         {post.content}
                       </GridItem>
                       <GridItem
                         colSpan={1}
-                        rowSpan={2}
+                        rowSpan={1}
                         border={"1px dotted yellow"}
+                        alignContent={"center"}
                       >
-                        {post.comment}
+                        댓글수 {post.comment}
+                      </GridItem>
+                      <GridItem
+                        colSpan={1}
+                        rowSpan={1}
+                        border={"1px dotted yellow"}
+                        alignContent={"center"}
+                      >
+                        좋아요 {post.like}
                       </GridItem>
                     </Grid>
                   </Td>
