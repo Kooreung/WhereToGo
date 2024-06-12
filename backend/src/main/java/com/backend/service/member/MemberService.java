@@ -19,6 +19,7 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,7 @@ public class MemberService {
     final JwtEncoder jwtEncoder;
     //    private MemberProfile memberProfile;
     final S3Client s3Client;
-    
+
     @Value("${aws.s3.bucket.name}")
     String bucketName;
 
@@ -197,5 +198,40 @@ public class MemberService {
         }
 
         return true;
+    }
+
+    public Map<String, Object> getToken(Member member) {
+
+        Map<String, Object> result = null;
+
+        // db 에서 해당 email 가져와서
+        Member db = mapper.selectByEmail(member.getEmail());
+
+        // 해당 email 이 null 이 아니면 실행
+        if (db != null) {
+            // db 에 저장된 password 와 사용자가 입력한 password 를 비교해서 같으면 실행
+            if (passwordEncoder.matches(member.getPassword(), db.getPassword())) {
+                result = new HashMap<>();
+                String token = "";
+                // 현재 시간 가져옴
+                Instant now = Instant.now();
+
+                JwtClaimsSet claims = JwtClaimsSet.builder()
+                        .issuer("self") // 토큰 발급자
+                        .issuedAt(now) //  토큰 발급 시간
+                        .expiresAt(now.plusSeconds(60 * 60 * 24 * 7)) // 토큰 만료 시간
+                        .subject(db.getMemberId().toString()) // unique 한 값 사용
+                        .claim("scope", "") // 권한
+                        .claim("nickName", db.getNickName())
+                        .build();
+
+                // 인코딩 된 jwk 변수에 할당
+                token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+
+                result.put("token", token);
+            }
+        }
+
+        return result;
     }
 }

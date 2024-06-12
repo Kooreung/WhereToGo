@@ -3,7 +3,6 @@ package com.backend.controller.member;
 import com.backend.domain.member.Member;
 import com.backend.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -53,7 +52,13 @@ public class MemberController {
 
     // 로그인
     @PostMapping("login")
-    public void login() {
+    public ResponseEntity login(@RequestBody Member member) {
+        Map<String, Object> map = service.getToken(member);
+        
+        if (map == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(map);
     }
 
     // 회원 수정
@@ -69,7 +74,7 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
-    
+
 
     // 회원 목록 보기
     @GetMapping("list")
