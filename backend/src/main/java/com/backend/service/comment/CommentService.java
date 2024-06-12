@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(rollbackFor = Exception.class)
 @RequiredArgsConstructor
@@ -16,8 +18,8 @@ public class CommentService {
         mapper.insert(comment);
     }
 
-    public void list() {
-        mapper.selectByPostId();
+    public List<Comment> list(Integer postId) {
+        return mapper.selectByPostId(postId);
     }
 
     public void edit() {
