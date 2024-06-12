@@ -25,7 +25,9 @@ function Navbar() {
         <Center onClick={() => navigate("/signup")} cursor={"pointer"}>
           회원가입
         </Center>
-        <Box>로그인/아웃</Box>
+        <Center onClick={() => navigate("/login")} cursor={"pointer"}>
+          로그인
+        </Center>
         <Center onClick={() => navigate("/memberinfo")} cursor={"pointer"}>
           프로필
         </Center>

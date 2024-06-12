@@ -47,3 +47,7 @@ ALTER TABLE Member
 
 ALTER TABLE Member
     MODIFY memberid INT AUTO_INCREMENT PRIMARY KEY;
+
+DELETE
+FROM Member
+WHERE memberid = 91;

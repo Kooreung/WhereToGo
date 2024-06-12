@@ -57,7 +57,7 @@ public class MemberController {
     @PostMapping("login")
     public ResponseEntity login(@RequestBody Member member) {
         Map<String, Object> map = service.getToken(member);
-        
+
         if (map == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -86,20 +86,20 @@ public class MemberController {
         return service.memberList();
     }
 
-    // 회원 정보 보기
-    @GetMapping("{memberId}")
-    public ResponseEntity getMemberId(@PathVariable int memberId,
-                                      Authentication authentication) {
-//        if (!service.hasAccess(memberId, authentication)) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//        }
+    // 마이페이지
+    @GetMapping("memberinfo")
+    public ResponseEntity getMemberId(Authentication authentication) {
+        Integer memberId = Integer.parseInt(authentication.getName());
+        if (!service.hasAccess(memberId, authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
 
-        Map<String, Object> member = service.getById(memberId);
+        Map<String, Object> dbmember = service.getById(memberId);
 
-        if (member == null) {
+        if (dbmember == null) {
             return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok(member);
+            return ResponseEntity.ok(dbmember);
         }
     }
 

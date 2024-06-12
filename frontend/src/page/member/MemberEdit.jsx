@@ -36,7 +36,11 @@ function MemberEdit(props) {
   const { isOpen, onClose, onOpen } = useDisclosure();
   useEffect(() => {
     axios
-      .get(`/api/member/${id}`)
+      .get(`/api/member/memberinfo`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       .then((res) => {
         const member1 = res.data.member;
         setMember({ ...member1, password: "" });

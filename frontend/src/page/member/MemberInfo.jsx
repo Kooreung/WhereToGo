@@ -13,18 +13,23 @@ import axios from "axios";
 
 export function MemberInfo(props) {
   const [member, setMember] = useState({});
+  const [file, setFile] = useState({});
   const toast = useToast();
   // const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     axios
-      .get(`/api/member/23`, {
-        // headers: {
-        //   Authorization: `Bearer ${localStorage.getItem("token")}`,
-        // },
+      .get(`/api/member/memberinfo`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       })
-      .then((res) => setMember(res.data.member))
+      .then((res) => {
+        setMember(res.data.member);
+        setFile(res.data.profile);
+        console.log(res.data.profile.src);
+      })
       .catch((err) => {
         if (err.response.status === 404) {
           toast({
@@ -52,7 +57,7 @@ export function MemberInfo(props) {
       <Box mt="100">
         <Avatar
           name="defaultProfile"
-          src="https://study9990924.s3.ap-northeast-2.amazonaws.com/prj2/15/Desktop Wallpaper Full HD Laptop Backgrounds Creation.jpeg"
+          src={file.src}
           w="200px" // 원하는 너비 값으로 조정
           h="200px" // 원하는 높이 값으로 조정
         />
@@ -71,7 +76,7 @@ export function MemberInfo(props) {
           colorScheme="teal"
           size="xs"
           ml="100%"
-          onClick={() => navigate("/member/edit/23")}
+          onClick={() => navigate(`/member/edit`)}
         >
           수정
         </Button>

@@ -98,7 +98,7 @@ public interface MemberMapper {
 
     @Select("""
             SELECT profilename 
-            from profile 
+            from Profile 
             where memberid = #{memberId}
             """)
     String getProfileByMemberId(int memberId);

@@ -26,7 +26,7 @@ const router = createBrowserRouter([
       { path: "memberinfo", element: <MemberInfo /> },
       { path: "comment", element: <CommentComponent /> },
       { path: "post/write", element: <PostWrite /> },
-      { path: "member/edit/:id", element: <MemberEdit /> },
+      { path: "member/edit", element: <MemberEdit /> },
     ],
   },
 ]);
