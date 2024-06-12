@@ -10,6 +10,8 @@ import { CommentComponent } from "./component/Comment/CommentComponent.jsx";
 import { PostView } from "./page/post/PostView.jsx";
 import PostList from "./page/post/PostList.jsx";
 import { PostEdit } from "./page/post/PostEdit.jsx";
+import { MemberLogin } from "./page/member/MemberLogin.jsx";
+import LoginProvider from "./component/LoginProvider.jsx";
 
 // 라우터 설정
 const router = createBrowserRouter([
@@ -22,6 +24,7 @@ const router = createBrowserRouter([
         element: <Lobby />,
       }, // 메인페이지를 담당
       { path: "signup", element: <MemberSignup /> },
+      { path: "login", element: <MemberLogin /> },
       { path: "memberinfo", element: <MemberInfo /> },
       { path: "comment", element: <CommentComponent /> },
       { path: "post/write", element: <PostWrite /> },
@@ -34,11 +37,11 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    // <LoginProvider>
-    <ChakraProvider>
-      <RouterProvider router={router} />
-    </ChakraProvider>
-    //</LoginProvider>
+    <LoginProvider>
+      <ChakraProvider>
+        <RouterProvider router={router} />
+      </ChakraProvider>
+    </LoginProvider>
   );
 }
 

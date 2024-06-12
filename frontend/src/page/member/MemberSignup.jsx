@@ -8,6 +8,7 @@ import {
   InputGroup,
   Radio,
   RadioGroup,
+  Select,
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
@@ -23,13 +24,41 @@ const isValidPassword = (password) => passwordPattern.test(password);
 const isValidPhoneNumber = (phoneNumber) =>
   phoneNumberPattern.test(phoneNumber);
 
+// 현재 연도를 가져와서 동적으로 배열에 추가하기
+const generateYears = () => {
+  const years = [];
+  const currentYear = new Date().getFullYear();
+  for (let year = 1900; year <= currentYear; year++) {
+    years.push(year);
+  }
+  return years;
+};
+
+// 1~12월 배열에 추가하기
+const generateMonths = () => {
+  const months = [];
+  for (let month = 1; month <= 12; month++) {
+    months.push(month);
+  }
+  return months;
+};
+
+// 주어진 연도와 월을 이용해서 월의 마지막 날짜 구하기, 여기서 0은 월의 마지막 날짜를 구하기 위한 방법
+const getDaysInMonth = (year, month) => {
+  return new Date(year, month, 0).getDate();
+};
+
 export function MemberSignup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordCheck, setPasswordCheck] = useState("");
   const [name, setName] = useState("");
   const [nickName, setNickName] = useState("");
   const [gender, setGender] = useState("");
-  const [birth, setBirth] = useState("");
+  const [birthYear, setBirthYear] = useState("");
+  const [birthMonth, setBirthMonth] = useState("");
+  const [birthDay, setBirthDay] = useState("");
+  const [daysInMonth, setDaysInMonth] = useState([]);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -83,6 +112,18 @@ export function MemberSignup() {
     return () => clearTimeout(timer);
   }, [email, nickName]);
 
+  // 연도, 월을 변경할 때마다 해당 월의 일 수를 계산
+  useEffect(() => {
+    if (birthYear && birthMonth) {
+      const days = [];
+      const daysInMonth = getDaysInMonth(birthYear, birthMonth);
+      for (let day = 1; day <= daysInMonth; day++) {
+        days.push(day);
+      }
+      setDaysInMonth(days);
+    }
+  }, [birthYear, birthMonth]);
+
   function handleClick() {
     setIsEmailValid(isValidEmail(email));
     setIsPasswordValid(isValidPassword(password));
@@ -112,7 +153,8 @@ export function MemberSignup() {
         name,
         nickName,
         gender,
-        birth,
+        // 연도, 월, 일 세 개의 변수로 생년월일 형식으로 문자열 표현
+        birth: `${birthYear}-${birthMonth.toString().padStart(2, "0")}-${birthDay.toString().padStart(2, "0")}`,
         phoneNumber,
         address,
       })
@@ -133,6 +175,45 @@ export function MemberSignup() {
       .finally(() => setIsLoading(false));
   }
 
+  // 비밀번호 일치하는지?
+  const isCheckedPassword = password === passwordCheck;
+
+  // 버튼 활성화 여부 결정
+  let isDisabled = false;
+
+  // 비밀번호 일치 여부에 따라 버튼 비활성화
+  if (!isCheckedPassword) {
+    isDisabled = true;
+  }
+
+  // 하나라도 공백일 경우 비활성화
+  if (
+    !(
+      email.trim().length > 0 &&
+      password.trim().length > 0 &&
+      name.trim().length > 0 &&
+      nickName.trim().length > 0 &&
+      gender.length > 0 &&
+      birthYear &&
+      birthMonth &&
+      birthDay &&
+      phoneNumber.trim().length > 0 &&
+      address.trim().length > 0
+    )
+  ) {
+    isDisabled = true;
+  }
+
+  // 이메일, 비밀번호, 전화번호 정규식 패턴에 따라 버튼 비활성화
+  if (!isEmailValid || !isPasswordValid || !isPhoneNumberValid) {
+    isDisabled = true;
+  }
+
+  // 이메일, 닉네임 중복에 따라 버튼 비활성화
+  if (isEmailDuplicate || isNickNameDuplicate) {
+    isDisabled = true;
+  }
+
   return (
     <Box>
       <Box>회원 가입</Box>
@@ -144,7 +225,7 @@ export function MemberSignup() {
               <Input
                 value={email}
                 onChange={(e) => {
-                  setEmail(e.target.value);
+                  setEmail(e.target.value.trim());
                   setIsEmailValid(isValidEmail(e.target.value));
                 }}
               />
@@ -173,7 +254,7 @@ export function MemberSignup() {
               type="password"
               value={password}
               onChange={(e) => {
-                setPassword(e.target.value);
+                setPassword(e.target.value.trim());
                 setIsPasswordValid(isValidPassword(e.target.value));
               }}
             />
@@ -186,8 +267,24 @@ export function MemberSignup() {
         </Box>
         <Box>
           <FormControl>
+            <FormLabel>비밀번호 확인</FormLabel>
+            <Input
+              type="password"
+              value={passwordCheck}
+              onChange={(e) => setPasswordCheck(e.target.value.trim())}
+            />
+            {isCheckedPassword || (
+              <FormHelperText>비밀번호가 일치하지 않습니다.</FormHelperText>
+            )}
+          </FormControl>
+        </Box>
+        <Box>
+          <FormControl>
             <FormLabel>이름</FormLabel>
-            <Input onChange={(e) => setName(e.target.value)} />
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value.trim())}
+            />
           </FormControl>
         </Box>
         <Box>
@@ -196,7 +293,7 @@ export function MemberSignup() {
             <InputGroup>
               <Input
                 value={nickName}
-                onChange={(e) => setNickName(e.target.value)}
+                onChange={(e) => setNickName(e.target.value.trim())}
               />
             </InputGroup>
             {isNickNameDuplicate && (
@@ -215,15 +312,54 @@ export function MemberSignup() {
           <FormControl>
             <FormLabel>성별</FormLabel>
             <RadioGroup value={gender} onChange={(e) => setGender(e)}>
-              <Radio value="남성">남성</Radio>
-              <Radio value="여성">여성</Radio>
+              <Radio value="남자">남자</Radio>
+              <Radio value="여자">여자</Radio>
             </RadioGroup>
           </FormControl>
         </Box>
+        {/* 생년월일 form 변경, 유효성 판단 */}
+        {/* ***************현재보다 뒤인 생년월일 사용불가하도록 짜기*************** 아직 안했음 */}
         <Box>
           <FormControl>
             <FormLabel>생년월일</FormLabel>
-            <Input type="date" onChange={(e) => setBirth(e.target.value)} />
+            <Box display="flex" justifyContent="space-between">
+              <Select
+                placeholder="출생 연도"
+                value={birthYear}
+                onChange={(e) => setBirthYear(e.target.value)}
+                maxW="30%"
+              >
+                {generateYears().map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </Select>
+              <Select
+                placeholder="월"
+                value={birthMonth}
+                onChange={(e) => setBirthMonth(e.target.value)}
+                maxW="30%"
+              >
+                {generateMonths().map((month) => (
+                  <option key={month} value={month}>
+                    {month}
+                  </option>
+                ))}
+              </Select>
+              <Select
+                placeholder="일"
+                value={birthDay}
+                onChange={(e) => setBirthDay(e.target.value)}
+                maxW="30%"
+              >
+                {daysInMonth.map((day) => (
+                  <option key={day} value={day}>
+                    {day}
+                  </option>
+                ))}
+              </Select>
+            </Box>
           </FormControl>
         </Box>
         <Box>
@@ -232,7 +368,7 @@ export function MemberSignup() {
             <Input
               value={phoneNumber}
               onChange={(e) => {
-                setPhoneNumber(e.target.value);
+                setPhoneNumber(e.target.value.trim());
                 setIsPhoneNumberValid(isValidPhoneNumber(e.target.value));
               }}
             />
@@ -246,12 +382,19 @@ export function MemberSignup() {
         <Box>
           <FormControl>
             <FormLabel>주소</FormLabel>
-            <Input onChange={(e) => setAddress(e.target.value)} />
+            <Input
+              value={address}
+              onChange={(e) => setAddress(e.target.value.trim())}
+            />
           </FormControl>
         </Box>
       </Box>
       <Box>
-        <Button onClick={handleClick} isLoading={isLoading}>
+        <Button
+          onClick={handleClick}
+          isLoading={isLoading}
+          isDisabled={isDisabled}
+        >
           회원가입
         </Button>
       </Box>
