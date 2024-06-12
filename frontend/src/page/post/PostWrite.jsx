@@ -5,6 +5,8 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  Grid,
+  GridItem,
   Input,
   Modal,
   ModalBody,
@@ -16,7 +18,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { GuideLineMediumBanner } from "../../CustomStyles.jsx";
+import { GuideLineMediumBanner } from "../../css/CustomStyles.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -75,6 +77,9 @@ function PostWrite() {
 
   return (
     <Box>
+      <Grid templateColumns={"repeat(1,1fr)"} templateRows={"repeat(4,1fr)"}>
+        <GridItem></GridItem>
+      </Grid>
       <Flex justify={"space-evenly"}>
         <Box>
           <Box {...GuideLineMediumBanner} w={500} h={500}>

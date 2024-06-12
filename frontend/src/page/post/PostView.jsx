@@ -9,7 +9,7 @@ import {
   Spinner,
   Textarea,
 } from "@chakra-ui/react";
-import { GuideLineMediumBanner } from "../../CustomStyles.jsx";
+import { GuideLineMediumBanner } from "../../css/CustomStyles.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 

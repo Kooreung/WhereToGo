@@ -3,7 +3,7 @@ import { Box, Center, Flex } from "@chakra-ui/react";
 import {
   GuideLineLargeBanner,
   GuideLineMediumBanner,
-} from "../CustomStyles.jsx";
+} from "../css/CustomStyles.jsx";
 
 function Lobby() {
   return (

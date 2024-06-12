@@ -23,16 +23,20 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Lobby />,
-      }, // 메인페이지를 담당
+        // 메인페이지
+      },
+      // 멤버 페이지
       { path: "signup", element: <MemberSignup /> },
       { path: "login", element: <MemberLogin /> },
       { path: "memberinfo", element: <MemberInfo /> },
-      { path: "comment", element: <CommentComponent /> },
-      { path: "post/write", element: <PostWrite /> },
       { path: "member/edit", element: <MemberEdit /> },
+      // 게시글 페이지
+      { path: "post/write", element: <PostWrite /> },
+      { path: "post/:postId", element: <PostView /> },
       { path: "post/:postId/edit", element: <PostEdit /> },
       { path: "post/list", element: <PostList /> },
-      { path: "post/:postId", element: <PostView /> },
+      // 댓글 페이지
+      { path: "comment", element: <CommentComponent /> },
     ],
   },
 ]);

@@ -65,9 +65,6 @@ public class PostService {
         if (nextPageNumber <= lastPageNumber) {
             pageInfo.put("nextPageNumber", nextPageNumber);
         }
-        System.out.println("prevPageNumber = " + prevPageNumber);
-        System.out.println("nextPageNumber = " + nextPageNumber);
-        System.out.println("page = " + page);
 
         pageInfo.put("currentPageNumber", page);
         pageInfo.put("lastPageNumber", lastPageNumber);
