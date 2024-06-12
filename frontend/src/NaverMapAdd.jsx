@@ -136,7 +136,10 @@ const KakaoMapSearch = () => {
   const selectPlace = (place) => {
     if (selectedPlaces.length < 3) {
       setSelectedPlaces([...selectedPlaces, place]);
-      setSearchTerm("");
+      setSearchTerm(""); //검색인풋값 ""로 리턴
+      if (selectedPlaces.length < 1) {
+        alert("다른 장소를 추가해주세요 최대 3개.");
+      }
     } else {
       alert("최대 3개의 장소만 선택할 수 있습니다.");
     }
@@ -155,7 +158,7 @@ const KakaoMapSearch = () => {
           placeName: place.place_name,
           placeUrl: place.place_url,
           address: place.address_name,
-          category: place.category,
+          category: place.category_group_name,
           latitude: parseFloat(place.y),
           longitude: parseFloat(place.x),
         })),
@@ -197,14 +200,14 @@ const KakaoMapSearch = () => {
         <ul>
           {selectedPlaces.map((place, index) => (
             <li key={index}>
-              {place.place_name} -{" "}
-              <a
-                href={place.place_url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                상세 정보
-              </a>
+              {place.place_name} -{/*상세정보 링크*/}
+              {/*<a*/}
+              {/*  href={place.place_url}*/}
+              {/*  target="_blank"*/}
+              {/*  rel="noopener noreferrer"*/}
+              {/*>*/}
+              {/*  상세 정보*/}
+              {/*</a>*/}
               <button onClick={() => removePlace(index)}>삭제하기</button>
             </li>
           ))}
