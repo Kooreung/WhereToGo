@@ -42,11 +42,11 @@ public class PostService {
     }
 
     // 게시글 리스트 서비스
-    public Map<String, Object> list(Integer page) {
+    public Map<String, Object> list(Integer page, String searchType, String searchKeyword) {
         // 페이징 내용
         Map pageInfo = new HashMap();
 
-        Integer countAllPost = postMapper.countAllPost();
+        Integer countAllPost = postMapper.countAllPost(searchType, searchKeyword);
         Integer offset = (page - 1) * 10;
         Integer lastPageNumber = (countAllPost - 1) / 10 + 1;
         Integer leftPageNumber = (page - 1) / 10 * 10 + 1;
@@ -60,7 +60,7 @@ public class PostService {
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
 
-        return Map.of("pageInfo", pageInfo, "postList", postMapper.selectAllPost(offset));
+        return Map.of("pageInfo", pageInfo, "postList", postMapper.selectAllPost(offset, searchType, searchKeyword));
     }
 
     // 게시글 수정 서비스
