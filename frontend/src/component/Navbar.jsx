@@ -22,7 +22,9 @@ function Navbar() {
         <Box>회원 게시판</Box>
       </Center>
       <Flex gap={3}>
-        <Box>회원가입/목록</Box>
+        <Center onClick={() => navigate("/signup")} cursor={"pointer"}>
+          회원가입
+        </Center>
         <Box>로그인/아웃</Box>
         <Center onClick={() => navigate("/memberinfo")} cursor={"pointer"}>
           프로필

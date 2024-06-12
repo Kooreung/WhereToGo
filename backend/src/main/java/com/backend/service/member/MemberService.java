@@ -1,7 +1,6 @@
 package com.backend.service.member;
 
 import com.backend.domain.member.Member;
-import com.backend.domain.member.MemberProfile;
 import com.backend.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,10 +13,11 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.*;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -34,7 +34,7 @@ public class MemberService {
     final JwtEncoder jwtEncoder;
     //    private MemberProfile memberProfile;
     final S3Client s3Client;
-    
+
     @Value("${aws.s3.bucket.name}")
     String bucketName;
 
@@ -48,6 +48,7 @@ public class MemberService {
         if (newProfile != null && !newProfile.isEmpty()) {
             // 이미지가 있는 경우 S3에 저장
             String key = String.format("prj3/%s/%s", member.getMemberId(), newProfile.getOriginalFilename());
+            System.out.println(key);
             PutObjectRequest objectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(key)
@@ -57,21 +58,22 @@ public class MemberService {
             mapper.profileAdd(member.getMemberId(), newProfile.getOriginalFilename());
         } else {
             // 프로필 이미지가 없는 경우 기본 프로필 이미지 사용
-            String defaultProfileKey = "prj3/defaultProfile";
-            GetObjectRequest defaultProfileRequest = GetObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(defaultProfileKey)
-                    .build();
-            ResponseInputStream<GetObjectResponse> defaultProfileResponse = s3Client.getObject(defaultProfileRequest);
+//            String defaultProfileKey = "prj3/defaultProfile";
+//            GetObjectRequest defaultProfileRequest = GetObjectRequest.builder()
+//                    .bucket(bucketName)
+//                    .key(defaultProfileKey)
+//                    .build();
+//            ResponseInputStream<GetObjectResponse> defaultProfileResponse = s3Client.getObject(defaultProfileRequest);
+//
+//            PutObjectRequest objectRequest = PutObjectRequest.builder()
+//                    .bucket(bucketName)
+//                    .key(String.format("prj3/%s/defaultProfile", member.getMemberId()))
+//                    .acl(ObjectCannedACL.PUBLIC_READ)
+//                    .build();
+//            s3Client.putObject(objectRequest, RequestBody.fromInputStream(defaultProfileResponse, defaultProfileResponse.response().contentLength()));
 
-            PutObjectRequest objectRequest = PutObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(String.format("prj3/%s/defaultProfile", member.getMemberId()))
-                    .acl(ObjectCannedACL.PUBLIC_READ)
-                    .build();
-            s3Client.putObject(objectRequest, RequestBody.fromInputStream(defaultProfileResponse, defaultProfileResponse.response().contentLength()));
-
-            mapper.profileAdd(member.getMemberId(), "defaultProfile");
+            //수정 필요 member.getMemberId();
+            mapper.profileAdd(1, "defaultProfile");
         }
     }
 
@@ -112,11 +114,11 @@ public class MemberService {
         Member member = mapper.selectById(memberId);
         result.put("member", member);
 
-        MemberProfile memberProfile = new MemberProfile();
-        memberProfile.setName(mapper.getProfileByMemberId(memberId));
-        String src = STR."prj3/\{member.getMemberId()}/\{memberProfile.getName()}";
-        memberProfile.setSrc(src);
-        result.put("profile", memberProfile);
+//        MemberProfile memberProfile = new MemberProfile();
+//        memberProfile.setName(mapper.getProfileByMemberId(memberId));
+//        String src = STR."prj3/\{member.getMemberId()}/\{memberProfile.getName()}";
+//        memberProfile.setSrc(src);
+//        result.put("profile", memberProfile);
 
         return result;
     }

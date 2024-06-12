@@ -84,9 +84,9 @@ public class MemberController {
     @GetMapping("{memberId}")
     public ResponseEntity getMemberId(@PathVariable int memberId,
                                       Authentication authentication) {
-        if (!service.hasAccess(memberId, authentication)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+//        if (!service.hasAccess(memberId, authentication)) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+//        }
 
         Map<String, Object> member = service.getById(memberId);
 

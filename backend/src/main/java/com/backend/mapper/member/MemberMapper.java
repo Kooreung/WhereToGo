@@ -9,7 +9,7 @@ import java.util.List;
 public interface MemberMapper {
 
     @Insert("""
-            INSERT INTO Member (email, password, nick_name, name, gender, birth, address, phone_number)
+            INSERT INTO Member (email, password, nickname, name, gender, birth, address, phonenumber)
             VALUES (#{email}, #{password}, #{nickName}, #{name}, #{gender}, #{birth}, #{address}, #{phoneNumber})
             """)
     int insert(Member member);
@@ -26,37 +26,37 @@ public interface MemberMapper {
     @Select("""
             SELECT *
             FROM Member
-            WHERE nick_name = #{nickName}
+            WHERE nickname = #{nickName}
             """)
     Member selectByNickName(String nickName);
 
     @Select("""
-            SELECT member_id, 
+            SELECT memberId, 
                    email, 
                    password, 
-                   nick_name, 
+                   nickName, 
                    name, 
                    gender, 
                    birth, 
                    address, 
-                   phone_number
-            FROM member
-            where id = #{memberId};
+                   phoneNumber
+            FROM Member
+            where memberId = #{memberId};
             """)
     Member selectById(int memberId);
 
     @Select("""
-            SELECT member_id, 
+            SELECT memberid, 
                    email, 
                    password, 
-                   nick_name, 
+                   nickname, 
                    name, 
                    gender, 
                    birth, 
                    address, 
-                   phone_number
+                   phonenumber
             FROM member
-            order by member_id ASC
+            order by memberid ASC
             """)
     List<Member> selectAll();
 
@@ -64,19 +64,19 @@ public interface MemberMapper {
             UPDATE member 
             SET
                 password = #{password},
-                nick_name = #{nickName}
-            WHERE id = #{id}
+                nickname = #{nickName}
+            WHERE memberid = #{id}
             """)
     int update(Member member);
 
     @Delete("""
             DELETE FROM member
-            where id = #{memberId}
+            where memberid = #{memberId}
             """)
     int deleteByid(Integer memberId);
 
     @Insert("""
-            insert into profile(member_id,profile_name)
+            insert into Profile(memberid,profilename)
             values(#{memberId},#{profileName})
             """)
     int profileAdd(Integer memberId, String profileName);
@@ -84,30 +84,30 @@ public interface MemberMapper {
     @Select("""
             SELECT name
             from Profile
-            where member_id = #{memberId}
+            where memberid = #{memberId}
             """)
     String getProfileNameByMemberId(Integer memberId);
 
     @Delete("""
             DELETE FROM profile
-            WHERE member_id=#{boardId}
+            WHERE memberid=#{boardId}
               AND name=#{fileName}
             """)
     int deleteFileByBoardIdAndName(Integer boardId, String fileName);
 
 
     @Select("""
-            SELECT profile_name 
+            SELECT profilename 
             from profile 
-            where member_id = #{memberId}
+            where memberid = #{memberId}
             """)
     String getProfileByMemberId(int memberId);
 
 
     @Update("""
             update profile
-            set profile_name = #{profileName}
-            where member_id = #{memberId}
+            set profilename = #{profileName}
+            where memberid = #{memberId}
             """)
     int profileUpdate(Integer memberId, String profileName);
 }

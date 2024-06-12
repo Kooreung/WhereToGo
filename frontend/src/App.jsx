@@ -7,6 +7,7 @@ import PostWrite from "./page/post/PostWrite.jsx";
 import { MemberInfo } from "./page/member/MemberInfo.jsx"; // 라우터 설정
 import { MemberSignup } from "./page/member/MemberSignup.jsx";
 import { CommentComponent } from "./component/Comment/CommentComponent.jsx";
+import MemberEdit from "./page/member/MemberEdit.jsx";
 
 // 라우터 설정
 const router = createBrowserRouter([
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
       { path: "memberinfo", element: <MemberInfo /> },
       { path: "comment", element: <CommentComponent /> },
       { path: "post/write", element: <PostWrite /> },
+      { path: "member/edit/:id", element: <MemberEdit /> },
     ],
   },
 ]);
