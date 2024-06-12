@@ -33,21 +33,5 @@ VALUES (123, 123, 123, 123, 123, 123, 123, 123);
 SELECT *
 FROM Member;
 
-select *
-from Member
-where memberid = 23;
-
--- 기존 memberid 컬럼 삭제
-ALTER TABLE Member
-    DROP COLUMN memberid;
-
--- 새로운 memberid 컬럼 추가 및 자동 증가 설정
-ALTER TABLE Member
-    ADD memberid INT AUTO_INCREMENT PRIMARY KEY;
-
-ALTER TABLE Member
-    MODIFY memberid INT AUTO_INCREMENT PRIMARY KEY;
-
-DELETE
-FROM Member
-WHERE memberid = 91;
+INSERT INTO Comment (commentid, postid, memberid, comment, createdate)
+VALUES (2, 1, 2, '성공', '2021-10-21');

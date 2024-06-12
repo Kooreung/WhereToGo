@@ -4,17 +4,22 @@ import {
   FormControl,
   FormLabel,
   Input,
+  InputGroup,
+  InputRightElement,
   useToast,
 } from "@chakra-ui/react";
 import React, { useContext, useState } from "react";
 import axios from "axios";
 import { LoginContext } from "../../component/LoginProvider.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 export function MemberLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const toast = useToast();
   const account = useContext(LoginContext);
+  const [showAndPassword, setShowAndPassword] = useState(false);
 
   function handleLogin() {
     axios
@@ -53,10 +58,18 @@ export function MemberLogin() {
         <Box>
           <FormControl>
             <FormLabel>비밀번호</FormLabel>
-            <Input
-              type="password"
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <InputGroup>
+              <Input
+                type={showAndPassword ? "text" : "password"}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <InputRightElement
+                cursor="pointer"
+                onClick={() => setShowAndPassword(!showAndPassword)}
+              >
+                <FontAwesomeIcon icon={showAndPassword ? faEyeSlash : faEye} />
+              </InputRightElement>
+            </InputGroup>
           </FormControl>
         </Box>
         <Box>

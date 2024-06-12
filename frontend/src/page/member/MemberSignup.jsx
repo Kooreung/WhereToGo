@@ -51,6 +51,7 @@ const getDaysInMonth = (year, month) => {
 export function MemberSignup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordCheck, setPasswordCheck] = useState("");
   const [name, setName] = useState("");
   const [nickName, setNickName] = useState("");
   const [gender, setGender] = useState("");
@@ -174,6 +175,45 @@ export function MemberSignup() {
       .finally(() => setIsLoading(false));
   }
 
+  // 비밀번호 일치하는지?
+  const isCheckedPassword = password === passwordCheck;
+
+  // 버튼 활성화 여부 결정
+  let isDisabled = false;
+
+  // 비밀번호 일치 여부에 따라 버튼 비활성화
+  if (!isCheckedPassword) {
+    isDisabled = true;
+  }
+
+  // 하나라도 공백일 경우 비활성화
+  if (
+    !(
+      email.trim().length > 0 &&
+      password.trim().length > 0 &&
+      name.trim().length > 0 &&
+      nickName.trim().length > 0 &&
+      gender.length > 0 &&
+      birthYear &&
+      birthMonth &&
+      birthDay &&
+      phoneNumber.trim().length > 0 &&
+      address.trim().length > 0
+    )
+  ) {
+    isDisabled = true;
+  }
+
+  // 이메일, 비밀번호, 전화번호 정규식 패턴에 따라 버튼 비활성화
+  if (!isEmailValid || !isPasswordValid || !isPhoneNumberValid) {
+    isDisabled = true;
+  }
+
+  // 이메일, 닉네임 중복에 따라 버튼 비활성화
+  if (isEmailDuplicate || isNickNameDuplicate) {
+    isDisabled = true;
+  }
+
   return (
     <Box>
       <Box>회원 가입</Box>
@@ -222,6 +262,19 @@ export function MemberSignup() {
               <FormHelperText color="red">
                 비밀번호는 8-20자 사이의 영문자와 숫자를 포함해야 합니다.
               </FormHelperText>
+            )}
+          </FormControl>
+        </Box>
+        <Box>
+          <FormControl>
+            <FormLabel>비밀번호 확인</FormLabel>
+            <Input
+              type="password"
+              value={passwordCheck}
+              onChange={(e) => setPasswordCheck(e.target.value.trim())}
+            />
+            {isCheckedPassword || (
+              <FormHelperText>비밀번호가 일치하지 않습니다.</FormHelperText>
             )}
           </FormControl>
         </Box>
@@ -337,7 +390,11 @@ export function MemberSignup() {
         </Box>
       </Box>
       <Box>
-        <Button onClick={handleClick} isLoading={isLoading}>
+        <Button
+          onClick={handleClick}
+          isLoading={isLoading}
+          isDisabled={isDisabled}
+        >
           회원가입
         </Button>
       </Box>
