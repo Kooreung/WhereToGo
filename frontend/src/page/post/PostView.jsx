@@ -37,9 +37,11 @@ export function PostView() {
         <Box>
           <Box {...GuideLineMediumBanner} w={500} h={500}>
             지도
+            {/* Todo 지도 표기 필요 */}
           </Box>
           <Box {...GuideLineMediumBanner} w={500}>
             추가 dsadas
+            {/* Todo 장소 내용 표기 필요 */}
           </Box>
         </Box>
         <Box>
@@ -69,6 +71,7 @@ export function PostView() {
                 수정
               </Button>
               <Button>삭제</Button>
+              {/* Todo 게시글 삭제 기능 필요 */}
             </Box>
           </Box>
         </Box>

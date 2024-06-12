@@ -49,11 +49,13 @@ function PostList() {
     }
   }, [searchParams]);
 
-  // const pageNumbers = [];
-  // for (let i = pageInfo.leftpageNumber; i < pageInfo.rightPageNumber; i++) {
-  //   pageNumbers.push(i);
-  // }
+  // 페이지 수
+  const pageNumbers = [];
+  for (let i = pageInfo.leftPageNumber; i < pageInfo.rightPageNumber; i++) {
+    pageNumbers.push(i);
+  }
 
+  // 검색 클릭 시 url
   function handleSearchClick() {
     navigate(`/post/list/?type=${searchType}&keyword=${searchKeyword}`);
   }
@@ -87,6 +89,7 @@ function PostList() {
         {postList.length > 0 && (
           <Box>
             <Table>
+              {/* Todo 조회수, 좋아요, 댓글수, 썸네일 JOIN */}
               <Thead></Thead>
               <Tbody>
                 {postList.map((post) => (
@@ -183,9 +186,11 @@ function PostList() {
                   <option value={"title"}>제목</option>
                   <option value={"nickName"}>닉네임</option>
                   <option value={"place"}>지역</option>
+                  {/* Todo 지역 검색 키워드 필요 */}
                 </Select>
               </Box>
               <Box>
+                {/* Todo 검색에 엔터 적용 필요 */}
                 <Input
                   value={searchKeyword}
                   onChange={(e) => setSearchKeyword(e.target.value)}
@@ -202,6 +207,14 @@ function PostList() {
         </Box>
 
         {/* 페이징 */}
+        {/* Todo 페이징 작업 필요 */}
+        <Box>
+          <Center>
+            {pageNumbers.map((pageNumber) => (
+              <Button key={pageNumber}>{pageNumber}</Button>
+            ))}
+          </Center>
+        </Box>
       </Flex>
     </Center>
   );
