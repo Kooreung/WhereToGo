@@ -5,26 +5,29 @@ import com.backend.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/comment")
 public class CommentController {
     final CommentService service;
-    
+
     @PostMapping("add")
     public void getComment(Comment comment) {
         System.out.println("comment = " + comment);
         service.add(comment);
     }
 
-    @PostMapping("list/{postId}")
-    public void getCommentList() {
-        service.list();
+    @GetMapping("list/{postId}")
+    public List<Comment> getCommentList(@PathVariable Integer postId) {
+        return service.list(postId);
     }
 
     @PutMapping("edit")
-    public void getCommentEdit() {
-        service.edit();
+    public void getCommentEdit(@RequestBody Comment comment) {
+        System.out.println("comment = " + comment);
+        service.edit(comment);
     }
 
     @DeleteMapping("delete")
