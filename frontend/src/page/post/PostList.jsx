@@ -17,14 +17,19 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { GuideLineMediumBanner } from "../../CustomStyles.jsx";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleLeft,
+  faAngleRight,
+  faAnglesLeft,
+  faAnglesRight,
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
 
 function PostList() {
   const navigate = useNavigate();
-  const { postId } = useParams();
   const [postList, setPostList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   const [searchParams] = useSearchParams();
@@ -51,13 +56,13 @@ function PostList() {
 
   // 페이지 수
   const pageNumbers = [];
-  for (let i = pageInfo.leftPageNumber; i < pageInfo.rightPageNumber; i++) {
+  for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {
     pageNumbers.push(i);
   }
 
   // 검색 클릭 시 url
   function handleSearchClick() {
-    navigate(`/post/list/?type=${searchType}&keyword=${searchKeyword}`);
+    navigate(`/post/list?type=${searchType}&keyword=${searchKeyword}`);
   }
 
   // 페이지 버튼 클릭 시
@@ -216,6 +221,19 @@ function PostList() {
         {/* Todo 페이징 작업 필요 */}
         <Box>
           <Center>
+            {pageInfo.prevPageNumber && (
+              <>
+                <Button onClick={() => handlePageButtonClick(1)}>
+                  <FontAwesomeIcon icon={faAnglesLeft} />
+                </Button>
+                <Button
+                  onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
+                >
+                  <FontAwesomeIcon icon={faAngleLeft} />
+                </Button>
+              </>
+            )}
+
             {pageNumbers.map((pageNumber) => (
               <Button
                 key={pageNumber}
@@ -224,6 +242,21 @@ function PostList() {
                 {pageNumber}
               </Button>
             ))}
+
+            {pageInfo.nextPageNumber && (
+              <>
+                <Button
+                  onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+                >
+                  <FontAwesomeIcon icon={faAngleRight} />
+                </Button>
+                <Button
+                  onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
+                >
+                  <FontAwesomeIcon icon={faAnglesRight} />
+                </Button>
+              </>
+            )}
           </Center>
         </Box>
       </Flex>
