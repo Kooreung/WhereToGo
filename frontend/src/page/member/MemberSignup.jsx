@@ -30,6 +30,7 @@ import {
 import DaumPostcodeEmbed from "react-daum-postcode";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "react-router-dom";
 
 export function MemberSignup() {
   const [email, setEmail] = useState("");
@@ -453,12 +454,22 @@ export function MemberSignup() {
         </Box>
         <Box>
           <Button
+            w={500}
             onClick={handleClick}
             isLoading={isLoading}
             isDisabled={isDisabled}
           >
             회원가입
           </Button>
+        </Box>
+        <Box>
+          이미 회원이신가요? &nbsp;
+          <Link
+            to="/login"
+            style={{ textDecoration: "underline", color: "dodgerblue" }}
+          >
+            로그인
+          </Link>
         </Box>
       </Box>
     </Center>
