@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -20,10 +20,12 @@ import {
 import { GuideLineMediumBanner } from "../../css/CustomStyles.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { LoginContext } from "../../component/LoginProvider.jsx";
 
 export function PostView() {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
+  const account = useContext(LoginContext);
   const navigate = useNavigate();
   const toast = useToast();
   const {
@@ -50,7 +52,7 @@ export function PostView() {
   function handleClickDelete() {
     axios
       .delete(`/api/post/${postId}`)
-      .then((res) => {
+      .then(() => {
         navigate(`/post/list`);
         toast({
           status: "success",
@@ -98,14 +100,16 @@ export function PostView() {
               </FormControl>
             </Box>
           </Box>
-          <Box>
-            <Box align={"left"} my={10}>
-              <Button onClick={() => navigate(`/post/${postId}/edit`)}>
-                수정
-              </Button>
-              <Button onClick={onModalOpenOfDelete}>삭제</Button>
+          {account.hasAccess(post.memberId) && (
+            <Box>
+              <Box align={"left"} my={10}>
+                <Button onClick={() => navigate(`/post/${postId}/edit`)}>
+                  수정
+                </Button>
+                <Button onClick={onModalOpenOfDelete}>삭제</Button>
+              </Box>
             </Box>
-          </Box>
+          )}
         </Box>
       </Flex>
 

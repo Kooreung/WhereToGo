@@ -5,6 +5,7 @@ import { jwtDecode } from "jwt-decode"; // 여러 컴포넌트가 현재 로그�
 export const LoginContext = createContext(null);
 
 export function LoginProvider({ children }) {
+  const [memberId, setMemberId] = useState("");
   const [email, setEmail] = useState("");
   const [nickName, setNickName] = useState("");
   // 로그인 한 날짜(시간) state 에 저장
@@ -13,6 +14,11 @@ export function LoginProvider({ children }) {
   // 로그인 유무 확인 함수
   function isLoggedIn() {
     return Date.now() < expired * 1000;
+  }
+
+  // 게시글 권한 확인 함수
+  function hasAccess(param) {
+    return memberId == param;
   }
 
   function hasEmail(param) {
@@ -27,6 +33,7 @@ export function LoginProvider({ children }) {
     setExpired(payload.exp);
     setEmail(payload.sub);
     setNickName(payload.nickName);
+    setMemberId(payload.memberId);
   }
 
   function logout() {
@@ -45,6 +52,7 @@ export function LoginProvider({ children }) {
         logout: logout,
         isLoggedIn: isLoggedIn,
         hasEmail: hasEmail,
+        hasAccess: hasAccess,
       }}
     >
       {children}
