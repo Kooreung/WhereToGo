@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Box, Button, Text } from "@chakra-ui/react";
 import CommentEdit from "./CommentEdit.jsx";
 import axios from "axios";
+import { LoginContext } from "../LoginProvider.jsx";
 
 function CommentItem({ comment }) {
   const [isEditing, setIsEditing] = useState(false);
+  const account = useContext(LoginContext);
 
   function handleRemoveSubmit() {
     axios.delete("/api/comment/delete", {
@@ -17,6 +19,7 @@ function CommentItem({ comment }) {
       {isEditing || (
         <Box>
           <Box>
+            <Text>{comment.memberId}</Text>
             <Text>{comment.comment}</Text>
           </Box>
           <Button onClick={() => setIsEditing(true)}>수정</Button>

@@ -3,6 +3,7 @@ package com.backend.service.post;
 import com.backend.domain.post.Post;
 import com.backend.mapper.post.PostMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,5 +82,16 @@ public class PostService {
     // 게시글 수정 서비스
     public void edit(Post post) {
         postMapper.update(post);
+    }
+
+    public Map<String, Object> postLike(Map<String, Object> like, Authentication authentication) {
+        Integer postId = (Integer) like.get("postId");
+        Integer memberId = Integer.valueOf(authentication.getName());
+
+        int count = postMapper.deleteLike(postId, memberId);
+        if (count == 0) {
+            postMapper.insertLike(postId, memberId);
+        }
+        return like;
     }
 }

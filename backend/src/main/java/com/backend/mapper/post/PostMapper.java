@@ -1,10 +1,7 @@
 package com.backend.mapper.post;
 
 import com.backend.domain.post.Post;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -79,4 +76,17 @@ public interface PostMapper {
             WHERE postid=#{postId}
             """)
     void update(Post post);
+
+    @Delete("""
+            DELETE FROM likes
+            WHERE postid=#{postId} AND memberid=#{memberId}
+            """)
+    int deleteLike(Integer postId, Integer memberId);
+
+    @Insert("""
+            INSERT INTO likes (postid, memberid)
+            VALUES (#{postId}, #{memberId})
+            """)
+    int insertLike(Integer postId, Integer memberId);
+
 }

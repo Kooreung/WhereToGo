@@ -8,8 +8,8 @@ import java.util.List;
 @Mapper
 public interface CommentMapper {
     @Insert("""
-            INSERT INTO comment(comment, postid)
-            VALUES (#{comment},#{postId})
+            INSERT INTO comment(comment, postid,memberid)
+            VALUES (#{comment},#{postId},#{memberId})
             """)
     void insert(Comment comment);
 

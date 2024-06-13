@@ -4,6 +4,8 @@ import com.backend.domain.post.Post;
 import com.backend.service.post.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -72,7 +74,10 @@ public class PostController {
 
     // 게시글 좋아요 Controller
     @PutMapping("like")
-    public void postLike() {
+    @PreAuthorize("isAuthenticated()")
+    public Map<String, Object> postLike(@RequestBody Map<String, Object> like, Authentication authentication) {
+        System.out.println("like = " + like);
+        return postService.postLike(like, authentication);
     }
 
     // 게시글 좋아요 목록 Controller

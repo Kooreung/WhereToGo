@@ -13,11 +13,15 @@ import { GuideLineMediumBanner } from "../../CustomStyles.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import CommentComponent from "../../component/Comment/CommentComponent.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart as emptyHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as fullHeart } from "@fortawesome/free-regular-svg-icons";
 
 export function PostView() {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const navigate = useNavigate();
+  const [like, setLike] = useState({ like: false, count: 0 });
 
   useEffect(() => {
     axios
@@ -30,6 +34,10 @@ export function PostView() {
 
   if (post === null || post === undefined) {
     return <Spinner />;
+  }
+
+  function handleLikeCount() {
+    axios.put("/api/post/like", { postId: post.postId });
   }
 
   return (
@@ -66,6 +74,17 @@ export function PostView() {
               </FormControl>
             </Box>
           </Box>
+          {/*좋아요*/}
+          <Flex justifyContent="center" alignItems="center" my={1}>
+            <Box onClick={handleLikeCount}>
+              {like.like && <FontAwesomeIcon icon={emptyHeart} />}
+              {like.like || <FontAwesomeIcon icon={fullHeart} />}
+            </Box>
+          </Flex>
+          <Flex justifyContent="center" alignItems="center">
+            <Box>like {like.count}</Box>
+          </Flex>
+          {/*댓글*/}
           <CommentComponent postId={post.postId} />
           <Box>
             <Box align={"left"} my={10}>
