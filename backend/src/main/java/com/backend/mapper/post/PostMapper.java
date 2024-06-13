@@ -1,10 +1,7 @@
 package com.backend.mapper.post;
 
 import com.backend.domain.post.Post;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -79,4 +76,11 @@ public interface PostMapper {
             WHERE postid=#{postId}
             """)
     void update(Post post);
+
+    // 게시글 삭제 매퍼
+    @Delete("""
+            DELETE FROM Post
+            WHERE postid=#{postId}
+            """)
+    Integer deleteById(Integer postId);
 }

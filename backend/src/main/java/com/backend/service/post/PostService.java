@@ -79,4 +79,9 @@ public class PostService {
     public void edit(Post post) {
         postMapper.update(post);
     }
+
+    // 게시글 삭제 서비스
+    public void remove(Integer postId) {
+        postMapper.deleteById(postId);
+    }
 }

@@ -6,8 +6,16 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Spinner,
   Textarea,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { GuideLineMediumBanner } from "../../css/CustomStyles.jsx";
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,6 +25,12 @@ export function PostView() {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const navigate = useNavigate();
+  const toast = useToast();
+  const {
+    isOpen: isModalOpenOfDelete,
+    onOpen: onModalOpenOfDelete,
+    onClose: onModalCloseOfDelete,
+  } = useDisclosure();
 
   useEffect(() => {
     axios
@@ -27,8 +41,27 @@ export function PostView() {
       .catch();
   }, []);
 
+  // 게시글 번호 확인
   if (post === null || post === undefined) {
     return <Spinner />;
+  }
+
+  // 게시글 삭제 클릭 시
+  function handleClickDelete() {
+    axios
+      .delete(`/api/post/${postId}`)
+      .then((res) => {
+        navigate(`/post/list`);
+        toast({
+          status: "success",
+          position: "bottom",
+          description: "게시글이 삭제되었습니다.",
+        });
+      })
+      .catch()
+      .finally(() => {
+        onModalCloseOfDelete();
+      });
   }
 
   return (
@@ -70,12 +103,23 @@ export function PostView() {
               <Button onClick={() => navigate(`/post/${postId}/edit`)}>
                 수정
               </Button>
-              <Button>삭제</Button>
-              {/* Todo 게시글 삭제 기능 필요 */}
+              <Button onClick={onModalOpenOfDelete}>삭제</Button>
             </Box>
           </Box>
         </Box>
       </Flex>
+
+      <Modal isOpen={isModalOpenOfDelete} onClose={onModalCloseOfDelete}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>게시글 삭제</ModalHeader>
+          <ModalBody>게시글을 삭제하시겠습니까?</ModalBody>
+          <ModalFooter>
+            <Button onClick={handleClickDelete}>삭제</Button>
+            <Button onClick={onModalCloseOfDelete}>취소</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }

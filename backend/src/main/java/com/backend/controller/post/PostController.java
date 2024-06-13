@@ -59,7 +59,8 @@ public class PostController {
 
     // 게시글 삭제 Controller
     @DeleteMapping("{postId}")
-    public void postDelete() {
+    public void postDelete(@PathVariable Integer postId) {
+        postService.remove(postId);
     }
 
     // 게시글 수정 Controller
