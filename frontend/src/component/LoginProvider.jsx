@@ -9,6 +9,7 @@ export function LoginProvider({ children }) {
   const [nickName, setNickName] = useState("");
   // 로그인 한 날짜(시간) state 에 저장
   const [expired, setExpired] = useState(0);
+  const [memberId, setMemberId] = useState("");
 
   // 로그인 유무 확인 함수
   function isLoggedIn() {
@@ -17,6 +18,10 @@ export function LoginProvider({ children }) {
 
   function hasEmail(param) {
     return email === param;
+  }
+
+  function hasAccess(param) {
+    return memberId == param;
   }
 
   function login(token) {
@@ -45,6 +50,7 @@ export function LoginProvider({ children }) {
         logout: logout,
         isLoggedIn: isLoggedIn,
         hasEmail: hasEmail,
+        hasAccess: hasAccess,
       }}
     >
       {children}

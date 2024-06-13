@@ -1,13 +1,28 @@
 import React, { useState } from "react";
-import { Box, Button, Textarea } from "@chakra-ui/react";
+import { Box, Button, Textarea, useToast } from "@chakra-ui/react";
 import axios from "axios";
 
-function CommentWrite({ postId }) {
+function CommentWrite({ postId, isTransition, setIsTransition }) {
   const [comment, setComment] = useState("");
+  const toast = useToast();
   console.log("comment", comment);
 
   function handleSubmitComment() {
-    axios.post("/api/comment/add", { postId, comment });
+    setIsTransition(true);
+    axios
+      .post("/api/comment/add", { postId, comment })
+      .then((res) => {
+        toast({
+          status: "success",
+          position: "top",
+          description: "등록완료",
+          isClosable: true,
+        });
+      })
+      .catch((err) => {})
+      .finally(() => {
+        setIsTransition(false);
+      });
   }
 
   return (
@@ -19,7 +34,9 @@ function CommentWrite({ postId }) {
         />
       </Box>
       <Box>
-        <Button onClick={handleSubmitComment}>작성</Button>
+        <Button onClick={handleSubmitComment} isLoading={isTransition}>
+          작성
+        </Button>
       </Box>
     </Box>
   );

@@ -42,3 +42,4 @@ INSERT INTO comment (commentid, postid, memberid, comment, createdate)
 VALUES (2, 1, 2, '성공', '2021-10-21');
 
 DESC likes;
+DESC post;

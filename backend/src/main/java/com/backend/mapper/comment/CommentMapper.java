@@ -30,4 +30,10 @@ public interface CommentMapper {
             """)
     void delete(Comment comment);
 
+    @Select("""
+            SELECT *
+            FROM comment
+            WHERE commentid = #{commentId}
+            """)
+    Comment selectById(Integer commentId);
 }

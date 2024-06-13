@@ -31,4 +31,15 @@ public class CommentService {
     public void delete(Comment comment, Authentication authentication) {
         mapper.delete(comment);
     }
+
+    public boolean hasAccess(Comment comment, Authentication authentication) {
+        Comment db = mapper.selectById(comment.getCommentId());
+        if (db == null) {
+            return false;
+        }
+        if (!authentication.getName().equals(db.getMemberId().toString())) {
+            return false;
+        }
+        return true;
+    }
 }

@@ -3,6 +3,7 @@ package com.backend.controller.comment;
 import com.backend.domain.comment.Comment;
 import com.backend.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,11 @@ public class CommentController {
     @PreAuthorize("isAuthenticated()")
     public void getCommentEdit(@RequestBody Comment comment, Authentication authentication) {
         System.out.println("comment = " + comment);
-        service.edit(comment, authentication);
+        if (service.hasAccess(comment, authentication)) {
+            service.edit(comment, authentication);
+        } else {
+            throw new AccessDeniedException("Access denied");
+        }
     }
 
     @DeleteMapping("delete")
