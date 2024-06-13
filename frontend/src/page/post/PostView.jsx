@@ -40,7 +40,16 @@ export function PostView() {
       .then((res) => {
         setPost(res.data.post);
       })
-      .catch();
+      .catch((err) => {
+        navigate("/post/list")
+        if (err.response.status === 404) {
+          toast({
+            status: "error",
+            description: "해당 게시물이 존재하지 않습니다.",
+            position: "bottom",
+          });
+        }
+      });
   }, []);
 
   // 게시글 번호 확인
@@ -60,7 +69,13 @@ export function PostView() {
           description: "게시글이 삭제되었습니다.",
         });
       })
-      .catch()
+      .catch(() => {
+        toast({
+          status: "error",
+          position: "bottom",
+          description: "게시글 삭제를 실패하였습니다.",
+        });
+      })
       .finally(() => {
         onModalCloseOfDelete();
       });
@@ -100,7 +115,7 @@ export function PostView() {
               </FormControl>
             </Box>
           </Box>
-          {account.hasAccess(post.memberId) && (
+          {/*{account.hasAccess(post.memberId) && (*/}
             <Box>
               <Box align={"left"} my={10}>
                 <Button onClick={() => navigate(`/post/${postId}/edit`)}>
@@ -109,7 +124,6 @@ export function PostView() {
                 <Button onClick={onModalOpenOfDelete}>삭제</Button>
               </Box>
             </Box>
-          )}
         </Box>
       </Flex>
 

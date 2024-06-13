@@ -36,7 +36,7 @@ public class PostService {
     }
 
     // 게시글 조회 서비스
-    public Map<String, Object> get(Integer postId) {
+    public Map<String, Object> get(Integer postId, Authentication authentication) {
         Post post = postMapper.selectById(postId);
         Map<String, Object> result = new HashMap<>();
         result.put("post", post);
@@ -83,8 +83,16 @@ public class PostService {
         postMapper.update(post);
     }
 
+    // 게시글 수정 시 권한 체크 서비스
+    public boolean hasAccess(Integer postId, Authentication authentication) {
+        Post post = postMapper.selectById(postId);
+        System.out.println(Integer.valueOf(authentication.getName()));
+        return post.getMemberId().equals(Integer.valueOf(authentication.getName()));
+    }
+
     // 게시글 삭제 서비스
     public void remove(Integer postId) {
         postMapper.deleteById(postId);
     }
+
 }

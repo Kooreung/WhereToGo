@@ -41,6 +41,7 @@ export function LoginProvider({ children }) {
     setExpired(0);
     setEmail("");
     setNickName("");
+    setMemberId("");
   }
 
   return (
@@ -48,6 +49,7 @@ export function LoginProvider({ children }) {
       value={{
         email: email,
         nickName: nickName,
+        memberId: memberId,
         login: login,
         logout: logout,
         isLoggedIn: isLoggedIn,

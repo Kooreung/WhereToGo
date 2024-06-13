@@ -75,8 +75,24 @@ export function PostEdit() {
           description: "게시글이 수정되었습니다.",
         });
       })
-      .catch()
-      .finally(() => setLoading(false));
+      .catch((err) => {
+        if (err.response.status === 400) {
+          toast({
+            status: "error",
+            position: "bottom",
+            description: "게시글 수정에 실패하였습니다.",
+          });
+        }
+        if (err.response.status === 401) {
+          toast({
+            status: "error",
+            position: "bottom",
+            description: "게시글 수정에 실패하였습니다.",
+          });
+        }
+
+      })
+      .finally(() => onModalCloseOfSave(), setLoading(false));
   }
 
   // 취소 버튼 클릭 시
@@ -85,7 +101,7 @@ export function PostEdit() {
     toast({
       status: "info",
       position: "bottom",
-      description: "게시글 작성이 취소되었습니다.",
+      description: "게시글 수정이 취소되었습니다.",
     });
   }
 
