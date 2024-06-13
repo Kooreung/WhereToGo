@@ -3,6 +3,10 @@ package com.backend.mapper.comment;
 import com.backend.domain.comment.Comment;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 @Mapper
 public interface CommentMapper {
@@ -12,9 +16,17 @@ public interface CommentMapper {
             """)
     void insert(Comment comment);
 
-    void selectByPostId();
+    @Select("""
+            SELECT *
+            FROM Comment
+            WHERE postid = #{postId}
+            """)
+    List<Comment> selectByPostId(Integer postId);
 
-    void update();
+    @Update("""
+            UPDATE Comment SET comment=#{comment} WHERE postId=#{postId}
+            """)
+    void update(Comment comment);
 
     void delete();
 

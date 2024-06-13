@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberProfile {
     private String name;
-    private int src;
+    private String src;
 }

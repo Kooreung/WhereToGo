@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -23,9 +24,11 @@ public class MemberController {
 
     // 회원가입
     @PostMapping("signup")
-    public ResponseEntity signup(@RequestBody Member member) {
+    public ResponseEntity signup(@RequestBody Member member,
+                                 @RequestParam(value = "addFile", required = false)
+                                 MultipartFile newProfile) throws IOException {
         if (service.validate(member)) {
-            service.add(member);
+            service.add(member, newProfile);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();
@@ -97,20 +100,20 @@ public class MemberController {
         return service.memberList();
     }
 
-    // 회원 정보 보기
-    @GetMapping("{memberId}")
-    public ResponseEntity getMemberId(@PathVariable int memberId,
-                                      Authentication authentication) {
+    // 마이페이지
+    @GetMapping("memberinfo")
+    public ResponseEntity getMemberId(Authentication authentication) {
+        Integer memberId = Integer.parseInt(authentication.getName());
         if (!service.hasAccess(memberId, authentication)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        Map<String, Object> member = service.getById(memberId);
+        Map<String, Object> dbmember = service.getById(memberId);
 
-        if (member == null) {
+        if (dbmember == null) {
             return ResponseEntity.notFound().build();
         } else {
-            return ResponseEntity.ok(member);
+            return ResponseEntity.ok(dbmember);
         }
     }
 
