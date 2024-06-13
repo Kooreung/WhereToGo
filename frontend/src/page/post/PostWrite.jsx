@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Button,
@@ -21,10 +21,13 @@ import {
 import { GuideLineMediumBanner } from "../../css/CustomStyles.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { LoginContext } from "../../component/LoginProvider.jsx";
 
 function PostWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const account = useContext(LoginContext);
+
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
@@ -103,7 +106,7 @@ function PostWrite() {
             <Box align={"left"} my={10}>
               <FormControl>
                 <FormLabel>작성자</FormLabel>
-                <Input value={"작성자"} readOnly></Input>
+                <Input value={account.nickName} readOnly></Input>
               </FormControl>
             </Box>
             <Box align={"left"} my={10}>

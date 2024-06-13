@@ -3,6 +3,7 @@ package com.backend.service.post;
 import com.backend.domain.post.Post;
 import com.backend.mapper.post.PostMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +29,8 @@ public class PostService {
     }
 
     // 게시글 추가 서비스
-    public void add(Post post) {
+    public void add(Post post, Authentication authentication) {
+        post.setMemberId(Integer.valueOf(authentication.getName()));
         postMapper.insert(post);
     }
 

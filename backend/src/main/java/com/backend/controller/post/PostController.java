@@ -4,6 +4,8 @@ import com.backend.domain.post.Post;
 import com.backend.service.post.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -17,11 +19,15 @@ public class PostController {
 
     // 게시글 추가 | 작성 Controller
     @PostMapping("add")
-    public ResponseEntity postAdd(Post post) {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity postAdd(Post post, Authentication authentication) {
         if (postService.validate(post)) {
-            postService.add(post);
+            System.out.println("post = " + post);
+            System.out.println("authentication = " + authentication);
+            postService.add(post, authentication);
             return ResponseEntity.ok().build();
         } else {
+
             return ResponseEntity.badRequest().build();
         }
     }
