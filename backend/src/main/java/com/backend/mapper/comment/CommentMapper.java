@@ -8,25 +8,25 @@ import java.util.List;
 @Mapper
 public interface CommentMapper {
     @Insert("""
-            INSERT INTO Comment(comment,postId,memberId)
-            VALUES (#{comment},#{postId},3)
+            INSERT INTO comment(comment, postid)
+            VALUES (#{comment},#{postId})
             """)
     void insert(Comment comment);
 
     @Select("""
             SELECT *
-            FROM Comment
+            FROM comment
             WHERE postid = #{postId}
             """)
     List<Comment> selectByPostId(Integer postId);
 
     @Update("""
-            UPDATE Comment SET comment=#{comment} WHERE commentId=#{commentId}
+            UPDATE comment SET comment=#{comment} WHERE commentid=#{commentId}
             """)
     void update(Comment comment);
 
     @Delete("""
-            DELETE FROM Comment WHERE commentId=#{commentId}
+            DELETE FROM comment WHERE commentId=#{commentId}
             """)
     void delete(Comment comment);
 
