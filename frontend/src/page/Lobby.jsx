@@ -25,6 +25,7 @@ function Lobby() {
         <Box {...GuideLineMediumBanner}></Box>
         <Box {...GuideLineMediumBanner}></Box>
       </Flex>
+      {/* TODO 다크/라이트 모드 추가 필요 */}
     </Box>
   );
 }
