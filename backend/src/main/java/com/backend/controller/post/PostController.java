@@ -20,10 +20,8 @@ public class PostController {
     public ResponseEntity postAdd(Post post) {
         if (postService.validate(post)) {
             postService.add(post);
-            System.out.println("post = " + post);
             return ResponseEntity.ok().build();
         } else {
-            System.out.println("post = " + post);
             return ResponseEntity.badRequest().build();
         }
     }
