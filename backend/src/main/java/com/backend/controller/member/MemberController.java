@@ -1,6 +1,7 @@
 package com.backend.controller.member;
 
 import com.backend.domain.member.Member;
+import com.backend.service.member.EmailSenderService;
 import com.backend.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.util.Map;
 @RequestMapping("/api/member")
 public class MemberController {
     final MemberService service;
+    private final EmailSenderService senderService;
 
     // 회원가입
     @PostMapping("signup")
@@ -62,6 +64,18 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         return ResponseEntity.ok(map);
+    }
+
+    // 임시 비밀번호 발급
+    @PostMapping("sendEmail")
+    public ResponseEntity sendEmail(@RequestBody Member member) {
+        String email = member.getEmail();
+        Member memberEmail = service.getByEmail(email);
+        if (memberEmail == null) {
+            return ResponseEntity.notFound().build();
+        }
+        senderService.createMail(email);
+        return ResponseEntity.ok(email);
     }
 
     // 회원 수정
