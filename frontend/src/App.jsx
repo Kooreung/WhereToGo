@@ -12,6 +12,7 @@ import PostList from "./page/post/PostList.jsx";
 import { PostEdit } from "./page/post/PostEdit.jsx";
 import { MemberLogin } from "./page/member/MemberLogin.jsx";
 import LoginProvider from "./component/LoginProvider.jsx";
+import { FindPassword } from "./page/member/FindPassword.jsx";
 import MemberEdit from "./page/member/MemberEdit.jsx";
 
 // 라우터 설정
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
       // 멤버 페이지
       { path: "signup", element: <MemberSignup /> },
       { path: "login", element: <MemberLogin /> },
+      { path: "findPassword", element: <FindPassword /> },
       { path: "memberinfo", element: <MemberInfo /> },
       { path: "member/edit", element: <MemberEdit /> },
       // 게시글 페이지

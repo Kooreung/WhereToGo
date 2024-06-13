@@ -9,7 +9,7 @@ import java.util.List;
 public interface MemberMapper {
 
     @Insert("""
-            INSERT INTO Member (email, password, nickname, name, gender, birth, address, phonenumber)
+            INSERT INTO member (email, password, nickname, name, gender, birth, address, phonenumber)
             VALUES (#{email}, #{password}, #{nickName}, #{name}, #{gender}, #{birth}, #{address}, #{phoneNumber})
             """)
     int insert(Member member);
@@ -17,7 +17,7 @@ public interface MemberMapper {
     // 이메일 중복 체크
     @Select("""
             SELECT *
-            FROM Member
+            FROM member
             WHERE email = #{email}
             """)
     Member selectByEmail(String email);
@@ -25,7 +25,7 @@ public interface MemberMapper {
     // 닉네임 중복 체크
     @Select("""
             SELECT *
-            FROM Member
+            FROM member
             WHERE nickname = #{nickName}
             """)
     Member selectByNickName(String nickName);
@@ -40,7 +40,7 @@ public interface MemberMapper {
                    birth, 
                    address, 
                    phoneNumber
-            FROM Member
+            FROM member
             where memberId = #{memberId};
             """)
     Member selectById(int memberId);
@@ -76,14 +76,14 @@ public interface MemberMapper {
     int deleteByid(Integer memberId);
 
     @Insert("""
-            insert into Profile(memberid,profilename)
+            insert into profile(memberid, profilename)
             values(#{memberId},#{profileName})
             """)
     int profileAdd(Integer memberId, String profileName);
 
     @Select("""
-            SELECT name
-            from Profile
+            SELECT profilename
+            from profile
             where memberid = #{memberId}
             """)
     String getProfileNameByMemberId(Integer memberId);
@@ -91,14 +91,14 @@ public interface MemberMapper {
     @Delete("""
             DELETE FROM profile
             WHERE memberid=#{boardId}
-              AND name=#{fileName}
+              AND profilename=#{fileName}
             """)
     int deleteFileByBoardIdAndName(Integer boardId, String fileName);
 
 
     @Select("""
             SELECT profilename 
-            from Profile 
+            from profile
             where memberid = #{memberId}
             """)
     String getProfileByMemberId(int memberId);
@@ -110,4 +110,12 @@ public interface MemberMapper {
             where memberid = #{memberId}
             """)
     int profileUpdate(Integer memberId, String profileName);
+
+    // email 받아서 encoding 된 임시 비밀번호로 password update
+    @Update("""
+                UPDATE member
+                SET password = #{pw}
+                WHERE email = #{email}
+            """)
+    int findByEmailAndUpdatePassword(String email, String pw);
 }

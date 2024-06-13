@@ -11,20 +11,20 @@ import java.util.List;
 @Mapper
 public interface CommentMapper {
     @Insert("""
-            INSERT INTO Comment(comment,post_Id)
+            INSERT INTO comment(comment, postid)
             VALUES (#{comment},#{postId})
             """)
     void insert(Comment comment);
 
     @Select("""
             SELECT *
-            FROM Comment
+            FROM comment
             WHERE postid = #{postId}
             """)
     List<Comment> selectByPostId(Integer postId);
 
     @Update("""
-            UPDATE Comment SET comment=#{comment} WHERE postId=#{postId}
+            UPDATE comment SET comment=#{comment} WHERE postid=#{postId}
             """)
     void update(Comment comment);
 
