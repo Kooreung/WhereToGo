@@ -71,7 +71,7 @@ function PostList() {
   // 회원 인기 게시글
   function ListOfFavoritePost() {
     return (
-      <Box w={{ base: "700px", lg: "2xl" }} h={"250px"}>
+      <Box w={{ base: "700px", lg: "2xl" }} h={"15rem"}>
         <Box border={"1px dotted red"} alignContent={"center"} mb={"32px"}>
           <Heading align={"center"}>회원 인기글</Heading>
         </Box>
@@ -124,11 +124,10 @@ function PostList() {
               {/* Todo 게시글 내용 보이다가 사리지기 */}
               <Box>
                 <Grid
-                  bg={"lightblue"}
                   w={"700"}
                   h={"200"}
                   templateColumns={"repeat(6, 1fr)"}
-                  templateRows={"repeat(3, 1fr)"}
+                  templateRows={"1fr 1fr 3fr"}
                 >
                   <GridItem
                     colSpan={2}
@@ -139,7 +138,7 @@ function PostList() {
                     <Flex>닉네임 {post.nickName}</Flex>
                   </GridItem>
                   <GridItem
-                    colSpan={3}
+                    colSpan={4}
                     rowSpan={1}
                     border={"1px dotted yellow"}
                     alignContent={"center"}
@@ -147,44 +146,44 @@ function PostList() {
                     <Flex>제목 {post.title}</Flex>
                   </GridItem>
                   <GridItem
-                    colSpan={1}
+                    colSpan={2}
                     rowSpan={1}
                     border={"1px dotted yellow"}
                     alignContent={"center"}
                   >
-                    <Flex>조회수 {post.view}</Flex>
+                    <Flex>조회수 {post.viewCount}</Flex>
                   </GridItem>
                   <GridItem
                     colSpan={2}
-                    rowSpan={3}
+                    rowSpan={1}
+                    border={"1px dotted yellow"}
+                    alignContent={"center"}
+                  >
+                    <Flex>댓글수 {post.commentCount}</Flex>
+                  </GridItem>
+                  <GridItem
+                    colSpan={2}
+                    rowSpan={1}
+                    border={"1px dotted yellow"}
+                    alignContent={"center"}
+                  >
+                    <Flex>좋아요 {post.likeCount}</Flex>
+                  </GridItem>
+                  <GridItem
+                    colSpan={2}
+                    rowSpan={1}
                     border={"1px dotted yellow"}
                     alignContent={"center"}
                   >
                     <Flex>썸네일 {post.thumbnail}</Flex>
                   </GridItem>
                   <GridItem
-                    colSpan={3}
-                    rowSpan={3}
-                    border={"1px dotted yellow"}
-                    alignContent={"center"}
-                  >
-                    {post.content}
-                  </GridItem>
-                  <GridItem
-                    colSpan={1}
+                    colSpan={4}
                     rowSpan={1}
                     border={"1px dotted yellow"}
                     alignContent={"center"}
                   >
-                    댓글수 {post.comment}
-                  </GridItem>
-                  <GridItem
-                    colSpan={1}
-                    rowSpan={1}
-                    border={"1px dotted yellow"}
-                    alignContent={"center"}
-                  >
-                    좋아요 {post.like}
+                    <Flex>{post.content}</Flex>
                   </GridItem>
                 </Grid>
               </Box>
