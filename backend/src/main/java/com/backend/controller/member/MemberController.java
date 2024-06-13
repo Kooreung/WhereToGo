@@ -22,8 +22,8 @@ public class MemberController {
 
     // 회원가입
     @PostMapping("signup")
-    public ResponseEntity signup(@RequestBody Member member,
-                                 @RequestParam(value = "addFile", required = false)
+    public ResponseEntity signup(Member member,
+                                 @RequestParam(value = "File", required = false)
                                  MultipartFile newProfile) throws IOException {
         if (service.validate(member)) {
             service.add(member, newProfile);

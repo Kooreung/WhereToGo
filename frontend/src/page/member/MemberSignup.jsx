@@ -70,6 +70,7 @@ export function MemberSignup() {
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(true);
   const toast = useToast();
+  const [file, setFiles] = useState(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -147,7 +148,7 @@ export function MemberSignup() {
     setIsLoading(true);
 
     axios
-      .post("/api/member/signup", {
+      .postForm("/api/member/signup", {
         email,
         password,
         name,
@@ -157,6 +158,7 @@ export function MemberSignup() {
         birth: `${birthYear}-${birthMonth.toString().padStart(2, "0")}-${birthDay.toString().padStart(2, "0")}`,
         phoneNumber,
         address,
+        file,
       })
       .then(() => {
         toast({
@@ -219,6 +221,20 @@ export function MemberSignup() {
       <Box>회원 가입</Box>
       <Box>
         <Box>
+          <Box mb={7}>
+            <FormControl>
+              <FormLabel>파일</FormLabel>
+              <Input
+                multiple
+                type="file"
+                accept="image/*"
+                onChange={(e) => setFiles(e.target.files[0])}
+              />
+              <FormHelperText>
+                총 용량은 10MB, 한 파일은 1MB를 초과할 수 없습니다.
+              </FormHelperText>
+            </FormControl>
+          </Box>
           <FormControl>
             <FormLabel>이메일</FormLabel>
             <InputGroup>
