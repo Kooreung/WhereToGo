@@ -3,18 +3,19 @@ package com.backend.mapper.member;
 import com.backend.domain.member.Member;
 import com.backend.domain.member.MemberProfile;
 import org.apache.ibatis.annotations.*;
+
 import java.util.List;
 
 @Mapper
 public interface MemberMapper {
 
     @Insert("""
-            INSERT INTO Member (email, password, nick_name, name, gender, birth, address, phone_number)
+            INSERT INTO Member (email, password, nickname, name, gender, birth, address, phoneNumber)
             VALUES (#{email}, #{password}, #{nickName}, #{name}, #{gender}, #{birth}, #{address}, #{phoneNumber})
             """)
     int insert(Member member);
 
-// 이메일 중복 체크
+    // 이메일 중복 체크
     @Select("""
             SELECT *
             FROM Member
@@ -22,11 +23,11 @@ public interface MemberMapper {
             """)
     Member selectByEmail(String email);
 
-// 닉네임 중복 체크
+    // 닉네임 중복 체크
     @Select("""
             SELECT *
             FROM Member
-            WHERE nick_name = #{nickName}
+            WHERE nickname = #{nickName}
             """)
     Member selectByNickName(String nickName);
 
@@ -102,4 +103,13 @@ public interface MemberMapper {
             where member_id = #{memberId}
             """)
     MemberProfile getProfileByMemberId(int memberId);
+
+
+    // email 받아서 encoding 된 임시 비밀번호로 password update
+    @Update("""
+                UPDATE Member
+                SET password = #{pw}
+                WHERE email = #{email}
+            """)
+    int findByEmailAndUpdatePassword(String email, String pw);
 }

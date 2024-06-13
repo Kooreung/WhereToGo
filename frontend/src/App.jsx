@@ -9,6 +9,7 @@ import { MemberSignup } from "./page/member/MemberSignup.jsx";
 import { CommentComponent } from "./component/Comment/CommentComponent.jsx";
 import { MemberLogin } from "./page/member/MemberLogin.jsx";
 import LoginProvider from "./component/LoginProvider.jsx";
+import { FindPassword } from "./page/member/FindPassword.jsx";
 
 // 라우터 설정
 const router = createBrowserRouter([
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
       }, // 메인페이지를 담당
       { path: "signup", element: <MemberSignup /> },
       { path: "login", element: <MemberLogin /> },
+      { path: "findPassword", element: <FindPassword /> },
       { path: "memberinfo", element: <MemberInfo /> },
       { path: "comment", element: <CommentComponent /> },
       { path: "post/write", element: <PostWrite /> },
