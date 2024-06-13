@@ -9,7 +9,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-export function FindPassword() {
+export function MemberFindPassword() {
   const [email, setEmail] = useState("");
   const toast = useToast();
 
