@@ -14,6 +14,15 @@ import { MemberLogin } from "./page/member/MemberLogin.jsx";
 import LoginProvider from "./component/LoginProvider.jsx";
 import { FindPassword } from "./page/member/FindPassword.jsx";
 import MemberEdit from "./page/member/MemberEdit.jsx";
+import axios from "axios";
+
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 // 라우터 설정
 const router = createBrowserRouter([

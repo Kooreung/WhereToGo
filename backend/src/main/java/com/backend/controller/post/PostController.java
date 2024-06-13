@@ -22,8 +22,6 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity postAdd(Post post, Authentication authentication) {
         if (postService.validate(post)) {
-            System.out.println("post = " + post);
-            System.out.println("authentication = " + authentication);
             postService.add(post, authentication);
             return ResponseEntity.ok().build();
         } else {
