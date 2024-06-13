@@ -12,6 +12,7 @@ import {
 import { GuideLineMediumBanner } from "../../CustomStyles.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import CommentComponent from "../../component/Comment/CommentComponent.jsx";
 
 export function PostView() {
   const { postId } = useParams();
@@ -65,6 +66,7 @@ export function PostView() {
               </FormControl>
             </Box>
           </Box>
+          <CommentComponent postId={post.postId} />
           <Box>
             <Box align={"left"} my={10}>
               <Button onClick={() => navigate(`/post/${postId}/edit`)}>

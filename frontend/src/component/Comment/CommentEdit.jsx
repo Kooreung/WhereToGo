@@ -3,12 +3,13 @@ import { Box, Button, Textarea } from "@chakra-ui/react";
 import axios from "axios";
 
 function CommentEdit({ comment }) {
-  const [reWriteComment, setReWriteComment] = useState();
+  const [reWriteComment, setReWriteComment] = useState(comment.comment);
 
   function handleEditSubmit() {
     axios
       .put("/api/comment/edit", {
         comment: reWriteComment,
+        commentId: comment.commentId,
       })
       .then((res) => {});
   }

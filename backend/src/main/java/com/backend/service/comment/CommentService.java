@@ -26,7 +26,7 @@ public class CommentService {
         mapper.update(comment);
     }
 
-    public void delete() {
-        mapper.delete();
+    public void delete(Comment comment) {
+        mapper.delete(comment);
     }
 }

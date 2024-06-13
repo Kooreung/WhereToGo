@@ -1,18 +1,15 @@
 package com.backend.mapper.comment;
 
 import com.backend.domain.comment.Comment;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
 @Mapper
 public interface CommentMapper {
     @Insert("""
-            INSERT INTO Comment(comment,post_Id)
-            VALUES (#{comment},#{postId})
+            INSERT INTO Comment(comment,postId,memberId)
+            VALUES (#{comment},#{postId},3)
             """)
     void insert(Comment comment);
 
@@ -24,10 +21,13 @@ public interface CommentMapper {
     List<Comment> selectByPostId(Integer postId);
 
     @Update("""
-            UPDATE Comment SET comment=#{comment} WHERE postId=#{postId}
+            UPDATE Comment SET comment=#{comment} WHERE commentId=#{commentId}
             """)
     void update(Comment comment);
 
-    void delete();
+    @Delete("""
+            DELETE FROM Comment WHERE commentId=#{commentId}
+            """)
+    void delete(Comment comment);
 
 }

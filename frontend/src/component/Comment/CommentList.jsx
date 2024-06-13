@@ -6,13 +6,12 @@ import CommentItem from "./CommentItem.jsx";
 function CommentList({ postId }) {
   const [commentList, setCommentList] = useState([]);
   useEffect(() => {
-    axios.get(`/api/comment/list/1`).then((res) => {
+    axios.get(`/api/comment/list/${postId}`).then((res) => {
       setCommentList(res.data);
     });
   }, []);
   return (
     <Box>
-      댓글리스트
       <Box>
         {commentList.map((comment) => (
           <CommentItem comment={comment} key={comment.commentid} />

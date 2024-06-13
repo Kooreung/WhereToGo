@@ -14,7 +14,7 @@ public class CommentController {
     final CommentService service;
 
     @PostMapping("add")
-    public void getComment(Comment comment) {
+    public void getComment(@RequestBody Comment comment) {
         System.out.println("comment = " + comment);
         service.add(comment);
     }
@@ -31,7 +31,8 @@ public class CommentController {
     }
 
     @DeleteMapping("delete")
-    public void deleteComment() {
-        service.delete();
+    public void deleteComment(@RequestBody Comment comment) {
+        System.out.println("comment = " + comment);
+        service.delete(comment);
     }
 }
