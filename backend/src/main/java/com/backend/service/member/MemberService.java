@@ -136,14 +136,13 @@ public class MemberService {
         if (dbMember == null) {
             return false;
         }
-
-        if (!passwordEncoder.matches(member.getPassword(), dbMember.getPassword())) {
+        if (!passwordEncoder.matches(member.getOldPassword(), dbMember.getPassword())) {
             return false;
         }
         return true;
     }
 
-    public Map<String, Object> modify(Member member, Authentication authentication, MultipartFile newProfile) {
+    public Map<String, Object> modify(Member member, Authentication authentication, MultipartFile newProfile) throws IOException {
         if (member.getPassword() != null && member.getPassword().length() > 0) {
             // 패스워드가 입력되었으니 바꾸기
             member.setPassword(passwordEncoder.encode(member.getPassword()));
@@ -154,22 +153,23 @@ public class MemberService {
         }
 
         if (newProfile != null && !newProfile.isEmpty()) {
+            System.out.println(newProfile.getOriginalFilename());
             String key = STR."prj3/\{member.getMemberId()}/\{newProfile.getOriginalFilename()}";
             PutObjectRequest objectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(key)
                     .acl(ObjectCannedACL.PUBLIC_READ)
                     .build();
-            mapper.profileUpdate(member.getMemberId(), newProfile.getOriginalFilename());
+            s3Client.putObject(objectRequest, RequestBody.fromInputStream(newProfile.getInputStream(), newProfile.getSize()));
 
             String prevProfileName = mapper.getProfileNameByMemberId(member.getMemberId());
             String key2 = STR."prj3/\{member.getMemberId()}/\{prevProfileName}";
             DeleteObjectRequest objectRequest2 = DeleteObjectRequest.builder()
                     .bucket(bucketName)
-                    .key(key)
+                    .key(key2)
                     .build();
             s3Client.deleteObject(objectRequest2);
-            mapper.deleteFileByBoardIdAndName(member.getMemberId(), prevProfileName);
+            mapper.profileUpdate(member.getMemberId(), newProfile.getOriginalFilename());
         }
         mapper.update(member);
 

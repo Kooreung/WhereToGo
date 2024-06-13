@@ -146,7 +146,7 @@ export function MemberSignup() {
     }
 
     setIsLoading(true);
-
+    console.log(file);
     axios
       .postForm("/api/member/signup", {
         email,

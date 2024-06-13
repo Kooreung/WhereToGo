@@ -65,7 +65,7 @@ public interface MemberMapper {
             SET
                 password = #{password},
                 nickname = #{nickName}
-            WHERE memberid = #{id}
+            WHERE memberid = #{memberId}
             """)
     int update(Member member);
 
