@@ -13,7 +13,7 @@ public interface PostMapper {
             INSERT INTO post (title, content, memberid)
             VALUES (#{title}, #{content}, #{memberId})
             """)
-    @Options(useGeneratedKeys = true, keyProperty = "memberId")
+    @Options(useGeneratedKeys = true, keyProperty = "postId")
     int insert(Post post);
 
     // 게시글 조회 매퍼

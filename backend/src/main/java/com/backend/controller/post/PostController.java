@@ -20,10 +20,10 @@ public class PostController {
     // 게시글 추가 | 작성 Controller
     @PostMapping("add")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity postAdd(Post post, Authentication authentication) {
+    public ResponseEntity<Integer> postAdd(Post post, Authentication authentication) {
         if (postService.validate(post)) {
-            postService.add(post, authentication);
-            return ResponseEntity.ok().build();
+            Integer result = postService.add(post, authentication);
+            return ResponseEntity.ok().body(result);
         } else {
 
             return ResponseEntity.badRequest().build();

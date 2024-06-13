@@ -29,9 +29,10 @@ public class PostService {
     }
 
     // 게시글 추가 서비스
-    public void add(Post post, Authentication authentication) {
+    public Integer add(Post post, Authentication authentication) {
         post.setMemberId(Integer.valueOf(authentication.getName()));
         postMapper.insert(post);
+        return post.getPostId();
     }
 
     // 게시글 조회 서비스

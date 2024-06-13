@@ -54,8 +54,8 @@ function PostWrite() {
     setLoading(true);
     axios
       .postForm("/api/post/add", { title, content })
-      .then(() => {
-        navigate(`/post/list`);
+      .then((res) => {
+        navigate(`/post/${res.data}`);
         toast({
           status: "success",
           position: "bottom",
