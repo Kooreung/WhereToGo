@@ -13,7 +13,7 @@ public interface PostMapper {
 
     // 게시글 추가 매퍼
     @Insert("""
-            INSERT INTO Post (title, content, memberid)
+            INSERT INTO post (title, content, memberid)
             VALUES (#{title}, #{content}, 1)
             """)
     int insert(Post post);
@@ -21,7 +21,7 @@ public interface PostMapper {
     // 게시글 조회 매퍼
     @Select("""
             SELECT p.postid, p.title, p.content, p.createdate, p.view, m.nickname
-            FROM Post p JOIN Member m
+            FROM post p JOIN member m
             ON p.memberid = m.memberid
             WHERE p.postid = #{postId}
             """)
@@ -31,7 +31,7 @@ public interface PostMapper {
     @Select("""
             <script>
             SELECT p.postid, p.title, p.content, m.nickname
-            FROM Post p JOIN Member m ON p.memberid = m.memberid
+            FROM post p JOIN member m ON p.memberid = m.memberid
             <where>
                 <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
@@ -55,7 +55,7 @@ public interface PostMapper {
     @Select("""
             <script>
             SELECT COUNT(p.postid)
-            FROM Post p JOIN Member m ON p.memberid = m.memberid
+            FROM post p JOIN member m ON p.memberid = m.memberid
                 <where>
                     <if test="searchType != null">
                         <bind name="pattern" value="'%' + searchKeyword + '%'"/>
@@ -74,7 +74,7 @@ public interface PostMapper {
 
     // 게시글 수정 매퍼
     @Update("""
-            UPDATE Post
+            UPDATE post
             SET title=#{title}, content=#{content}
             WHERE postid=#{postId}
             """)

@@ -50,7 +50,7 @@ public class EmailSenderService {
 
         SimpleMailMessage message = new SimpleMailMessage();
 
-        message.setFrom("askcw38@gmail.com");
+        message.setFrom("인증된 본인 구글 이메일");
         message.setTo(passwordMail.getToEmail());
         message.setSubject(passwordMail.getMailTitle());
         message.setText(passwordMail.getMailContent());
