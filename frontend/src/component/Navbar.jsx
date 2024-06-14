@@ -27,9 +27,11 @@ function Navbar() {
         </Box>
       </Center>
       <Flex gap={3}>
+        {account.isLoggedIn() || (
         <Center onClick={() => navigate("/signup")} cursor={"pointer"}>
           회원가입
         </Center>
+        )}
         {account.isLoggedIn() ||(
         <Center onClick={() => navigate("/login")} cursor={"pointer"}>
           로그인
