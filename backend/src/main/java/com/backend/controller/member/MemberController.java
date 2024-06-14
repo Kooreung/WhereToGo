@@ -24,11 +24,11 @@ public class MemberController {
 
     // 회원가입
     @PostMapping("signup")
-    public ResponseEntity signup(@RequestBody Member member,
-                                 @RequestParam(value = "addFile", required = false)
-                                 MultipartFile newProfile) throws IOException {
+    public ResponseEntity signup(Member member,
+                                 @RequestParam(value = "file", required = false)
+                                 MultipartFile file) throws IOException {
         if (service.validate(member)) {
-            service.add(member, newProfile);
+            service.add(member, file);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();
@@ -81,15 +81,18 @@ public class MemberController {
     // 회원 수정
     @PutMapping("edit")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity edit(@RequestBody Member member,
-                               @RequestParam(value = "addFileList", required = false)
-                               MultipartFile newProfile, Authentication authentication) {
+    public ResponseEntity edit(Member member,
+                               @RequestParam(value = "file", required = false)
+                               MultipartFile newProfile, Authentication authentication) throws IOException {
         if (service.hasAccessModify(member, authentication)) {
+            System.out.println(member.getPassword());
             Map<String, Object> result = service.modify(member, authentication, newProfile);
             return ResponseEntity.ok(result);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+//        return ResponseEntity.ok().build();
+
     }
 
 
@@ -122,6 +125,7 @@ public class MemberController {
     public ResponseEntity delete(
             @RequestBody Member member,
             Authentication authentication) {
+        System.out.println("id" + member.getMemberId());
         if (service.hasAccess(member, authentication)) {
             service.delete(member.getMemberId());
             return ResponseEntity.ok().build();

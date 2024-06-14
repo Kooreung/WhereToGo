@@ -1,18 +1,21 @@
 package com.backend.domain.member;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class Member {
     private Integer memberId;
     private String email;
     private String password;
+    private String oldPassword;
     private String nickName;
     private String name;
     private String gender;
-    private Date birth;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birth;
     private String address;
     private String phoneNumber;
 }

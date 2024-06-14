@@ -1,22 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Avatar,
   Box,
   Button,
   Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Spinner,
   Text,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { LoginContext } from "../../component/LoginProvider.jsx";
 
 export function MemberInfo(props) {
   const [member, setMember] = useState({});
   const [file, setFile] = useState({});
   const toast = useToast();
-  // const { id } = useParams();
   const navigate = useNavigate();
+  const account = useContext(LoginContext);
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     axios
@@ -49,6 +64,31 @@ export function MemberInfo(props) {
       });
   }, []);
 
+  function handleCLickDelete() {
+    setId(member.memberId);
+    console.log(id);
+    axios
+      .delete(`/api/member/delete`, {
+        data: { memberId: id, password },
+      })
+      .then(() => {
+        toast({
+          status: "success",
+          description: "회원 탈퇴하였습니다.",
+          position: "top",
+        });
+        account.logout();
+        navigate("/");
+      })
+      .catch(() => {
+        toast({
+          status: "warning",
+          description: "탈퇴중 문제가 생겼습니다.",
+          position: "top",
+        });
+      });
+  }
+
   if (member === null) {
     return <Spinner />;
   }
@@ -72,6 +112,9 @@ export function MemberInfo(props) {
         <Text mb="5">생일 : {member.birth}</Text>
         <Text mb="5">주소 : {member.address}</Text>
         <Text mb="5">휴대폰 번호 : {member.phoneNumber}</Text>
+        <Button colorScheme="teal" size="xs" ml="100%" onClick={onOpen}>
+          탈퇴
+        </Button>
         <Button
           colorScheme="teal"
           size="xs"
@@ -80,6 +123,31 @@ export function MemberInfo(props) {
         >
           수정
         </Button>
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>탈퇴 확인</ModalHeader>
+            <ModalBody>
+              <FormControl>
+                <FormLabel>비밀번호를 입력 해주세요</FormLabel>
+                <Input
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </FormControl>
+            </ModalBody>
+            <ModalFooter>
+              <Button onClick={onClose}>취소</Button>
+              <Button
+                isLoading={isLoading}
+                colorScheme={"red"}
+                onClick={handleCLickDelete}
+              >
+                확인
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Box>
     </Flex>
   );

@@ -69,5 +69,3 @@ export function LoginProvider({ children }) {
     </LoginContext.Provider>
   );
 }
-
-export default LoginProvider;
