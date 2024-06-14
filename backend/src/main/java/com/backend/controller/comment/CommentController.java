@@ -3,6 +3,7 @@ package com.backend.controller.comment;
 import com.backend.domain.comment.Comment;
 import com.backend.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -18,8 +19,13 @@ public class CommentController {
 
     @PostMapping("add")
     @PreAuthorize("isAuthenticated()")
-    public void getComment(@RequestBody Comment comment, Authentication authentication) {
-        service.add(comment, authentication);
+    public ResponseEntity getComment(@RequestBody Comment comment, Authentication authentication) {
+        if (service.validate(comment)) {
+            service.add(comment, authentication);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("list/{postId}")
