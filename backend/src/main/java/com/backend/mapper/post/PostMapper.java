@@ -89,4 +89,10 @@ public interface PostMapper {
             """)
     int insertLike(Integer postId, Integer memberId);
 
+    @Select("""
+            SELECT COUNT(*)
+            FROM likes
+            WHERE postid=#{postId}
+            """)
+    Object selectCountLikeByBoardId(Integer postId);
 }

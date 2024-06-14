@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode"; // 여러 컴포넌트가 현재 로그인 정보 사용하기 위해 Context 사용
 
 // 여러 컴포넌트가 현재 로그인 정보 사용하기 위해 Context 사용
@@ -11,6 +11,13 @@ export function LoginProvider({ children }) {
   const [expired, setExpired] = useState(0);
   const [memberId, setMemberId] = useState("");
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token === null) {
+      return;
+    }
+    login(token);
+  }, []);
   // 로그인 유무 확인 함수
   function isLoggedIn() {
     return Date.now() < expired * 1000;
@@ -31,6 +38,7 @@ export function LoginProvider({ children }) {
     // payload 에서 가져온 해당 정보를 상태로 설정함
     setExpired(payload.exp);
     setEmail(payload.sub);
+    setMemberId(payload.sub);
     setNickName(payload.nickName);
   }
 
@@ -38,6 +46,7 @@ export function LoginProvider({ children }) {
     localStorage.removeItem("token");
     setExpired(0);
     setEmail("");
+    setMemberId("");
     setNickName("");
   }
 

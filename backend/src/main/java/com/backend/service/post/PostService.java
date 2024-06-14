@@ -85,6 +85,8 @@ public class PostService {
     }
 
     public Map<String, Object> postLike(Map<String, Object> like, Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("like", false);
         Integer postId = (Integer) like.get("postId");
         Integer memberId = Integer.valueOf(authentication.getName());
 
@@ -92,6 +94,7 @@ public class PostService {
         if (count == 0) {
             postMapper.insertLike(postId, memberId);
         }
-        return like;
+        result.put("count", postMapper.selectCountLikeByBoardId(postId));
+        return result;
     }
 }

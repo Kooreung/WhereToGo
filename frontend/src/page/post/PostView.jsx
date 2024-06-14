@@ -22,12 +22,13 @@ export function PostView() {
   const [post, setPost] = useState(null);
   const navigate = useNavigate();
   const [like, setLike] = useState({ like: false, count: 0 });
-
+  const [isLikeLoading, setIsLikeLoading] = useState(false);
   useEffect(() => {
     axios
       .get(`/api/post/${postId}`)
       .then((res) => {
         setPost(res.data.post);
+        console.log(res.data);
       })
       .catch();
   }, []);
@@ -37,7 +38,16 @@ export function PostView() {
   }
 
   function handleLikeCount() {
-    axios.put("/api/post/like", { postId: post.postId });
+    setIsLikeLoading(true);
+    axios
+      .put("/api/post/like", { postId: post.postId })
+      .then((res) => {
+        setLike(res.data);
+      })
+      .catch((err) => {})
+      .finally(() => {
+        setIsLikeLoading(false);
+      });
   }
 
   return (

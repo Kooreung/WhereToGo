@@ -24,7 +24,7 @@ public class CommentService {
         return mapper.selectByPostId(postId);
     }
 
-    public void edit(Comment comment, Authentication authentication) {
+    public void edit(Comment comment) {
         mapper.update(comment);
     }
 

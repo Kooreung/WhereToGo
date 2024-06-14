@@ -34,13 +34,17 @@ function CommentItem({ comment, isTransition, setIsTransition }) {
       {isEditing || (
         <Box>
           <Box>
-            <Text>{comment.memberId}</Text>
+            <Text>{comment.nickName}</Text>
             <Text>{comment.comment}</Text>
           </Box>
-          <Button onClick={() => setIsEditing(true)}>수정</Button>
-          <Button onClick={handleRemoveSubmit} isLoading={isTransition}>
-            삭제
-          </Button>
+          {account.hasAccess(comment.memberId) && (
+            <Box>
+              <Button onClick={() => setIsEditing(true)}>수정</Button>
+              <Button onClick={handleRemoveSubmit} isLoading={isTransition}>
+                삭제
+              </Button>
+            </Box>
+          )}
         </Box>
       )}
       {isEditing && (

@@ -33,7 +33,7 @@ public class CommentController {
     public void getCommentEdit(@RequestBody Comment comment, Authentication authentication) {
         System.out.println("comment = " + comment);
         if (service.hasAccess(comment, authentication)) {
-            service.edit(comment, authentication);
+            service.edit(comment);
         } else {
             throw new AccessDeniedException("Access denied");
         }
