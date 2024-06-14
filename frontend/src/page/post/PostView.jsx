@@ -14,6 +14,7 @@ import {
   ModalOverlay,
   Spinner,
   Textarea,
+  Tooltip,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -45,6 +46,7 @@ export function PostView() {
       .get(`/api/post/${postId}`)
       .then((res) => {
         setPost(res.data.post);
+        setLike(res.data.like);
       })
       .catch((err) => {
         navigate("/post/list");
@@ -56,7 +58,7 @@ export function PostView() {
           });
         }
       });
-  }, []);
+  }, [isLikeLoading]);
 
   // 게시글 번호 확인
   if (post === null || post === undefined) {
@@ -64,6 +66,9 @@ export function PostView() {
   }
 
   function handleLikeCount() {
+    if (!account.isLoggedIn()) {
+      return;
+    }
     setIsLikeLoading(true);
     axios
       .put("/api/post/like", { postId: post.postId })
@@ -146,10 +151,16 @@ export function PostView() {
           )}
           {/*좋아요*/}
           <Flex justifyContent="center" alignItems="center" my={1}>
-            <Box onClick={handleLikeCount}>
-              {like.like && <FontAwesomeIcon icon={emptyHeart} />}
-              {like.like || <FontAwesomeIcon icon={fullHeart} />}
-            </Box>
+            <Tooltip
+              isDisabled={account.isLoggedIn()}
+              hasArrow
+              label={"로그인 해주세요"}
+            >
+              <Box onClick={handleLikeCount}>
+                {like.like && <FontAwesomeIcon icon={emptyHeart} />}
+                {like.like || <FontAwesomeIcon icon={fullHeart} />}
+              </Box>
+            </Tooltip>
           </Flex>
           <Flex justifyContent="center" alignItems="center">
             <Box>like {like.count}</Box>
