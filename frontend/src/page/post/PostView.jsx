@@ -8,6 +8,7 @@ import {
   FormLabel,
   Grid,
   GridItem,
+  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -18,9 +19,11 @@ import {
   Spinner,
   Text,
   Textarea,
+  Tooltip,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import { GuideLineMediumBanner } from "../../css/CustomStyles.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { LoginContext } from "../../component/LoginProvider.jsx";
@@ -51,6 +54,7 @@ export function PostView() {
       .get(`/api/post/${postId}`)
       .then((res) => {
         setPost(res.data.post);
+        setLike(res.data.like);
       })
       .catch((err) => {
         navigate("/post/list");
@@ -62,7 +66,7 @@ export function PostView() {
           });
         }
       });
-  }, []);
+  }, [isLikeLoading]);
 
   // 게시글 번호 확인
   if (post === null || post === undefined) {
@@ -70,6 +74,9 @@ export function PostView() {
   }
 
   function handleLikeCount() {
+    if (!account.isLoggedIn()) {
+      return;
+    }
     setIsLikeLoading(true);
     axios
       .put("/api/post/like", { postId: post.postId })
@@ -252,6 +259,11 @@ export function PostView() {
       {/* 좋아요 & 수정/삭제/목록 버튼 */}
       <Flex w={"720px"} h={"64px"} my={"16px"} align={"center"}>
         {/* 좋아요 */}
+        <Tooltip
+          isDisabled={account.isLoggedIn()}
+          hasArrow
+          label={"로그인 해주세요"}
+        >
         <Button onClick={handleLikeCount}>
           <Flex align={"center"} gap={1}>
             <Text fontSize={"xl"}>
@@ -262,11 +274,12 @@ export function PostView() {
             <Text fontSize={"xl"}>{like.count}</Text>
           </Flex>
         </Button>
+        </Tooltip>
         <Spacer />
         {/* 수정 및 삭제 버튼 */}
         {account.hasAccessMemberId(post.memberId) && (
           <Box>
-            <Box align={"left"}>
+            <Box align={"left"} my={10}>
               <Button onClick={() => navigate(`/post/${postId}/edit`)}>
                 수정
               </Button>
