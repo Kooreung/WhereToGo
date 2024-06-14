@@ -3,6 +3,9 @@ package com.backend.controller.comment;
 import com.backend.domain.comment.Comment;
 import com.backend.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,9 +17,10 @@ public class CommentController {
     final CommentService service;
 
     @PostMapping("add")
-    public void getComment(Comment comment) {
+    @PreAuthorize("isAuthenticated()")
+    public void getComment(@RequestBody Comment comment, Authentication authentication) {
         System.out.println("comment = " + comment);
-        service.add(comment);
+        service.add(comment, authentication);
     }
 
     @GetMapping("list/{postId}")
@@ -25,13 +29,20 @@ public class CommentController {
     }
 
     @PutMapping("edit")
-    public void getCommentEdit(@RequestBody Comment comment) {
+    @PreAuthorize("isAuthenticated()")
+    public void getCommentEdit(@RequestBody Comment comment, Authentication authentication) {
         System.out.println("comment = " + comment);
-        service.edit(comment);
+        if (service.hasMemberIdAccess(comment, authentication)) {
+            service.edit(comment);
+        } else {
+            throw new AccessDeniedException("Access denied");
+        }
     }
 
     @DeleteMapping("delete")
-    public void deleteComment() {
-        service.delete();
+    @PreAuthorize("isAuthenticated()")
+    public void deleteComment(@RequestBody Comment comment, Authentication authentication) {
+        System.out.println("comment = " + comment);
+        service.delete(comment, authentication);
     }
 }

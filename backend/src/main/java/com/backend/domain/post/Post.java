@@ -14,6 +14,6 @@ public class Post {
     private LocalDateTime postDate;
 
     private Integer memberId;
-    private Integer LikeCount;
-    private Integer CommentCount;
+    private Integer likeCount;
+    private Integer commentCount;
 }

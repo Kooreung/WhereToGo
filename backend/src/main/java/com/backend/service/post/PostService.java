@@ -84,7 +84,7 @@ public class PostService {
     }
 
     // 게시글 수정 시 권한 체크 서비스
-    public boolean hasAccess(Integer postId, Authentication authentication) {
+    public boolean hasMemberIdAccess(Integer postId, Authentication authentication) {
         Post post = postMapper.selectById(postId);
         return post.getMemberId().equals(Integer.valueOf(authentication.getName()));
     }
@@ -94,4 +94,18 @@ public class PostService {
         postMapper.deleteById(postId);
     }
 
+
+    public Map<String, Object> postLike(Map<String, Object> like, Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("like", false);
+        Integer postId = (Integer) like.get("postId");
+        Integer memberId = Integer.valueOf(authentication.getName());
+
+        int count = postMapper.deleteLike(postId, memberId);
+        if (count == 0) {
+            postMapper.insertLike(postId, memberId);
+        }
+        result.put("count", postMapper.selectCountLikeByBoardId(postId));
+        return result;
+    }
 }

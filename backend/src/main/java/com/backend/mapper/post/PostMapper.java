@@ -84,4 +84,23 @@ public interface PostMapper {
             WHERE postid=#{postId}
             """)
     Integer deleteById(Integer postId);
+
+    @Delete("""
+            DELETE FROM likes
+            WHERE postid=#{postId} AND memberid=#{memberId}
+            """)
+    int deleteLike(Integer postId, Integer memberId);
+
+    @Insert("""
+            INSERT INTO likes (postid, memberid)
+            VALUES (#{postId}, #{memberId})
+            """)
+    int insertLike(Integer postId, Integer memberId);
+
+    @Select("""
+            SELECT COUNT(*)
+            FROM likes
+            WHERE postid=#{postId}
+            """)
+    Object selectCountLikeByBoardId(Integer postId);
 }

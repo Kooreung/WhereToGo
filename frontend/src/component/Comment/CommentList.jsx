@@ -3,19 +3,28 @@ import { Box } from "@chakra-ui/react";
 import axios from "axios";
 import CommentItem from "./CommentItem.jsx";
 
-function CommentList({ postId }) {
+function CommentList({ postId, isTransition, setIsTransition }) {
   const [commentList, setCommentList] = useState([]);
   useEffect(() => {
-    axios.get(`/api/comment/list/1`).then((res) => {
-      setCommentList(res.data);
-    });
-  }, []);
+    if (!isTransition) {
+      axios.get(`/api/comment/list/${postId}`).then((res) => {
+        setCommentList(res.data);
+      });
+    }
+  }, [isTransition]);
+  if (commentList.length === 0) {
+    return <Box>댓글이 없습니당</Box>;
+  }
   return (
     <Box>
-      댓글리스트
       <Box>
         {commentList.map((comment) => (
-          <CommentItem comment={comment} key={comment.commentid} />
+          <CommentItem
+            comment={comment}
+            key={comment.commentid}
+            isTransition={isTransition}
+            setIsTransition={setIsTransition}
+          />
         ))}
       </Box>
     </Box>
