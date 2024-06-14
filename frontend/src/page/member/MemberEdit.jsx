@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -22,14 +22,18 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { LoginContext } from "../../component/LoginProvider.jsx";
 
 function MemberEdit(props) {
   const [member, setMember] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [oldProfile, setOldProfile] = useState(null);
+  const [file, setFile] = useState(null);
   const [oldPassword, setOldPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [isCheckedNickName, setIsCheckedNickName] = useState(true);
   const [oldNickName, setOldNickName] = useState("");
-  // const account = useContext(LoginContext);
+  const account = useContext(LoginContext);
   const { id } = useParams();
   const toast = useToast();
   const navigate = useNavigate();
@@ -43,7 +47,11 @@ function MemberEdit(props) {
       })
       .then((res) => {
         const member1 = res.data.member;
+        console.log("member", member);
+        console.log("member1", member1);
         setMember({ ...member1, password: "" });
+        setOldProfile(res.data.profile);
+        setProfile(res.data.profile);
         setOldNickName(member1.nickName);
       })
       .catch(() => {
@@ -58,15 +66,28 @@ function MemberEdit(props) {
 
   function handleClickSave() {
     axios
-      .put("/api/member/edit", { ...member, oldPassword })
+      .putForm(
+        "/api/member/edit",
+        {
+          ...member,
+          oldPassword,
+          file,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        },
+      )
       .then((res) => {
         toast({
           status: "success",
           description: "회원 정보가 수정되었습니다.",
           position: "top",
         });
+        console.log("token", res.data.token);
         account.login(res.data.token);
-        navigate(`/member/${id}`);
+        navigate(`/memberinfo`);
       })
       .catch(() => {
         toast({
@@ -111,6 +132,22 @@ function MemberEdit(props) {
   if (!isCheckedNickName) {
     isDisableSaveButton = true;
   }
+  function handleFileChange(e) {
+    const file = e.target.files[0];
+    if (file) {
+      // 파일이 선택되었는지 확인
+      setFile(file);
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfile({ src: reader.result });
+      };
+      reader.readAsDataURL(file);
+    } else {
+      // 파일 선택이 취소되었을 때
+      setProfile({ src: oldProfile.src }); // 원래 사진으로 되돌림
+    }
+  }
 
   function handleCheckNickName() {
     axios
@@ -141,11 +178,25 @@ function MemberEdit(props) {
         <Box>
           <Avatar
             name="defaultProfile"
-            src="https://study9990924.s3.ap-northeast-2.amazonaws.com/prj2/15/Desktop Wallpaper Full HD Laptop Backgrounds Creation.jpeg"
+            src={profile.src}
             w="200px" // 원하는 너비 값으로 조정
             h="200px" // 원하는 높이 값으로 조정
             mb={30}
           />
+          <Box mb={7}>
+            <FormControl>
+              <FormLabel>프로필 사진 선택</FormLabel>
+              <Input
+                multiple
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+              <FormHelperText>
+                총 용량은 10MB, 한 파일은 1MB를 초과할 수 없습니다.
+              </FormHelperText>
+            </FormControl>
+          </Box>
           <Box>
             <FormControl>별명</FormControl>
             <InputGroup>

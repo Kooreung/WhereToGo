@@ -2,7 +2,10 @@ package com.backend.service.member;
 
 import com.backend.domain.member.Member;
 import com.backend.domain.member.MemberProfile;
+import com.backend.mapper.comment.CommentMapper;
 import com.backend.mapper.member.MemberMapper;
+import com.backend.mapper.post.PostMapper;
+import com.backend.service.post.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -35,6 +38,10 @@ public class MemberService {
     final JwtEncoder jwtEncoder;
     //    private MemberProfile memberProfile;
     final S3Client s3Client;
+    private final PostMapper postMapper;
+    private final PostService postService;
+    private final CommentMapper commentMapper;
+
 
     @Value("${aws.s3.bucket.name}")
     String bucketName;
@@ -136,14 +143,13 @@ public class MemberService {
         if (dbMember == null) {
             return false;
         }
-
-        if (!passwordEncoder.matches(member.getPassword(), dbMember.getPassword())) {
+        if (!passwordEncoder.matches(member.getOldPassword(), dbMember.getPassword())) {
             return false;
         }
         return true;
     }
 
-    public Map<String, Object> modify(Member member, Authentication authentication, MultipartFile newProfile) {
+    public Map<String, Object> modify(Member member, Authentication authentication, MultipartFile newProfile) throws IOException {
         if (member.getPassword() != null && member.getPassword().length() > 0) {
             // 패스워드가 입력되었으니 바꾸기
             member.setPassword(passwordEncoder.encode(member.getPassword()));
@@ -154,22 +160,23 @@ public class MemberService {
         }
 
         if (newProfile != null && !newProfile.isEmpty()) {
+            System.out.println(newProfile.getOriginalFilename());
             String key = STR."prj3/\{member.getMemberId()}/\{newProfile.getOriginalFilename()}";
             PutObjectRequest objectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(key)
                     .acl(ObjectCannedACL.PUBLIC_READ)
                     .build();
-            mapper.profileUpdate(member.getMemberId(), newProfile.getOriginalFilename());
+            s3Client.putObject(objectRequest, RequestBody.fromInputStream(newProfile.getInputStream(), newProfile.getSize()));
 
             String prevProfileName = mapper.getProfileNameByMemberId(member.getMemberId());
             String key2 = STR."prj3/\{member.getMemberId()}/\{prevProfileName}";
             DeleteObjectRequest objectRequest2 = DeleteObjectRequest.builder()
                     .bucket(bucketName)
-                    .key(key)
+                    .key(key2)
                     .build();
             s3Client.deleteObject(objectRequest2);
-            mapper.deleteFileByBoardIdAndName(member.getMemberId(), prevProfileName);
+            mapper.profileUpdate(member.getMemberId(), newProfile.getOriginalFilename());
         }
         mapper.update(member);
 
@@ -196,6 +203,9 @@ public class MemberService {
                 .build();
 
         s3Client.deleteObject(objectRequest);
+
+//        List<Post> postList = postMapper.selectAllPost(memberId);
+
         mapper.deleteByid(memberId);
     }
 
