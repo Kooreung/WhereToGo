@@ -37,7 +37,7 @@ function CommentItem({ comment, isTransition, setIsTransition }) {
             <Text>{comment.nickName}</Text>
             <Text>{comment.comment}</Text>
           </Box>
-          {account.hasAccess(comment.memberId) && (
+          {account.hasAccessMemberId(comment.memberId) && (
             <Box>
               <Button onClick={() => setIsEditing(true)}>수정</Button>
               <Button onClick={handleRemoveSubmit} isLoading={isTransition}>
