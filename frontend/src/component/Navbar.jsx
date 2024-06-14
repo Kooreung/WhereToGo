@@ -36,14 +36,6 @@ function Navbar() {
           <Center onClick={() => navigate("/memberinfo")} cursor={"pointer"}>
             프로필
           </Center>
-          <Box
-            onClick={() => {
-              navigate("/comment");
-            }}
-            cursor={"pointer"}
-          >
-            댓글연습
-          </Box>
         </Flex>
       </Flex>
     </Flex>

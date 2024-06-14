@@ -1,8 +1,9 @@
 package com.backend.domain.post;
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 public class Post {
@@ -11,8 +12,8 @@ public class Post {
     private String content;
     private String nickName;
     private Integer viewCount;
-    private LocalDateTime postDate;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate createDate;
     private Integer memberId;
     private Integer likeCount;
     private Integer commentCount;

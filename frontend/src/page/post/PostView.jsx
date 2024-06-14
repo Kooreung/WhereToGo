@@ -6,6 +6,8 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  Grid,
+  GridItem,
   Modal,
   ModalBody,
   ModalContent,
@@ -24,7 +26,10 @@ import axios from "axios";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import CommentComponent from "../../component/Comment/CommentComponent.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart as emptyHeart } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCaretRight,
+  faHeart as emptyHeart,
+} from "@fortawesome/free-solid-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-regular-svg-icons";
 
 export function PostView() {
@@ -104,14 +109,120 @@ export function PostView() {
   return (
     <Flex direction="column" align="center">
       <Flex direction="column" align="center">
-        <Box
+        <Grid
           w={{ base: "720px", lg: "1080px" }}
           h={"80px"}
           bg={"lightgray"}
           my={"32px"}
+          templateColumns={"repeat(5,1fr)"}
+          templateRows={"1fr 1fr"}
         >
-          게시글 정보
-        </Box>
+          <GridItem
+            border={"1px dotted red"}
+            rowSpan={1}
+            colSpan={1}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Flex pl={3}>
+              <Text>
+                지역 <FontAwesomeIcon icon={faCaretRight} />
+              </Text>
+            </Flex>
+          </GridItem>
+          <GridItem
+            border={"1px dotted red"}
+            rowSpan={1}
+            colSpan={4}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Flex pl={3}>
+              <Text>
+                제목 <FontAwesomeIcon icon={faCaretRight} />
+              </Text>
+              <Box ml={1}>{post.title}</Box>
+            </Flex>
+          </GridItem>
+          <GridItem
+            border={"1px dotted red"}
+            rowSpan={1}
+            colSpan={1}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Text pl={3}>
+              작성자 <FontAwesomeIcon icon={faCaretRight} /> {post.nickName}
+            </Text>
+          </GridItem>
+          <GridItem
+            border={"1px dotted red"}
+            rowSpan={1}
+            colSpan={1}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Flex pl={3}>
+              <Text>
+                조회수 <FontAwesomeIcon icon={faCaretRight} />
+              </Text>
+            </Flex>
+          </GridItem>
+          <GridItem
+            border={"1px dotted red"}
+            rowSpan={1}
+            colSpan={1}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Flex pl={3}>
+              <Text>
+                좋아요 <FontAwesomeIcon icon={faCaretRight} /> {like.count}
+              </Text>
+            </Flex>
+          </GridItem>
+          <GridItem
+            border={"1px dotted red"}
+            rowSpan={1}
+            colSpan={1}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Flex pl={3}>
+              <Text>
+                댓글 <FontAwesomeIcon icon={faCaretRight} />
+              </Text>
+            </Flex>
+          </GridItem>
+          <GridItem
+            border={"1px dotted red"}
+            rowSpan={1}
+            colSpan={1}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Flex pl={3}>
+              <Text>
+                작성일자 <FontAwesomeIcon icon={faCaretRight} />{" "}
+                {post.createDate}
+              </Text>
+            </Flex>
+          </GridItem>
+        </Grid>
         <Box w={"576px"} h={"360px"} bg={"lightgray"} my={"32px"}>
           지도
           {/* Todo 지도 표기 필요 */}
@@ -128,18 +239,6 @@ export function PostView() {
       </Flex>
       <Box w={"720px"} h={"360px"} bg={"lightgray"} my={"32px"}>
         <Box>
-          {/*<Box align={"left"} my={10}>*/}
-          {/*  <FormControl>*/}
-          {/*    <FormLabel>제목</FormLabel>*/}
-          {/*    <Input value={post.title} readOnly />*/}
-          {/*  </FormControl>*/}
-          {/*</Box>*/}
-          {/*<Box align={"left"} my={10}>*/}
-          {/*  <FormControl>*/}
-          {/*    <FormLabel>작성자</FormLabel>*/}
-          {/*    <Input value={post.nickName} readOnly />*/}
-          {/*  </FormControl>*/}
-          {/*</Box>*/}
           <Box align={"left"}>
             <FormControl>
               <FormLabel>설명</FormLabel>

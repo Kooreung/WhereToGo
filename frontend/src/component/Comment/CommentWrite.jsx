@@ -5,7 +5,6 @@ import axios from "axios";
 function CommentWrite({ postId, isTransition, setIsTransition }) {
   const [comment, setComment] = useState("");
   const toast = useToast();
-  console.log("comment", comment);
 
   function handleSubmitComment() {
     setIsTransition(true);
@@ -27,7 +26,7 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
   }
 
   return (
-    <Box mt={3}>
+    <Box w={"720px"} my={"16px"} mt={3}>
       <Box>
         <Textarea
           onChange={(e) => setComment(e.target.value)}
