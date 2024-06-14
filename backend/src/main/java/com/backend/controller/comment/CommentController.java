@@ -19,7 +19,6 @@ public class CommentController {
     @PostMapping("add")
     @PreAuthorize("isAuthenticated()")
     public void getComment(@RequestBody Comment comment, Authentication authentication) {
-        System.out.println("comment = " + comment);
         service.add(comment, authentication);
     }
 
@@ -31,7 +30,6 @@ public class CommentController {
     @PutMapping("edit")
     @PreAuthorize("isAuthenticated()")
     public void getCommentEdit(@RequestBody Comment comment, Authentication authentication) {
-        System.out.println("comment = " + comment);
         if (service.hasMemberIdAccess(comment, authentication)) {
             service.edit(comment);
         } else {
@@ -42,7 +40,6 @@ public class CommentController {
     @DeleteMapping("delete")
     @PreAuthorize("isAuthenticated()")
     public void deleteComment(@RequestBody Comment comment, Authentication authentication) {
-        System.out.println("comment = " + comment);
         service.delete(comment, authentication);
     }
 }
