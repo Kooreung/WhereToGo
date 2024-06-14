@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Box, Button, Text, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, Spacer, Text, useToast } from "@chakra-ui/react";
 import CommentEdit from "./CommentEdit.jsx";
 import axios from "axios";
 import { LoginContext } from "../LoginProvider.jsx";
@@ -33,18 +33,21 @@ function CommentItem({ comment, isTransition, setIsTransition }) {
     <Box>
       {isEditing || (
         <Box>
-          <Box>
-            <Text>{comment.nickName}</Text>
-            <Text>{comment.comment}</Text>
-          </Box>
-          {account.hasAccessMemberId(comment.memberId) && (
+          <Flex w={"720px"} my={"16px"} bg={"lightgray"} p={3}>
             <Box>
-              <Button onClick={() => setIsEditing(true)}>수정</Button>
-              <Button onClick={handleRemoveSubmit} isLoading={isTransition}>
-                삭제
-              </Button>
+              <Text fontWeight={"bold"}>{comment.nickName}</Text>
+              <Text>{comment.comment}</Text>
             </Box>
-          )}
+            <Spacer />
+            {account.hasAccessMemberId(comment.memberId) && (
+              <Flex align={"center"} gap={3}>
+                <Button onClick={() => setIsEditing(true)}>수정</Button>
+                <Button onClick={handleRemoveSubmit} isLoading={isTransition}>
+                  삭제
+                </Button>
+              </Flex>
+            )}
+          </Flex>
         </Box>
       )}
       {isEditing && (

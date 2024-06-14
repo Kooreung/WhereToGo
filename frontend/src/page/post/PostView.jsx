@@ -2,9 +2,12 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
+  Divider,
   Flex,
   FormControl,
   FormLabel,
+  Grid,
+  GridItem,
   Input,
   Modal,
   ModalBody,
@@ -12,8 +15,11 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spacer,
   Spinner,
+  Text,
   Textarea,
+  Tooltip,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -23,7 +29,10 @@ import axios from "axios";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import CommentComponent from "../../component/Comment/CommentComponent.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart as emptyHeart } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCaretRight,
+  faHeart as emptyHeart,
+} from "@fortawesome/free-solid-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-regular-svg-icons";
 
 export function PostView() {
@@ -45,6 +54,7 @@ export function PostView() {
       .get(`/api/post/${postId}`)
       .then((res) => {
         setPost(res.data.post);
+        setLike(res.data.like);
       })
       .catch((err) => {
         navigate("/post/list");
@@ -56,7 +66,7 @@ export function PostView() {
           });
         }
       });
-  }, []);
+  }, [isLikeLoading]);
 
   // 게시글 번호 확인
   if (post === null || post === undefined) {
@@ -64,6 +74,9 @@ export function PostView() {
   }
 
   function handleLikeCount() {
+    if (!account.isLoggedIn()) {
+      return;
+    }
     setIsLikeLoading(true);
     axios
       .put("/api/post/like", { postId: post.postId })
@@ -101,63 +114,184 @@ export function PostView() {
   }
 
   return (
-    <Box>
-      <Flex justify={"space-evenly"}>
-        <Box>
-          <Box {...GuideLineMediumBanner} w={500} h={500}>
-            지도
-            {/* Todo 지도 표기 필요 */}
-          </Box>
-          <Box {...GuideLineMediumBanner} w={500}>
-            추가 dsadas
-            {/* Todo 장소 내용 표기 필요 */}
-          </Box>
+    <Flex direction="column" align="center">
+      <Flex direction="column" align="center">
+        <Grid
+          w={{ base: "720px", lg: "1080px" }}
+          h={"80px"}
+          bg={"lightgray"}
+          my={"32px"}
+          templateColumns={"repeat(5,1fr)"}
+          templateRows={"1fr 1fr"}
+        >
+          <GridItem
+            border={"1px dotted red"}
+            rowSpan={1}
+            colSpan={1}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Flex pl={3}>
+              <Text>
+                지역 <FontAwesomeIcon icon={faCaretRight} />
+              </Text>
+            </Flex>
+          </GridItem>
+          <GridItem
+            border={"1px dotted red"}
+            rowSpan={1}
+            colSpan={4}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Flex pl={3}>
+              <Text>
+                제목 <FontAwesomeIcon icon={faCaretRight} />
+              </Text>
+              <Box ml={1}>{post.title}</Box>
+            </Flex>
+          </GridItem>
+          <GridItem
+            border={"1px dotted red"}
+            rowSpan={1}
+            colSpan={1}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Text pl={3}>
+              작성자 <FontAwesomeIcon icon={faCaretRight} /> {post.nickName}
+            </Text>
+          </GridItem>
+          <GridItem
+            border={"1px dotted red"}
+            rowSpan={1}
+            colSpan={1}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Flex pl={3}>
+              <Text>
+                조회수 <FontAwesomeIcon icon={faCaretRight} />
+              </Text>
+            </Flex>
+          </GridItem>
+          <GridItem
+            border={"1px dotted red"}
+            rowSpan={1}
+            colSpan={1}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Flex pl={3}>
+              <Text>
+                좋아요 <FontAwesomeIcon icon={faCaretRight} /> {like.count}
+              </Text>
+            </Flex>
+          </GridItem>
+          <GridItem
+            border={"1px dotted red"}
+            rowSpan={1}
+            colSpan={1}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Flex pl={3}>
+              <Text>
+                댓글 <FontAwesomeIcon icon={faCaretRight} />
+              </Text>
+            </Flex>
+          </GridItem>
+          <GridItem
+            border={"1px dotted red"}
+            rowSpan={1}
+            colSpan={1}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Flex pl={3}>
+              <Text>
+                작성일자 <FontAwesomeIcon icon={faCaretRight} />{" "}
+                {post.createDate}
+              </Text>
+            </Flex>
+          </GridItem>
+        </Grid>
+        <Box w={"576px"} h={"360px"} bg={"lightgray"} my={"32px"}>
+          지도
+          {/* Todo 지도 표기 필요 */}
         </Box>
-        <Box>
-          <Box {...GuideLineMediumBanner} w={500} h={1000} p={10}>
-            <Box align={"left"} my={10}>
-              <FormControl>
-                <FormLabel>제목</FormLabel>
-                <Input value={post.title} readOnly />
-              </FormControl>
-            </Box>
-            <Box align={"left"} my={10}>
-              <FormControl>
-                <FormLabel>작성자</FormLabel>
-                <Input value={post.nickName} readOnly />
-              </FormControl>
-            </Box>
-            <Box align={"left"} my={10}>
-              <FormControl>
-                <FormLabel>설명</FormLabel>
-                <Textarea h={200} value={post.content} readOnly></Textarea>
-              </FormControl>
-            </Box>
-          </Box>
-          {account.hasAccessMemberId(post.memberId) && (
-            <Box>
-              <Box align={"left"} my={10}>
-                <Button onClick={() => navigate(`/post/${postId}/edit`)}>
-                  수정
-                </Button>
-                <Button onClick={onModalOpenOfDelete}>삭제</Button>
-              </Box>
-            </Box>
-          )}
-          {/*좋아요*/}
-          <Flex justifyContent="center" alignItems="center" my={1}>
-            <Box onClick={handleLikeCount}>
-              {like.like && <FontAwesomeIcon icon={emptyHeart} />}
-              {like.like || <FontAwesomeIcon icon={fullHeart} />}
-            </Box>
-          </Flex>
-          <Flex justifyContent="center" alignItems="center">
-            <Box>like {like.count}</Box>
-          </Flex>
-          {/*댓글*/}
-          <CommentComponent postId={post.postId} />
+        <Box
+          w={{ base: "720px", lg: "1080px" }}
+          h={"160px"}
+          bg={"lightgray"}
+          my={"32px"}
+        >
+          장소 선택
+          {/* Todo 장소 내용 표기 필요 */}
         </Box>
       </Flex>
+      <Box w={"720px"} h={"360px"} bg={"lightgray"} my={"32px"}>
+        <Box>
+          <Box align={"left"}>
+            <FormControl>
+              <FormLabel>설명</FormLabel>
+              <Textarea value={post.content} readOnly></Textarea>
+            </FormControl>
+          </Box>
+        </Box>
+      </Box>
+
+      <Divider border={"1px solid lightGray"} w={"720px"} />
+      {/* 좋아요 & 수정/삭제/목록 버튼 */}
+      <Flex w={"720px"} h={"64px"} my={"16px"} align={"center"}>
+        {/* 좋아요 */}
+        <Tooltip
+          isDisabled={account.isLoggedIn()}
+          hasArrow
+          label={"로그인 해주세요"}
+        >
+        <Button onClick={handleLikeCount}>
+          <Flex align={"center"} gap={1}>
+            <Text fontSize={"xl"}>
+              {like.like && <FontAwesomeIcon icon={emptyHeart} />}
+              {like.like || <FontAwesomeIcon icon={fullHeart} />}
+            </Text>
+            <Text fontSize={"xl"}>좋아요</Text>
+            <Text fontSize={"xl"}>{like.count}</Text>
+          </Flex>
+        </Button>
+        </Tooltip>
+        <Spacer />
+        {/* 수정 및 삭제 버튼 */}
+        {account.hasAccessMemberId(post.memberId) && (
+          <Box>
+            <Box align={"left"} my={10}>
+              <Button onClick={() => navigate(`/post/${postId}/edit`)}>
+                수정
+              </Button>
+              <Button onClick={onModalOpenOfDelete}>삭제</Button>
+            </Box>
+          </Box>
+        )}
+        {/* 목록 */}
+        <Button onClick={() => navigate("/post/list")}>목록</Button>
+      </Flex>
+      {/*댓글*/}
+      <CommentComponent postId={post.postId} />
 
       <Modal isOpen={isModalOpenOfDelete} onClose={onModalCloseOfDelete}>
         <ModalOverlay />
@@ -170,6 +304,6 @@ export function PostView() {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </Box>
+    </Flex>
   );
 }

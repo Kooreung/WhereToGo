@@ -93,7 +93,6 @@ public class PostController {
     @PutMapping("like")
     @PreAuthorize("isAuthenticated()")
     public Map<String, Object> postLike(@RequestBody Map<String, Object> like, Authentication authentication) {
-        System.out.println("like = " + like);
         return postService.postLike(like, authentication);
     }
 

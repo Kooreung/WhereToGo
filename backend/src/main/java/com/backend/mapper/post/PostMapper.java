@@ -103,4 +103,11 @@ public interface PostMapper {
             WHERE postid=#{postId}
             """)
     Object selectCountLikeByBoardId(Integer postId);
+
+    @Select("""
+            select count(*) from likes
+            where postid=#{postId}
+            and memberid=#{memberId}
+            """)
+    int selectLikeByPostIdAndMemberId(Integer postId, String memberId);
 }

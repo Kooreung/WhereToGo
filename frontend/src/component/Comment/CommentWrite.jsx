@@ -1,18 +1,22 @@
-import React, { useState } from "react";
-import { Box, Button, Textarea, useToast } from "@chakra-ui/react";
+import React, { useContext, useState } from "react";
+import { Box, Button, Flex, Textarea, Tooltip, useToast } from "@chakra-ui/react";
 import axios from "axios";
+import { LoginContext } from "../LoginProvider.jsx";
 
 function CommentWrite({ postId, isTransition, setIsTransition }) {
   const [comment, setComment] = useState("");
   const toast = useToast();
-  console.log("comment", comment);
+  const account = useContext(LoginContext);
 
   function handleSubmitComment() {
+    if (!account.isLoggedIn()) {
+      return;
+    }
     setIsTransition(true);
     axios
       .post("/api/comment/add", { postId, comment })
       .then((res) => {
-        // TODO INPUT 초기화 필요
+        setComment("");
         toast({
           status: "success",
           position: "top",
@@ -27,18 +31,24 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
   }
 
   return (
-    <Box>
+    <Box w={"720px"} my={"16px"} mt={3}>
       <Box>
         <Textarea
           onChange={(e) => setComment(e.target.value)}
           value={comment}
         />
       </Box>
-      <Box>
+      <Flex justify={"end"} mt={3}>
+        <Tooltip
+          isDisabled={account.isLoggedIn()}
+          hasArrow
+          label={"회원만 작성 가능합니다"}
+        >
         <Button onClick={handleSubmitComment} isLoading={isTransition}>
           작성
         </Button>
-      </Box>
+        </Tooltip>
+      </Flex>
     </Box>
   );
 }

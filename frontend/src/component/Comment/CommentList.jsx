@@ -21,7 +21,7 @@ function CommentList({ postId, isTransition, setIsTransition }) {
         {commentList.map((comment) => (
           <CommentItem
             comment={comment}
-            key={comment.commentid}
+            key={comment.commentId}
             isTransition={isTransition}
             setIsTransition={setIsTransition}
           />
