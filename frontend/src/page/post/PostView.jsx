@@ -39,9 +39,10 @@ export function PostView() {
       .get(`/api/post/${postId}`)
       .then((res) => {
         setPost(res.data.post);
+        console.log(res.data.post);
       })
       .catch((err) => {
-        navigate("/post/list")
+        navigate("/post/list");
         if (err.response.status === 404) {
           toast({
             status: "error",
@@ -115,7 +116,7 @@ export function PostView() {
               </FormControl>
             </Box>
           </Box>
-          {/*{account.hasAccess(post.memberId) && (*/}
+          {account.hasAccessMemberId(post.memberId) && (
             <Box>
               <Box align={"left"} my={10}>
                 <Button onClick={() => navigate(`/post/${postId}/edit`)}>
@@ -124,6 +125,7 @@ export function PostView() {
                 <Button onClick={onModalOpenOfDelete}>삭제</Button>
               </Box>
             </Box>
+          )}
         </Box>
       </Flex>
 

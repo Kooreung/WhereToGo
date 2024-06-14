@@ -86,7 +86,6 @@ public class PostService {
     // 게시글 수정 시 권한 체크 서비스
     public boolean hasAccess(Integer postId, Authentication authentication) {
         Post post = postMapper.selectById(postId);
-        System.out.println(Integer.valueOf(authentication.getName()));
         return post.getMemberId().equals(Integer.valueOf(authentication.getName()));
     }
 

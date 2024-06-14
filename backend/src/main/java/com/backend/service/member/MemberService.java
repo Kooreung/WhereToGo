@@ -258,6 +258,7 @@ public class MemberService {
                         .subject(db.getMemberId().toString()) // unique 한 값 사용
                         .claim("scope", "") // 권한
                         .claim("nickName", db.getNickName())
+                        .claim("email", db.getEmail())
                         .build();
 
                 // 인코딩 된 jwk 변수에 할당
