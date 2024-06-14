@@ -30,7 +30,7 @@ import {
 import DaumPostcodeEmbed from "react-daum-postcode";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
+import {Link, Navigate, useNavigate} from "react-router-dom";
 
 export function MemberSignup() {
   const [email, setEmail] = useState("");
@@ -53,9 +53,10 @@ export function MemberSignup() {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(true);
-  const toast = useToast();
   const [file, setFiles] = useState(null);
   const { onClose, onOpen, isOpen } = useDisclosure();
+  const toast = useToast();
+  const navigate = useNavigate();
 
   const isValidEmail = (email) => emailPattern.test(email);
   const isValidPassword = (password) => passwordPattern.test(password);
@@ -201,6 +202,7 @@ export function MemberSignup() {
           status: "success",
           position: "top",
         });
+        navigate("/login");
       })
       .catch(() => {
         toast({
@@ -276,6 +278,7 @@ export function MemberSignup() {
             <FormControl>
               <FormLabel>이메일</FormLabel>
               <Input
+                maxLength="25"
                 placeholder="project@naver.com"
                 value={email}
                 onChange={(e) => {
@@ -304,6 +307,7 @@ export function MemberSignup() {
             <FormControl>
               <FormLabel>비밀번호</FormLabel>
               <Input
+                maxLength="50"
                 placeholder="최소 8자 이상(알파벳, 숫자 필수)"
                 type="password"
                 value={password}
@@ -323,6 +327,7 @@ export function MemberSignup() {
             <FormControl>
               <FormLabel>비밀번호 확인</FormLabel>
               <Input
+                maxLength="50"
                 placeholder="비밀번호를 한번 더 입력해 주세요."
                 type="password"
                 value={passwordCheck}
@@ -339,6 +344,7 @@ export function MemberSignup() {
             <FormControl>
               <FormLabel>이름</FormLabel>
               <Input
+                maxLength="30"
                 placeholder="홍길동"
                 value={name}
                 onChange={(e) => setName(e.target.value.trim())}
@@ -349,6 +355,7 @@ export function MemberSignup() {
             <FormControl>
               <FormLabel>닉네임</FormLabel>
               <Input
+                maxLength="20"
                 placeholder="별명"
                 value={nickName}
                 onChange={(e) => setNickName(e.target.value.trim())}
@@ -423,6 +430,7 @@ export function MemberSignup() {
             <FormControl>
               <FormLabel>전화번호</FormLabel>
               <Input
+                maxLength="30"
                 placeholder="숫자만 입력해 주세요."
                 value={phoneNumber}
                 onChange={(e) => {
@@ -442,6 +450,7 @@ export function MemberSignup() {
               <FormLabel>주소</FormLabel>
               <InputGroup>
                 <Input
+                  maxLength="100"
                   placeholder="주소를 검색하거나 직접 입력해 주세요."
                   value={address}
                   onChange={(e) => setAddress(e.target.value.trim())}

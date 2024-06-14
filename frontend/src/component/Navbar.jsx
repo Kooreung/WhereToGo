@@ -1,9 +1,12 @@
-import React from "react";
+import React, {useContext} from "react";
 import { Box, Center, Flex } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import {LoginContext} from "./LoginProvider.jsx";
 
 function Navbar() {
   const navigate = useNavigate();
+  const account = useContext(LoginContext);
+
   return (
     <Flex
       align={"center"}
@@ -27,12 +30,21 @@ function Navbar() {
         <Center onClick={() => navigate("/signup")} cursor={"pointer"}>
           회원가입
         </Center>
+        {account.isLoggedIn() ||(
         <Center onClick={() => navigate("/login")} cursor={"pointer"}>
           로그인
         </Center>
+        )}
+        {account.isLoggedIn() && (
+        <Center onClick={() => {account.logout(); navigate("/")}} cursor={"pointer"}>
+          로그아웃
+        </Center>
+        )}
+        {account.isLoggedIn() && (
         <Center onClick={() => navigate("/memberinfo")} cursor={"pointer"}>
           프로필
         </Center>
+        )}
         <Box
           onClick={() => {
             navigate("/comment");
