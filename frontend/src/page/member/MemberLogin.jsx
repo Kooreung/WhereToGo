@@ -13,13 +13,15 @@ import axios from "axios";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 export function MemberLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showAndPassword, setShowAndPassword] = useState(false);
   const toast = useToast();
   const account = useContext(LoginContext);
-  const [showAndPassword, setShowAndPassword] = useState(false);
+  const navigate = useNavigate();
 
   function handleLogin() {
     axios
@@ -43,6 +45,10 @@ export function MemberLogin() {
         });
       })
       .finally(() => {});
+  }
+
+  function handleFindPassword() {
+    navigate("/FindPassword");
   }
 
   return (
@@ -74,6 +80,9 @@ export function MemberLogin() {
         </Box>
         <Box>
           <Button onClick={handleLogin}>로그인</Button>
+        </Box>
+        <Box>
+          <Button onClick={handleFindPassword}>비밀번호 찾기</Button>
         </Box>
       </Box>
     </Box>

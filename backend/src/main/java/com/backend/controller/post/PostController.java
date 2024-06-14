@@ -3,7 +3,10 @@ package com.backend.controller.post;
 import com.backend.domain.post.Post;
 import com.backend.service.post.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -17,23 +20,23 @@ public class PostController {
 
     // 게시글 추가 | 작성 Controller
     @PostMapping("add")
-    public ResponseEntity postAdd(Post post) {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Integer> postAdd(Post post, Authentication authentication) {
         if (postService.validate(post)) {
-            postService.add(post);
-            System.out.println("post = " + post);
-            return ResponseEntity.ok().build();
+            Integer result = postService.add(post, authentication);
+            return ResponseEntity.ok().body(result);
         } else {
-            System.out.println("post = " + post);
+
             return ResponseEntity.badRequest().build();
         }
     }
 
     // 게시글 조회 Controller
     @GetMapping("{postId}")
-    public ResponseEntity postRead(@PathVariable Integer postId) {
-        Map<String, Object> result = postService.get(postId);
+    public ResponseEntity postRead(@PathVariable Integer postId, Authentication authentication) {
+        Map<String, Object> result = postService.get(postId, authentication);
         if (result.get("post") == null) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok().body(result);
     }
@@ -59,14 +62,30 @@ public class PostController {
 
     // 게시글 삭제 Controller
     @DeleteMapping("{postId}")
-    public void postDelete() {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity postDelete(@PathVariable Integer postId, Authentication authentication) {
+        if (postService.hasAccess(postId,authentication)) {
+            postService.remove(postId);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
     }
 
     // 게시글 수정 Controller
     @PutMapping("edit")
-    public void postEdit(Post post) {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity postEdit(Post post,
+                                   Authentication authentication) {
+        if (!postService.hasAccess(post.getPostId(), authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         if (postService.validate(post)) {
             postService.edit(post);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
         }
     }
 

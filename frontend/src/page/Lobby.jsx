@@ -3,7 +3,7 @@ import { Box, Center, Flex } from "@chakra-ui/react";
 import {
   GuideLineLargeBanner,
   GuideLineMediumBanner,
-} from "../CustomStyles.jsx";
+} from "../css/CustomStyles.jsx";
 
 function Lobby() {
   return (
@@ -25,6 +25,7 @@ function Lobby() {
         <Box {...GuideLineMediumBanner}></Box>
         <Box {...GuideLineMediumBanner}></Box>
       </Flex>
+      {/* TODO 다크/라이트 모드 추가 필요 */}
     </Box>
   );
 }
