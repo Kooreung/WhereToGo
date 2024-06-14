@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode"; // 여러 컴포넌트가 현재 로그인 정보 사용하기 위해 Context 사용
 
 // 여러 컴포넌트가 현재 로그인 정보 사용하기 위해 Context 사용
@@ -9,6 +9,14 @@ export function LoginProvider({ children }) {
   const [nickName, setNickName] = useState("");
   // 로그인 한 날짜(시간) state 에 저장
   const [expired, setExpired] = useState(0);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token === null) {
+      return;
+    }
+    login(token);
+  }, []);
 
   // 로그인 유무 확인 함수
   function isLoggedIn() {
@@ -51,5 +59,3 @@ export function LoginProvider({ children }) {
     </LoginContext.Provider>
   );
 }
-
-export default LoginProvider;

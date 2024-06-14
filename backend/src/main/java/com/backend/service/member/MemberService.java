@@ -2,7 +2,10 @@ package com.backend.service.member;
 
 import com.backend.domain.member.Member;
 import com.backend.domain.member.MemberProfile;
+import com.backend.mapper.comment.CommentMapper;
 import com.backend.mapper.member.MemberMapper;
+import com.backend.mapper.post.PostMapper;
+import com.backend.service.post.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -35,6 +38,10 @@ public class MemberService {
     final JwtEncoder jwtEncoder;
     //    private MemberProfile memberProfile;
     final S3Client s3Client;
+    private final PostMapper postMapper;
+    private final PostService postService;
+    private final CommentMapper commentMapper;
+
 
     @Value("${aws.s3.bucket.name}")
     String bucketName;
@@ -196,6 +203,9 @@ public class MemberService {
                 .build();
 
         s3Client.deleteObject(objectRequest);
+
+//        List<Post> postList = postMapper.selectAllPost(memberId);
+
         mapper.deleteByid(memberId);
     }
 

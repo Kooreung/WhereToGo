@@ -125,6 +125,7 @@ public class MemberController {
     public ResponseEntity delete(
             @RequestBody Member member,
             Authentication authentication) {
+        System.out.println("id" + member.getMemberId());
         if (service.hasAccess(member, authentication)) {
             service.delete(member.getMemberId());
             return ResponseEntity.ok().build();

@@ -11,9 +11,19 @@ import { PostView } from "./page/post/PostView.jsx";
 import PostList from "./page/post/PostList.jsx";
 import { PostEdit } from "./page/post/PostEdit.jsx";
 import { MemberLogin } from "./page/member/MemberLogin.jsx";
-import LoginProvider from "./component/LoginProvider.jsx";
+import { LoginProvider } from "./component/LoginProvider.jsx";
 import { FindPassword } from "./page/member/FindPassword.jsx";
 import MemberEdit from "./page/member/MemberEdit.jsx";
+import axios from "axios"; // axios interceptor 설정
+
+// axios interceptor 설정
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 // 라우터 설정
 const router = createBrowserRouter([
