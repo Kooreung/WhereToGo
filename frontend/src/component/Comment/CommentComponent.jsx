@@ -7,17 +7,17 @@ export function CommentComponent({ postId }) {
   const [isTransition, setIsTransition] = useState(false);
   return (
     <Box>
-      <Box>Comment</Box>
-      <CommentList
-        postId={postId}
-        isTransition={isTransition}
-        setIsTransition={setIsTransition}
-      ></CommentList>
+      <Box fontSize={"lg"}>댓글</Box>
       <CommentWrite
         postId={postId}
         isTransition={isTransition}
         setIsTransition={setIsTransition}
       ></CommentWrite>
+      <CommentList
+        postId={postId}
+        isTransition={isTransition}
+        setIsTransition={setIsTransition}
+      ></CommentList>
     </Box>
   );
 }

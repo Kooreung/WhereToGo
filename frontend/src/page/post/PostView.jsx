@@ -2,22 +2,23 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
+  Divider,
   Flex,
   FormControl,
   FormLabel,
-  Input,
   Modal,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spacer,
   Spinner,
+  Text,
   Textarea,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { GuideLineMediumBanner } from "../../css/CustomStyles.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { LoginContext } from "../../component/LoginProvider.jsx";
@@ -101,63 +102,84 @@ export function PostView() {
   }
 
   return (
-    <Box>
-      <Flex justify={"space-evenly"}>
-        <Box>
-          <Box {...GuideLineMediumBanner} w={500} h={500}>
-            지도
-            {/* Todo 지도 표기 필요 */}
-          </Box>
-          <Box {...GuideLineMediumBanner} w={500}>
-            추가 dsadas
-            {/* Todo 장소 내용 표기 필요 */}
-          </Box>
+    <Flex direction="column" align="center">
+      <Flex direction="column" align="center">
+        <Box
+          w={{ base: "720px", lg: "1080px" }}
+          h={"80px"}
+          bg={"lightgray"}
+          my={"32px"}
+        >
+          게시글 정보
         </Box>
-        <Box>
-          <Box {...GuideLineMediumBanner} w={500} h={1000} p={10}>
-            <Box align={"left"} my={10}>
-              <FormControl>
-                <FormLabel>제목</FormLabel>
-                <Input value={post.title} readOnly />
-              </FormControl>
-            </Box>
-            <Box align={"left"} my={10}>
-              <FormControl>
-                <FormLabel>작성자</FormLabel>
-                <Input value={post.nickName} readOnly />
-              </FormControl>
-            </Box>
-            <Box align={"left"} my={10}>
-              <FormControl>
-                <FormLabel>설명</FormLabel>
-                <Textarea h={200} value={post.content} readOnly></Textarea>
-              </FormControl>
-            </Box>
-          </Box>
-          {account.hasAccessMemberId(post.memberId) && (
-            <Box>
-              <Box align={"left"} my={10}>
-                <Button onClick={() => navigate(`/post/${postId}/edit`)}>
-                  수정
-                </Button>
-                <Button onClick={onModalOpenOfDelete}>삭제</Button>
-              </Box>
-            </Box>
-          )}
-          {/*좋아요*/}
-          <Flex justifyContent="center" alignItems="center" my={1}>
-            <Box onClick={handleLikeCount}>
-              {like.like && <FontAwesomeIcon icon={emptyHeart} />}
-              {like.like || <FontAwesomeIcon icon={fullHeart} />}
-            </Box>
-          </Flex>
-          <Flex justifyContent="center" alignItems="center">
-            <Box>like {like.count}</Box>
-          </Flex>
-          {/*댓글*/}
-          <CommentComponent postId={post.postId} />
+        <Box w={"576px"} h={"360px"} bg={"lightgray"} my={"32px"}>
+          지도
+          {/* Todo 지도 표기 필요 */}
+        </Box>
+        <Box
+          w={{ base: "720px", lg: "1080px" }}
+          h={"160px"}
+          bg={"lightgray"}
+          my={"32px"}
+        >
+          장소 선택
+          {/* Todo 장소 내용 표기 필요 */}
         </Box>
       </Flex>
+      <Box w={"720px"} h={"360px"} bg={"lightgray"} my={"32px"}>
+        <Box>
+          {/*<Box align={"left"} my={10}>*/}
+          {/*  <FormControl>*/}
+          {/*    <FormLabel>제목</FormLabel>*/}
+          {/*    <Input value={post.title} readOnly />*/}
+          {/*  </FormControl>*/}
+          {/*</Box>*/}
+          {/*<Box align={"left"} my={10}>*/}
+          {/*  <FormControl>*/}
+          {/*    <FormLabel>작성자</FormLabel>*/}
+          {/*    <Input value={post.nickName} readOnly />*/}
+          {/*  </FormControl>*/}
+          {/*</Box>*/}
+          <Box align={"left"}>
+            <FormControl>
+              <FormLabel>설명</FormLabel>
+              <Textarea value={post.content} readOnly></Textarea>
+            </FormControl>
+          </Box>
+        </Box>
+      </Box>
+
+      <Divider border={"1px solid lightGray"} w={"720px"} />
+      {/* 좋아요 & 수정/삭제/목록 버튼 */}
+      <Flex w={"720px"} h={"64px"} my={"16px"} align={"center"}>
+        {/* 좋아요 */}
+        <Button onClick={handleLikeCount}>
+          <Flex align={"center"} gap={1}>
+            <Text fontSize={"xl"}>
+              {like.like && <FontAwesomeIcon icon={emptyHeart} />}
+              {like.like || <FontAwesomeIcon icon={fullHeart} />}
+            </Text>
+            <Text fontSize={"xl"}>좋아요</Text>
+            <Text fontSize={"xl"}>{like.count}</Text>
+          </Flex>
+        </Button>
+        <Spacer />
+        {/* 수정 및 삭제 버튼 */}
+        {account.hasAccessMemberId(post.memberId) && (
+          <Box>
+            <Box align={"left"}>
+              <Button onClick={() => navigate(`/post/${postId}/edit`)}>
+                수정
+              </Button>
+              <Button onClick={onModalOpenOfDelete}>삭제</Button>
+            </Box>
+          </Box>
+        )}
+        {/* 목록 */}
+        <Button onClick={() => navigate("/post/list")}>목록</Button>
+      </Flex>
+      {/*댓글*/}
+      <CommentComponent postId={post.postId} />
 
       <Modal isOpen={isModalOpenOfDelete} onClose={onModalCloseOfDelete}>
         <ModalOverlay />
@@ -170,6 +192,6 @@ export function PostView() {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </Box>
+    </Flex>
   );
 }

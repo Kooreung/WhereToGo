@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, Textarea, useToast } from "@chakra-ui/react";
+import { Box, Button, Flex, Textarea, useToast } from "@chakra-ui/react";
 import axios from "axios";
 
 function CommentWrite({ postId, isTransition, setIsTransition }) {
@@ -27,18 +27,18 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
   }
 
   return (
-    <Box>
+    <Box mt={3}>
       <Box>
         <Textarea
           onChange={(e) => setComment(e.target.value)}
           value={comment}
         />
       </Box>
-      <Box>
+      <Flex justify={"end"} mt={3}>
         <Button onClick={handleSubmitComment} isLoading={isTransition}>
           작성
         </Button>
-      </Box>
+      </Flex>
     </Box>
   );
 }
