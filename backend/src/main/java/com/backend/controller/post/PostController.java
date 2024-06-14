@@ -64,7 +64,7 @@ public class PostController {
     @DeleteMapping("{postId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity postDelete(@PathVariable Integer postId, Authentication authentication) {
-        if (postService.hasAccess(postId,authentication)) {
+        if (postService.hasMemberIdAccess(postId, authentication)) {
             postService.remove(postId);
             return ResponseEntity.ok().build();
         } else {
@@ -78,7 +78,7 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity postEdit(Post post,
                                    Authentication authentication) {
-        if (!postService.hasAccess(post.getPostId(), authentication)) {
+        if (!postService.hasMemberIdAccess(post.getPostId(), authentication)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         if (postService.validate(post)) {

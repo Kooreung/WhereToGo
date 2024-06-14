@@ -32,7 +32,7 @@ public class CommentController {
     @PreAuthorize("isAuthenticated()")
     public void getCommentEdit(@RequestBody Comment comment, Authentication authentication) {
         System.out.println("comment = " + comment);
-        if (service.hasAccess(comment, authentication)) {
+        if (service.hasMemberIdAccess(comment, authentication)) {
             service.edit(comment);
         } else {
             throw new AccessDeniedException("Access denied");

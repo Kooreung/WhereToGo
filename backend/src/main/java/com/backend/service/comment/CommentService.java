@@ -32,7 +32,7 @@ public class CommentService {
         mapper.delete(comment);
     }
 
-    public boolean hasAccess(Comment comment, Authentication authentication) {
+    public boolean hasMemberIdAccess(Comment comment, Authentication authentication) {
         Comment db = mapper.selectById(comment.getCommentId());
         if (db == null) {
             return false;
