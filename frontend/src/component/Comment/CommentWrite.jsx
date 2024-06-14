@@ -12,6 +12,7 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
     axios
       .post("/api/comment/add", { postId, comment })
       .then((res) => {
+        // TODO INPUT 초기화 필요
         toast({
           status: "success",
           position: "top",

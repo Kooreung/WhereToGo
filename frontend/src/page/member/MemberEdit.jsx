@@ -186,6 +186,7 @@ function MemberEdit(props) {
           <Box mb={7}>
             <FormControl>
               <FormLabel>프로필 사진 선택</FormLabel>
+              {/* TODO 수정 시 사진 적용 안됨 */}
               <Input
                 multiple
                 type="file"
@@ -220,6 +221,7 @@ function MemberEdit(props) {
             </InputGroup>
             <FormControl>
               <FormLabel>기존 비밀번호</FormLabel>
+              {/* TODO 비밀번호 수정 로직 가입 할 때랑 동일하게 설정 필요 */}
               <Input onChange={(e) => setOldPassword(e.target.value)} />
             </FormControl>
             <FormControl>

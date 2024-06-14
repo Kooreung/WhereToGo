@@ -37,6 +37,8 @@ const router = createBrowserRouter([
         // 메인페이지
       },
       // 멤버 페이지
+      // TODO 전체 페이지 네이밍 규칙 동일하게 설정 필요
+      // TODO MODAL 규칙 동일하게 하단으로 설정 필요
       { path: "signup", element: <MemberSignup /> },
       { path: "login", element: <MemberLogin /> },
       { path: "findPassword", element: <MemberFindPassword /> },
