@@ -11,13 +11,14 @@ public interface PostMapper {
     // 게시글 추가 매퍼
     @Insert("""
             INSERT INTO post (title, content, memberid)
-            VALUES (#{title}, #{content}, 1)
+            VALUES (#{title}, #{content}, #{memberId})
             """)
+    @Options(useGeneratedKeys = true, keyProperty = "postId")
     int insert(Post post);
 
     // 게시글 조회 매퍼
     @Select("""
-            SELECT p.postid, p.title, p.content, p.createdate, p.view, m.nickname
+            SELECT p.postid, p.title, p.content, p.createdate, p.view, m.nickname, p.memberid
             FROM post p JOIN member m
             ON p.memberid = m.memberid
             WHERE p.postid = #{postId}
@@ -76,6 +77,13 @@ public interface PostMapper {
             WHERE postid=#{postId}
             """)
     void update(Post post);
+
+    // 게시글 삭제 매퍼
+    @Delete("""
+            DELETE FROM post
+            WHERE postid=#{postId}
+            """)
+    Integer deleteById(Integer postId);
 
     @Delete("""
             DELETE FROM likes

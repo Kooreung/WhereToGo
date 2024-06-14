@@ -29,12 +29,14 @@ public class PostService {
     }
 
     // 게시글 추가 서비스
-    public void add(Post post) {
+    public Integer add(Post post, Authentication authentication) {
+        post.setMemberId(Integer.valueOf(authentication.getName()));
         postMapper.insert(post);
+        return post.getPostId();
     }
 
     // 게시글 조회 서비스
-    public Map<String, Object> get(Integer postId) {
+    public Map<String, Object> get(Integer postId, Authentication authentication) {
         Post post = postMapper.selectById(postId);
         Map<String, Object> result = new HashMap<>();
         result.put("post", post);
@@ -66,9 +68,6 @@ public class PostService {
         if (nextPageNumber <= lastPageNumber) {
             pageInfo.put("nextPageNumber", nextPageNumber);
         }
-        System.out.println("prevPageNumber = " + prevPageNumber);
-        System.out.println("nextPageNumber = " + nextPageNumber);
-        System.out.println("page = " + page);
 
         pageInfo.put("currentPageNumber", page);
         pageInfo.put("lastPageNumber", lastPageNumber);
@@ -83,6 +82,18 @@ public class PostService {
     public void edit(Post post) {
         postMapper.update(post);
     }
+
+    // 게시글 수정 시 권한 체크 서비스
+    public boolean hasMemberIdAccess(Integer postId, Authentication authentication) {
+        Post post = postMapper.selectById(postId);
+        return post.getMemberId().equals(Integer.valueOf(authentication.getName()));
+    }
+
+    // 게시글 삭제 서비스
+    public void remove(Integer postId) {
+        postMapper.deleteById(postId);
+    }
+
 
     public Map<String, Object> postLike(Map<String, Object> like, Authentication authentication) {
         Map<String, Object> result = new HashMap<>();

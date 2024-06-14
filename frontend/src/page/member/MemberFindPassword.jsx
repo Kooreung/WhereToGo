@@ -3,13 +3,15 @@ import axios from "axios";
 import {
   Box,
   Button,
+  Center,
   FormControl,
   FormLabel,
+  Heading,
   Input,
   useToast,
 } from "@chakra-ui/react";
 
-export function FindPassword() {
+export function MemberFindPassword() {
   const [email, setEmail] = useState("");
   const toast = useToast();
 
@@ -34,16 +36,21 @@ export function FindPassword() {
   }
 
   return (
-    <Box>
-      <Box>
+    <Center>
+      <Box w={500}>
         <Box>
-          <FormControl>
-            <FormLabel>이메일</FormLabel>
-            <Input onChange={(e) => setEmail(e.target.value)} />
-          </FormControl>
+          <Box>
+            <Heading>비밀번호 찾기</Heading>
+          </Box>
+          <Box>
+            <FormControl>
+              <FormLabel>이메일</FormLabel>
+              <Input onChange={(e) => setEmail(e.target.value)} />
+            </FormControl>
+          </Box>
+          <Button onClick={handleFindPassword}>임시 비밀번호 발급</Button>
         </Box>
-        <Button onClick={handleFindPassword}>임시 비밀번호 발급</Button>
       </Box>
-    </Box>
+    </Center>
   );
 }
