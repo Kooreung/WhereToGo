@@ -1,8 +1,10 @@
 import {
   Box,
   Button,
+  Center,
   FormControl,
   FormLabel,
+  Heading,
   Input,
   InputGroup,
   InputRightElement,
@@ -13,7 +15,7 @@ import axios from "axios";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export function MemberLogin() {
   const [email, setEmail] = useState("");
@@ -47,44 +49,62 @@ export function MemberLogin() {
       .finally(() => {});
   }
 
-  function handleFindPassword() {
-    navigate("/FindPassword");
-  }
-
   return (
-    <Box>
-      <Box>로그인</Box>
-      <Box>
+    <Center>
+      <Box w={500}>
         <Box>
-          <FormControl>
-            <FormLabel>이메일</FormLabel>
-            <Input onChange={(e) => setEmail(e.target.value)} />
-          </FormControl>
+          <Heading>로그인</Heading>
         </Box>
         <Box>
-          <FormControl>
-            <FormLabel>비밀번호</FormLabel>
-            <InputGroup>
-              <Input
-                type={showAndPassword ? "text" : "password"}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <InputRightElement
-                cursor="pointer"
-                onClick={() => setShowAndPassword(!showAndPassword)}
-              >
-                <FontAwesomeIcon icon={showAndPassword ? faEyeSlash : faEye} />
-              </InputRightElement>
-            </InputGroup>
-          </FormControl>
-        </Box>
-        <Box>
-          <Button onClick={handleLogin}>로그인</Button>
-        </Box>
-        <Box>
-          <Button onClick={handleFindPassword}>비밀번호 찾기</Button>
+          <Box>
+            <FormControl>
+              <FormLabel>이메일</FormLabel>
+              <Input onChange={(e) => setEmail(e.target.value)} />
+            </FormControl>
+          </Box>
+          <Box>
+            <FormControl>
+              <FormLabel>비밀번호</FormLabel>
+              <InputGroup>
+                <Input
+                  type={showAndPassword ? "text" : "password"}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <InputRightElement
+                  cursor="pointer"
+                  onClick={() => setShowAndPassword(!showAndPassword)}
+                >
+                  <FontAwesomeIcon
+                    icon={showAndPassword ? faEyeSlash : faEye}
+                  />
+                </InputRightElement>
+              </InputGroup>
+            </FormControl>
+          </Box>
+          <Box style={{ textAlign: "right" }}>
+            <Link
+              to="/findPassword"
+              style={{ textDecoration: "underline", color: "dodgerblue" }}
+            >
+              비밀번호 찾기
+            </Link>
+          </Box>
+          <Box>
+            <Button w={500} onClick={handleLogin}>
+              로그인
+            </Button>
+          </Box>
+          <Box>
+            아직 회원이 아니신가요? &nbsp;
+            <Link
+              to="/signup"
+              style={{ textDecoration: "underline", color: "dodgerblue" }}
+            >
+              회원가입
+            </Link>
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </Center>
   );
 }

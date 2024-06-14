@@ -5,6 +5,7 @@ import { jwtDecode } from "jwt-decode"; // 여러 컴포넌트가 현재 로그�
 export const LoginContext = createContext(null);
 
 export function LoginProvider({ children }) {
+  const [memberId, setMemberId] = useState(0);
   const [email, setEmail] = useState("");
   const [nickName, setNickName] = useState("");
   // 로그인 한 날짜(시간) state 에 저장
@@ -23,7 +24,12 @@ export function LoginProvider({ children }) {
     return Date.now() < expired * 1000;
   }
 
-  function hasEmail(param) {
+  // 게시글 권한 확인 함수
+  function hasAccessMemberId(param) {
+    return memberId == param;
+  }
+
+  function hasAccessEmail(param) {
     return email === param;
   }
 
@@ -33,8 +39,9 @@ export function LoginProvider({ children }) {
     const payload = jwtDecode(token);
     // payload 에서 가져온 해당 정보를 상태로 설정함
     setExpired(payload.exp);
-    setEmail(payload.sub);
+    setEmail(payload.email);
     setNickName(payload.nickName);
+    setMemberId(payload.sub);
   }
 
   function logout() {
@@ -42,6 +49,7 @@ export function LoginProvider({ children }) {
     setExpired(0);
     setEmail("");
     setNickName("");
+    setMemberId(0);
   }
 
   return (
@@ -49,10 +57,12 @@ export function LoginProvider({ children }) {
       value={{
         email: email,
         nickName: nickName,
+        memberId: memberId,
         login: login,
         logout: logout,
         isLoggedIn: isLoggedIn,
-        hasEmail: hasEmail,
+        hasAccessEmail: hasAccessEmail,
+        hasAccessMemberId: hasAccessMemberId,
       }}
     >
       {children}
