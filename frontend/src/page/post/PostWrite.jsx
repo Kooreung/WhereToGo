@@ -13,7 +13,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  ModalOverlay,
+  ModalOverlay, Select,
   Textarea,
   useDisclosure,
   useToast,
@@ -21,10 +21,14 @@ import {
 import { GuideLineMediumBanner } from "../../css/CustomStyles.jsx";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import MapSample from "../../MapSample.jsx";
+import MapAdd from "../../MapAdd.jsx";
 
 function PostWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [city, setCity] = useState("")
+  const [area, setArea] = useState("")
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -53,7 +57,7 @@ function PostWrite() {
   function handleClickSave() {
     setLoading(true);
     axios
-      .postForm("/api/post/add", { title, content })
+      .postForm("/api/post/add", { title, content, city, area })
       .then((res) => {
         navigate(`/post/${res.data}`);
         toast({
@@ -76,43 +80,76 @@ function PostWrite() {
     });
   }
 
+  // 지역 및 상세지역 설정 시
+  function handleClickSelectCity(e) {
+    setCity(e.target.value);
+  }
+  function handleClickSelectArea(e) {
+    setArea(e.target.value);
+  }
+
   return (
-    <Box>
-      <Grid templateColumns={"repeat(1,1fr)"} templateRows={"repeat(4,1fr)"}>
-        <GridItem></GridItem>
-      </Grid>
-      <Flex justify={"space-evenly"}>
-        <Box>
-          <Box {...GuideLineMediumBanner} w={500} h={500}>
-            지도
-          </Box>
-          <Box {...GuideLineMediumBanner} w={500}>
-            추가 dsadas
-          </Box>
-        </Box>
-        <Box>
-          <Box {...GuideLineMediumBanner} w={500} h={1000} p={10}>
-            <Box align={"left"} my={10}>
+    <Flex direction={"column"} align={"center"}>
+      <Flex  direction={"column"} align={"center"}>
+          <Box w={"540px"} bg={"lightgray"} my={"2rem"}>
+            <Box align={"left"} mb={"1rem"}>
               <FormControl>
                 <FormLabel>제목</FormLabel>
                 <Input
-                  defaultValue={"제목"}
+                  placeholder={"제목을 작성해주세요."}
                   onChange={(e) => setTitle(e.target.value)}
                 ></Input>
               </FormControl>
             </Box>
-            <Box align={"left"} my={10}>
+            <Box align={"left"}>
               <FormControl>
-                <FormLabel>설명</FormLabel>
-                <Textarea
-                  h={200}
-                  defaultValue={"내용을 작성해주세요."}
-                  onChange={(e) => setContent(e.target.value)}
-                ></Textarea>
+                <Select placeholder={"지역을 선택해주세요."} onChange={handleClickSelectCity}>
+                  <option value={"서울"} >서울</option>
+                </Select>
+                {city === "서울" &&
+                  <Select placeholder={"상세 지역을 선택해주세요."} onChange={handleClickSelectArea}>
+                    <option value={"서울01"}>강남/역삼</option>
+                    <option value={"서울02"}>서초/교대/방배</option>
+                    <option value={"서울03"}>잠실/송파/강동</option>
+                    <option value={"서울04"}>건대/성수/왕십리</option>
+                    <option value={"서울05"}>성북/노원/중랑</option>
+                    <option value={"서울06"}>종로/중구</option>
+                    <option value={"서울07"}>용산/이태원/한남</option>
+                    <option value={"서울08"}>홍대/합정/마포</option>
+                    <option value={"서울09"}>영등포/여의도/강서</option>
+                    <option value={"서울10"}>구로/관악/동작</option>
+                  </Select>
+                }
+
               </FormControl>
             </Box>
           </Box>
+          <Box
+            w={{ base: "720px", lg: "1080px" }}
+            h={"160px"}
+            bg={"lightgray"}
+            my={"32px"}
+          >
+            장소 선택
+            {/* Todo 장소 내용 표기 필요 */}
+          </Box>
+          <Box w={"576px"} h={"360px"} bg={"lightgray"} my={"32px"}>
+            {/* Todo 지도 표기 필요 */}
+          </Box>
+        <Box>
           <Box>
+            <Box w={"720px"} bg={"lightgray"} my={"32px"}>
+              <Box align={"left"} my={10}>
+                <FormControl>
+                  <FormLabel>설명</FormLabel>
+                  <Textarea
+                    h={200}
+                    defaultValue={"내용을 작성해주세요."}
+                    onChange={(e) => setContent(e.target.value)}
+                  ></Textarea>
+                </FormControl>
+              </Box>
+            </Box>
             <Box align={"left"} my={10}>
               <Button
                 onClick={onModalOpenOfSave}
@@ -127,6 +164,8 @@ function PostWrite() {
           </Box>
         </Box>
       </Flex>
+
+
 
       {/* 게시글 작성 저장 Modal */}
       <Modal isOpen={isModalOpenOfSave} onClose={onModalCloseOfSave}>
@@ -157,7 +196,7 @@ function PostWrite() {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </Box>
+    </Flex>
   );
 }
 

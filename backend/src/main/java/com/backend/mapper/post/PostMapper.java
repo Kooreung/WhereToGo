@@ -18,9 +18,11 @@ public interface PostMapper {
 
     // 게시글 조회 매퍼
     @Select("""
-            SELECT p.postid, p.title, p.content, p.createdate, p.view, m.nickname, p.memberid
-            FROM post p JOIN member m
-            ON p.memberid = m.memberid
+            SELECT p.postid, p.title, p.content, p.createdate, p.view, p.memberid, 
+                   m.nickname, 
+                   COUNT(DISTINCT c.commentid) commentCount
+            FROM post p JOIN member m ON p.memberid = m.memberid
+                        LEFT JOIN comment c ON p.memberid = c.memberid
             WHERE p.postid = #{postId}
             """)
     Post selectById(Integer postId);
