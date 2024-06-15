@@ -4,8 +4,6 @@ import {
   Button,
   Divider,
   Flex,
-  FormControl,
-  FormLabel,
   Grid,
   GridItem,
   Modal,
@@ -17,7 +15,6 @@ import {
   Spacer,
   Spinner,
   Text,
-  Textarea,
   Tooltip,
   useDisclosure,
   useToast,
@@ -154,7 +151,9 @@ export function PostView() {
               <Text display={{ base: "none", lg: "block" }} mr={1}>
                 제목 <FontAwesomeIcon icon={faCaretRight} />
               </Text>
-              <Text>{post.title}</Text>
+              <Text overflow={"hidden"} textOverflow={"ellipsis"}>
+                {post.title}
+              </Text>
             </Flex>
           </GridItem>
           <GridItem
@@ -252,15 +251,8 @@ export function PostView() {
           {/* Todo 장소 내용 표기 필요 */}
         </Box>
       </Flex>
-      <Box w={"720px"} h={"360px"} bg={"lightgray"} my={"32px"}>
-        <Box>
-          <Box align={"left"}>
-            <FormControl>
-              <FormLabel>설명</FormLabel>
-              <Textarea value={post.content} readOnly></Textarea>
-            </FormControl>
-          </Box>
-        </Box>
+      <Box w={"720px"} h={"360px"} bg={"lightgray"} my={"32px"} p={"1rem"}>
+        <Box>{post.content}</Box>
       </Box>
 
       <Divider border={"1px solid lightGray"} w={"720px"} />

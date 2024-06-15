@@ -52,7 +52,7 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
         <Textarea
           onChange={(e) => setComment(e.target.value)}
           value={comment}
-          placehol요der={"댓글을 입력하세요"}
+          placeholder={"댓글을 입력하세요"}
         />
       </Box>
       <Flex justify={"end"} mt={3}>

@@ -10,8 +10,8 @@ function Navbar() {
         w={{ base: "1080px", lg: "1440px" }}
         h={"96px"}
         px={6}
-        mt={"64px"}
-        mb={"32px"}
+        mt={"4rem"}
+        mb={"4rem"}
         align={"center"}
         justify={"space-between"}
         border={"red dotted 1px"}
