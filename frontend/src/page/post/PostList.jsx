@@ -122,41 +122,44 @@ function PostList() {
             <Box
               key={post.postId}
               onClick={() => navigate(`/post/${post.postId}`)}
-              cursor={"pointer"}
-              w={{ base: "720px", lg: "960px" }}
-              overflow={"hidden"}
+              w={"720px"}
             >
-              {/* Todo 조회수, 좋아요, 댓글수, 썸네일 JOIN */}
-              {/* Todo 게시글 내용 보이다가 사리지기 */}
+              {/* Todo 조회수, 썸네일 JOIN */}
               <Box>
                 <Grid
                   w={"720px"}
                   h={"224px"}
                   templateColumns={"repeat(9, 1fr)"}
                   templateRows={"1fr 1fr 5fr"}
+                  _hover={{ bgColor: "beige" }}
+                  cursor={"pointer"}
                 >
                   <GridItem
                     colSpan={9}
                     rowSpan={1}
-                    border={"1px dotted yellow"}
                     alignContent={"center"}
                     whiteSpace={"nowrap"}
                   >
                     <Flex pl={3}>
-                      <Text display={{ base: "none", lg: "block" }} mr={1}>
+                      <Text
+                        display={{ base: "none", lg: "block" }}
+                        mr={1}
+                        fontSize={"xl"}
+                        fontWeight={"bold"}
+                      >
                         제목 <FontAwesomeIcon icon={faCaretRight} />
                       </Text>
-                      <Text overflow={"hidden"} textOverflow={"ellipsis"}>
+                      <Text
+                        overflow={"hidden"}
+                        textOverflow={"ellipsis"}
+                        fontSize={"xl"}
+                        fontWeight={"bold"}
+                      >
                         {post.title}
                       </Text>
                     </Flex>
                   </GridItem>
-                  <GridItem
-                    colSpan={3}
-                    rowSpan={1}
-                    border={"1px dotted yellow"}
-                    alignContent={"center"}
-                  >
+                  <GridItem colSpan={3} rowSpan={1} alignContent={"center"}>
                     <Flex pl={3}>
                       <Text display={{ base: "none", lg: "block" }} mr={1}>
                         작성자 <FontAwesomeIcon icon={faCaretRight} />
@@ -166,12 +169,7 @@ function PostList() {
                       </Text>
                     </Flex>
                   </GridItem>
-                  <GridItem
-                    colSpan={2}
-                    rowSpan={1}
-                    border={"1px dotted yellow"}
-                    alignContent={"center"}
-                  >
+                  <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
                     <Flex pl={3}>
                       <Text display={{ base: "none", lg: "block" }} mr={1}>
                         조회수 <FontAwesomeIcon icon={faCaretRight} />
@@ -179,12 +177,7 @@ function PostList() {
                       <Text>{post.viewCount}</Text>
                     </Flex>
                   </GridItem>
-                  <GridItem
-                    colSpan={2}
-                    rowSpan={1}
-                    border={"1px dotted yellow"}
-                    alignContent={"center"}
-                  >
+                  <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
                     <Flex pl={3}>
                       <Text display={{ base: "none", lg: "block" }} mr={1}>
                         좋아요 <FontAwesomeIcon icon={faCaretRight} />
@@ -192,12 +185,7 @@ function PostList() {
                       <Text>{post.likeCount}</Text>
                     </Flex>
                   </GridItem>
-                  <GridItem
-                    colSpan={2}
-                    rowSpan={1}
-                    border={"1px dotted yellow"}
-                    alignContent={"center"}
-                  >
+                  <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
                     <Flex pl={3}>
                       <Text display={{ base: "none", lg: "block" }} mr={1}>
                         댓글 <FontAwesomeIcon icon={faCaretRight} />
@@ -205,12 +193,7 @@ function PostList() {
                       <Text>{post.commentCount}</Text>
                     </Flex>
                   </GridItem>
-                  <GridItem
-                    colSpan={2}
-                    rowSpan={1}
-                    border={"1px dotted yellow"}
-                    alignContent={"center"}
-                  >
+                  <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
                     <Flex pl={3}>
                       <Text display={{ base: "none", lg: "block" }} mr={1}>
                         썸네일
@@ -221,7 +204,6 @@ function PostList() {
                   <GridItem
                     colSpan={7}
                     rowSpan={1}
-                    border={"1px dotted yellow"}
                     alignContent={"center"}
                     overflow={"hidden"}
                     textOverflow={"ellipsis"}
