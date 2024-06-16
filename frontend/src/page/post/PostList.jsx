@@ -73,17 +73,59 @@ function PostList() {
   // 회원 인기 게시글
   function ListOfFavoritePost() {
     return (
-      <Box w={{ base: "720px", lg: "1080px" }} h={"15rem"}>
-        <Box border={"1px dotted red"} alignContent={"center"} mb={"2rem"}>
+      <Box w={{ base: "720px", lg: "1080px" }}>
+        <Box mb={"2rem"}>
           <Heading align={"center"}>회원 인기글</Heading>
         </Box>
         <Flex justify={"space-evenly"}>
-          <Box
-            border={"1px dotted red"}
-            alignContent={"center"}
-            w={150}
-            h={150}
-          ></Box>
+          {/* lg 이상일 때 */}
+          <Flex
+            border={"1px solid gray"}
+            alignItems={"center"}
+            display={{ base: "none", lg: "flex" }}
+            w={"320px"}
+          >
+            <Box
+              border={"1px dotted red"}
+              alignContent={"center"}
+              w={"120px"}
+              h={"120px"}
+            >
+              썸네일
+            </Box>
+            <Box textAlign={"start"} alignContent={"center"} ml={"1"}>
+              <Box>제목</Box>
+              <Box>작성자</Box>
+              <Box>조회수</Box>
+              <Box>좋아요</Box>
+              <Box>댓글</Box>
+            </Box>
+          </Flex>
+          {/* lg 이하일 때 */}
+          <Flex
+            border={"1px solid gray"}
+            direction={"column"}
+            alignItems={"center"}
+            display={{ base: "flex", lg: "none" }}
+            w={"240px"}
+          >
+            <Box
+              border={"1px dotted red"}
+              alignContent={"center"}
+              w={"120px"}
+              h={"120px"}
+            >
+              썸네일
+            </Box>
+            <Box textAlign={"start"} alignContent={"center"} ml={"1"}>
+              <Box>제목</Box>
+              <Box>작성자</Box>
+              <Box>조회수</Box>
+              <Box>좋아요</Box>
+              <Box>댓글</Box>
+            </Box>
+          </Flex>
+          {/*임시 박스*/}
           <Box
             border={"1px dotted red"}
             alignContent={"center"}
@@ -139,6 +181,7 @@ function PostList() {
                     rowSpan={1}
                     alignContent={"center"}
                     whiteSpace={"nowrap"}
+                    borderY={"1px solid lightgray"}
                   >
                     <Flex pl={3}>
                       <Text
@@ -193,12 +236,16 @@ function PostList() {
                       <Text>{post.commentCount}</Text>
                     </Flex>
                   </GridItem>
-                  <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
+                  <GridItem
+                    colSpan={2}
+                    rowSpan={1}
+                    alignContent={"center"}
+                    borderY={"1px solid lightgray"}
+                  >
                     <Flex pl={3}>
                       <Text display={{ base: "none", lg: "block" }} mr={1}>
                         썸네일
                       </Text>
-                      <Text></Text>
                     </Flex>
                   </GridItem>
                   <GridItem
@@ -208,15 +255,28 @@ function PostList() {
                     overflow={"hidden"}
                     textOverflow={"ellipsis"}
                     whiteSpace={"nowrap"}
+                    borderY={"1px solid lightgray"}
                   >
                     <Box pl={3}>
                       <Flex>
                         <Text display={{ base: "none", lg: "block" }} mr={1}>
                           내용 <FontAwesomeIcon icon={faCaretRight} />{" "}
                         </Text>
-                        <Text overflow={"hidden"} textOverflow={"ellipsis"}>
+                        <Box
+                          maxW={"560px"}
+                          textAlign={"start"}
+                          overflow={"hidden"}
+                          textOverflow={"ellipsis"}
+                          display={"-webkit-box"}
+                          css={{
+                            "-webkit-line-clamp": "4",
+                            "-webkit-box-orient": "vertical",
+                            wordBreak: "break-word",
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
                           {post.content}
-                        </Text>
+                        </Box>
                       </Flex>
                       <Text textAlign={"left"} mt={"1rem"} color={"lightgray"}>
                         {post.createDate}

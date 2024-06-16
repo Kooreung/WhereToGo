@@ -251,7 +251,14 @@ export function PostView() {
           {/* Todo 장소 내용 표기 필요 */}
         </Box>
       </Flex>
-      <Box w={"720px"} h={"360px"} bg={"lightgray"} my={"32px"} p={"1rem"}>
+      <Box
+        w={"720px"}
+        h={"360px"}
+        bg={"lightgray"}
+        my={"32px"}
+        p={"1rem"}
+        whiteSpace={"pre-wrap"}
+      >
         <Box>{post.content}</Box>
       </Box>
 

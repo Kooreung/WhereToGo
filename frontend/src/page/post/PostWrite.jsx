@@ -157,6 +157,7 @@ function PostWrite() {
                     placeholder={"내용을 작성해주세요."}
                     onChange={(e) => setContent(e.target.value)}
                   ></Textarea>
+                  {/* TODO Text Editor 추가 */}
                 </FormControl>
               </Box>
             </Box>
@@ -177,6 +178,7 @@ function PostWrite() {
               </Tooltip>
               <Button onClick={onModalOpenOfCancel}>취소</Button>
               {/* Todo 게시글 작성 중 임시저장 필요 */}
+              {/* TODO 게시글 수정하다가 나가려고 하면 Modal 표기 */}
             </Box>
           </Box>
         </Box>
