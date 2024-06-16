@@ -132,26 +132,11 @@ function PostList() {
                 <Grid
                   w={"720px"}
                   h={"224px"}
-                  templateColumns={"repeat(6, 1fr)"}
-                  templateRows={"1fr 1fr 4fr"}
+                  templateColumns={"repeat(9, 1fr)"}
+                  templateRows={"1fr 1fr 5fr"}
                 >
                   <GridItem
-                    colSpan={2}
-                    rowSpan={1}
-                    border={"1px dotted yellow"}
-                    alignContent={"center"}
-                  >
-                    <Flex pl={3}>
-                      <Text display={{ base: "none", lg: "block" }} mr={1}>
-                        작성자 <FontAwesomeIcon icon={faCaretRight} />
-                      </Text>
-                      <Text overflow={"hidden"} textOverflow={"ellipsis"}>
-                        {post.nickName}
-                      </Text>
-                    </Flex>
-                  </GridItem>
-                  <GridItem
-                    colSpan={4}
+                    colSpan={9}
                     rowSpan={1}
                     border={"1px dotted yellow"}
                     alignContent={"center"}
@@ -163,6 +148,21 @@ function PostList() {
                       </Text>
                       <Text overflow={"hidden"} textOverflow={"ellipsis"}>
                         {post.title}
+                      </Text>
+                    </Flex>
+                  </GridItem>
+                  <GridItem
+                    colSpan={3}
+                    rowSpan={1}
+                    border={"1px dotted yellow"}
+                    alignContent={"center"}
+                  >
+                    <Flex pl={3}>
+                      <Text display={{ base: "none", lg: "block" }} mr={1}>
+                        작성자 <FontAwesomeIcon icon={faCaretRight} />
+                      </Text>
+                      <Text overflow={"hidden"} textOverflow={"ellipsis"}>
+                        {post.nickName}
                       </Text>
                     </Flex>
                   </GridItem>
@@ -187,6 +187,19 @@ function PostList() {
                   >
                     <Flex pl={3}>
                       <Text display={{ base: "none", lg: "block" }} mr={1}>
+                        좋아요 <FontAwesomeIcon icon={faCaretRight} />
+                      </Text>
+                      <Text>{post.likeCount}</Text>
+                    </Flex>
+                  </GridItem>
+                  <GridItem
+                    colSpan={2}
+                    rowSpan={1}
+                    border={"1px dotted yellow"}
+                    alignContent={"center"}
+                  >
+                    <Flex pl={3}>
+                      <Text display={{ base: "none", lg: "block" }} mr={1}>
                         댓글 <FontAwesomeIcon icon={faCaretRight} />
                       </Text>
                       <Text>{post.commentCount}</Text>
@@ -200,26 +213,13 @@ function PostList() {
                   >
                     <Flex pl={3}>
                       <Text display={{ base: "none", lg: "block" }} mr={1}>
-                        좋아요 <FontAwesomeIcon icon={faCaretRight} />
-                      </Text>
-                      <Text>{post.like}</Text>
-                    </Flex>
-                  </GridItem>
-                  <GridItem
-                    colSpan={2}
-                    rowSpan={1}
-                    border={"1px dotted yellow"}
-                    alignContent={"center"}
-                  >
-                    <Flex pl={3}>
-                      <Text display={{ base: "none", lg: "block" }} mr={1}>
                         썸네일
                       </Text>
-                      <Text>{post.createDate}</Text>
+                      <Text></Text>
                     </Flex>
                   </GridItem>
                   <GridItem
-                    colSpan={4}
+                    colSpan={7}
                     rowSpan={1}
                     border={"1px dotted yellow"}
                     alignContent={"center"}
@@ -227,14 +227,19 @@ function PostList() {
                     textOverflow={"ellipsis"}
                     whiteSpace={"nowrap"}
                   >
-                    <Flex pl={3}>
-                      <Text display={{ base: "none", lg: "block" }} mr={1}>
-                        내용 <FontAwesomeIcon icon={faCaretRight} />{" "}
+                    <Box pl={3}>
+                      <Flex>
+                        <Text display={{ base: "none", lg: "block" }} mr={1}>
+                          내용 <FontAwesomeIcon icon={faCaretRight} />{" "}
+                        </Text>
+                        <Text overflow={"hidden"} textOverflow={"ellipsis"}>
+                          {post.content}
+                        </Text>
+                      </Flex>
+                      <Text textAlign={"left"} mt={"1rem"} color={"lightgray"}>
+                        {post.createDate}
                       </Text>
-                      <Text overflow={"hidden"} textOverflow={"ellipsis"}>
-                        {post.content}
-                      </Text>
-                    </Flex>
+                    </Box>
                   </GridItem>
                 </Grid>
               </Box>

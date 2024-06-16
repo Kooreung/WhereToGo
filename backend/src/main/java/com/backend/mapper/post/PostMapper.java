@@ -18,11 +18,13 @@ public interface PostMapper {
 
     // 게시글 조회 매퍼
     @Select("""
-            SELECT p.postid, p.title, p.content, p.createdate, p.view, p.memberid, 
+            SELECT p.postid, p.title, p.content, p.createdate, p.view, p.memberid,
                    m.nickname, 
-                   COUNT(DISTINCT c.commentid) commentCount
+                   COUNT(DISTINCT c.commentid) commentCount,
+                   COUNT(DISTINCT l.memberid) likeCount
             FROM post p JOIN member m ON p.memberid = m.memberid
-                        LEFT JOIN comment c ON p.memberid = c.memberid
+                        LEFT JOIN comment c ON p.postid = c.postid
+                        LEFT JOIN likes l ON p.postid = l.postid
             WHERE p.postid = #{postId}
             """)
     Post selectById(Integer postId);
@@ -30,8 +32,13 @@ public interface PostMapper {
     // 게시글 리스트 매퍼
     @Select("""
             <script>
-            SELECT p.postid, p.title, p.content, m.nickname
+            SELECT p.postid, p.title, p.content, p.createdate,
+                   m.nickname,
+                   COUNT(DISTINCT c.commentid) commentCount,
+                   COUNT(DISTINCT l.memberid) likeCount
             FROM post p JOIN member m ON p.memberid = m.memberid
+                        LEFT JOIN comment c ON p.postid = c.postid
+                        LEFT JOIN likes l ON p.postid = l.postid
             <where>
                 <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
