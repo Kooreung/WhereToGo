@@ -180,7 +180,7 @@ export function PostView() {
           >
             <Flex pl={3}>
               <Text>
-                조회수 <FontAwesomeIcon icon={faCaretRight} />
+                조회수 <FontAwesomeIcon icon={faCaretRight} /> {post.view}
               </Text>
             </Flex>
           </GridItem>

@@ -28,7 +28,7 @@ public interface PostMapper {
     // 게시글 리스트 매퍼
     @Select("""
             <script>
-            SELECT p.postid, p.title, p.content, m.nickname,COUNT(DISTINCT l.memberid)likeCount,COUNT(DISTINCT c.commentid)commentCount
+            SELECT p.postid, p.title, p.content, p.view, m.nickname,COUNT(DISTINCT l.memberid)likeCount,COUNT(DISTINCT c.commentid)commentCount
             FROM post p JOIN member m ON p.memberid = m.memberid
                                  LEFT JOIN likes l ON p.postid=l.postid
                                              LEFT JOIN comment c ON p.postid=c.postid
@@ -124,4 +124,10 @@ public interface PostMapper {
             WHERE postid = #{postId}
             """)
     int selectCountCommentByBoardId(Integer postId);
+
+    @Update("""
+            UPDATE post SET view=view+1 WHERE postid=#{postId}
+
+            """)
+    int incrementViewCount(Integer postId);
 }
