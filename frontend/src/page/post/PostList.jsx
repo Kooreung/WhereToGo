@@ -61,9 +61,16 @@ function PostList() {
     pageNumbers.push(i);
   }
 
-  // 검색 클릭 시 url
+  // 검색 클릭 시 URL
   function handleSearchClick() {
     navigate(`/post/list?type=${searchType}&keyword=${searchKeyword}`);
+  }
+
+  // 검색 창 Enter 시 URL
+  function handleSearchKeyDown(e) {
+    if (e.key === "Enter") {
+      navigate(`/post/list?type=${searchType}&keyword=${searchKeyword}`);
+    }
   }
 
   // 페이지 버튼 클릭 시
@@ -320,6 +327,7 @@ function PostList() {
               <Input
                 value={searchKeyword}
                 onChange={(e) => setSearchKeyword(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
                 placeholder={"검색어"}
               />
             </Box>
