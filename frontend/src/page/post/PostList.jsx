@@ -7,7 +7,6 @@ import {
   Flex,
   Grid,
   GridItem,
-  Heading,
   IconButton,
   Input,
   Select,
@@ -27,6 +26,7 @@ import {
 import { SearchIcon } from "@chakra-ui/icons";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import axios from "axios";
+import { PostListOfBest } from "./PostListOfBest.jsx";
 
 function PostList() {
   const navigate = useNavigate();
@@ -79,82 +79,9 @@ function PostList() {
     navigate(`/post/list?${searchParams}`);
   }
 
-  // 회원 인기 게시글
-  function ListOfFavoritePost() {
-    return (
-      <Box w={{ base: "720px", lg: "1080px" }}>
-        <Box mb={"2rem"}>
-          <Heading align={"center"}>회원 인기글</Heading>
-        </Box>
-        <Flex justify={"space-evenly"}>
-          {/* lg 이상일 때 */}
-          <Flex
-            border={"1px solid gray"}
-            alignItems={"center"}
-            display={{ base: "none", lg: "flex" }}
-            w={"320px"}
-          >
-            <Box
-              border={"1px dotted red"}
-              alignContent={"center"}
-              w={"120px"}
-              h={"120px"}
-            >
-              썸네일
-            </Box>
-            <Box textAlign={"start"} alignContent={"center"} ml={"1"}>
-              <Box>제목</Box>
-              <Box>작성자</Box>
-              <Box>조회수</Box>
-              <Box>좋아요</Box>
-              <Box>댓글</Box>
-            </Box>
-          </Flex>
-          {/* lg 이하일 때 */}
-          <Flex
-            border={"1px solid gray"}
-            direction={"column"}
-            alignItems={"center"}
-            display={{ base: "flex", lg: "none" }}
-            w={"240px"}
-          >
-            <Box
-              border={"1px dotted red"}
-              alignContent={"center"}
-              w={"120px"}
-              h={"120px"}
-            >
-              썸네일
-            </Box>
-            <Box textAlign={"start"} alignContent={"center"} ml={"1"}>
-              <Box>제목</Box>
-              <Box>작성자</Box>
-              <Box>조회수</Box>
-              <Box>좋아요</Box>
-              <Box>댓글</Box>
-            </Box>
-          </Flex>
-          {/*임시 박스*/}
-          <Box
-            border={"1px dotted red"}
-            alignContent={"center"}
-            w={150}
-            h={150}
-          ></Box>
-          <Box
-            border={"1px dotted red"}
-            alignContent={"center"}
-            w={150}
-            h={150}
-          ></Box>
-        </Flex>
-      </Box>
-    );
-  }
-
   return (
-    <Box align="center" justify="center">
-      <ListOfFavoritePost />
+    <Box align="center" justify="center" overflowX={"hidden"}>
+      <PostListOfBest />
       <Divider
         border={"1px solid lightGray"}
         w={{ base: "720px", lg: "960px" }}
@@ -173,16 +100,17 @@ function PostList() {
             <Box
               key={post.postId}
               onClick={() => navigate(`/post/${post.postId}`)}
+              _hover={"pointer"}
               w={"720px"}
             >
-              {/* Todo 조회수, 썸네일 JOIN */}
+              {/* Todo 썸네일 JOIN */}
               <Box>
                 <Grid
                   w={"720px"}
                   h={"224px"}
                   templateColumns={"repeat(9, 1fr)"}
                   templateRows={"1fr 1fr 5fr"}
-                  _hover={{ bgColor: "beige" }}
+                  _hover={{ bgColor: "gray.50" }}
                   cursor={"pointer"}
                 >
                   <GridItem
@@ -278,8 +206,8 @@ function PostList() {
                           textOverflow={"ellipsis"}
                           display={"-webkit-box"}
                           css={{
-                            "-webkit-line-clamp": "4",
-                            "-webkit-box-orient": "vertical",
+                            WebkitLineClamp: "4",
+                            WebkitBoxOrient: "vertical",
                             wordBreak: "break-word",
                             whiteSpace: "pre-wrap",
                           }}

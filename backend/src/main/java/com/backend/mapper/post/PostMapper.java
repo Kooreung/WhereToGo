@@ -79,6 +79,25 @@ public interface PostMapper {
             """)
     Integer countAllPost(String searchType, String searchKeyword);
 
+    // 게시글 Top 3 인기글 목록 매퍼
+    @Select("""
+            SELECT p.postid,
+                   p.title,
+                   p.view,
+                   p.createDate,
+                   m.nickName,
+                   COUNT(DISTINCT c.commentid)                                                 commentCount,
+                   COUNT(DISTINCT l.memberid)                                                  likeCount,
+                   ROW_NUMBER() OVER (ORDER BY likeCount DESC, p.view DESC, commentCount DESC) postOfBest
+            FROM post p
+                     JOIN member m ON p.memberid = m.memberid
+                     LEFT JOIN comment c ON p.postid = c.postid
+                     LEFT JOIN likes l ON p.postid = l.postid
+            GROUP BY p.postid, p.title, p.view, m.nickName
+            LIMIT 3
+            """)
+    List<Post> selectPostOfBest();
+
     // 게시글 수정 매퍼
     @Update("""
             UPDATE post
@@ -139,4 +158,6 @@ public interface PostMapper {
             WHERE postid=#{postId}
             """)
     int incrementViewCount(Integer postId);
+
+
 }
