@@ -22,6 +22,9 @@ function Navbar() {
         <Box onClick={() => navigate("/post/list")} cursor={"pointer"}>
           회원 게시판
         </Box>
+        <Box onClick={() => navigate("/memberList")} cursor={"pointer"}>
+          멤버 리스트
+        </Box>
       </Center>
       <Flex gap={3}>
         <Center onClick={() => navigate("/signup")} cursor={"pointer"}>

@@ -98,7 +98,7 @@ public class MemberController {
 
     // 회원 목록 보기
     @GetMapping("list")
-    @PreAuthorize("hasAuthority('admin')")
+//    @PreAuthorize("hasAuthority('admin')")
     public List<Member> list() {
         return service.memberList();
     }
@@ -119,6 +119,18 @@ public class MemberController {
             return ResponseEntity.ok(dbmember);
         }
     }
+
+    // 유저정보, 아이디로 들어가기
+    @GetMapping("{memberId}")
+    public ResponseEntity findById(@PathVariable Integer memberId) {
+        Map<String, Object> member = service.getById(memberId);
+        if (member == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(member);
+        }
+    }
+
 
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated()")

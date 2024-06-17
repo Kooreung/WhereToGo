@@ -15,6 +15,8 @@ import { LoginProvider } from "./component/LoginProvider.jsx";
 import { MemberFindPassword } from "./page/member/MemberFindPassword.jsx";
 import MemberEdit from "./page/member/MemberEdit.jsx";
 import axios from "axios";
+import MemberList from "./page/member/MemberList.jsx";
+import MemberInfoAdmin from "./page/member/MemberInfoAdmin.jsx";
 
 // axios interceptor 설정
 axios.interceptors.request.use((config) => {
@@ -42,6 +44,8 @@ const router = createBrowserRouter([
       { path: "findPassword", element: <MemberFindPassword /> },
       { path: "memberinfo", element: <MemberInfo /> },
       { path: "member/edit", element: <MemberEdit /> },
+      { path: "memberList", element: <MemberList /> },
+      { path: "member/:memberId", element: <MemberInfoAdmin /> },
       // 게시글 페이지
       { path: "post/write", element: <PostWrite /> },
       { path: "post/:postId", element: <PostView /> },
