@@ -43,3 +43,6 @@ VALUES (2, 1, 2, '성공', '2021-10-21');
 
 DESC likes;
 DESC post;
+
+INSERT INTO post (postid, memberid, title, content, createdate, view)
+VALUES (1090, 40, '조회수연습', 'ㅇㅁㄴㅇㄴㅁㅇㄴㅁ', '2020-02-21', 35);
