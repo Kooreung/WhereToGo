@@ -17,6 +17,7 @@ import MemberEdit from "./page/member/MemberEdit.jsx";
 import axios from "axios";
 import MemberList from "./page/member/MemberList.jsx";
 import MemberInfoAdmin from "./page/member/MemberInfoAdmin.jsx";
+import { PostLikeList } from "./page/post/PostLikeList.jsx";
 
 // axios interceptor 설정
 axios.interceptors.request.use((config) => {
@@ -53,12 +54,13 @@ const router = createBrowserRouter([
       { path: "post/:postId", element: <PostView /> },
       { path: "post/:postId/edit", element: <PostEdit /> },
       { path: "post/list", element: <PostList /> },
+      // 좋아요한 게시글 목록 페이지
+      { path: "postLike/list", element: <PostLikeList /> },
       // 댓글 페이지
       { path: "comment", element: <CommentComponent /> },
     ],
   },
 ]);
-
 
 function App() {
   return (
