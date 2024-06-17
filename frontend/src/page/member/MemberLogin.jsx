@@ -36,6 +36,7 @@ export function MemberLogin() {
           description: "로그인 되었습니다.",
           position: "top",
         });
+        navigate("/");
       })
       .catch(() => {
         // localStorage 에서 토큰 정보 삭제
