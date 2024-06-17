@@ -2,11 +2,15 @@ package com.backend.service.post;
 
 import com.backend.domain.post.Post;
 import com.backend.mapper.post.PostMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +21,8 @@ import java.util.Map;
 public class PostService {
 
     private final PostMapper postMapper;
+    @Autowired
+    private HttpServletRequest request;
 
     // 게시글 작성 시 제목, 내용 공백 확인
     public boolean validate(Post post) {
@@ -39,7 +45,11 @@ public class PostService {
     // 게시글 조회 서비스
     public Map<String, Object> get(Integer postId, Authentication authentication) {
         // 조회수 증가
-        postMapper.incrementViewCount(postId);
+        if (canIncrementView(postId)) {
+            postMapper.incrementViewCount(postId);
+            HttpSession session = request.getSession();
+            session.setAttribute("lastViewTime_" + postId, Instant.now());
+        }
         Post post = postMapper.selectById(postId);
         Map<String, Object> result = new HashMap<>();
 
@@ -63,6 +73,20 @@ public class PostService {
         result.put("commentCount", commentCount);
 
         return result;
+    }
+
+    private boolean canIncrementView(Integer postId) {
+        HttpSession session = request.getSession();
+        Instant lastViewTime = (Instant) session.getAttribute("lastViewTime_" + postId);
+        if (lastViewTime != null) {
+            // 마지막 조회 시간부터 일정 시간(예: 1시간)이 지났는지 확인
+            Instant now = Instant.now();
+            Instant earliestTimeToIncrement = lastViewTime.plusSeconds(600);
+            return now.isAfter(earliestTimeToIncrement);
+        } else {
+            // 이전에 조회 기록이 없는 경우에는 항상 조회수를 증가시킬 수 있도록 함
+            return true;
+        }
     }
 
     // 게시글 리스트 서비스
