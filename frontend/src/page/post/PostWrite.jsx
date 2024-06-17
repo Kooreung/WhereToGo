@@ -20,6 +20,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import SmartEditor from "../../component/SmartEditor.jsx";
 
 function PostWrite() {
   const [title, setTitle] = useState("");
@@ -49,12 +50,12 @@ function PostWrite() {
   if (content.trim().length === 0) {
     disableSaveButton = true;
   }
-  if (city.length === 0) {
-    disableSaveButton = true;
-  }
-  if (area.length === 0) {
-    disableSaveButton = true;
-  }
+  // if (city.length === 0) {
+  //   disableSaveButton = true;
+  // }
+  // if (area.length === 0) {
+  //   disableSaveButton = true;
+  // }
 
   // 저장 버튼 클릭 시
   function handleClickSave() {
@@ -157,7 +158,7 @@ function PostWrite() {
                     placeholder={"내용을 작성해주세요."}
                     onChange={(e) => setContent(e.target.value)}
                   ></Textarea>
-                  {/* TODO Text Editor 추가 */}
+                  <SmartEditor />
                 </FormControl>
               </Box>
             </Box>
