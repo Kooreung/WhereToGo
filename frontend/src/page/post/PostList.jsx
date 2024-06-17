@@ -251,7 +251,6 @@ function PostList() {
               </Select>
             </Box>
             <Box>
-              {/* Todo 검색에 엔터 적용 필요 */}
               <Input
                 value={searchKeyword}
                 onChange={(e) => setSearchKeyword(e.target.value)}
