@@ -117,4 +117,11 @@ public interface PostMapper {
             and memberid=#{memberId}
             """)
     int selectLikeByPostIdAndMemberId(Integer postId, String memberId);
+
+    @Select("""
+            SELECT COUNT(*)
+            FROM comment
+            WHERE postid = #{postId}
+            """)
+    int selectCountCommentByBoardId(Integer postId);
 }

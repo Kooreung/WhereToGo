@@ -54,6 +54,9 @@ public class PostService {
         result.put("like", like);
         result.put("post", post);
 
+        int commentCount = postMapper.selectCountCommentByBoardId(postId);
+        result.put("commentCount", commentCount);
+
         return result;
     }
 

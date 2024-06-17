@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box } from "@chakra-ui/react";
 import CommentWrite from "./CommentWrite.jsx";
 import CommentList from "./CommentList.jsx";
 
-export function CommentComponent({ postId }) {
-  const [isTransition, setIsTransition] = useState(false);
+export function CommentComponent({ postId, isTransition, setIsTransition }) {
   return (
     <Box>
       <Box fontSize={"lg"}>댓글</Box>
