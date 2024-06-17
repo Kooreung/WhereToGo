@@ -176,11 +176,6 @@ const KakaoMapSearch = () => {
         placeholder="검색어를 입력하세요"
       />
       <button onClick={searchPlaces}>검색</button>
-      <div
-        id="map"
-        ref={mapRef}
-        style={{ width: "500px", height: "400px" }}
-      ></div>
       <div>
         <h2>검색 결과</h2>
         <ul>
@@ -192,6 +187,12 @@ const KakaoMapSearch = () => {
           ))}
         </ul>
       </div>
+      <div
+        id="map"
+        ref={mapRef}
+        style={{ width: "720px", height: "360px" }}
+      ></div>
+
       <div>
         <h2>선택된 장소</h2>
         <ul>

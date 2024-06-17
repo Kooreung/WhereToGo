@@ -121,13 +121,11 @@ export function PostView() {
         <Grid
           w={{ base: "720px", lg: "1080px" }}
           h={"80px"}
-          bg={"lightgray"}
           my={"32px"}
           templateColumns={"repeat(5,1fr)"}
           templateRows={"1fr 1fr"}
         >
           <GridItem
-            border={"1px dotted red"}
             rowSpan={1}
             colSpan={1}
             alignContent={"center"}
@@ -142,7 +140,6 @@ export function PostView() {
             </Flex>
           </GridItem>
           <GridItem
-            border={"1px dotted red"}
             rowSpan={1}
             colSpan={4}
             alignContent={"center"}
@@ -160,7 +157,6 @@ export function PostView() {
             </Flex>
           </GridItem>
           <GridItem
-            border={"1px dotted red"}
             rowSpan={1}
             colSpan={1}
             alignContent={"center"}
@@ -176,7 +172,6 @@ export function PostView() {
             </Flex>
           </GridItem>
           <GridItem
-            border={"1px dotted red"}
             rowSpan={1}
             colSpan={1}
             alignContent={"center"}
@@ -192,7 +187,6 @@ export function PostView() {
             </Flex>
           </GridItem>
           <GridItem
-            border={"1px dotted red"}
             rowSpan={1}
             colSpan={1}
             alignContent={"center"}
@@ -208,7 +202,6 @@ export function PostView() {
             </Flex>
           </GridItem>
           <GridItem
-            border={"1px dotted red"}
             rowSpan={1}
             colSpan={1}
             alignContent={"center"}
@@ -224,7 +217,6 @@ export function PostView() {
             </Flex>
           </GridItem>
           <GridItem
-            border={"1px dotted red"}
             rowSpan={1}
             colSpan={1}
             alignContent={"center"}

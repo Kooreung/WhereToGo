@@ -20,6 +20,7 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import SmartEditor from "../../component/SmartEditor.jsx";
+import MapAdd from "../../MapAdd.jsx";
 
 function PostWrite() {
   const [title, setTitle] = useState("");
@@ -52,7 +53,7 @@ function PostWrite() {
   function handleClickSave() {
     setLoading(true);
     axios
-      .postForm("/api/post/add", { title, content, city, area })
+      .postForm("/api/post/add", { title, content })
       .then((res) => {
         navigate(`/post/${res.data}`);
         toast({
@@ -108,8 +109,8 @@ function PostWrite() {
           장소 선택
           {/* Todo 장소 내용 표기 필요 */}
         </Box>
-        <Box w={"576px"} h={"360px"} bg={"lightgray"} my={"32px"}>
-          {/* Todo 지도 표기 필요 */}
+        <Box w={"576px"} bg={"lightgray"} my={"32px"}>
+          <MapAdd />
         </Box>
         <Box>
           <Box>
