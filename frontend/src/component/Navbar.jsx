@@ -46,6 +46,11 @@ function Navbar() {
             </Center>
           )}
           {account.isLoggedIn() && (
+          <Box onClick={() => navigate("/memberList")} cursor={"pointer"}>
+            멤버 리스트
+          </Box>
+          )}
+          {account.isLoggedIn() && (
           <Center onClick={() => navigate("/memberinfo")} cursor={"pointer"}>
             프로필
           </Center>
