@@ -8,7 +8,6 @@ import {
   FormLabel,
   Grid,
   GridItem,
-  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -23,7 +22,6 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { GuideLineMediumBanner } from "../../css/CustomStyles.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { LoginContext } from "../../component/LoginProvider.jsx";
@@ -42,12 +40,14 @@ export function PostView() {
   const navigate = useNavigate();
   const [like, setLike] = useState({ like: false, count: 0 });
   const [isLikeLoading, setIsLikeLoading] = useState(false);
+  const [isTransition, setIsTransition] = useState(false);
   const toast = useToast();
   const {
     isOpen: isModalOpenOfDelete,
     onOpen: onModalOpenOfDelete,
     onClose: onModalCloseOfDelete,
   } = useDisclosure();
+  const [comment, setComment] = useState({ count: 0 });
 
   useEffect(() => {
     axios
@@ -55,6 +55,7 @@ export function PostView() {
       .then((res) => {
         setPost(res.data.post);
         setLike(res.data.like);
+        setComment({ count: res.data.commentCount });
       })
       .catch((err) => {
         navigate("/post/list");
@@ -66,7 +67,7 @@ export function PostView() {
           });
         }
       });
-  }, [isLikeLoading]);
+  }, [isLikeLoading, isTransition]);
 
   // 게시글 번호 확인
   if (post === null || post === undefined) {
@@ -179,7 +180,7 @@ export function PostView() {
           >
             <Flex pl={3}>
               <Text>
-                조회수 <FontAwesomeIcon icon={faCaretRight} />
+                조회수 <FontAwesomeIcon icon={faCaretRight} /> {post.view}
               </Text>
             </Flex>
           </GridItem>
@@ -209,7 +210,7 @@ export function PostView() {
           >
             <Flex pl={3}>
               <Text>
-                댓글 <FontAwesomeIcon icon={faCaretRight} />
+                댓글 <FontAwesomeIcon icon={faCaretRight} /> {comment.count}
               </Text>
             </Flex>
           </GridItem>
@@ -264,16 +265,16 @@ export function PostView() {
           hasArrow
           label={"로그인 해주세요"}
         >
-        <Button onClick={handleLikeCount}>
-          <Flex align={"center"} gap={1}>
-            <Text fontSize={"xl"}>
-              {like.like && <FontAwesomeIcon icon={emptyHeart} />}
-              {like.like || <FontAwesomeIcon icon={fullHeart} />}
-            </Text>
-            <Text fontSize={"xl"}>좋아요</Text>
-            <Text fontSize={"xl"}>{like.count}</Text>
-          </Flex>
-        </Button>
+          <Button onClick={handleLikeCount}>
+            <Flex align={"center"} gap={1}>
+              <Text fontSize={"xl"}>
+                {like.like && <FontAwesomeIcon icon={emptyHeart} />}
+                {like.like || <FontAwesomeIcon icon={fullHeart} />}
+              </Text>
+              <Text fontSize={"xl"}>좋아요</Text>
+              <Text fontSize={"xl"}>{like.count}</Text>
+            </Flex>
+          </Button>
         </Tooltip>
         <Spacer />
         {/* 수정 및 삭제 버튼 */}
@@ -291,7 +292,11 @@ export function PostView() {
         <Button onClick={() => navigate("/post/list")}>목록</Button>
       </Flex>
       {/*댓글*/}
-      <CommentComponent postId={post.postId} />
+      <CommentComponent
+        postId={post.postId}
+        isTransition={isTransition}
+        setIsTransition={setIsTransition}
+      />
 
       <Modal isOpen={isModalOpenOfDelete} onClose={onModalCloseOfDelete}>
         <ModalOverlay />

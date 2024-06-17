@@ -37,6 +37,8 @@ public class PostService {
 
     // 게시글 조회 서비스
     public Map<String, Object> get(Integer postId, Authentication authentication) {
+        // 조회수 증가
+        postMapper.incrementViewCount(postId);
         Post post = postMapper.selectById(postId);
         Map<String, Object> result = new HashMap<>();
 
@@ -53,6 +55,9 @@ public class PostService {
         like.put("count", postMapper.selectCountLikeByBoardId(postId));
         result.put("like", like);
         result.put("post", post);
+
+        int commentCount = postMapper.selectCountCommentByBoardId(postId);
+        result.put("commentCount", commentCount);
 
         return result;
     }

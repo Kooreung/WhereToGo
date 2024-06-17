@@ -42,4 +42,14 @@ public class CommentService {
         }
         return true;
     }
+
+    public boolean validate(Comment comment) {
+        if (comment == null) {
+            return false;
+        }
+        if (comment.getComment().isBlank()) {
+            return false;
+        }
+        return true;
+    }
 }

@@ -151,7 +151,7 @@ function PostList() {
                     border={"1px dotted yellow"}
                     alignContent={"center"}
                   >
-                    <Flex>조회수 {post.viewCount}</Flex>
+                    <Flex>조회수 {post.view}</Flex>
                   </GridItem>
                   <GridItem
                     colSpan={2}

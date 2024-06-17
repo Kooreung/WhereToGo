@@ -1,5 +1,19 @@
 import React, { useContext, useState } from "react";
-import { Box, Button, Flex, Textarea, Tooltip, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Textarea,
+  Tooltip,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import axios from "axios";
 import { LoginContext } from "../LoginProvider.jsx";
 
@@ -7,6 +21,7 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
   const [comment, setComment] = useState("");
   const toast = useToast();
   const account = useContext(LoginContext);
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   function handleSubmitComment() {
     if (!account.isLoggedIn()) {
@@ -26,6 +41,7 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
       })
       .catch((err) => {})
       .finally(() => {
+        onClose();
         setIsTransition(false);
       });
   }
@@ -36,6 +52,7 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
         <Textarea
           onChange={(e) => setComment(e.target.value)}
           value={comment}
+          placehol요der={"댓글을 입력하세요"}
         />
       </Box>
       <Flex justify={"end"} mt={3}>
@@ -44,11 +61,26 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
           hasArrow
           label={"회원만 작성 가능합니다"}
         >
-        <Button onClick={handleSubmitComment} isLoading={isTransition}>
-          작성
-        </Button>
+          <Button
+            onClick={onOpen}
+            isLoading={isTransition}
+            isDisabled={!account.isLoggedIn() || comment.length === 0}
+          >
+            작성
+          </Button>
         </Tooltip>
       </Flex>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>작성 확인</ModalHeader>
+          <ModalBody>작성하시겠습니까?</ModalBody>
+          <ModalFooter>
+            <Button onClick={onClose}>취소</Button>
+            <Button onClick={handleSubmitComment}>확인</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }

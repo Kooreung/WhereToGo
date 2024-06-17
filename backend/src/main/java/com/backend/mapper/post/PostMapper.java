@@ -28,8 +28,10 @@ public interface PostMapper {
     // 게시글 리스트 매퍼
     @Select("""
             <script>
-            SELECT p.postid, p.title, p.content, m.nickname
+            SELECT p.postid, p.title, p.content, p.view, m.nickname,COUNT(DISTINCT l.memberid)likeCount,COUNT(DISTINCT c.commentid)commentCount
             FROM post p JOIN member m ON p.memberid = m.memberid
+                                 LEFT JOIN likes l ON p.postid=l.postid
+                                             LEFT JOIN comment c ON p.postid=c.postid
             <where>
                 <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
@@ -48,6 +50,11 @@ public interface PostMapper {
             </script>
             """)
     List<Post> selectAllPost(Integer offset, String searchType, String searchKeyword);
+
+    @Select("""
+            SELECT COUNT(*) FROM post;
+            """)
+    Integer countAll();
 
     // 게시글 리스트 카운트 매퍼
     @Select("""
@@ -110,4 +117,17 @@ public interface PostMapper {
             and memberid=#{memberId}
             """)
     int selectLikeByPostIdAndMemberId(Integer postId, String memberId);
+
+    @Select("""
+            SELECT COUNT(*)
+            FROM comment
+            WHERE postid = #{postId}
+            """)
+    int selectCountCommentByBoardId(Integer postId);
+
+    @Update("""
+            UPDATE post SET view=view+1 WHERE postid=#{postId}
+
+            """)
+    int incrementViewCount(Integer postId);
 }

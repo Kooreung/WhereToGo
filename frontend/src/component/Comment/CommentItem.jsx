@@ -1,5 +1,19 @@
 import React, { useContext, useState } from "react";
-import { Box, Button, Flex, Spacer, Text, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Spacer,
+  Text,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import CommentEdit from "./CommentEdit.jsx";
 import axios from "axios";
 import { LoginContext } from "../LoginProvider.jsx";
@@ -8,6 +22,7 @@ function CommentItem({ comment, isTransition, setIsTransition }) {
   const [isEditing, setIsEditing] = useState(false);
   const toast = useToast();
   const account = useContext(LoginContext);
+  const { onClose, isOpen, onOpen } = useDisclosure();
 
   function handleRemoveSubmit() {
     setIsTransition(true);
@@ -25,6 +40,7 @@ function CommentItem({ comment, isTransition, setIsTransition }) {
       })
       .catch()
       .finally(() => {
+        onClose();
         setIsTransition(false);
       });
   }
@@ -42,12 +58,23 @@ function CommentItem({ comment, isTransition, setIsTransition }) {
             {account.hasAccessMemberId(comment.memberId) && (
               <Flex align={"center"} gap={3}>
                 <Button onClick={() => setIsEditing(true)}>수정</Button>
-                <Button onClick={handleRemoveSubmit} isLoading={isTransition}>
+                <Button onClick={onOpen} isLoading={isTransition}>
                   삭제
                 </Button>
               </Flex>
             )}
           </Flex>
+          <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>삭제 확인</ModalHeader>
+              <ModalBody>삭제하시겠습니까?</ModalBody>
+              <ModalFooter>
+                <Button onClick={onClose}>취소</Button>
+                <Button onClick={handleRemoveSubmit}>확인</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
         </Box>
       )}
       {isEditing && (
