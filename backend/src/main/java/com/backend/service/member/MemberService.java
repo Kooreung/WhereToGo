@@ -57,7 +57,6 @@ public class MemberService {
         if (newProfile != null && !newProfile.isEmpty()) {
             // 이미지가 있는 경우 S3에 저장
             String key = String.format("prj3/%s/%s", dbmember.getMemberId(), newProfile.getOriginalFilename());
-            System.out.println(key);
             PutObjectRequest objectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(key)

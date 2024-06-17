@@ -37,9 +37,27 @@ public class PostService {
 
     // 게시글 조회 서비스
     public Map<String, Object> get(Integer postId, Authentication authentication) {
+        // 조회수 증가
+        postMapper.incrementViewCount(postId);
         Post post = postMapper.selectById(postId);
         Map<String, Object> result = new HashMap<>();
+
+
+        Map<String, Object> like = new HashMap<>();
+//        로그인안하면 빈하트 로그인하면 좋아요 한 게시물 하트
+        if (authentication == null) {
+            like.put("like", false);
+        } else {
+            int c = postMapper.selectLikeByPostIdAndMemberId(postId, authentication.getName());
+            like.put("like", c == 1);
+        }
+//        게시물 조회시 좋아요 카운트 전송
+        like.put("count", postMapper.selectCountLikeByBoardId(postId));
+        result.put("like", like);
         result.put("post", post);
+
+        int commentCount = postMapper.selectCountCommentByBoardId(postId);
+        result.put("commentCount", commentCount);
 
         return result;
     }

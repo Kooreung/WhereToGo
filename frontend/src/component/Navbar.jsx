@@ -8,53 +8,49 @@ function Navbar() {
   const account = useContext(LoginContext);
 
   return (
-    <Flex
-      align={"center"}
-      justify={"space-between"}
-      px={6}
-      mb={6}
-      border={"red dotted 1px"}
-      height={20}
-    >
-      <Flex gap={3} onClick={() => navigate("/")} cursor={"pointer"}>
-        <Box>로고</Box>
-        <Box>홈페이지 제목</Box>
-      </Flex>
-      <Center gap={12}>
-        <Box>MD Pick</Box>
-        <Box onClick={() => navigate("/post/list")} cursor={"pointer"}>
-          회원 게시판
-        </Box>
-      </Center>
-      <Flex gap={3}>
-        {account.isLoggedIn() || (
-        <Center onClick={() => navigate("/signup")} cursor={"pointer"}>
-          회원가입
+    <Flex alignItems="center" justifyContent="center">
+      <Flex
+        w={{ base: "1080px", lg: "1440px" }}
+        h={"96px"}
+        px={6}
+        mt={"64px"}
+        mb={"32px"}
+        align={"center"}
+        justify={"space-between"}
+        border={"red dotted 1px"}
+      >
+        <Flex gap={3} onClick={() => navigate("/")} cursor={"pointer"}>
+          <Box>로고</Box>
+          <Box>홈페이지 제목</Box>
+        </Flex>
+        <Center gap={12}>
+          <Box>MD Pick</Box>
+          <Box onClick={() => navigate("/post/list")} cursor={"pointer"}>
+            회원 게시판
+          </Box>
         </Center>
-        )}
-        {account.isLoggedIn() ||(
-        <Center onClick={() => navigate("/login")} cursor={"pointer"}>
-          로그인
-        </Center>
-        )}
-        {account.isLoggedIn() && (
-        <Center onClick={() => {account.logout(); navigate("/")}} cursor={"pointer"}>
-          로그아웃
-        </Center>
-        )}
-        {account.isLoggedIn() && (
-        <Center onClick={() => navigate("/memberinfo")} cursor={"pointer"}>
-          프로필
-        </Center>
-        )}
-        <Box
-          onClick={() => {
-            navigate("/comment");
-          }}
-          cursor={"pointer"}
-        >
-          댓글연습
-        </Box>
+        <Flex gap={3}>
+          {account.isLoggedIn() || (
+          <Center onClick={() => navigate("/signup")} cursor={"pointer"}>
+            회원가입
+          </Center>
+          )}
+          {account.isLoggedIn() ||(
+          <Center onClick={() => navigate("/login")} cursor={"pointer"}>
+            로그인
+          </Center>
+          )}
+          {account.isLoggedIn() && (
+            <Center onClick={() => {account.logout(); navigate("/")}} cursor={"pointer"}>
+              로그아웃
+            </Center>
+          )}
+          {account.isLoggedIn() && (
+          <Center onClick={() => navigate("/memberinfo")} cursor={"pointer"}>
+            프로필
+          </Center>
+          )}
+        </Flex>
       </Flex>
     </Flex>
   );
