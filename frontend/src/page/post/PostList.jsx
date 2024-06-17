@@ -217,7 +217,7 @@ function PostList() {
                       <Text display={{ base: "none", lg: "block" }} mr={1}>
                         조회수 <FontAwesomeIcon icon={faCaretRight} />
                       </Text>
-                      <Text>{post.viewCount}</Text>
+                      <Text>{post.view}</Text>
                     </Flex>
                   </GridItem>
                   <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>

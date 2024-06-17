@@ -40,12 +40,14 @@ export function PostView() {
   const navigate = useNavigate();
   const [like, setLike] = useState({ like: false, count: 0 });
   const [isLikeLoading, setIsLikeLoading] = useState(false);
+  const [isTransition, setIsTransition] = useState(false);
   const toast = useToast();
   const {
     isOpen: isModalOpenOfDelete,
     onOpen: onModalOpenOfDelete,
     onClose: onModalCloseOfDelete,
   } = useDisclosure();
+  const [comment, setComment] = useState({ count: 0 });
 
   useEffect(() => {
     axios
@@ -53,6 +55,7 @@ export function PostView() {
       .then((res) => {
         setPost(res.data.post);
         setLike(res.data.like);
+        setComment({ count: res.data.commentCount });
       })
       .catch((err) => {
         navigate("/post/list");
@@ -64,7 +67,7 @@ export function PostView() {
           });
         }
       });
-  }, [isLikeLoading]);
+  }, [isLikeLoading, isTransition]);
 
   // 게시글 번호 확인
   if (post === null || post === undefined) {
@@ -185,7 +188,7 @@ export function PostView() {
               <Text display={{ base: "none", lg: "block" }} mr={1}>
                 조회수 <FontAwesomeIcon icon={faCaretRight} />
               </Text>
-              <Text>{post.viewCount}</Text>
+              <Text>{post.view}</Text>
             </Flex>
           </GridItem>
           <GridItem
@@ -217,7 +220,7 @@ export function PostView() {
               <Text display={{ base: "none", lg: "block" }} mr={1}>
                 댓글 <FontAwesomeIcon icon={faCaretRight} />
               </Text>
-              <Text>{post.commentCount}</Text>
+              <Text>{comment.count}</Text>
             </Flex>
           </GridItem>
           <GridItem
@@ -313,7 +316,11 @@ export function PostView() {
         </Button>
       </Flex>
       {/*댓글*/}
-      <CommentComponent postId={post.postId} />
+      <CommentComponent
+        postId={post.postId}
+        isTransition={isTransition}
+        setIsTransition={setIsTransition}
+      />
 
       <Modal isOpen={isModalOpenOfDelete} onClose={onModalCloseOfDelete}>
         <ModalOverlay />

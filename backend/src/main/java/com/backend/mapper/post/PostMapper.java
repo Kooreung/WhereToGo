@@ -32,7 +32,7 @@ public interface PostMapper {
     // 게시글 리스트 매퍼
     @Select("""
             <script>
-            SELECT p.postid, p.title, p.content, p.createdate,
+            SELECT p.postid, p.title, p.content, p.createdate, p.view,
                    m.nickname,
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l.memberid) likeCount
@@ -57,6 +57,12 @@ public interface PostMapper {
             </script>
             """)
     List<Post> selectAllPost(Integer offset, String searchType, String searchKeyword);
+
+    // 게시글 갯수 카운트 매퍼
+    @Select("""
+            SELECT COUNT(*) FROM post;
+            """)
+    Integer countAll();
 
     // 게시글 리스트 카운트 매퍼
     @Select("""
@@ -94,18 +100,21 @@ public interface PostMapper {
             """)
     Integer deleteById(Integer postId);
 
-    @Delete("""
-            DELETE FROM likes
-            WHERE postid=#{postId} AND memberid=#{memberId}
-            """)
-    int deleteLike(Integer postId, Integer memberId);
-
+    // 좋아요 추가 매퍼
     @Insert("""
             INSERT INTO likes (postid, memberid)
             VALUES (#{postId}, #{memberId})
             """)
     int insertLike(Integer postId, Integer memberId);
 
+    // 좋아요 삭제 매퍼
+    @Delete("""
+            DELETE FROM likes
+            WHERE postid=#{postId} AND memberid=#{memberId}
+            """)
+    int deleteLike(Integer postId, Integer memberId);
+
+    // 게시글 별 좋아요 개수 카운트 매퍼
     @Select("""
             SELECT COUNT(*)
             FROM likes
@@ -113,10 +122,27 @@ public interface PostMapper {
             """)
     Object selectCountLikeByBoardId(Integer postId);
 
+    // 회원 별 좋아요 개수 카운트 매퍼
     @Select("""
-            select count(*) from likes
+            select COUNT(*) from likes
             where postid=#{postId}
             and memberid=#{memberId}
             """)
     int selectLikeByPostIdAndMemberId(Integer postId, String memberId);
+
+    // 게시글 별 댓글 개수 카운트 매퍼
+    @Select("""
+            SELECT COUNT(*)
+            FROM comment
+            WHERE postid = #{postId}
+            """)
+    int selectCountCommentByBoardId(Integer postId);
+
+    // 조회수 매퍼
+    @Update("""
+            UPDATE post
+            SET view=view+1
+            WHERE postid=#{postId}
+            """)
+    int incrementViewCount(Integer postId);
 }

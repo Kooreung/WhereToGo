@@ -11,7 +11,7 @@ public class Post {
     private String title;
     private String content;
     private String nickName;
-    private Integer viewCount;
+    private Integer view;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate createDate;
     private Integer memberId;
