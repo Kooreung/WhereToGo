@@ -58,12 +58,6 @@ public interface PostMapper {
             """)
     List<Post> selectAllPost(Integer offset, String searchType, String searchKeyword);
 
-    // 게시글 갯수 카운트 매퍼
-    @Select("""
-            SELECT COUNT(*) FROM post;
-            """)
-    Integer countAll();
-
     // 게시글 리스트 카운트 매퍼
     @Select("""
             <script>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -16,7 +16,6 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAngleLeft,
@@ -26,9 +25,12 @@ import {
   faCaretRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { SearchIcon } from "@chakra-ui/icons";
+import { LoginContext } from "../../component/LoginProvider.jsx";
+import axios from "axios";
 
 function PostList() {
   const navigate = useNavigate();
+  const account = useContext(LoginContext);
   const [postList, setPostList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   const [searchParams] = useSearchParams();
@@ -329,7 +331,11 @@ function PostList() {
               />
             </Box>
           </Center>
-          <Button onClick={() => navigate(`/post/write`)}>글쓰기</Button>
+          {account.isLoggedIn() ? (
+            <Button onClick={() => navigate(`/post/write`)}>글쓰기</Button>
+          ) : (
+            <Box w={"80px"}></Box>
+          )}
         </Flex>
       </Box>
 

@@ -12,7 +12,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Select,
   Textarea,
   Tooltip,
   useDisclosure,
@@ -25,8 +24,6 @@ import SmartEditor from "../../component/SmartEditor.jsx";
 function PostWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [city, setCity] = useState("");
-  const [area, setArea] = useState("");
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -43,19 +40,13 @@ function PostWrite() {
   } = useDisclosure();
 
   // 저장 버튼 비활성화 조건
-  let disableSaveButton = false;
+  let disableSaveButton = "able";
   if (title.trim().length === 0) {
-    disableSaveButton = true;
+    disableSaveButton = "disableToTitle";
   }
   if (content.trim().length === 0) {
-    disableSaveButton = true;
+    disableSaveButton = "disableToContent";
   }
-  // if (city.length === 0) {
-  //   disableSaveButton = true;
-  // }
-  // if (area.length === 0) {
-  //   disableSaveButton = true;
-  // }
 
   // 저장 버튼 클릭 시
   function handleClickSave() {
@@ -84,15 +75,6 @@ function PostWrite() {
     });
   }
 
-  // 지역 및 상세지역 설정 시
-  function handleClickSelectCity(e) {
-    setCity(e.target.value);
-  }
-
-  function handleClickSelectArea(e) {
-    setArea(e.target.value);
-  }
-
   return (
     <Flex direction={"column"} align={"center"}>
       <Flex direction={"column"} align={"center"}>
@@ -106,34 +88,16 @@ function PostWrite() {
               ></Input>
             </FormControl>
           </Box>
-          <Box align={"left"}>
-            <FormControl>
-              <Select
-                placeholder={"지역을 선택해주세요."}
-                onChange={handleClickSelectCity}
-              >
-                <option value={"서울"}>서울</option>
-              </Select>
-              {city === "서울" && (
-                <Select
-                  placeholder={"상세 지역을 선택해주세요."}
-                  onChange={handleClickSelectArea}
-                >
-                  <option value={"서울01"}>강남/역삼</option>
-                  <option value={"서울02"}>서초/교대/방배</option>
-                  <option value={"서울03"}>잠실/송파/강동</option>
-                  <option value={"서울04"}>건대/성수/왕십리</option>
-                  <option value={"서울05"}>성북/노원/중랑</option>
-                  <option value={"서울06"}>종로/중구</option>
-                  <option value={"서울07"}>용산/이태원/한남</option>
-                  <option value={"서울08"}>홍대/합정/마포</option>
-                  <option value={"서울09"}>영등포/여의도/강서</option>
-                  <option value={"서울10"}>구로/관악/동작</option>
-                  {/* TODO City & Area Table 어떻게 할지 */}
-                </Select>
-              )}
-            </FormControl>
-          </Box>
+          {/*<option value={"서울01"}>강남/역삼</option>*/}
+          {/*<option value={"서울02"}>서초/교대/방배</option>*/}
+          {/*<option value={"서울03"}>잠실/송파/강동</option>*/}
+          {/*<option value={"서울04"}>건대/성수/왕십리</option>*/}
+          {/*<option value={"서울05"}>성북/노원/중랑</option>*/}
+          {/*<option value={"서울06"}>종로/중구</option>*/}
+          {/*<option value={"서울07"}>용산/이태원/한남</option>*/}
+          {/*<option value={"서울08"}>홍대/합정/마포</option>*/}
+          {/*<option value={"서울09"}>영등포/여의도/강서</option>*/}
+          {/*<option value={"서울10"}>구로/관악/동작</option>*/}
         </Box>
         <Box
           w={{ base: "720px", lg: "1080px" }}
@@ -164,15 +128,20 @@ function PostWrite() {
             </Box>
             <Box align={"left"} my={10}>
               <Tooltip
-                isDisabled={disableSaveButton === false}
                 hasArrow
-                label={"제목 또는 내용을 확인해주세요."}
+                isDisabled={disableSaveButton === "able"}
+                label={
+                  disableSaveButton === "disableToTitle"
+                    ? "제목을 확인해주세요."
+                    : disableSaveButton === "disableToContent"
+                      ? "내용을 확인해주세요."
+                      : ""
+                }
               >
-                {/* TODO 내용 공백에 따라 라벨 내용 수정 필요 */}
                 <Button
                   onClick={onModalOpenOfSave}
                   isLoading={loading}
-                  isDisabled={disableSaveButton}
+                  isDisabled={disableSaveButton !== "able"}
                 >
                   등록
                 </Button>
