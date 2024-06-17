@@ -4,8 +4,6 @@ import {
   Button,
   Divider,
   Flex,
-  FormControl,
-  FormLabel,
   Grid,
   GridItem,
   Modal,
@@ -17,7 +15,6 @@ import {
   Spacer,
   Spinner,
   Text,
-  Textarea,
   Tooltip,
   useDisclosure,
   useToast,
@@ -30,6 +27,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCaretRight,
   faHeart as emptyHeart,
+  faList,
+  faPenToSquare,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-regular-svg-icons";
 
@@ -74,6 +74,7 @@ export function PostView() {
     return <Spinner />;
   }
 
+  // 게시글 좋아요 클릭 시
   function handleLikeCount() {
     if (!account.isLoggedIn()) {
       return;
@@ -150,37 +151,11 @@ export function PostView() {
             whiteSpace={"nowrap"}
           >
             <Flex pl={3}>
-              <Text>
+              <Text display={{ base: "none", lg: "block" }} mr={1}>
                 제목 <FontAwesomeIcon icon={faCaretRight} />
               </Text>
-              <Box ml={1}>{post.title}</Box>
-            </Flex>
-          </GridItem>
-          <GridItem
-            border={"1px dotted red"}
-            rowSpan={1}
-            colSpan={1}
-            alignContent={"center"}
-            overflow={"hidden"}
-            textOverflow={"ellipsis"}
-            whiteSpace={"nowrap"}
-          >
-            <Text pl={3}>
-              작성자 <FontAwesomeIcon icon={faCaretRight} /> {post.nickName}
-            </Text>
-          </GridItem>
-          <GridItem
-            border={"1px dotted red"}
-            rowSpan={1}
-            colSpan={1}
-            alignContent={"center"}
-            overflow={"hidden"}
-            textOverflow={"ellipsis"}
-            whiteSpace={"nowrap"}
-          >
-            <Flex pl={3}>
-              <Text>
-                조회수 <FontAwesomeIcon icon={faCaretRight} /> {post.view}
+              <Text overflow={"hidden"} textOverflow={"ellipsis"}>
+                {post.title}
               </Text>
             </Flex>
           </GridItem>
@@ -194,9 +169,10 @@ export function PostView() {
             whiteSpace={"nowrap"}
           >
             <Flex pl={3}>
-              <Text>
-                좋아요 <FontAwesomeIcon icon={faCaretRight} /> {like.count}
+              <Text display={{ base: "none", lg: "block" }} mr={1}>
+                작성자 <FontAwesomeIcon icon={faCaretRight} />
               </Text>
+              <Text>{post.nickName}</Text>
             </Flex>
           </GridItem>
           <GridItem
@@ -209,9 +185,10 @@ export function PostView() {
             whiteSpace={"nowrap"}
           >
             <Flex pl={3}>
-              <Text>
-                댓글 <FontAwesomeIcon icon={faCaretRight} /> {comment.count}
+              <Text display={{ base: "none", lg: "block" }} mr={1}>
+                조회수 <FontAwesomeIcon icon={faCaretRight} />
               </Text>
+              <Text>{post.view}</Text>
             </Flex>
           </GridItem>
           <GridItem
@@ -224,10 +201,42 @@ export function PostView() {
             whiteSpace={"nowrap"}
           >
             <Flex pl={3}>
-              <Text>
+              <Text display={{ base: "none", lg: "block" }} mr={1}>
+                좋아요 <FontAwesomeIcon icon={faCaretRight} />
+              </Text>
+              <Text>{like.count}</Text>
+            </Flex>
+          </GridItem>
+          <GridItem
+            border={"1px dotted red"}
+            rowSpan={1}
+            colSpan={1}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Flex pl={3}>
+              <Text display={{ base: "none", lg: "block" }} mr={1}>
+                댓글 <FontAwesomeIcon icon={faCaretRight} />
+              </Text>
+              <Text>{comment.count}</Text>
+            </Flex>
+          </GridItem>
+          <GridItem
+            border={"1px dotted red"}
+            rowSpan={1}
+            colSpan={1}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Flex pl={3}>
+              <Text display={{ base: "none", lg: "block" }} mr={1}>
                 작성일자 <FontAwesomeIcon icon={faCaretRight} />{" "}
-                {post.createDate}
               </Text>
+              <Text>{post.createDate}</Text>
             </Flex>
           </GridItem>
         </Grid>
@@ -245,15 +254,15 @@ export function PostView() {
           {/* Todo 장소 내용 표기 필요 */}
         </Box>
       </Flex>
-      <Box w={"720px"} h={"360px"} bg={"lightgray"} my={"32px"}>
-        <Box>
-          <Box align={"left"}>
-            <FormControl>
-              <FormLabel>설명</FormLabel>
-              <Textarea value={post.content} readOnly></Textarea>
-            </FormControl>
-          </Box>
-        </Box>
+      <Box
+        w={"720px"}
+        h={"360px"}
+        bg={"lightgray"}
+        my={"32px"}
+        p={"1rem"}
+        whiteSpace={"pre-wrap"}
+      >
+        <Box>{post.content}</Box>
       </Box>
 
       <Divider border={"1px solid lightGray"} w={"720px"} />
@@ -271,7 +280,9 @@ export function PostView() {
                 {like.like && <FontAwesomeIcon icon={emptyHeart} />}
                 {like.like || <FontAwesomeIcon icon={fullHeart} />}
               </Text>
-              <Text fontSize={"xl"}>좋아요</Text>
+              <Text fontSize={"xl"} display={{ base: "none", lg: "block" }}>
+                좋아요
+              </Text>
               <Text fontSize={"xl"}>{like.count}</Text>
             </Flex>
           </Button>
@@ -282,14 +293,27 @@ export function PostView() {
           <Box>
             <Box align={"left"} my={10}>
               <Button onClick={() => navigate(`/post/${postId}/edit`)}>
-                수정
+                <FontAwesomeIcon icon={faPenToSquare} />
+                <Text display={{ base: "none", lg: "block" }} ml={1}>
+                  수정
+                </Text>
               </Button>
-              <Button onClick={onModalOpenOfDelete}>삭제</Button>
+              <Button onClick={onModalOpenOfDelete}>
+                <FontAwesomeIcon icon={faTrash} />
+                <Text display={{ base: "none", lg: "block" }} ml={1}>
+                  삭제
+                </Text>
+              </Button>
             </Box>
           </Box>
         )}
         {/* 목록 */}
-        <Button onClick={() => navigate("/post/list")}>목록</Button>
+        <Button onClick={() => navigate("/post/list")}>
+          <FontAwesomeIcon icon={faList} />
+          <Text display={{ base: "none", lg: "block" }} ml={1}>
+            목록
+          </Text>
+        </Button>
       </Flex>
       {/*댓글*/}
       <CommentComponent

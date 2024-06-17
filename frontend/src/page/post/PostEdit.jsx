@@ -12,12 +12,13 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select,
   Spinner,
   Textarea,
+  Tooltip,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { GuideLineMediumBanner } from "../../css/CustomStyles.jsx";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -90,7 +91,6 @@ export function PostEdit() {
             description: "게시글 수정에 실패하였습니다.",
           });
         }
-
       })
       .finally(() => onModalCloseOfSave(), setLoading(false));
   }
@@ -106,56 +106,94 @@ export function PostEdit() {
   }
 
   return (
-    <Box>
-      <Flex justify={"space-evenly"}>
-        <Box>
-          <Box {...GuideLineMediumBanner} w={500} h={500}>
-            지도
+    <Flex direction={"column"} align={"center"}>
+      <Flex direction={"column"} align={"center"}>
+        <Box w={"540px"} bg={"lightgray"} my={"2rem"}>
+          <Box align={"left"} mb={"1rem"}>
+            <FormControl>
+              <FormLabel>제목</FormLabel>
+              <Input
+                defaultValue={post.title}
+                onChange={(e) => setPost({ ...post, title: e.target.value })}
+              ></Input>
+            </FormControl>
           </Box>
-          <Box {...GuideLineMediumBanner} w={500}>
-            추가 dsadas
+          <Box align={"left"}>
+            <FormControl>
+              <Select
+                placeholder={"지역을 선택해주세요."}
+                // onChange={handleClickSelectCity}
+              >
+                <option value={"서울"}>서울</option>
+              </Select>
+              {/*{city === "서울" && (*/}
+              <Select
+                placeholder={"상세 지역을 선택해주세요."}
+                // onChange={handleClickSelectArea}
+              >
+                <option value={"서울01"}>강남/역삼</option>
+                <option value={"서울02"}>서초/교대/방배</option>
+                <option value={"서울03"}>잠실/송파/강동</option>
+                <option value={"서울04"}>건대/성수/왕십리</option>
+                <option value={"서울05"}>성북/노원/중랑</option>
+                <option value={"서울06"}>종로/중구</option>
+                <option value={"서울07"}>용산/이태원/한남</option>
+                <option value={"서울08"}>홍대/합정/마포</option>
+                <option value={"서울09"}>영등포/여의도/강서</option>
+                <option value={"서울10"}>구로/관악/동작</option>
+                {/* TODO City & Area Table 어떻게 할지 */}
+              </Select>
+              {/*)}*/}
+            </FormControl>
           </Box>
         </Box>
+        <Box
+          w={{ base: "720px", lg: "1080px" }}
+          h={"160px"}
+          bg={"lightgray"}
+          my={"32px"}
+        >
+          장소 선택
+          {/* Todo 장소 내용 표기 필요 */}
+        </Box>
+        <Box w={"576px"} h={"360px"} bg={"lightgray"} my={"32px"}>
+          {/* Todo 지도 표기 필요 */}
+        </Box>
         <Box>
-          <Box {...GuideLineMediumBanner} w={500} h={1000} p={10}>
-            <Box align={"left"} my={10}>
-              <FormControl>
-                <FormLabel>제목</FormLabel>
-                <Input
-                  defaultValue={post.title}
-                  onChange={(e) => setPost({ ...post, title: e.target.value })}
-                ></Input>
-              </FormControl>
-            </Box>
-            <Box align={"left"} my={10}>
-              <FormControl>
-                <FormLabel>작성자</FormLabel>
-                <Input defaultValue={post.nickName} readOnly></Input>
-              </FormControl>
-            </Box>
-            <Box align={"left"} my={10}>
-              <FormControl>
-                <FormLabel>설명</FormLabel>
-                <Textarea
-                  h={200}
-                  defaultValue={post.content}
-                  onChange={(e) =>
-                    setPost({ ...post, content: e.target.value })
-                  }
-                ></Textarea>
-              </FormControl>
-            </Box>
-          </Box>
           <Box>
+            <Box w={"720px"} bg={"lightgray"} my={"32px"}>
+              <Box align={"left"} my={10}>
+                <FormControl>
+                  <FormLabel>설명</FormLabel>
+                  <Textarea
+                    h={200}
+                    defaultValue={post.content}
+                    onChange={(e) =>
+                      setPost({ ...post, content: e.target.value })
+                    }
+                  ></Textarea>
+                  {/* TODO Text Editor 추가 */}
+                </FormControl>
+              </Box>
+            </Box>
             <Box align={"left"} my={10}>
-              <Button
-                onClick={onModalOpenOfSave}
-                isLoading={loading}
-                isDisabled={disableSaveButton}
+              <Tooltip
+                isDisabled={disableSaveButton === false}
+                hasArrow
+                label={"제목 또는 내용을 확인해주세요."}
               >
-                저장
-              </Button>
+                {/* TODO 내용 공백에 따라 라벨 내용 수정 필요 */}
+                <Button
+                  onClick={onModalOpenOfSave}
+                  isLoading={loading}
+                  isDisabled={disableSaveButton}
+                >
+                  등록
+                </Button>
+              </Tooltip>
               <Button onClick={onModalOpenOfCancel}>취소</Button>
+              {/* Todo 게시글 작성 중 임시저장 필요 */}
+              {/* TODO 게시글 수정하다가 나가려고 하면 Modal 표기 */}
             </Box>
           </Box>
         </Box>
@@ -190,6 +228,6 @@ export function PostEdit() {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </Box>
+    </Flex>
   );
 }

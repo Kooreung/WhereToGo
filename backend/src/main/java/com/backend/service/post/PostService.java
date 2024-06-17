@@ -44,6 +44,7 @@ public class PostService {
 
 
         Map<String, Object> like = new HashMap<>();
+
 //        로그인안하면 빈하트 로그인하면 좋아요 한 게시물 하트
         if (authentication == null) {
             like.put("like", false);
@@ -51,6 +52,7 @@ public class PostService {
             int c = postMapper.selectLikeByPostIdAndMemberId(postId, authentication.getName());
             like.put("like", c == 1);
         }
+
 //        게시물 조회시 좋아요 카운트 전송
         like.put("count", postMapper.selectCountLikeByBoardId(postId));
         result.put("like", like);

@@ -12,6 +12,7 @@ import {
   Input,
   Select,
   StackDivider,
+  Text,
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -22,8 +23,9 @@ import {
   faAngleRight,
   faAnglesLeft,
   faAnglesRight,
-  faMagnifyingGlass,
+  faCaretRight,
 } from "@fortawesome/free-solid-svg-icons";
+import { SearchIcon } from "@chakra-ui/icons";
 
 function PostList() {
   const navigate = useNavigate();
@@ -71,17 +73,59 @@ function PostList() {
   // 회원 인기 게시글
   function ListOfFavoritePost() {
     return (
-      <Box w={{ base: "700px", lg: "2xl" }} h={"15rem"}>
-        <Box border={"1px dotted red"} alignContent={"center"} mb={"32px"}>
+      <Box w={{ base: "720px", lg: "1080px" }}>
+        <Box mb={"2rem"}>
           <Heading align={"center"}>회원 인기글</Heading>
         </Box>
         <Flex justify={"space-evenly"}>
-          <Box
-            border={"1px dotted red"}
-            alignContent={"center"}
-            w={150}
-            h={150}
-          ></Box>
+          {/* lg 이상일 때 */}
+          <Flex
+            border={"1px solid gray"}
+            alignItems={"center"}
+            display={{ base: "none", lg: "flex" }}
+            w={"320px"}
+          >
+            <Box
+              border={"1px dotted red"}
+              alignContent={"center"}
+              w={"120px"}
+              h={"120px"}
+            >
+              썸네일
+            </Box>
+            <Box textAlign={"start"} alignContent={"center"} ml={"1"}>
+              <Box>제목</Box>
+              <Box>작성자</Box>
+              <Box>조회수</Box>
+              <Box>좋아요</Box>
+              <Box>댓글</Box>
+            </Box>
+          </Flex>
+          {/* lg 이하일 때 */}
+          <Flex
+            border={"1px solid gray"}
+            direction={"column"}
+            alignItems={"center"}
+            display={{ base: "flex", lg: "none" }}
+            w={"240px"}
+          >
+            <Box
+              border={"1px dotted red"}
+              alignContent={"center"}
+              w={"120px"}
+              h={"120px"}
+            >
+              썸네일
+            </Box>
+            <Box textAlign={"start"} alignContent={"center"} ml={"1"}>
+              <Box>제목</Box>
+              <Box>작성자</Box>
+              <Box>조회수</Box>
+              <Box>좋아요</Box>
+              <Box>댓글</Box>
+            </Box>
+          </Flex>
+          {/*임시 박스*/}
           <Box
             border={"1px dotted red"}
             alignContent={"center"}
@@ -102,88 +146,142 @@ function PostList() {
   return (
     <Box align="center" justify="center">
       <ListOfFavoritePost />
-      <Divider border={"1px solid lightGray"} w={"2xl"} my={"2rem"}></Divider>
+      <Divider
+        border={"1px solid lightGray"}
+        w={{ base: "720px", lg: "960px" }}
+        my={"2rem"}
+      ></Divider>
       {/* 회원 게시글 페이지 */}
       {postList.length === 0 && <Center>조회 결과가 없습니다.</Center>}
       {postList.length > 0 && (
         <VStack
           divider={<StackDivider borderColor={"lightgray"} />}
-          my={6}
-          spacing={6}
-          width={{ base: "md", lg: "2xl" }}
+          my={"2rem"}
+          spacing={"2rem"}
+          w={{ base: "720px", lg: "960px" }}
         >
           {postList.map((post) => (
             <Box
               key={post.postId}
               onClick={() => navigate(`/post/${post.postId}`)}
-              cursor={"pointer"}
-              width={{ base: "md", lg: "2xl" }}
-              overflow={"hidden"}
+              w={"720px"}
             >
-              {/* Todo 조회수, 좋아요, 댓글수, 썸네일 JOIN */}
-              {/* Todo 게시글 내용 보이다가 사리지기 */}
+              {/* Todo 조회수, 썸네일 JOIN */}
               <Box>
                 <Grid
-                  w={"700"}
-                  h={"200"}
-                  templateColumns={"repeat(6, 1fr)"}
-                  templateRows={"1fr 1fr 3fr"}
+                  w={"720px"}
+                  h={"224px"}
+                  templateColumns={"repeat(9, 1fr)"}
+                  templateRows={"1fr 1fr 5fr"}
+                  _hover={{ bgColor: "beige" }}
+                  cursor={"pointer"}
                 >
                   <GridItem
+                    colSpan={9}
+                    rowSpan={1}
+                    alignContent={"center"}
+                    whiteSpace={"nowrap"}
+                    borderY={"1px solid lightgray"}
+                  >
+                    <Flex pl={3}>
+                      <Text
+                        display={{ base: "none", lg: "block" }}
+                        mr={1}
+                        fontSize={"xl"}
+                        fontWeight={"bold"}
+                      >
+                        제목 <FontAwesomeIcon icon={faCaretRight} />
+                      </Text>
+                      <Text
+                        overflow={"hidden"}
+                        textOverflow={"ellipsis"}
+                        fontSize={"xl"}
+                        fontWeight={"bold"}
+                      >
+                        {post.title}
+                      </Text>
+                    </Flex>
+                  </GridItem>
+                  <GridItem colSpan={3} rowSpan={1} alignContent={"center"}>
+                    <Flex pl={3}>
+                      <Text display={{ base: "none", lg: "block" }} mr={1}>
+                        작성자 <FontAwesomeIcon icon={faCaretRight} />
+                      </Text>
+                      <Text overflow={"hidden"} textOverflow={"ellipsis"}>
+                        {post.nickName}
+                      </Text>
+                    </Flex>
+                  </GridItem>
+                  <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
+                    <Flex pl={3}>
+                      <Text display={{ base: "none", lg: "block" }} mr={1}>
+                        조회수 <FontAwesomeIcon icon={faCaretRight} />
+                      </Text>
+                      <Text>{post.view}</Text>
+                    </Flex>
+                  </GridItem>
+                  <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
+                    <Flex pl={3}>
+                      <Text display={{ base: "none", lg: "block" }} mr={1}>
+                        좋아요 <FontAwesomeIcon icon={faCaretRight} />
+                      </Text>
+                      <Text>{post.likeCount}</Text>
+                    </Flex>
+                  </GridItem>
+                  <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
+                    <Flex pl={3}>
+                      <Text display={{ base: "none", lg: "block" }} mr={1}>
+                        댓글 <FontAwesomeIcon icon={faCaretRight} />
+                      </Text>
+                      <Text>{post.commentCount}</Text>
+                    </Flex>
+                  </GridItem>
+                  <GridItem
                     colSpan={2}
                     rowSpan={1}
-                    border={"1px dotted yellow"}
                     alignContent={"center"}
+                    borderY={"1px solid lightgray"}
                   >
-                    <Flex>닉네임 {post.nickName}</Flex>
+                    <Flex pl={3}>
+                      <Text display={{ base: "none", lg: "block" }} mr={1}>
+                        썸네일
+                      </Text>
+                    </Flex>
                   </GridItem>
                   <GridItem
-                    colSpan={4}
+                    colSpan={7}
                     rowSpan={1}
-                    border={"1px dotted yellow"}
                     alignContent={"center"}
+                    overflow={"hidden"}
+                    textOverflow={"ellipsis"}
+                    whiteSpace={"nowrap"}
+                    borderY={"1px solid lightgray"}
                   >
-                    <Flex>제목 {post.title}</Flex>
-                  </GridItem>
-                  <GridItem
-                    colSpan={2}
-                    rowSpan={1}
-                    border={"1px dotted yellow"}
-                    alignContent={"center"}
-                  >
-                    <Flex>조회수 {post.view}</Flex>
-                  </GridItem>
-                  <GridItem
-                    colSpan={2}
-                    rowSpan={1}
-                    border={"1px dotted yellow"}
-                    alignContent={"center"}
-                  >
-                    <Flex>댓글수 {post.commentCount}</Flex>
-                  </GridItem>
-                  <GridItem
-                    colSpan={2}
-                    rowSpan={1}
-                    border={"1px dotted yellow"}
-                    alignContent={"center"}
-                  >
-                    <Flex>좋아요 {post.likeCount}</Flex>
-                  </GridItem>
-                  <GridItem
-                    colSpan={2}
-                    rowSpan={1}
-                    border={"1px dotted yellow"}
-                    alignContent={"center"}
-                  >
-                    <Flex>썸네일 {post.thumbnail}</Flex>
-                  </GridItem>
-                  <GridItem
-                    colSpan={4}
-                    rowSpan={1}
-                    border={"1px dotted yellow"}
-                    alignContent={"center"}
-                  >
-                    <Flex>{post.content}</Flex>
+                    <Box pl={3}>
+                      <Flex>
+                        <Text display={{ base: "none", lg: "block" }} mr={1}>
+                          내용 <FontAwesomeIcon icon={faCaretRight} />{" "}
+                        </Text>
+                        <Box
+                          maxW={"560px"}
+                          textAlign={"start"}
+                          overflow={"hidden"}
+                          textOverflow={"ellipsis"}
+                          display={"-webkit-box"}
+                          css={{
+                            "-webkit-line-clamp": "4",
+                            "-webkit-box-orient": "vertical",
+                            wordBreak: "break-word",
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          {post.content}
+                        </Box>
+                      </Flex>
+                      <Text textAlign={"left"} mt={"1rem"} color={"lightgray"}>
+                        {post.createDate}
+                      </Text>
+                    </Box>
                   </GridItem>
                 </Grid>
               </Box>
@@ -191,7 +289,11 @@ function PostList() {
           ))}
         </VStack>
       )}
-      <Divider border={"1px solid lightGray"} w={"2xl"} my={"2rem"}></Divider>
+      <Divider
+        border={"1px solid lightGray"}
+        w={{ base: "720px", lg: "960px" }}
+        my={"2rem"}
+      ></Divider>
       {/* 게시글 검색 */}
       <Box my={"2rem"}>
         <Flex align={"center"} justify={"center"} gap={10}>
@@ -220,9 +322,11 @@ function PostList() {
               />
             </Box>
             <Box>
-              <IconButton onClick={handleSearchClick}>
-                <FontAwesomeIcon icon={faMagnifyingGlass} />
-              </IconButton>
+              <IconButton
+                onClick={handleSearchClick}
+                icon={<SearchIcon />}
+                aria-label={"Search database"}
+              />
             </Box>
           </Center>
           <Button onClick={() => navigate(`/post/write`)}>글쓰기</Button>
