@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -127,5 +128,9 @@ public class PostService {
         }
         result.put("count", postMapper.selectCountLikeByBoardId(postId));
         return result;
+    }
+
+    public List<Post> getLikeAllList(Integer memberId) {
+        return postMapper.selectLikeList(memberId);
     }
 }

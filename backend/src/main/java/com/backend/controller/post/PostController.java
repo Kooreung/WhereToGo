@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -96,9 +97,13 @@ public class PostController {
         return postService.postLike(like, authentication);
     }
 
-    // 게시글 좋아요 목록 Controller
-    @PutMapping("likeList")
-    public void postLikeList() {
+
+    // 내가 좋아요한 게시글 목록 Controller
+    @GetMapping("likeList")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<Post>> getLikeList(Authentication authentication) {
+        Integer memberId = Integer.valueOf(authentication.getName());
+        List<Post> likedPosts = postService.getLikeAllList(memberId);
+        return ResponseEntity.ok(likedPosts);
     }
-    
 }
