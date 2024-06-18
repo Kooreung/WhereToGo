@@ -100,7 +100,7 @@ function PostList() {
             <Box
               key={post.postId}
               onClick={() => navigate(`/post/${post.postId}`)}
-              _hover={"pointer"}
+              cursor={"pointer"}
               w={"720px"}
             >
               {/* Todo 썸네일 JOIN */}
@@ -110,8 +110,12 @@ function PostList() {
                   h={"224px"}
                   templateColumns={"repeat(9, 1fr)"}
                   templateRows={"1fr 1fr 5fr"}
-                  _hover={{ bgColor: "gray.50" }}
                   cursor={"pointer"}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "gray.50",
+                    },
+                  }}
                 >
                   <GridItem
                     colSpan={9}
