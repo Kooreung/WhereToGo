@@ -25,7 +25,7 @@ import MapAdd from "../../MapAdd.jsx";
 function PostWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [place, setPlace] = useState("");
+  const [selectedPlaces, setSelectedPlaces] = useState([]);
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -50,6 +50,10 @@ function PostWrite() {
     disableSaveButton = "disableToContent";
   }
 
+  function handleRegisterPlaces() {
+    console.log(selectedPlaces);
+  }
+
   // 저장 버튼 클릭 시
   function handleClickSave() {
     setLoading(true);
@@ -65,27 +69,25 @@ function PostWrite() {
       })
       .catch()
       .finally(() => setLoading(false));
-
-    console.log(selectedPlaces);
-
-    axios
-      .post(
-        "/api/place/add",
-        selectedPlaces.map((place) => ({
-          placeName: place.place_name,
-          placeUrl: place.place_url,
-          address: place.address_name,
-          category: place.category,
-          latitude: parseFloat(place.y),
-          longitude: parseFloat(place.x),
-        })),
-      )
-      .then(() => {
-        console.log("장소가 성공적으로 서버에 전송되었습니다.");
-      })
-      .catch((error) => {
-        console.error("장소를 서버에 전송하는 중 오류가 발생했습니다:", error);
-      });
+    // TODO 맵 위치도 전송하기
+    // axios
+    //   .post(
+    //     "/api/place/add",
+    //     selectedPlaces.map((place) => ({
+    //       placeName: place.place_name,
+    //       placeUrl: place.place_url,
+    //       address: place.address_name,
+    //       category: place.category,
+    //       latitude: parseFloat(place.y),
+    //       longitude: parseFloat(place.x),
+    //     })),
+    //   )
+    //   .then(() => {
+    //     console.log("장소가 성공적으로 서버에 전송되었습니다.");
+    //   })
+    //   .catch((error) => {
+    //     console.error("장소를 서버에 전송하는 중 오류가 발생했습니다:", error);
+    //   });
   }
 
   // 취소 버튼 클릭 시
@@ -132,7 +134,11 @@ function PostWrite() {
           {/* Todo 장소 내용 표기 필요 */}
         </Box>
         <Box w={"576px"} bg={"lightgray"} my={"32px"}>
-          <MapAdd />
+          <MapAdd
+            selectedPlaces={selectedPlaces}
+            setSelectedPlaces={setSelectedPlaces}
+            registerPlaces={handleRegisterPlaces}
+          />
         </Box>
         <Box>
           <Box>

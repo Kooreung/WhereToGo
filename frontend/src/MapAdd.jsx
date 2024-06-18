@@ -24,14 +24,18 @@ const loadKakaoMapScript = (appKey, libraries = []) => {
   });
 };
 
-const KakaoMapSearch = () => {
+const KakaoMapSearch = ({
+  selectedPlaces,
+  setSelectedPlaces,
+  registerPlaces,
+}) => {
   const mapRef = useRef(null);
   const kakaoMapAppKey = import.meta.env.VITE_KAKAO_MAP_APP_KEY;
   const [places, setPlaces] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [map, setMap] = useState(null);
   const [ps, setPs] = useState(null);
-  const [selectedPlaces, setSelectedPlaces] = useState([]);
+
   const [markers, setMarkers] = useState([]);
   const [polylines, setPolylines] = useState([]);
 
@@ -160,35 +164,16 @@ const KakaoMapSearch = () => {
     setSelectedPlaces(newSelectedPlaces);
   };
 
-  function saveSelectedPlacesToServer() {
-    selectedPlaces.map((place) => ({
-      placeName: place.place_name,
-      placeUrl: place.place_url,
-      address: place.address_name,
-      category: place.category,
-      latitude: parseFloat(place.y),
-      longitude: parseFloat(place.x),
-    }));
-
-    // axios
-    //   .post(
-    //     "/api/place/add",
-    //     selectedPlaces.map((place) => ({
-    //       placeName: place.place_name,
-    //       placeUrl: place.place_url,
-    //       address: place.address_name,
-    //       category: place.category,
-    //       latitude: parseFloat(place.y),
-    //       longitude: parseFloat(place.x),
-    //     })),
-    //   )
-    //   .then((response) => {
-    //     console.log("장소가 성공적으로 서버에 전송되었습니다.");
-    //   })
-    //   .catch((error) => {
-    //     console.error("장소를 서버에 전송하는 중 오류가 발생했습니다:", error);
-    //   });
-  }
+  // function saveSelectedPlacesToServer() {
+  //   selectedPlaces.map((place) => ({
+  //     placeName: place.place_name,
+  //     placeUrl: place.place_url,
+  //     address: place.address_name,
+  //     category: place.category,
+  //     latitude: parseFloat(place.y),
+  //     longitude: parseFloat(place.x),
+  //   }));
+  // }
 
   return (
     <Box>
@@ -239,7 +224,7 @@ const KakaoMapSearch = () => {
           ))}
         </Box>
       </Box>
-      <Button onClick={saveSelectedPlacesToServer}>제출</Button>
+      <Button onClick={registerPlaces}>제출</Button>
     </Box>
   );
 };
