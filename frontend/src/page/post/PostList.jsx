@@ -200,7 +200,6 @@ function PostList() {
                           내용 <FontAwesomeIcon icon={faCaretRight} />{" "}
                         </Text>
                         <Box
-                          maxW={"560px"}
                           textAlign={"start"}
                           overflow={"hidden"}
                           textOverflow={"ellipsis"}

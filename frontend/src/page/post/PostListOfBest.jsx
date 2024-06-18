@@ -22,14 +22,16 @@ export function PostListOfBest() {
       <Box mb={"2rem"}>
         <Heading align={"center"}>회원 인기글</Heading>
       </Box>
-      <Flex justify={"space-evenly"}>
+      <Flex justify={"center"} gap={6}>
+        {/* 사이즈가 lg 이상일 때 */}
         {postListOfBest.map((post, index) => (
           <Flex
             key={index}
             onClick={() => navigate(`/post/${post.postId}`)}
-            border={"1px solid gray"}
             display={{ base: "none", lg: "flex" }}
-            w={"320px"}
+            w={"480px"}
+            h={"160px"}
+            boxSizing={"content-box"}
             alignItems={"center"}
             cursor={"pointer"}
             _hover={{ bgColor: "gray.50" }}
@@ -37,27 +39,81 @@ export function PostListOfBest() {
             <Box
               border={"1px dotted red"}
               alignContent={"center"}
-              w={"120px"}
-              h={"120px"}
+              w={"160px"}
+              h={"160px"}
             >
               썸네일
             </Box>
-            <Box textAlign={"start"} alignContent={"center"} ml={"1"}>
-              <Box>{post.title}</Box>
-              <Box>{post.nickName}</Box>
-              <Box>{post.view}</Box>
-              <Box>{post.likeCount}</Box>
-              <Box>{post.commentCount}</Box>
-            </Box>
+            <Flex
+              textAlign={"start"}
+              alignContent={"center"}
+              direction={"column"}
+              w={"320px"}
+              h={"160px"}
+              fontSize={"14px"}
+            >
+              <Flex>
+                <Text
+                  fontSize={"16px"}
+                  overflow={"hidden"}
+                  textOverflow={"ellipsis"}
+                  display={"-webkit-box"}
+                  css={{
+                    WebkitLineClamp: "2",
+                    WebkitBoxOrient: "vertical",
+                    wordBreak: "break-word",
+                    whiteSpace: "pre-wrap",
+                  }}
+                >
+                  {post.title}
+                </Text>
+              </Flex>
+              <Spacer />
+              <Flex justify={"space-between"}>
+                <Flex>
+                  <Text ml={1}>
+                    조회수 <FontAwesomeIcon icon={faCaretRight} />
+                  </Text>
+                  <Text ml={1}>{post.view}</Text>
+                </Flex>
+                <Flex>
+                  <Text ml={1}>
+                    좋아요 <FontAwesomeIcon icon={faCaretRight} />
+                  </Text>
+                  <Text ml={1}>{post.likeCount}</Text>
+                </Flex>
+                <Flex>
+                  <Text ml={1}>
+                    댓글 <FontAwesomeIcon icon={faCaretRight} />
+                  </Text>
+                  <Text ml={1}>{post.commentCount}</Text>
+                </Flex>
+              </Flex>
+              <Flex justify={"space-between"}>
+                <Flex>
+                  <Text ml={1}>
+                    작성자 <FontAwesomeIcon icon={faCaretRight} />
+                  </Text>
+                  <Text ml={1}>{post.nickName}</Text>
+                </Flex>
+                <Flex color={"lightgray"}>
+                  <Text ml={1}>
+                    <FontAwesomeIcon icon={faCaretRight} />
+                  </Text>
+                  <Text ml={1}>{post.createDate}</Text>
+                </Flex>
+              </Flex>
+            </Flex>
           </Flex>
         ))}
+        {/* 사이즈가 lg 이하일 때 */}
         {postListOfBest.map((post, index) => (
           <Flex
             key={index}
             onClick={() => navigate(`/post/${post.postId}`)}
             display={{ base: "flex", lg: "none" }}
             w={"240px"}
-            h={"240px"}
+            h={"176px"}
             flexWrap={"wrap"}
             boxSizing={"content-box"}
             cursor={"pointer"}
@@ -71,13 +127,13 @@ export function PostListOfBest() {
             >
               썸네일
             </Box>
-            <Box h={"120px"} alignContent={"center"} textAlign={"start"}>
-              <Flex>
-                <Text ml={1}>
-                  좋아요 <FontAwesomeIcon icon={faCaretRight} />
-                </Text>
-                <Text ml={1}>{post.likeCount}</Text>
-              </Flex>
+            <Box
+              w={"120px"}
+              h={"120px"}
+              alignContent={"center"}
+              textAlign={"start"}
+              fontSize={"13px"}
+            >
               <Flex>
                 <Text ml={1}>
                   조회 <FontAwesomeIcon icon={faCaretRight} />
@@ -86,28 +142,43 @@ export function PostListOfBest() {
               </Flex>
               <Flex>
                 <Text ml={1}>
+                  좋아요 <FontAwesomeIcon icon={faCaretRight} />
+                </Text>
+                <Text ml={1}>{post.likeCount}</Text>
+              </Flex>
+              <Flex>
+                <Text ml={1}>
                   댓글 <FontAwesomeIcon icon={faCaretRight} />
                 </Text>
                 <Text ml={1}>{post.commentCount}</Text>
               </Flex>
-            </Box>
-            <Flex w={"100%"} h={"120px"} direction={"column"}>
-              <Flex fontSize={"lg"} ml={1}>
-                {post.title}
-              </Flex>
-              <Spacer />
               <Flex>
                 <Text ml={1}>
-                  작성자 <FontAwesomeIcon icon={faCaretRight} />
+                  <FontAwesomeIcon icon={faCaretRight} />
                 </Text>
                 <Text ml={1}>{post.nickName}</Text>
               </Flex>
               <Flex color={"lightgray"}>
                 <Text ml={1}>
-                  작성일자 <FontAwesomeIcon icon={faCaretRight} />
+                  <FontAwesomeIcon icon={faCaretRight} />
                 </Text>
                 <Text ml={1}>{post.createDate}</Text>
               </Flex>
+            </Box>
+            <Flex>
+              <Text
+                overflow={"hidden"}
+                textOverflow={"ellipsis"}
+                display={"-webkit-box"}
+                css={{
+                  WebkitLineClamp: "2",
+                  WebkitBoxOrient: "vertical",
+                  wordBreak: "break-word",
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                {post.title}
+              </Text>
             </Flex>
           </Flex>
         ))}
