@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { Box, Button, Flex, Input, Link, Spacer } from "@chakra-ui/react";
 
 const loadKakaoMapScript = (appKey, libraries = []) => {
   return new Promise((resolve, reject) => {
@@ -40,7 +41,7 @@ const KakaoMapSearch = () => {
       .then(() => {
         const container = mapRef.current;
         const options = {
-          center: new window.kakao.maps.LatLng(33.450701, 126.570667),
+          center: new window.kakao.maps.LatLng(37.5664056, 126.9778222),
           level: 3,
         };
 
@@ -130,7 +131,12 @@ const KakaoMapSearch = () => {
       }
     };
 
-    ps.keywordSearch(searchTerm, callback);
+    ps.keywordSearch(searchTerm, callback, {
+      useMapBounds: true,
+      radius: 20000,
+      location: new kakao.maps.LatLng(37.5664056, 126.9778222),
+      size: 10,
+    });
   };
 
   const selectPlace = (place) => {
@@ -146,6 +152,16 @@ const KakaoMapSearch = () => {
     const newSelectedPlaces = selectedPlaces.filter((_, i) => i !== index);
     setSelectedPlaces(newSelectedPlaces);
   };
+
+  function getMapInfo() {
+    let center = map.getCenter();
+    let level = map.getLevel();
+    let bounds = map.getBounds();
+    let swLatLng = bounds.getSouthWest();
+    let neLatLng = bounds.getNorthEast();
+
+    console.log(center);
+  }
 
   function saveSelectedPlacesToServer() {
     axios
@@ -167,52 +183,59 @@ const KakaoMapSearch = () => {
         console.error("장소를 서버에 전송하는 중 오류가 발생했습니다:", error);
       });
   }
-  return (
-    <div>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="검색어를 입력하세요"
-      />
-      <button onClick={searchPlaces}>검색</button>
-      <div>
-        <h2>검색 결과</h2>
-        <ul>
-          {places.map((place, index) => (
-            <li key={index} style={{ cursor: "pointer", color: "blue" }}>
-              {place.place_name}
-              <button onClick={() => selectPlace(place)}>추가하기</button>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div
-        id="map"
-        ref={mapRef}
-        style={{ width: "720px", height: "360px" }}
-      ></div>
 
-      <div>
-        <h2>선택된 장소</h2>
-        <ul>
+  return (
+    <Box>
+      <Box mb={"2rem"}>
+        <Flex>
+          <Input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="검색어를 입력하세요"
+          />
+          <Button onClick={searchPlaces}>검색</Button>
+        </Flex>
+        <Box maxH={"240px"} overflowY={"auto"}>
+          {places.map((place, index) => (
+            <Flex key={index}>
+              <Box>
+                <Link
+                  href={place.place_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {place.place_name}
+                </Link>
+              </Box>
+              <Spacer />
+              <Button onClick={() => selectPlace(place)}>추가하기</Button>
+            </Flex>
+          ))}
+        </Box>
+      </Box>
+
+      <Box id="map" ref={mapRef} w={"576px"} h={"360px"}></Box>
+      <Button onClick={getMapInfo}>현재 위치에서 재검색</Button>
+      <Box>
+        <Box>
           {selectedPlaces.map((place, index) => (
-            <li key={index}>
-              {place.place_name} -{" "}
-              <a
+            <Flex key={index}>
+              <Link
                 href={place.place_url}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                상세 정보
-              </a>
-              <button onClick={() => removePlace(index)}>삭제하기</button>
-            </li>
+                {place.place_name}
+              </Link>
+              <Spacer />
+              <Button onClick={() => removePlace(index)}>삭제하기</Button>
+            </Flex>
           ))}
-        </ul>
-        <button onClick={saveSelectedPlacesToServer}>제출</button>
-      </div>
-    </div>
+        </Box>
+      </Box>
+      <Button onClick={saveSelectedPlacesToServer}>제출</Button>
+    </Box>
   );
 };
 
