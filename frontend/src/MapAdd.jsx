@@ -68,6 +68,7 @@ const KakaoMapSearch = () => {
         bounds.extend(marker.getPosition());
         return marker;
       });
+      setMarkers([]);
       setMarkers(newMarkers);
       map.setBounds(bounds);
     }
@@ -131,10 +132,14 @@ const KakaoMapSearch = () => {
       }
     };
 
+    let getMapCenter = map.getCenter();
+
     ps.keywordSearch(searchTerm, callback, {
-      useMapBounds: true,
       radius: 20000,
-      location: new kakao.maps.LatLng(37.5664056, 126.9778222),
+      location: new kakao.maps.LatLng(
+        getMapCenter.getLat(),
+        getMapCenter.getLng(),
+      ),
       size: 10,
     });
   };
@@ -152,16 +157,6 @@ const KakaoMapSearch = () => {
     const newSelectedPlaces = selectedPlaces.filter((_, i) => i !== index);
     setSelectedPlaces(newSelectedPlaces);
   };
-
-  function getMapInfo() {
-    let center = map.getCenter();
-    let level = map.getLevel();
-    let bounds = map.getBounds();
-    let swLatLng = bounds.getSouthWest();
-    let neLatLng = bounds.getNorthEast();
-
-    console.log(center);
-  }
 
   function saveSelectedPlacesToServer() {
     axios
@@ -216,7 +211,7 @@ const KakaoMapSearch = () => {
       </Box>
 
       <Box id="map" ref={mapRef} w={"576px"} h={"360px"}></Box>
-      <Button onClick={getMapInfo}>현재 위치에서 재검색</Button>
+      {/*<Button onClick={getMapInfo}>현재 위치에서 재검색</Button>*/}
       <Box>
         <Box>
           {selectedPlaces.map((place, index) => (
