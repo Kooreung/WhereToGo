@@ -41,7 +41,10 @@ const KakaoMapSearch = () => {
       .then(() => {
         const container = mapRef.current;
         const options = {
-          center: new window.kakao.maps.LatLng(37.5664056, 126.9778222),
+          center: new window.kakao.maps.LatLng(
+            37.567157695939926,
+            126.979353948294,
+          ),
           level: 3,
         };
 
@@ -66,6 +69,7 @@ const KakaoMapSearch = () => {
           title: place.place_name,
         });
         bounds.extend(marker.getPosition());
+        console.log(marker);
         return marker;
       });
       setMarkers(newMarkers);
@@ -130,11 +134,12 @@ const KakaoMapSearch = () => {
         alert("검색 결과가 존재하지 않습니다.");
       }
     };
+    const cen = map.getCenter();
 
     ps.keywordSearch(searchTerm, callback, {
       useMapBounds: true,
       radius: 20000,
-      location: new kakao.maps.LatLng(37.5664056, 126.9778222),
+      location: new kakao.maps.LatLng(cen.La, cen.Ma),
       size: 10,
     });
   };

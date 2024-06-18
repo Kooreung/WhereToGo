@@ -1,13 +1,23 @@
-import React from "react";
-import { Box, Center, Flex } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Box, Button, Center, Flex, Input } from "@chakra-ui/react";
 import {
   GuideLineLargeBanner,
   GuideLineMediumBanner,
 } from "../css/CustomStyles.jsx";
+import axios from "axios";
 
 function Lobby() {
+  const [keyword, setKeyword] = useState("");
+
+  function crawling() {
+    axios.get(`/api/web/crawling/${keyword}`).then((response) => {
+      console.log(response.data);
+    });
+  }
   return (
     <Box>
+      <Input onChange={(e) => setKeyword(e.target.value)}></Input>
+      <Button onClick={crawling}>크롤링~</Button>
       <Center my={6}>
         <Flex {...GuideLineMediumBanner}>원형 메뉴</Flex>
       </Center>
