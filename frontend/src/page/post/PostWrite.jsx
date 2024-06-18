@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Button,
@@ -22,6 +22,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import SmartEditor from "../../component/SmartEditor.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
+import { MemberLogin } from "../member/MemberLogin.jsx";
 
 function PostWrite() {
   const [title, setTitle] = useState("");
@@ -34,14 +35,6 @@ function PostWrite() {
   const toast = useToast();
 
   const account = useContext(LoginContext); // 로그인 상태를 확인하기 위해 LoginContext 에서 isLoggedIn 함수를 가져옴
-
-  useEffect(() => {
-    // 페이지 진입 시 로그인 상태를 확인하고, 로그인되어 있지 않으면 "/"로 리다이렉션
-    console.log(account.isLoggedIn());
-    if (!account.isLoggedIn()) {
-      navigate("/");
-    }
-  }, [account, navigate]);
 
   const {
     isOpen: isModalOpenOfSave,
@@ -103,6 +96,14 @@ function PostWrite() {
 
   function handleClickSelectArea(e) {
     setArea(e.target.value);
+  }
+
+  if (!account.isLoggedIn()) {
+    return (
+      <Box>
+        <MemberLogin />;
+      </Box>
+    );
   }
 
   return (
