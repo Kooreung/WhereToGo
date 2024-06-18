@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import { Box, Button, Flex, Input, Link, Spacer } from "@chakra-ui/react";
 
 const loadKakaoMapScript = (appKey, libraries = []) => {
@@ -59,6 +58,10 @@ const KakaoMapSearch = () => {
   useEffect(() => {
     if (map && places.length > 0) {
       const bounds = new window.kakao.maps.LatLngBounds();
+
+      markers.forEach((marker) => marker.setMap(null));
+      setMarkers([]);
+
       const newMarkers = places.map((place) => {
         const marker = new window.kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(place.y, place.x),
@@ -68,7 +71,6 @@ const KakaoMapSearch = () => {
         bounds.extend(marker.getPosition());
         return marker;
       });
-      setMarkers([]);
       setMarkers(newMarkers);
       map.setBounds(bounds);
     }
@@ -159,24 +161,33 @@ const KakaoMapSearch = () => {
   };
 
   function saveSelectedPlacesToServer() {
-    axios
-      .post(
-        "/api/place/add",
-        selectedPlaces.map((place) => ({
-          placeName: place.place_name,
-          placeUrl: place.place_url,
-          address: place.address_name,
-          category: place.category,
-          latitude: parseFloat(place.y),
-          longitude: parseFloat(place.x),
-        })),
-      )
-      .then((response) => {
-        console.log("장소가 성공적으로 서버에 전송되었습니다.");
-      })
-      .catch((error) => {
-        console.error("장소를 서버에 전송하는 중 오류가 발생했습니다:", error);
-      });
+    selectedPlaces.map((place) => ({
+      placeName: place.place_name,
+      placeUrl: place.place_url,
+      address: place.address_name,
+      category: place.category,
+      latitude: parseFloat(place.y),
+      longitude: parseFloat(place.x),
+    }));
+
+    // axios
+    //   .post(
+    //     "/api/place/add",
+    //     selectedPlaces.map((place) => ({
+    //       placeName: place.place_name,
+    //       placeUrl: place.place_url,
+    //       address: place.address_name,
+    //       category: place.category,
+    //       latitude: parseFloat(place.y),
+    //       longitude: parseFloat(place.x),
+    //     })),
+    //   )
+    //   .then((response) => {
+    //     console.log("장소가 성공적으로 서버에 전송되었습니다.");
+    //   })
+    //   .catch((error) => {
+    //     console.error("장소를 서버에 전송하는 중 오류가 발생했습니다:", error);
+    //   });
   }
 
   return (
@@ -211,7 +222,6 @@ const KakaoMapSearch = () => {
       </Box>
 
       <Box id="map" ref={mapRef} w={"576px"} h={"360px"}></Box>
-      {/*<Button onClick={getMapInfo}>현재 위치에서 재검색</Button>*/}
       <Box>
         <Box>
           {selectedPlaces.map((place, index) => (
