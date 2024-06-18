@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Box,
   Button,
@@ -15,9 +15,11 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import { LoginContext } from "../../component/LoginProvider.jsx";
 
 export function PostMdList(props) {
   const navigate = useNavigate();
+  const account = useContext(LoginContext);
   return (
     <Box align="center" justify="center">
       <Box mb={"2rem"}>
@@ -157,7 +159,9 @@ export function PostMdList(props) {
           </Box>
         </Box>
       </VStack>
-      <Button onClick={() => navigate(`/post/write`)}>글쓰기</Button>
+      {account.isAdmin() && (
+        <Button onClick={() => navigate(`/post/write`)}>글쓰기</Button>
+      )}
     </Box>
   );
 }

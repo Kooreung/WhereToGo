@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
-  Button,
   Center,
   Divider,
   Flex,
@@ -20,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { SearchIcon } from "@chakra-ui/icons";
 
-export function PostLikeList(props) {
+export function PostLikeList() {
   const [postLikeList, setPostLikeList] = useState([]);
   const navigate = useNavigate();
   const [searchType, setSearchType] = useState("all");
@@ -219,7 +218,6 @@ export function PostLikeList(props) {
               />
             </Box>
           </Center>
-          <Button onClick={() => navigate(`/post/write`)}>글쓰기</Button>
         </Flex>
       </Box>
     </Box>

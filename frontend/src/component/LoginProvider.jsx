@@ -10,6 +10,7 @@ export function LoginProvider({ children }) {
   const [nickName, setNickName] = useState("");
   // 로그인 한 날짜(시간) state 에 저장
   const [expired, setExpired] = useState(0);
+  const [authority, setAuthority] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -33,6 +34,10 @@ export function LoginProvider({ children }) {
     return email === param;
   }
 
+  function isAdmin() {
+    return authority.includes("admin");
+  }
+
   function login(token) {
     localStorage.setItem("token", token);
     // jwtDecode(token)으로 토큰의 페이로드(정보)를 가져옴
@@ -42,6 +47,7 @@ export function LoginProvider({ children }) {
     setEmail(payload.email);
     setNickName(payload.nickName);
     setMemberId(payload.sub);
+    setAuthority(payload.scope.split(" "));
   }
 
   function logout() {
@@ -50,6 +56,7 @@ export function LoginProvider({ children }) {
     setEmail("");
     setNickName("");
     setMemberId(0);
+    setAuthority([]);
   }
 
   return (
@@ -63,6 +70,7 @@ export function LoginProvider({ children }) {
         isLoggedIn: isLoggedIn,
         hasAccessEmail: hasAccessEmail,
         hasAccessMemberId: hasAccessMemberId,
+        isAdmin: isAdmin,
       }}
     >
       {children}
