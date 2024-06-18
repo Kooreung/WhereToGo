@@ -34,7 +34,11 @@ export function PostListOfBest() {
             boxSizing={"content-box"}
             alignItems={"center"}
             cursor={"pointer"}
-            _hover={{ bgColor: "gray.50" }}
+            sx={{
+              "&:hover": {
+                backgroundColor: "gray.50",
+              },
+            }}
           >
             <Box
               border={"1px dotted red"}
@@ -117,7 +121,11 @@ export function PostListOfBest() {
             flexWrap={"wrap"}
             boxSizing={"content-box"}
             cursor={"pointer"}
-            _hover={{ bgColor: "gray.50" }}
+            sx={{
+              "&:hover": {
+                backgroundColor: "gray.50",
+              },
+            }}
           >
             <Box
               border={"1px dotted red"}
