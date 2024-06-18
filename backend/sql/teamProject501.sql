@@ -86,3 +86,6 @@ FROM post p
 WHERE l.memberid = 134
 GROUP BY p.postid
 ORDER BY p.postid DESC;
+
+INSERT INTO authority (memberid, authtype)
+VALUES (101, 'admin');
