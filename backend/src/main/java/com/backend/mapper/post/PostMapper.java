@@ -147,6 +147,7 @@ public interface PostMapper {
             """)
     int incrementViewCount(Integer postId);
 
+    //좋아요 리스트
     @Select("""
               SELECT p.postid, p.title, p.content, p.createdate, p.view,
                                m.nickname,
@@ -163,21 +164,24 @@ public interface PostMapper {
             """)
     List<Post> selectLikeList(Integer memberId);
 
+    //MD List
     @Select("""
-            SELECT p.postid,
-                   p.title,
-                   p.content,
-                   p.createdate,
-                   p.view,
-                   m.memberid,
-                   COUNT(DISTINCT c.commentid) commentCount,
-                   COUNT(DISTINCT l.memberid)  likeCount
-            FROM post p
-                     JOIN member m ON p.memberid = m.memberid
-                     JOIN authority a ON p.memberid = a.memberid
-                     LEFT JOIN comment c ON p.postid = c.postid
-                     LEFT JOIN likes l ON p.postid = l.postid
-            WHERE a.authtype = 'admin';
+                        SELECT p.postid,
+                               p.title,
+                               p.content,
+                               p.createdate,
+                               p.view,
+                               m.memberid,
+                               COUNT(DISTINCT c.commentid) commentCount,
+                               COUNT(DISTINCT l.memberid)  likeCount
+                        FROM post p
+                                 JOIN member m ON p.memberid = m.memberid
+                                 JOIN authority a ON p.memberid = a.memberid
+                                 LEFT JOIN comment c ON p.postid = c.postid
+                                 LEFT JOIN likes l ON p.postid = l.postid
+                        WHERE a.authtype = 'admin'
+            GROUP BY p.postid, p.title, p.content, p.createdate, p.view, m.memberid
+            ORDER BY p.postid DESC
             """)
     List<Post> selectMdPostList(Map<String, Object> post);
 }
