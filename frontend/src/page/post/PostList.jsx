@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -26,6 +26,7 @@ import {
   faCaretRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { SearchIcon } from "@chakra-ui/icons";
+import { LoginContext } from "../../component/LoginProvider.jsx";
 
 function PostList() {
   const navigate = useNavigate();
@@ -34,6 +35,8 @@ function PostList() {
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
+
+  const account = useContext(LoginContext);
 
   useEffect(() => {
     axios.get(`/api/post/list?${searchParams}`).then((res) => {
@@ -329,7 +332,9 @@ function PostList() {
               />
             </Box>
           </Center>
-          <Button onClick={() => navigate(`/post/write`)}>글쓰기</Button>
+          {account.isLoggedIn() && (
+            <Button onClick={() => navigate(`/post/write`)}>글쓰기</Button>
+          )}
         </Flex>
       </Box>
 
