@@ -52,13 +52,15 @@ public class PostController {
     }
 
     // 게시글 MD추천 목록 Controller
-    @GetMapping("list/md")
-    public void postListMd() {
+    @GetMapping("mdList")
+    public Map<String, Object> postListMd(Map<String, Object> post) {
+        return postService.mdlist(post);
     }
 
     // 게시글 인기글 목록 Controller
     @GetMapping("list/recommend")
-    public void postListRecommend() {
+    public void postListRecommend(Post post) {
+        System.out.println(post);
     }
 
     // 게시글 삭제 Controller

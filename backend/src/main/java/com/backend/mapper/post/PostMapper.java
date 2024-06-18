@@ -4,6 +4,7 @@ import com.backend.domain.post.Post;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface PostMapper {
@@ -161,4 +162,22 @@ public interface PostMapper {
                         ORDER BY p.postid DESC
             """)
     List<Post> selectLikeList(Integer memberId);
+
+    @Select("""
+            SELECT p.postid,
+                   p.title,
+                   p.content,
+                   p.createdate,
+                   p.view,
+                   m.memberid,
+                   COUNT(DISTINCT c.commentid) commentCount,
+                   COUNT(DISTINCT l.memberid)  likeCount
+            FROM post p
+                     JOIN member m ON p.memberid = m.memberid
+                     JOIN authority a ON p.memberid = a.memberid
+                     LEFT JOIN comment c ON p.postid = c.postid
+                     LEFT JOIN likes l ON p.postid = l.postid
+            WHERE a.authtype = 'admin';
+            """)
+    List<Post> selectMdPostList(Map<String, Object> post);
 }

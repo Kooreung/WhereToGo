@@ -157,4 +157,12 @@ public class PostService {
     public List<Post> getLikeAllList(Integer memberId) {
         return postMapper.selectLikeList(memberId);
     }
+
+    public Map<String, Object> mdlist(Map<String, Object> post) {
+        List<Post> posts = postMapper.selectMdPostList(post);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("post", posts);
+        return result;
+    }
 }
