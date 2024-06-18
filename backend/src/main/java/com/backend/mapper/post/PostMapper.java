@@ -18,14 +18,20 @@ public interface PostMapper {
 
     // 게시글 조회 매퍼
     @Select("""
-            SELECT p.postid, p.title, p.content, p.createdate, p.view, p.memberid,
-                   m.nickname, 
+            SELECT p.postid,
+                   p.title,
+                   p.content,
+                   p.createdate,
+                   p.view,
+                   p.memberid,
+                   m.nickname,
                    COUNT(DISTINCT c.commentid) commentCount,
-                   COUNT(DISTINCT l.memberid) likeCount
-            FROM post p JOIN member m ON p.memberid = m.memberid
-                        LEFT JOIN comment c ON p.postid = c.postid
-                        LEFT JOIN likes l ON p.postid = l.postid
-            WHERE p.postid = #{postId}
+                   COUNT(DISTINCT l.memberid)  likeCount
+            FROM post p
+                     JOIN member m ON p.memberid = m.memberid
+                     LEFT JOIN comment c ON p.postid = c.postid
+                     LEFT JOIN likes l ON p.postid = l.postid
+            WHERE p.postid = #{postId};
             """)
     Post selectById(Integer postId);
 
@@ -159,5 +165,12 @@ public interface PostMapper {
             """)
     int incrementViewCount(Integer postId);
 
-
+    @Select("""
+            SELECT p.postid,
+                   pl.placename
+            FROM post p
+                     LEFT JOIN place pl ON p.postid = pl.postid
+            WHERE p.postid = #{postId}
+            """)
+    List<Post> getPlaceList(Integer postId);
 }

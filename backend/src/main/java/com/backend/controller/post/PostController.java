@@ -72,7 +72,6 @@ public class PostController {
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-
     }
 
     // 게시글 수정 Controller
@@ -89,6 +88,12 @@ public class PostController {
         } else {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    // 게시글 선택 장소 목록 Controller
+    @GetMapping("{postId}/place")
+    public List<Post> postPlace(@PathVariable Integer postId) {
+        return postService.placeList(postId);
     }
 
     // 게시글 좋아요 Controller

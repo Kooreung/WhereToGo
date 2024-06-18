@@ -135,4 +135,7 @@ public class PostService {
         return result;
     }
 
+    public List<Post> placeList(Integer postId) {
+        return postMapper.getPlaceList(postId);
+    }
 }
