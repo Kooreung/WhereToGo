@@ -126,6 +126,8 @@ public interface PostMapper {
                    pl.placename,
                    pl.address,
                    pl.placeurl,
+                   pl.latitude,
+                   pl.longitude,
                    (SELECT COUNT(pl_inner.postid)
                     FROM place pl_inner
                     WHERE pl_inner.placeurl = pl.placeurl) countPlace

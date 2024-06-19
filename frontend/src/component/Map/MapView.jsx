@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box } from "@chakra-ui/react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const loadKakaoMapScript = (appKey, libraries = []) => {
   return new Promise((resolve, reject) => {
@@ -24,7 +26,8 @@ const loadKakaoMapScript = (appKey, libraries = []) => {
   });
 };
 
-const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
+const KakaoMapSearch = () => {
+  const { postId } = useParams();
   const mapRef = useRef(null);
   const kakaoMapAppKey = import.meta.env.VITE_KAKAO_MAP_APP_KEY;
   const [places, setPlaces] = useState([]);
@@ -35,11 +38,11 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   const [markers, setMarkers] = useState([]);
   const [polylines, setPolylines] = useState([]);
 
-  const postPlaces = [
-    { y: 37.44935034, x: 126.65431538, place_name: "1번" },
-    { y: 37.4476009, x: 126.65319672, place_name: "2번" },
-    { y: 37.44755103, x: 126.64851381, place_name: "3번" },
-  ];
+  useEffect(() => {
+    axios.get(`/api/post/${postId}/place`).then((res) => {
+      setPlaces(res.data);
+    });
+  }, [postId]);
 
   useEffect(() => {
     loadKakaoMapScript(kakaoMapAppKey, ["services"])
@@ -56,24 +59,10 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
         const map = new window.kakao.maps.Map(container, options);
         map.setDraggable(false);
         map.setZoomable(false);
-
         setMap(map);
 
         const placesService = new window.kakao.maps.services.Places();
         setPs(placesService);
-
-        const bounds = new window.kakao.maps.LatLngBounds();
-        const postMarkers = postPlaces.map((place) => {
-          const marker = new window.kakao.maps.Marker({
-            position: new window.kakao.maps.LatLng(place.y, place.x),
-            map: map,
-            title: place.place_name,
-          });
-          bounds.extend(marker.getPosition());
-          return marker;
-        });
-        setMarkers(postMarkers);
-        map.setBounds(bounds);
       })
       .catch((error) => {
         console.error("Kakao map script loading error: ", error);
@@ -84,16 +73,22 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
     if (map && places.length > 0) {
       const bounds = new window.kakao.maps.LatLngBounds();
 
-      const newMarkers = places.map((place) => {
+      markers.forEach((marker) => marker.setMap(null));
+      setMarkers([]);
+
+      const postMarkers = places.map((place) => {
         const marker = new window.kakao.maps.Marker({
-          position: new window.kakao.maps.LatLng(place.y, place.x),
+          position: new window.kakao.maps.LatLng(
+            place.latitude,
+            place.longitude,
+          ),
           map: map,
           title: place.place_name,
         });
         bounds.extend(marker.getPosition());
         return marker;
       });
-      setMarkers(newMarkers);
+      setMarkers(postMarkers);
       map.setBounds(bounds);
     }
   }, [map, places]);
