@@ -196,10 +196,10 @@ export function PostLikeList() {
                 }}
               >
                 <option value={"all"}>전체</option>
-                <option value={"title"}>제목</option>
+                <option value={"titleAndContent"}>제목+내용</option>
                 <option value={"nickName"}>닉네임</option>
-                <option value={"place"}>지역</option>
-                {/* Todo 지역 검색 키워드 필요 */}
+                <option value={"placeName"}>장소명</option>
+                <option value={"address"}>지역명</option>
               </Select>
             </Box>
             <Box>

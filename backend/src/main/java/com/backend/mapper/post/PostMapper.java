@@ -51,15 +51,18 @@ public interface PostMapper {
             <where>
                 <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
-                    <if test="searchType =='all' || searchType =='title'">
+                    <if test="searchType =='all' || searchType =='titleAndContent'">
                         OR p.title LIKE #{pattern}
                         OR p.content LIKE #{pattern}
                     </if>
                     <if test="searchType == 'all' || searchType == 'nickName'">
                         OR m.nickname LIKE #{pattern}
                     </if>
-                    <if test="searchType == 'all' || searchType == 'place'">
-                        OR pl.placename LIKE #{pattern}
+                    <if test="searchType == 'all' || searchType == 'placeName'">
+                            OR pl.placename LIKE #{pattern}
+                        </if>
+                    <if test="searchType == 'all' || searchType == 'address'">
+                        OR pl.address LIKE #{pattern}
                     </if>
                 </if>
             </where>
@@ -75,18 +78,22 @@ public interface PostMapper {
             <script>
             SELECT COUNT(p.postid)
             FROM post p JOIN member m ON p.memberid = m.memberid
+                        LEFT JOIN place pl ON p.postid = pl.postid
                 <where>
                     <if test="searchType != null">
                         <bind name="pattern" value="'%' + searchKeyword + '%'"/>
-                        <if test="searchType =='all' || searchType =='title'">
+                        <if test="searchType =='all' || searchType =='titleAndContent'">
                             OR p.title LIKE #{pattern}
                             OR p.content LIKE #{pattern}
                         </if>
                         <if test="searchType == 'all' || searchType == 'nickName'">
                             OR m.nickname LIKE #{pattern}
                         </if>
-                        <if test="searchType == 'all' || searchType == 'place'">
+                        <if test="searchType == 'all' || searchType == 'placeName'">
                             OR pl.placename LIKE #{pattern}
+                        </if>
+                        <if test="searchType == 'all' || searchType == 'address'">
+                            OR pl.address LIKE #{pattern}
                         </if>
                     </if>
                 </where>
