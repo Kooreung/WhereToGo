@@ -23,6 +23,7 @@ import {
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../../component/LoginProvider.jsx";
+import { passwordPattern } from "../../Regex.jsx";
 
 function MemberEdit(props) {
   const [member, setMember] = useState(null);
@@ -38,6 +39,10 @@ function MemberEdit(props) {
   const toast = useToast();
   const navigate = useNavigate();
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+
+  const isValidPassword = (password) => passwordPattern.test(password);
+
   useEffect(() => {
     axios
       .get(`/api/member/memberinfo`, {
@@ -132,6 +137,11 @@ function MemberEdit(props) {
   if (!isCheckedNickName) {
     isDisableSaveButton = true;
   }
+
+  if (!isValidPassword(member.password)) {
+    isDisableSaveButton = true;
+  }
+
   function handleFileChange(e) {
     const file = e.target.files[0];
     if (file) {
@@ -227,11 +237,18 @@ function MemberEdit(props) {
             <FormControl>
               <FormLabel>새로운 비밀번호</FormLabel>
               <Input
-                onChange={(e) =>
-                  setMember({ ...member, password: e.target.value })
-                }
+                onChange={(e) => {
+                  const newPassword = e.target.value;
+                  setMember({ ...member, password: newPassword });
+                  setIsPasswordValid(isValidPassword(newPassword));
+                }}
                 placeholder={"암호를 변경하려면 입력하세요"}
               />
+              {!isPasswordValid && (
+                <FormHelperText color="red">
+                  비밀번호는 8-20자 사이의 영문자와 숫자를 포함해야 합니다.
+                </FormHelperText>
+              )}
               <FormHelperText>
                 입력하지 않으면 기존 암호를 변경하지 않습니다.
               </FormHelperText>
