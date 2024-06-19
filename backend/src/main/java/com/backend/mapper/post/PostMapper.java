@@ -47,6 +47,7 @@ public interface PostMapper {
             FROM post p JOIN member m ON p.memberid = m.memberid
                         LEFT JOIN comment c ON p.postid = c.postid
                         LEFT JOIN likes l ON p.postid = l.postid
+                        LEFT JOIN place pl ON p.postid = pl.postid
             <where>
                 <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
@@ -56,6 +57,9 @@ public interface PostMapper {
                     </if>
                     <if test="searchType == 'all' || searchType == 'nickName'">
                         OR m.nickname LIKE #{pattern}
+                    </if>
+                    <if test="searchType == 'all' || searchType == 'place'">
+                        OR pl.placename LIKE #{pattern}
                     </if>
                 </if>
             </where>
@@ -80,6 +84,9 @@ public interface PostMapper {
                         </if>
                         <if test="searchType == 'all' || searchType == 'nickName'">
                             OR m.nickname LIKE #{pattern}
+                        </if>
+                        <if test="searchType == 'all' || searchType == 'place'">
+                            OR pl.placename LIKE #{pattern}
                         </if>
                     </if>
                 </where>
