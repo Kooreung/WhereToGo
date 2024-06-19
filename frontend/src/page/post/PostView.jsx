@@ -32,6 +32,7 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-regular-svg-icons";
+import MapView from "../../component/Map/MapView.jsx";
 
 export function PostView() {
   const { postId } = useParams();
@@ -240,8 +241,7 @@ export function PostView() {
           </GridItem>
         </Grid>
         <Box w={"576px"} h={"360px"} bg={"lightgray"} my={"32px"}>
-          지도
-          {/* Todo 지도 표기 필요 */}
+          <MapView />
         </Box>
         <Flex
           w={{ base: "720px", lg: "1080px" }}
