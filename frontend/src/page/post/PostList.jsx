@@ -28,7 +28,6 @@ import { LoginContext } from "../../component/LoginProvider.jsx";
 import axios from "axios";
 import { PostListOfBest } from "./PostListOfBest.jsx";
 
-
 function PostList() {
   const navigate = useNavigate();
   const account = useContext(LoginContext);
@@ -37,8 +36,6 @@ function PostList() {
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
-
-  const account = useContext(LoginContext);
 
   useEffect(() => {
     axios.get(`/api/post/list?${searchParams}`).then((res) => {
