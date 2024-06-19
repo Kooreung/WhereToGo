@@ -142,7 +142,6 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
 
     ps.keywordSearch(searchTerm, callback, {
       radius: 20000,
-
       location: new kakao.maps.LatLng(
         getMapCenter.getLat(),
         getMapCenter.getLng(),
@@ -164,17 +163,6 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
     const newSelectedPlaces = selectedPlaces.filter((_, i) => i !== index);
     setSelectedPlaces(newSelectedPlaces);
   };
-
-  // function saveSelectedPlacesToServer() {
-  //   selectedPlaces.map((place) => ({
-  //     placeName: place.place_name,
-  //     placeUrl: place.place_url,
-  //     address: place.address_name,
-  //     category: place.category,
-  //     latitude: parseFloat(place.y),
-  //     longitude: parseFloat(place.x),
-  //   }));
-  // }
 
   return (
     <Box>
