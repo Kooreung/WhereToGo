@@ -21,7 +21,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   emailPattern,
   passwordPattern,
@@ -30,7 +30,9 @@ import {
 import DaumPostcodeEmbed from "react-daum-postcode";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {Link, Navigate, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Lobby from "../Lobby.jsx";
+import { LoginContext } from "../../component/LoginProvider.jsx";
 
 export function MemberSignup() {
   const [email, setEmail] = useState("");
@@ -57,6 +59,7 @@ export function MemberSignup() {
   const { onClose, onOpen, isOpen } = useDisclosure();
   const toast = useToast();
   const navigate = useNavigate();
+  const account = useContext(LoginContext);
 
   const isValidEmail = (email) => emailPattern.test(email);
   const isValidPassword = (password) => passwordPattern.test(password);
@@ -251,6 +254,14 @@ export function MemberSignup() {
   // 이메일, 닉네임 중복에 따라 버튼 비활성화
   if (isEmailDuplicate || isNickNameDuplicate) {
     isDisabled = true;
+  }
+
+  if (account.isLoggedIn()) {
+    return (
+      <Box>
+        <Lobby />;
+      </Box>
+    );
   }
 
   return (

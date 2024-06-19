@@ -16,7 +16,7 @@ public class EmailSenderService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final MemberMapper mapper;
 
-    public void createMail(String email) {
+    public String createMail(String email) {
 
         MemberMail passwordMail = new MemberMail();
         String tempPassword = getTempPassword();
@@ -28,6 +28,8 @@ public class EmailSenderService {
         sendEmail(passwordMail);
 
         updatePassword(email, tempPassword);
+
+        return tempPassword; // 임시 비밀번호 반환
     }
 
     // 임시 비밀번호 생성
@@ -38,7 +40,7 @@ public class EmailSenderService {
         StringBuilder tempPassword = new StringBuilder();
 
         int idx = 0;
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 8; i++) {
             idx = (int) (charSet.length * Math.random());
             tempPassword.append(charSet[idx]);
         }
@@ -50,7 +52,7 @@ public class EmailSenderService {
 
         SimpleMailMessage message = new SimpleMailMessage();
 
-        message.setFrom("인증된 본인 구글 이메일");
+        message.setFrom("yourEmail");
         message.setTo(passwordMail.getToEmail());
         message.setSubject(passwordMail.getMailTitle());
         message.setText(passwordMail.getMailContent());
@@ -66,5 +68,31 @@ public class EmailSenderService {
 
         mapper.findByEmailAndUpdatePassword(email, pw);
 
+    }
+
+    public String createCode(String email) {
+        MemberMail codeMail = new MemberMail();
+        String tempCode = getTempCode();
+
+        codeMail.setToEmail(email);
+        codeMail.setMailTitle("인증 코드 메일입니다.");
+        codeMail.setMailContent(STR."안녕하세요. 인증 코드 메일입니다.\n인증 코드는 \{tempCode} 입니다.\n");
+
+        sendEmail(codeMail);
+
+        return tempCode;
+    }
+
+    public String getTempCode() {
+
+        char[] charSet = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+        StringBuilder tempCode = new StringBuilder();
+
+        int idx = 0;
+        for (int i = 0; i < 6; i++) {
+            idx = (int) (charSet.length * Math.random());
+            tempCode.append(charSet[idx]);
+        }
+        return tempCode.toString();
     }
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import { Box, Button, Flex, Input, Link, Spacer } from "@chakra-ui/react";
 
 const loadKakaoMapScript = (appKey, libraries = []) => {
   return new Promise((resolve, reject) => {
@@ -24,14 +24,14 @@ const loadKakaoMapScript = (appKey, libraries = []) => {
   });
 };
 
-const KakaoMapSearch = () => {
+const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   const mapRef = useRef(null);
   const kakaoMapAppKey = import.meta.env.VITE_KAKAO_MAP_APP_KEY;
   const [places, setPlaces] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [map, setMap] = useState(null);
   const [ps, setPs] = useState(null);
-  const [selectedPlaces, setSelectedPlaces] = useState([]);
+
   const [markers, setMarkers] = useState([]);
   const [polylines, setPolylines] = useState([]);
 
@@ -40,7 +40,7 @@ const KakaoMapSearch = () => {
       .then(() => {
         const container = mapRef.current;
         const options = {
-          center: new window.kakao.maps.LatLng(33.450701, 126.570667),
+          center: new window.kakao.maps.LatLng(37.5664056, 126.9778222),
           level: 3,
         };
 
@@ -58,6 +58,10 @@ const KakaoMapSearch = () => {
   useEffect(() => {
     if (map && places.length > 0) {
       const bounds = new window.kakao.maps.LatLngBounds();
+
+      markers.forEach((marker) => marker.setMap(null));
+      setMarkers([]);
+
       const newMarkers = places.map((place) => {
         const marker = new window.kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(place.y, place.x),
@@ -130,7 +134,16 @@ const KakaoMapSearch = () => {
       }
     };
 
-    ps.keywordSearch(searchTerm, callback);
+    let getMapCenter = map.getCenter();
+
+    ps.keywordSearch(searchTerm, callback, {
+      radius: 20000,
+      location: new kakao.maps.LatLng(
+        getMapCenter.getLat(),
+        getMapCenter.getLng(),
+      ),
+      size: 10,
+    });
   };
 
   const selectPlace = (place) => {
@@ -147,71 +160,67 @@ const KakaoMapSearch = () => {
     setSelectedPlaces(newSelectedPlaces);
   };
 
-  function saveSelectedPlacesToServer() {
-    axios
-      .post(
-        "/api/place/add",
-        selectedPlaces.map((place) => ({
-          placeName: place.place_name,
-          placeUrl: place.place_url,
-          address: place.address_name,
-          category: place.category,
-          latitude: parseFloat(place.y),
-          longitude: parseFloat(place.x),
-        })),
-      )
-      .then((response) => {
-        console.log("장소가 성공적으로 서버에 전송되었습니다.");
-      })
-      .catch((error) => {
-        console.error("장소를 서버에 전송하는 중 오류가 발생했습니다:", error);
-      });
-  }
+  // function saveSelectedPlacesToServer() {
+  //   selectedPlaces.map((place) => ({
+  //     placeName: place.place_name,
+  //     placeUrl: place.place_url,
+  //     address: place.address_name,
+  //     category: place.category,
+  //     latitude: parseFloat(place.y),
+  //     longitude: parseFloat(place.x),
+  //   }));
+  // }
+
   return (
-    <div>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="검색어를 입력하세요"
-      />
-      <button onClick={searchPlaces}>검색</button>
-      <div
-        id="map"
-        ref={mapRef}
-        style={{ width: "500px", height: "400px" }}
-      ></div>
-      <div>
-        <h2>검색 결과</h2>
-        <ul>
+    <Box>
+      <Box mb={"2rem"}>
+        <Flex>
+          <Input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="검색어를 입력하세요"
+          />
+          <Button onClick={searchPlaces}>검색</Button>
+        </Flex>
+        <Box maxH={"240px"} overflowY={"auto"}>
           {places.map((place, index) => (
-            <li key={index} style={{ cursor: "pointer", color: "blue" }}>
-              {place.place_name}
-              <button onClick={() => selectPlace(place)}>추가하기</button>
-            </li>
+            <Flex key={index}>
+              <Box>
+                <Link
+                  href={place.place_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {place.place_name}
+                </Link>
+              </Box>
+              <Spacer />
+              <Button onClick={() => selectPlace(place)}>추가하기</Button>
+            </Flex>
           ))}
-        </ul>
-      </div>
-      <div>
-        <h2>선택된 장소</h2>
-        <ul>
+        </Box>
+      </Box>
+
+      <Box id="map" ref={mapRef} w={"576px"} h={"360px"}></Box>
+      <Box>
+        <Box>
           {selectedPlaces.map((place, index) => (
-            <li key={index}>
-              {place.place_name} -{" "}
-              <a
+            <Flex key={index}>
+              <Link
                 href={place.place_url}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                상세 정보
-              </a>
-              <button onClick={() => removePlace(index)}>삭제하기</button>
-            </li>
+                {place.place_name}
+              </Link>
+              <Spacer />
+              <Button onClick={() => removePlace(index)}>삭제하기</Button>
+            </Flex>
           ))}
-        </ul>
-        <button onClick={saveSelectedPlacesToServer}>제출</button>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

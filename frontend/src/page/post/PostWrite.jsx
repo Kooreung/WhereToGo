@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Button,
@@ -12,7 +12,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Select,
   Textarea,
   Tooltip,
   useDisclosure,
@@ -21,16 +20,21 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import SmartEditor from "../../component/SmartEditor.jsx";
+import MapAdd from "../../MapAdd.jsx";
+import { LoginContext } from "../../component/LoginProvider.jsx";
+import { MemberLogin } from "../member/MemberLogin.jsx";
 
 function PostWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [city, setCity] = useState("");
-  const [area, setArea] = useState("");
+  const [selectedPlaces, setSelectedPlaces] = useState([]);
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
+
+  const account = useContext(LoginContext); // 로그인 상태를 확인하기 위해 LoginContext 에서 isLoggedIn 함수를 가져옴
+
   const {
     isOpen: isModalOpenOfSave,
     onOpen: onModalOpenOfSave,
@@ -43,32 +47,50 @@ function PostWrite() {
   } = useDisclosure();
 
   // 저장 버튼 비활성화 조건
-  let disableSaveButton = false;
+  let disableSaveButton = "able";
   if (title.trim().length === 0) {
-    disableSaveButton = true;
+    disableSaveButton = "disableToTitle";
   }
   if (content.trim().length === 0) {
-    disableSaveButton = true;
+    disableSaveButton = "disableToContent";
   }
-  // if (city.length === 0) {
-  //   disableSaveButton = true;
-  // }
-  // if (area.length === 0) {
-  //   disableSaveButton = true;
-  // }
 
   // 저장 버튼 클릭 시
   function handleClickSave() {
     setLoading(true);
     axios
-      .postForm("/api/post/add", { title, content, city, area })
+      .postForm("/api/post/add", { title, content })
       .then((res) => {
-        navigate(`/post/${res.data}`);
-        toast({
-          status: "success",
-          position: "bottom",
-          description: "게시글이 등록되었습니다.",
-        });
+        const postId = res.data;
+
+        axios
+          .post(
+            "/api/place/add",
+            selectedPlaces.map((place) => ({
+              placeName: place.place_name,
+              placeUrl: place.place_url,
+              address: place.address_name,
+              category: place.category,
+              latitude: parseFloat(place.y),
+              longitude: parseFloat(place.x),
+              postId: postId,
+            })),
+          )
+          .then(() => {
+            console.log("장소가 성공적으로 서버에 전송되었습니다.");
+            navigate(`/post/${res.data}`);
+            toast({
+              status: "success",
+              position: "bottom",
+              description: "게시글이 등록되었습니다.",
+            });
+          })
+          .catch((error) => {
+            console.error(
+              "장소를 서버에 전송하는 중 오류가 발생했습니다:",
+              error,
+            );
+          });
       })
       .catch()
       .finally(() => setLoading(false));
@@ -84,15 +106,6 @@ function PostWrite() {
     });
   }
 
-  // 지역 및 상세지역 설정 시
-  function handleClickSelectCity(e) {
-    setCity(e.target.value);
-  }
-
-  function handleClickSelectArea(e) {
-    setArea(e.target.value);
-  }
-
   return (
     <Flex direction={"column"} align={"center"}>
       <Flex direction={"column"} align={"center"}>
@@ -106,46 +119,31 @@ function PostWrite() {
               ></Input>
             </FormControl>
           </Box>
-          <Box align={"left"}>
-            <FormControl>
-              <Select
-                placeholder={"지역을 선택해주세요."}
-                onChange={handleClickSelectCity}
-              >
-                <option value={"서울"}>서울</option>
-              </Select>
-              {city === "서울" && (
-                <Select
-                  placeholder={"상세 지역을 선택해주세요."}
-                  onChange={handleClickSelectArea}
-                >
-                  <option value={"서울01"}>강남/역삼</option>
-                  <option value={"서울02"}>서초/교대/방배</option>
-                  <option value={"서울03"}>잠실/송파/강동</option>
-                  <option value={"서울04"}>건대/성수/왕십리</option>
-                  <option value={"서울05"}>성북/노원/중랑</option>
-                  <option value={"서울06"}>종로/중구</option>
-                  <option value={"서울07"}>용산/이태원/한남</option>
-                  <option value={"서울08"}>홍대/합정/마포</option>
-                  <option value={"서울09"}>영등포/여의도/강서</option>
-                  <option value={"서울10"}>구로/관악/동작</option>
-                  {/* TODO City & Area Table 어떻게 할지 */}
-                </Select>
-              )}
-            </FormControl>
-          </Box>
+          {/*<option value={"서울01"}>강남/역삼</option>*/}
+          {/*<option value={"서울02"}>서초/교대/방배</option>*/}
+          {/*<option value={"서울03"}>잠실/송파/강동</option>*/}
+          {/*<option value={"서울04"}>건대/성수/왕십리</option>*/}
+          {/*<option value={"서울05"}>성북/노원/중랑</option>*/}
+          {/*<option value={"서울06"}>종로/중구</option>*/}
+          {/*<option value={"서울07"}>용산/이태원/한남</option>*/}
+          {/*<option value={"서울08"}>홍대/합정/마포</option>*/}
+          {/*<option value={"서울09"}>영등포/여의도/강서</option>*/}
+          {/*<option value={"서울10"}>구로/관악/동작</option>*/}
         </Box>
-        <Box
-          w={{ base: "720px", lg: "1080px" }}
-          h={"160px"}
-          bg={"lightgray"}
-          my={"32px"}
-        >
-          장소 선택
-          {/* Todo 장소 내용 표기 필요 */}
-        </Box>
-        <Box w={"576px"} h={"360px"} bg={"lightgray"} my={"32px"}>
-          {/* Todo 지도 표기 필요 */}
+        {/* Todo 장소 내용 표기 필요 */}
+        {/*<Box*/}
+        {/*  w={{ base: "720px", lg: "1080px" }}*/}
+        {/*  h={"160px"}*/}
+        {/*  bg={"lightgray"}*/}
+        {/*  my={"32px"}*/}
+        {/*>*/}
+        {/*  장소 선택*/}
+        {/*</Box>*/}
+        <Box w={"576px"} bg={"lightgray"} my={"32px"}>
+          <MapAdd
+            selectedPlaces={selectedPlaces}
+            setSelectedPlaces={setSelectedPlaces}
+          />
         </Box>
         <Box>
           <Box>
@@ -164,15 +162,20 @@ function PostWrite() {
             </Box>
             <Box align={"left"} my={10}>
               <Tooltip
-                isDisabled={disableSaveButton === false}
                 hasArrow
-                label={"제목 또는 내용을 확인해주세요."}
+                isDisabled={disableSaveButton === "able"}
+                label={
+                  disableSaveButton === "disableToTitle"
+                    ? "제목을 확인해주세요."
+                    : disableSaveButton === "disableToContent"
+                      ? "내용을 확인해주세요."
+                      : ""
+                }
               >
-                {/* TODO 내용 공백에 따라 라벨 내용 수정 필요 */}
                 <Button
                   onClick={onModalOpenOfSave}
                   isLoading={loading}
-                  isDisabled={disableSaveButton}
+                  isDisabled={disableSaveButton !== "able"}
                 >
                   등록
                 </Button>

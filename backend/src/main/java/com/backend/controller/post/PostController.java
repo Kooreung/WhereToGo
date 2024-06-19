@@ -1,5 +1,6 @@
 package com.backend.controller.post;
 
+import com.backend.domain.place.Place;
 import com.backend.domain.post.Post;
 import com.backend.service.post.PostService;
 import lombok.RequiredArgsConstructor;
@@ -57,10 +58,16 @@ public class PostController {
         return postService.mdlist(post);
     }
 
-    // 게시글 인기글 목록 Controller
-    @GetMapping("list/recommend")
-    public void postListRecommend(Post post) {
-        System.out.println(post);
+    // 게시글 Top 3 인기글 목록 Controller
+    @GetMapping("list/postListOfBest")
+    public List<Post> postListOfBest() {
+        return postService.postListOfBest();
+    }
+
+    // 게시글 선택 장소 목록 Controller
+    @GetMapping("{postId}/place")
+    public List<Place> postPlace(@PathVariable Integer postId) {
+        return postService.placeList(postId);
     }
 
     // 게시글 삭제 Controller
@@ -73,7 +80,6 @@ public class PostController {
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-
     }
 
     // 게시글 수정 Controller
@@ -98,7 +104,6 @@ public class PostController {
     public Map<String, Object> postLike(@RequestBody Map<String, Object> like, Authentication authentication) {
         return postService.postLike(like, authentication);
     }
-
 
     // 내가 좋아요한 게시글 목록 Controller
     @GetMapping("likeList")

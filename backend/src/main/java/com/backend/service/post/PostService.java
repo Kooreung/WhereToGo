@@ -1,5 +1,6 @@
 package com.backend.service.post;
 
+import com.backend.domain.place.Place;
 import com.backend.domain.post.Post;
 import com.backend.mapper.post.PostMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -75,6 +76,7 @@ public class PostService {
         return result;
     }
 
+    //조회수 증가 세션 확인 서비스
     private boolean canIncrementView(Integer postId) {
         HttpSession session = request.getSession();
         Instant lastViewTime = (Instant) session.getAttribute("lastViewTime_" + postId);
@@ -123,6 +125,16 @@ public class PostService {
         return Map.of("pageInfo", pageInfo, "postList", postMapper.selectAllPost(offset, searchType, searchKeyword));
     }
 
+    // 게시글 Top 3 인기글 목록 서비스
+    public List<Post> postListOfBest() {
+        return postMapper.selectPostOfBest();
+    }
+
+    // 게시글 선택 장소 목록 서비스
+    public List<Place> placeList(Integer postId) {
+        return postMapper.getPlaceList(postId);
+    }
+
     // 게시글 수정 서비스
     public void edit(Post post) {
         postMapper.update(post);
@@ -139,7 +151,7 @@ public class PostService {
         postMapper.deleteById(postId);
     }
 
-
+    //좋아요 카운트 서비스
     public Map<String, Object> postLike(Map<String, Object> like, Authentication authentication) {
         Map<String, Object> result = new HashMap<>();
         result.put("like", false);
@@ -153,11 +165,11 @@ public class PostService {
         result.put("count", postMapper.selectCountLikeByBoardId(postId));
         return result;
     }
-
+    //좋아요 목록 서비스
     public List<Post> getLikeAllList(Integer memberId) {
         return postMapper.selectLikeList(memberId);
     }
-
+    //md 게시물 목록 서비스
     public Map<String, Object> mdlist(Map<String, Object> post) {
         List<Post> posts = postMapper.selectMdPostList(post);
 
