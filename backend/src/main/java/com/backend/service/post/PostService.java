@@ -165,10 +165,12 @@ public class PostService {
         result.put("count", postMapper.selectCountLikeByBoardId(postId));
         return result;
     }
+
     //좋아요 목록 서비스
     public List<Post> getLikeAllList(Integer memberId) {
         return postMapper.selectLikeList(memberId);
     }
+
     //md 게시물 목록 서비스
     public Map<String, Object> mdlist(Map<String, Object> post) {
         List<Post> posts = postMapper.selectMdPostList(post);

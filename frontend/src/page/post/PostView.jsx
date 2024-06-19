@@ -243,16 +243,24 @@ export function PostView() {
           지도
           {/* Todo 지도 표기 필요 */}
         </Box>
-        <Box
+        <Flex
           w={{ base: "720px", lg: "1080px" }}
           h={"160px"}
           bg={"lightgray"}
           my={"32px"}
+          justify={"space-evenly"}
+          alignItems={"center"}
         >
           {place.map((place, index) => (
-            <Box key={index}>{place.placeName}</Box>
+            <Box key={index}>
+              <Box>
+                <Box>{place.placeName}</Box>
+                <Box>{place.address}</Box>
+                <Box>게시글에 등록 된 횟수 : {place.countPlace} 건</Box>
+              </Box>
+            </Box>
           ))}
-        </Box>
+        </Flex>
       </Flex>
       <Box
         w={"720px"}

@@ -123,7 +123,12 @@ public interface PostMapper {
     // 게시글 선택 장소 목록 매퍼
     @Select("""
             SELECT p.postid,
-                   pl.placename
+                   pl.placename,
+                   pl.address,
+                   pl.placeurl,
+                   (SELECT COUNT(pl_inner.postid)
+                    FROM place pl_inner
+                    WHERE pl_inner.placeurl = pl.placeurl) countPlace
             FROM post p
                      JOIN place pl ON p.postid = pl.postid
             WHERE p.postid = #{postId}
