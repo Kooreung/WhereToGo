@@ -125,4 +125,17 @@ public interface MemberMapper {
             WHERE memberid=${memberId}
             """)
     List<String> selectAuthorityByMemberId(Integer memberId);
+
+    @Select("""
+            SELECT memberId
+            FROM member
+            WHERE email = #{email};
+            """)
+    int selectByLastMemberId(Member member);
+
+    @Insert("""
+            INSERT INTO authority (memberId, authtype) 
+            VALUES (#{memberId}, 'user') 
+            """)
+    int addAuthority(int memberId);
 }

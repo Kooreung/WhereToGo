@@ -262,7 +262,6 @@ public class MemberService {
                 Instant now = Instant.now();
 
                 List<String> authority = mapper.selectAuthorityByMemberId(db.getMemberId());
-                System.out.println(authority.get(0));
 
                 String authorityString = authority.stream()
                         .collect(Collectors.joining(""));
@@ -286,5 +285,13 @@ public class MemberService {
         }
 
         return result;
+    }
+
+    public int selectByLastMemberId(Member member) {
+        return mapper.selectByLastMemberId(member);
+    }
+
+    public void addAuthority(int memberId) {
+        mapper.addAuthority(memberId);
     }
 }

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -22,12 +22,12 @@ import { useNavigate } from "react-router-dom";
 import SmartEditor from "../../component/SmartEditor.jsx";
 import MapAdd from "../../MapAdd.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
-import { MemberLogin } from "../member/MemberLogin.jsx";
 
 function PostWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectedPlaces, setSelectedPlaces] = useState([]);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -54,6 +54,19 @@ function PostWrite() {
   if (content.trim().length === 0) {
     disableSaveButton = "disableToContent";
   }
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      event.preventDefault(); // 정확한 구현에 따라 이벤트를 취소할 수 있습니다.
+      return (event.returnValue = ""); // 일반적으로 이런 방식으로 경고창을 띄웁니다.
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
   // 저장 버튼 클릭 시
   function handleClickSave() {
