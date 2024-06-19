@@ -104,6 +104,15 @@ export function MemberInfo(props) {
         <Text mb="5" fontSize="25" ml="25%" mt={23}>
           이름 : {member.name}
         </Text>
+        <Text
+          mb="5"
+          fontSize="20"
+          ml="25%"
+          mt={23}
+          onClick={() => navigate("/postLike/list")}
+        >
+          내가 좋아요한 목록
+        </Text>
       </Box>
       <Box ml="100" fontSize="25" mt="100">
         <Text mb="5">닉네임 : {member.nickName}</Text>

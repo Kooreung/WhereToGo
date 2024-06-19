@@ -53,8 +53,9 @@ public class PostController {
     }
 
     // 게시글 MD추천 목록 Controller
-    @GetMapping("list/md")
-    public void postListMd() {
+    @GetMapping("mdList")
+    public Map<String, Object> postListMd(Map<String, Object> post) {
+        return postService.mdlist(post);
     }
 
     // 게시글 Top 3 인기글 목록 Controller
@@ -104,9 +105,12 @@ public class PostController {
         return postService.postLike(like, authentication);
     }
 
-    // 회원 당 게시글 좋아요 목록 Controller
-    @PutMapping("likeList")
-    public void postLikeList() {
+    // 내가 좋아요한 게시글 목록 Controller
+    @GetMapping("likeList")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<Post>> getLikeList(Authentication authentication) {
+        Integer memberId = Integer.valueOf(authentication.getName());
+        List<Post> likedPosts = postService.getLikeAllList(memberId);
+        return ResponseEntity.ok(likedPosts);
     }
-
 }

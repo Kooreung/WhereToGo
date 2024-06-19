@@ -118,4 +118,11 @@ public interface MemberMapper {
                 WHERE email = #{email}
             """)
     int findByEmailAndUpdatePassword(String email, String pw);
+
+    @Select("""
+            SELECT authtype
+            FROM authority
+            WHERE memberid=${memberId}
+            """)
+    List<String> selectAuthorityByMemberId(Integer memberId);
 }
