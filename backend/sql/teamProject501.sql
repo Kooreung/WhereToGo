@@ -147,3 +147,19 @@ FROM post p
 WHERE l.memberid = 101
 GROUP BY p.postid
 ORDER BY p.postid DESC;
+
+
+SELECT p.postid,
+       p.title,
+       p.content,
+       p.createdate,
+       p.view,
+       m.nickname,
+       COUNT(DISTINCT c.commentid) commentCount,
+       COUNT(DISTINCT l2.memberid) likeCount
+FROM post p
+         JOIN member m ON p.memberid = m.memberid
+         LEFT JOIN comment c ON p.postid = c.postid
+         LEFT JOIN likes l2 ON p.postid = l2.postid
+         JOIN likes l ON p.postid = l.postid
+where l.memberid = 101;

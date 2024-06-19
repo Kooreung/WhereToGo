@@ -211,19 +211,21 @@ public interface PostMapper {
                                LEFT JOIN comment c ON p.postid = c.postid
                                LEFT JOIN likes l2 ON p.postid = l2.postid
                                JOIN likes l ON p.postid = l.postid
-                   <where>
-            l.memberid = #{memberId}
-                       <if test="searchType != null">
-                           <bind name="pattern" value="'%' + searchKeyword + '%'"/>
-                           <if test="searchType =='all' || searchType =='title'">
-                               OR p.title LIKE #{pattern}
-                               OR p.content LIKE #{pattern}
-                           </if>
-                           <if test="searchType == 'all' || searchType == 'nickName'">
-                               OR m.nickname LIKE #{pattern}
-                           </if>
-                       </if>
-                   </where>
+                       <where>
+               l.memberid = #{memberId}
+               <if test="searchType != null">
+                   <bind name="pattern" value="'%' + searchKeyword + '%'"/>
+                   <if test="searchType == 'all'">
+                       AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern})
+                   </if>
+                   <if test="searchType == 'title'">
+                       AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
+                   </if>
+                   <if test="searchType == 'nickName'">
+                       AND m.nickname LIKE #{pattern}
+                   </if>
+               </if>
+                       </where>
             GROUP BY p.postid
             ORDER BY p.postid DESC
             LIMIT #{offset}, 5
@@ -236,19 +238,21 @@ public interface PostMapper {
             SELECT COUNT(p.postid)
             FROM post p JOIN member m ON p.memberid = m.memberid
                                JOIN likes l ON p.postid = l.postid
-                <where>
-            l.memberid = #{memberId}
-                    <if test="searchType != null">
-                        <bind name="pattern" value="'%' + searchKeyword + '%'"/>
-                        <if test="searchType =='all' || searchType =='title'">
-                            OR p.title LIKE #{pattern}
-                            OR p.content LIKE #{pattern}
-                        </if>
-                        <if test="searchType == 'all' || searchType == 'nickName'">
-                            OR m.nickname LIKE #{pattern}
-                        </if>
+            <where>
+                l.memberid = #{memberId}
+                <if test="searchType != null">
+                    <bind name="pattern" value="'%' + searchKeyword + '%'"/>
+                    <if test="searchType == 'all'">
+                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern})
                     </if>
-                </where>
+                    <if test="searchType == 'title'">
+                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
+                    </if>
+                    <if test="searchType == 'nickName'">
+                        AND m.nickname LIKE #{pattern}
+                    </if>
+                </if>
+            </where>
             </script>
             """)
     Integer countAllLikePost(Integer memberId, String searchType, String searchKeyword);
