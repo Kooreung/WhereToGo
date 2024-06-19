@@ -13,7 +13,6 @@ export function PostListOfBest() {
   useEffect(() => {
     axios.get(`/api/post/list/postListOfBest`).then((res) => {
       setPostListOfBest(res.data);
-      console.log(res.data);
     });
   }, []);
 
