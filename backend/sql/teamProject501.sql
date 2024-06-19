@@ -104,5 +104,6 @@ FROM post p
          LEFT JOIN comment c ON p.postid = c.postid
          LEFT JOIN likes l ON p.postid = l.postid
 WHERE a.authtype = 'admin'
-GROUP BY p.postid, p.title, p.content, p.createdate, p.view, m.memberid;
+GROUP BY p.postid, p.title, p.content, p.createdate, p.view, m.memberid
+ORDER BY p.postid DESC;
 

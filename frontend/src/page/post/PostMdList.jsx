@@ -20,6 +20,7 @@ import axios from "axios";
 
 export function PostMdList(props) {
   const [mdPost, setMdPost] = useState([]);
+  const [visiblePosts, setVisiblePosts] = useState(3);
   const navigate = useNavigate();
   const account = useContext(LoginContext);
   useEffect(() => {
@@ -31,6 +32,11 @@ export function PostMdList(props) {
       .catch((err) => console.log(err))
       .finally(() => {});
   }, []);
+
+  function handleLoadMore() {
+    setVisiblePosts((prevVisiblePosts) => prevVisiblePosts + 3);
+  }
+
   return (
     <Box align="center" justify="center">
       <Box mb={"2rem"}>
@@ -49,7 +55,7 @@ export function PostMdList(props) {
           spacing={"2rem"}
           w={{ base: "720px", lg: "960px" }}
         >
-          {mdPost.map((post) => (
+          {mdPost.slice(0, visiblePosts).map((post) => (
             <Box
               w={"720px"}
               key={post.postId}
@@ -178,6 +184,11 @@ export function PostMdList(props) {
           ))}
         </VStack>
       )}
+      <Box>
+        {visiblePosts < mdPost.length && (
+          <Button onClick={handleLoadMore}>더보기</Button>
+        )}
+      </Box>
       {account.isAdmin() && (
         <Button onClick={() => navigate(`/post/write`)}>글쓰기</Button>
       )}
