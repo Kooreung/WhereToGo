@@ -76,7 +76,7 @@ public interface PostMapper {
     // 게시글 리스트 카운트 매퍼
     @Select("""
             <script>
-            SELECT COUNT(p.postid)
+            SELECT COUNT(DISTINCT p.postid)
             FROM post p JOIN member m ON p.memberid = m.memberid
                         LEFT JOIN place pl ON p.postid = pl.postid
                 <where>
