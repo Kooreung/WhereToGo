@@ -177,22 +177,6 @@ public interface PostMapper {
             """)
     int incrementViewCount(Integer postId);
 
-    //좋아요 리스트
-    @Select("""
-              SELECT p.postid, p.title, p.content, p.createdate, p.view,
-                               m.nickname,
-                               COUNT(DISTINCT c.commentid) commentCount,
-                               COUNT(DISTINCT l2.memberid) likeCount
-                        FROM post p
-                        JOIN member m ON p.memberid = m.memberid
-                        LEFT JOIN comment c ON p.postid = c.postid
-                        LEFT JOIN likes l2 ON p.postid = l2.postid
-                        JOIN likes l ON p.postid = l.postid
-                        WHERE l.memberid = #{memberId}
-                        GROUP BY p.postid
-                        ORDER BY p.postid DESC
-            """)
-    List<Post> selectLikeList(Integer memberId);
 
     //MD List
     @Select("""
@@ -214,4 +198,58 @@ public interface PostMapper {
             ORDER BY p.postid DESC
             """)
     List<Post> selectMdPostList(Map<String, Object> post);
+
+    //좋아요 리스트
+    @Select("""
+            <script>
+            SELECT p.postid, p.title, p.content, p.createdate, p.view,
+                                      m.nickname,
+                                      COUNT(DISTINCT c.commentid) commentCount,
+                                      COUNT(DISTINCT l2.memberid) likeCount
+                               FROM post p
+                               JOIN member m ON p.memberid = m.memberid
+                               LEFT JOIN comment c ON p.postid = c.postid
+                               LEFT JOIN likes l2 ON p.postid = l2.postid
+                               JOIN likes l ON p.postid = l.postid
+                   <where>
+            l.memberid = #{memberId}
+                       <if test="searchType != null">
+                           <bind name="pattern" value="'%' + searchKeyword + '%'"/>
+                           <if test="searchType =='all' || searchType =='title'">
+                               OR p.title LIKE #{pattern}
+                               OR p.content LIKE #{pattern}
+                           </if>
+                           <if test="searchType == 'all' || searchType == 'nickName'">
+                               OR m.nickname LIKE #{pattern}
+                           </if>
+                       </if>
+                   </where>
+            GROUP BY p.postid
+            ORDER BY p.postid DESC
+            LIMIT #{offset}, 5
+                   </script>
+            """)
+    List<Post> selectLikeList(Integer memberId, Integer offset, String searchType, String searchKeyword);
+
+    @Select("""
+            <script>
+            SELECT COUNT(p.postid)
+            FROM post p JOIN member m ON p.memberid = m.memberid
+                               JOIN likes l ON p.postid = l.postid
+                <where>
+            l.memberid = #{memberId}
+                    <if test="searchType != null">
+                        <bind name="pattern" value="'%' + searchKeyword + '%'"/>
+                        <if test="searchType =='all' || searchType =='title'">
+                            OR p.title LIKE #{pattern}
+                            OR p.content LIKE #{pattern}
+                        </if>
+                        <if test="searchType == 'all' || searchType == 'nickName'">
+                            OR m.nickname LIKE #{pattern}
+                        </if>
+                    </if>
+                </where>
+            </script>
+            """)
+    Integer countAllLikePost(Integer memberId, String searchType, String searchKeyword);
 }

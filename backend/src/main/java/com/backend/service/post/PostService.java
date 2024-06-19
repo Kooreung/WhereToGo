@@ -165,10 +165,43 @@ public class PostService {
         result.put("count", postMapper.selectCountLikeByBoardId(postId));
         return result;
     }
+
     //좋아요 목록 서비스
-    public List<Post> getLikeAllList(Integer memberId) {
-        return postMapper.selectLikeList(memberId);
+    public Map<String, Object> getLikeAllList(Integer memberId, Integer page, String searchType, String searchKeyword) {
+        // 페이징 내용
+        Map pageInfo = new HashMap();
+
+        Integer countAllPost = postMapper.countAllLikePost(memberId, searchType, searchKeyword);
+        System.out.println(countAllPost);
+        Integer offset = (page - 1) * 5;
+        Integer lastPageNumber = (countAllPost - 1) / 5 + 1;
+        Integer leftPageNumber = (page - 1) / 10 * 10 + 1;
+        Integer rightPageNumber = leftPageNumber + 9;
+
+        rightPageNumber = Math.min(rightPageNumber, lastPageNumber);
+        leftPageNumber = rightPageNumber - 9;
+        leftPageNumber = Math.max(leftPageNumber, 1);
+
+        Integer prevPageNumber = leftPageNumber - 1;
+        Integer nextPageNumber = rightPageNumber + 1;
+
+        if (prevPageNumber > 0) {
+            pageInfo.put("prevPageNumber", prevPageNumber);
+        }
+        if (nextPageNumber <= lastPageNumber) {
+            pageInfo.put("nextPageNumber", nextPageNumber);
+        }
+
+        pageInfo.put("currentPageNumber", page);
+        pageInfo.put("lastPageNumber", lastPageNumber);
+        pageInfo.put("leftPageNumber", leftPageNumber);
+        pageInfo.put("rightPageNumber", rightPageNumber);
+
+        System.out.println(countAllPost);
+        return Map.of("pageInfo", pageInfo, "postList", postMapper.selectLikeList(memberId, offset, searchType, searchKeyword));
+
     }
+
     //md 게시물 목록 서비스
     public Map<String, Object> mdlist(Map<String, Object> post) {
         List<Post> posts = postMapper.selectMdPostList(post);

@@ -108,9 +108,11 @@ public class PostController {
     // 내가 좋아요한 게시글 목록 Controller
     @GetMapping("likeList")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<Post>> getLikeList(Authentication authentication) {
+    public ResponseEntity<Map<String, Object>> getLikeList(Authentication authentication, @RequestParam(defaultValue = "1") Integer page, @RequestParam(value = "type", required = false) String searchType,
+                                                           @RequestParam(value = "keyword", defaultValue = "") String searchKeyword) {
         Integer memberId = Integer.valueOf(authentication.getName());
-        List<Post> likedPosts = postService.getLikeAllList(memberId);
+        System.out.println("searchKeyword = " + searchKeyword);
+        Map<String, Object> likedPosts = postService.getLikeAllList(memberId, page, searchType, searchKeyword);
         return ResponseEntity.ok(likedPosts);
     }
 }
