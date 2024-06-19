@@ -18,7 +18,7 @@ public class WebcrawlerController {
     private final WebCrawler webCrawler;
 
     @GetMapping("crawling/{keyword}")
-    public Map<String, String> getCrawler(@PathVariable String keyword) throws UnsupportedEncodingException {
+    public Map<String, String> getCrawler(@PathVariable String keyword) throws UnsupportedEncodingException, InterruptedException {
         return webCrawler.crawler(keyword);
     }
 }
