@@ -37,10 +37,11 @@ export function PostView() {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const [place, setPlace] = useState([]);
-  const account = useContext(LoginContext);
-  const navigate = useNavigate();
   const [like, setLike] = useState({ like: false, count: 0 });
   const [isLikeLoading, setIsLikeLoading] = useState(false);
+  const [comment, setComment] = useState({ count: 0 });
+  const account = useContext(LoginContext);
+  const navigate = useNavigate();
   const [isTransition, setIsTransition] = useState(false);
   const toast = useToast();
   const {
@@ -48,7 +49,6 @@ export function PostView() {
     onOpen: onModalOpenOfDelete,
     onClose: onModalCloseOfDelete,
   } = useDisclosure();
-  const [comment, setComment] = useState({ count: 0 });
 
   useEffect(() => {
     axios
@@ -249,9 +249,8 @@ export function PostView() {
           bg={"lightgray"}
           my={"32px"}
         >
-          {/* Todo 장소 내용 표기 필요 */}
           {place.map((place, index) => (
-            <Box key={place}>{place.placeName}</Box>
+            <Box key={index}>{place.placeName}</Box>
           ))}
         </Box>
       </Flex>

@@ -1,5 +1,6 @@
 package com.backend.mapper.post;
 
+import com.backend.domain.place.Place;
 import com.backend.domain.post.Post;
 import org.apache.ibatis.annotations.*;
 
@@ -104,6 +105,16 @@ public interface PostMapper {
             """)
     List<Post> selectPostOfBest();
 
+    // 게시글 선택 장소 목록 매퍼
+    @Select("""
+            SELECT p.postid,
+                   pl.placename
+            FROM post p
+                     JOIN place pl ON p.postid = pl.postid
+            WHERE p.postid = #{postId}
+            """)
+    List<Place> getPlaceList(Integer postId);
+
     // 게시글 수정 매퍼
     @Update("""
             UPDATE post
@@ -165,12 +176,4 @@ public interface PostMapper {
             """)
     int incrementViewCount(Integer postId);
 
-    @Select("""
-            SELECT p.postid,
-                   pl.placename
-            FROM post p
-                     LEFT JOIN place pl ON p.postid = pl.postid
-            WHERE p.postid = #{postId}
-            """)
-    List<Post> getPlaceList(Integer postId);
 }

@@ -1,5 +1,6 @@
 package com.backend.controller.post;
 
+import com.backend.domain.place.Place;
 import com.backend.domain.post.Post;
 import com.backend.service.post.PostService;
 import lombok.RequiredArgsConstructor;
@@ -62,6 +63,12 @@ public class PostController {
         return postService.postListOfBest();
     }
 
+    // 게시글 선택 장소 목록 Controller
+    @GetMapping("{postId}/place")
+    public List<Place> postPlace(@PathVariable Integer postId) {
+        return postService.placeList(postId);
+    }
+
     // 게시글 삭제 Controller
     @DeleteMapping("{postId}")
     @PreAuthorize("isAuthenticated()")
@@ -88,12 +95,6 @@ public class PostController {
         } else {
             return ResponseEntity.badRequest().build();
         }
-    }
-
-    // 게시글 선택 장소 목록 Controller
-    @GetMapping("{postId}/place")
-    public List<Post> postPlace(@PathVariable Integer postId) {
-        return postService.placeList(postId);
     }
 
     // 게시글 좋아요 Controller

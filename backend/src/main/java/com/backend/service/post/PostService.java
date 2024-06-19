@@ -1,5 +1,6 @@
 package com.backend.service.post;
 
+import com.backend.domain.place.Place;
 import com.backend.domain.post.Post;
 import com.backend.mapper.post.PostMapper;
 import lombok.RequiredArgsConstructor;
@@ -104,6 +105,11 @@ public class PostService {
         return postMapper.selectPostOfBest();
     }
 
+    // 게시글 선택 장소 목록 서비스
+    public List<Place> placeList(Integer postId) {
+        return postMapper.getPlaceList(postId);
+    }
+
     // 게시글 수정 서비스
     public void edit(Post post) {
         postMapper.update(post);
@@ -135,7 +141,4 @@ public class PostService {
         return result;
     }
 
-    public List<Post> placeList(Integer postId) {
-        return postMapper.getPlaceList(postId);
-    }
 }
