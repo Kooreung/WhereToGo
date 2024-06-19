@@ -25,7 +25,14 @@ public class PostService {
     @Autowired
     private HttpServletRequest request;
 
-    // 게시글 작성 시 제목, 내용 공백 확인
+    // 게시글 추가 | 작성 서비스
+    public Integer add(Post post, Authentication authentication) {
+        post.setMemberId(Integer.valueOf(authentication.getName()));
+        postMapper.insert(post);
+        return post.getPostId();
+    }
+
+    // 게시글 추가 시 제목, 내용 공백 확인
     public boolean validate(Post post) {
         if (post.getTitle() == null || post.getTitle().isBlank()) {
             return false;
@@ -34,13 +41,6 @@ public class PostService {
             return false;
         }
         return true;
-    }
-
-    // 게시글 추가 서비스
-    public Integer add(Post post, Authentication authentication) {
-        post.setMemberId(Integer.valueOf(authentication.getName()));
-        postMapper.insert(post);
-        return post.getPostId();
     }
 
     // 게시글 조회 서비스
@@ -52,12 +52,11 @@ public class PostService {
             session.setAttribute("lastViewTime_" + postId, Instant.now());
         }
         Post post = postMapper.selectById(postId);
+
         Map<String, Object> result = new HashMap<>();
-
-
         Map<String, Object> like = new HashMap<>();
 
-//        로그인안하면 빈하트 로그인하면 좋아요 한 게시물 하트
+        // 로그인 안하면 빈 하트 표기, 로그인 하면 좋아요 한 게시물 하트 표기
         if (authentication == null) {
             like.put("like", false);
         } else {
@@ -65,11 +64,12 @@ public class PostService {
             like.put("like", c == 1);
         }
 
-//        게시물 조회시 좋아요 카운트 전송
+        // 게시물 조회 시 좋아요 카운트 전송
         like.put("count", postMapper.selectCountLikeByBoardId(postId));
         result.put("like", like);
         result.put("post", post);
 
+        // 게시물 조회 시 댓글 수 카운트 전송
         int commentCount = postMapper.selectCountCommentByBoardId(postId);
         result.put("commentCount", commentCount);
 
@@ -91,9 +91,8 @@ public class PostService {
         }
     }
 
-    // 게시글 리스트 서비스
+    // 게시글 목록 서비스
     public Map<String, Object> list(Integer page, String searchType, String searchKeyword) {
-        // 페이징 내용
         Map pageInfo = new HashMap();
 
         Integer countAllPost = postMapper.countAllPost(searchType, searchKeyword);
@@ -121,7 +120,6 @@ public class PostService {
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
 
-
         return Map.of("pageInfo", pageInfo, "postList", postMapper.selectAllPost(offset, searchType, searchKeyword));
     }
 
@@ -130,9 +128,28 @@ public class PostService {
         return postMapper.selectPostOfBest();
     }
 
-    // 게시글 선택 장소 목록 서비스
+    // 게시글에서 선택한 장소 목록 서비스
     public List<Place> placeList(Integer postId) {
         return postMapper.getPlaceList(postId);
+    }
+
+    // 내가 좋아요한 게시글 목록 서비스
+    public List<Post> getLikeAllList(Integer memberId) {
+        return postMapper.selectLikeList(memberId);
+    }
+
+    // 게시글 MD추천 목록 서비스
+    public Map<String, Object> mdlist(Map<String, Object> post) {
+        List<Post> posts = postMapper.selectMdPostList(post);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("post", posts);
+        return result;
+    }
+
+    // 게시글 삭제 서비스
+    public void remove(Integer postId) {
+        postMapper.deleteById(postId);
     }
 
     // 게시글 수정 서비스
@@ -146,12 +163,7 @@ public class PostService {
         return post.getMemberId().equals(Integer.valueOf(authentication.getName()));
     }
 
-    // 게시글 삭제 서비스
-    public void remove(Integer postId) {
-        postMapper.deleteById(postId);
-    }
-
-    //좋아요 카운트 서비스
+    // 게시글 좋아요 서비스
     public Map<String, Object> postLike(Map<String, Object> like, Authentication authentication) {
         Map<String, Object> result = new HashMap<>();
         result.put("like", false);
@@ -163,20 +175,6 @@ public class PostService {
             postMapper.insertLike(postId, memberId);
         }
         result.put("count", postMapper.selectCountLikeByBoardId(postId));
-        return result;
-    }
-
-    //좋아요 목록 서비스
-    public List<Post> getLikeAllList(Integer memberId) {
-        return postMapper.selectLikeList(memberId);
-    }
-
-    //md 게시물 목록 서비스
-    public Map<String, Object> mdlist(Map<String, Object> post) {
-        List<Post> posts = postMapper.selectMdPostList(post);
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("post", posts);
         return result;
     }
 }

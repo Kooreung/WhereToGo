@@ -10,7 +10,7 @@ import java.util.Map;
 @Mapper
 public interface PostMapper {
 
-    // 게시글 추가 매퍼
+    // 게시글 추가 | 작성 매퍼
     @Insert("""
             INSERT INTO post (title, content, memberid)
             VALUES (#{title}, #{content}, #{memberId})
@@ -37,7 +37,7 @@ public interface PostMapper {
             """)
     Post selectById(Integer postId);
 
-    // 게시글 리스트 매퍼
+    // 게시글 목록 매퍼
     @Select("""
             <script>
             SELECT p.postid, p.title, p.content, p.createdate, p.view,
@@ -73,7 +73,7 @@ public interface PostMapper {
             """)
     List<Post> selectAllPost(Integer offset, String searchType, String searchKeyword);
 
-    // 게시글 리스트 카운트 매퍼
+    // 게시글 목록 카운트 매퍼
     @Select("""
             <script>
             SELECT COUNT(DISTINCT p.postid)
@@ -120,7 +120,7 @@ public interface PostMapper {
             """)
     List<Post> selectPostOfBest();
 
-    // 게시글 선택 장소 목록 매퍼
+    // 게시글에서 선택한 장소 목록 매퍼
     @Select("""
             SELECT p.postid,
                    pl.placename,
@@ -137,13 +137,43 @@ public interface PostMapper {
             """)
     List<Place> getPlaceList(Integer postId);
 
-    // 게시글 수정 매퍼
-    @Update("""
-            UPDATE post
-            SET title=#{title}, content=#{content}
-            WHERE postid=#{postId}
+    // 내가 좋아요한 게시글 목록 리스트
+    @Select("""
+              SELECT p.postid, p.title, p.content, p.createdate, p.view,
+                               m.nickname,
+                               COUNT(DISTINCT c.commentid) commentCount,
+                               COUNT(DISTINCT l2.memberid) likeCount
+                        FROM post p
+                        JOIN member m ON p.memberid = m.memberid
+                        LEFT JOIN comment c ON p.postid = c.postid
+                        LEFT JOIN likes l2 ON p.postid = l2.postid
+                        JOIN likes l ON p.postid = l.postid
+                        WHERE l.memberid = #{memberId}
+                        GROUP BY p.postid
+                        ORDER BY p.postid DESC
             """)
-    void update(Post post);
+    List<Post> selectLikeList(Integer memberId);
+
+    // 게시글 MD추천 목록 List
+    @Select("""
+                        SELECT p.postid,
+                               p.title,
+                               p.content,
+                               p.createdate,
+                               p.view,
+                               m.memberid,
+                               COUNT(DISTINCT c.commentid) commentCount,
+                               COUNT(DISTINCT l.memberid)  likeCount
+                        FROM post p
+                                 JOIN member m ON p.memberid = m.memberid
+                                 JOIN authority a ON p.memberid = a.memberid
+                                 LEFT JOIN comment c ON p.postid = c.postid
+                                 LEFT JOIN likes l ON p.postid = l.postid
+                        WHERE a.authtype = 'admin'
+            GROUP BY p.postid, p.title, p.content, p.createdate, p.view, m.memberid
+            ORDER BY p.postid DESC
+            """)
+    List<Post> selectMdPostList(Map<String, Object> post);
 
     // 게시글 삭제 매퍼
     @Delete("""
@@ -151,6 +181,14 @@ public interface PostMapper {
             WHERE postid=#{postId}
             """)
     Integer deleteById(Integer postId);
+
+    // 게시글 수정 매퍼
+    @Update("""
+            UPDATE post
+            SET title=#{title}, content=#{content}
+            WHERE postid=#{postId}
+            """)
+    void update(Post post);
 
     // 좋아요 추가 매퍼
     @Insert("""
@@ -198,41 +236,4 @@ public interface PostMapper {
             """)
     int incrementViewCount(Integer postId);
 
-    //좋아요 리스트
-    @Select("""
-              SELECT p.postid, p.title, p.content, p.createdate, p.view,
-                               m.nickname,
-                               COUNT(DISTINCT c.commentid) commentCount,
-                               COUNT(DISTINCT l2.memberid) likeCount
-                        FROM post p
-                        JOIN member m ON p.memberid = m.memberid
-                        LEFT JOIN comment c ON p.postid = c.postid
-                        LEFT JOIN likes l2 ON p.postid = l2.postid
-                        JOIN likes l ON p.postid = l.postid
-                        WHERE l.memberid = #{memberId}
-                        GROUP BY p.postid
-                        ORDER BY p.postid DESC
-            """)
-    List<Post> selectLikeList(Integer memberId);
-
-    //MD List
-    @Select("""
-                        SELECT p.postid,
-                               p.title,
-                               p.content,
-                               p.createdate,
-                               p.view,
-                               m.memberid,
-                               COUNT(DISTINCT c.commentid) commentCount,
-                               COUNT(DISTINCT l.memberid)  likeCount
-                        FROM post p
-                                 JOIN member m ON p.memberid = m.memberid
-                                 JOIN authority a ON p.memberid = a.memberid
-                                 LEFT JOIN comment c ON p.postid = c.postid
-                                 LEFT JOIN likes l ON p.postid = l.postid
-                        WHERE a.authtype = 'admin'
-            GROUP BY p.postid, p.title, p.content, p.createdate, p.view, m.memberid
-            ORDER BY p.postid DESC
-            """)
-    List<Post> selectMdPostList(Map<String, Object> post);
 }
