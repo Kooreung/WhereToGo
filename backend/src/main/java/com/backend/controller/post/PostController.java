@@ -1,5 +1,6 @@
 package com.backend.controller.post;
 
+import com.backend.domain.place.Place;
 import com.backend.domain.post.Post;
 import com.backend.service.post.PostService;
 import lombok.RequiredArgsConstructor;
@@ -52,14 +53,21 @@ public class PostController {
     }
 
     // 게시글 MD추천 목록 Controller
-    @GetMapping("list/md")
-    public void postListMd() {
+    @GetMapping("mdList")
+    public Map<String, Object> postListMd(Map<String, Object> post) {
+        return postService.mdlist(post);
     }
 
     // 게시글 Top 3 인기글 목록 Controller
     @GetMapping("list/postListOfBest")
     public List<Post> postListOfBest() {
         return postService.postListOfBest();
+    }
+
+    // 게시글 선택 장소 목록 Controller
+    @GetMapping("{postId}/place")
+    public List<Place> postPlace(@PathVariable Integer postId) {
+        return postService.placeList(postId);
     }
 
     // 게시글 삭제 Controller
@@ -72,7 +80,6 @@ public class PostController {
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-
     }
 
     // 게시글 수정 Controller
@@ -98,9 +105,12 @@ public class PostController {
         return postService.postLike(like, authentication);
     }
 
-    // 회원 당 게시글 좋아요 목록 Controller
-    @PutMapping("likeList")
-    public void postLikeList() {
+    // 내가 좋아요한 게시글 목록 Controller
+    @GetMapping("likeList")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<Post>> getLikeList(Authentication authentication) {
+        Integer memberId = Integer.valueOf(authentication.getName());
+        List<Post> likedPosts = postService.getLikeAllList(memberId);
+        return ResponseEntity.ok(likedPosts);
     }
-
 }

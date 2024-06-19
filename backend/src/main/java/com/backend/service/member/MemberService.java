@@ -27,6 +27,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -260,12 +261,19 @@ public class MemberService {
                 // 현재 시간 가져옴
                 Instant now = Instant.now();
 
+                List<String> authority = mapper.selectAuthorityByMemberId(db.getMemberId());
+                System.out.println(authority.get(0));
+
+                String authorityString = authority.stream()
+                        .collect(Collectors.joining(""));
+
+
                 JwtClaimsSet claims = JwtClaimsSet.builder()
                         .issuer("self") // 토큰 발급자
                         .issuedAt(now) //  토큰 발급 시간
                         .expiresAt(now.plusSeconds(60 * 60 * 24 * 7)) // 토큰 만료 시간
                         .subject(db.getMemberId().toString()) // unique 한 값 사용
-                        .claim("scope", "") // 권한
+                        .claim("scope", authorityString) // 권한
                         .claim("nickName", db.getNickName())
                         .claim("email", db.getEmail())
                         .build();

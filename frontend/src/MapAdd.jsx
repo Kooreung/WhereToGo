@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
 import { Box, Button, Flex, Input, Link, Spacer } from "@chakra-ui/react";
 
 const loadKakaoMapScript = (appKey, libraries = []) => {
@@ -25,14 +24,14 @@ const loadKakaoMapScript = (appKey, libraries = []) => {
   });
 };
 
-const KakaoMapSearch = () => {
+const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   const mapRef = useRef(null);
   const kakaoMapAppKey = import.meta.env.VITE_KAKAO_MAP_APP_KEY;
   const [places, setPlaces] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [map, setMap] = useState(null);
   const [ps, setPs] = useState(null);
-  const [selectedPlaces, setSelectedPlaces] = useState([]);
+
   const [markers, setMarkers] = useState([]);
   const [polylines, setPolylines] = useState([]);
 
@@ -62,6 +61,10 @@ const KakaoMapSearch = () => {
   useEffect(() => {
     if (map && places.length > 0) {
       const bounds = new window.kakao.maps.LatLngBounds();
+
+      markers.forEach((marker) => marker.setMap(null));
+      setMarkers([]);
+
       const newMarkers = places.map((place) => {
         const marker = new window.kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(place.y, place.x),
@@ -134,12 +137,16 @@ const KakaoMapSearch = () => {
         alert("검색 결과가 존재하지 않습니다.");
       }
     };
-    const cen = map.getCenter();
+
+    let getMapCenter = map.getCenter();
 
     ps.keywordSearch(searchTerm, callback, {
-      useMapBounds: true,
       radius: 20000,
-      location: new kakao.maps.LatLng(cen.La, cen.Ma),
+
+      location: new kakao.maps.LatLng(
+        getMapCenter.getLat(),
+        getMapCenter.getLng(),
+      ),
       size: 10,
     });
   };
@@ -158,36 +165,16 @@ const KakaoMapSearch = () => {
     setSelectedPlaces(newSelectedPlaces);
   };
 
-  function getMapInfo() {
-    let center = map.getCenter();
-    let level = map.getLevel();
-    let bounds = map.getBounds();
-    let swLatLng = bounds.getSouthWest();
-    let neLatLng = bounds.getNorthEast();
-
-    console.log(center);
-  }
-
-  function saveSelectedPlacesToServer() {
-    axios
-      .post(
-        "/api/place/add",
-        selectedPlaces.map((place) => ({
-          placeName: place.place_name,
-          placeUrl: place.place_url,
-          address: place.address_name,
-          category: place.category,
-          latitude: parseFloat(place.y),
-          longitude: parseFloat(place.x),
-        })),
-      )
-      .then((response) => {
-        console.log("장소가 성공적으로 서버에 전송되었습니다.");
-      })
-      .catch((error) => {
-        console.error("장소를 서버에 전송하는 중 오류가 발생했습니다:", error);
-      });
-  }
+  // function saveSelectedPlacesToServer() {
+  //   selectedPlaces.map((place) => ({
+  //     placeName: place.place_name,
+  //     placeUrl: place.place_url,
+  //     address: place.address_name,
+  //     category: place.category,
+  //     latitude: parseFloat(place.y),
+  //     longitude: parseFloat(place.x),
+  //   }));
+  // }
 
   return (
     <Box>
@@ -221,7 +208,6 @@ const KakaoMapSearch = () => {
       </Box>
 
       <Box id="map" ref={mapRef} w={"576px"} h={"360px"}></Box>
-      <Button onClick={getMapInfo}>현재 위치에서 재검색</Button>
       <Box>
         <Box>
           {selectedPlaces.map((place, index) => (
@@ -239,7 +225,6 @@ const KakaoMapSearch = () => {
           ))}
         </Box>
       </Box>
-      <Button onClick={saveSelectedPlacesToServer}>제출</Button>
     </Box>
   );
 };

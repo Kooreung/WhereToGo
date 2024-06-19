@@ -36,10 +36,12 @@ import { faHeart as fullHeart } from "@fortawesome/free-regular-svg-icons";
 export function PostView() {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
-  const account = useContext(LoginContext);
-  const navigate = useNavigate();
+  const [place, setPlace] = useState([]);
   const [like, setLike] = useState({ like: false, count: 0 });
   const [isLikeLoading, setIsLikeLoading] = useState(false);
+  const [comment, setComment] = useState({ count: 0 });
+  const account = useContext(LoginContext);
+  const navigate = useNavigate();
   const [isTransition, setIsTransition] = useState(false);
   const toast = useToast();
   const {
@@ -47,7 +49,6 @@ export function PostView() {
     onOpen: onModalOpenOfDelete,
     onClose: onModalCloseOfDelete,
   } = useDisclosure();
-  const [comment, setComment] = useState({ count: 0 });
 
   useEffect(() => {
     axios
@@ -69,6 +70,12 @@ export function PostView() {
       });
   }, [isLikeLoading, isTransition]);
 
+  useEffect(() => {
+    axios.get(`/api/post/${postId}/place`).then((res) => {
+      setPlace(res.data);
+    });
+  }, []);
+
   // 게시글 번호 확인
   if (post === null || post === undefined) {
     return <Spinner />;
@@ -85,7 +92,7 @@ export function PostView() {
       .then((res) => {
         setLike(res.data);
       })
-      .catch((err) => {})
+      .catch(() => {})
       .finally(() => {
         setIsLikeLoading(false);
       });
@@ -242,8 +249,9 @@ export function PostView() {
           bg={"lightgray"}
           my={"32px"}
         >
-          장소 선택
-          {/* Todo 장소 내용 표기 필요 */}
+          {place.map((place, index) => (
+            <Box key={index}>{place.placeName}</Box>
+          ))}
         </Box>
       </Flex>
       <Box

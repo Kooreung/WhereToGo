@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Button,
@@ -21,14 +21,20 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import SmartEditor from "../../component/SmartEditor.jsx";
 import MapAdd from "../../MapAdd.jsx";
+import { LoginContext } from "../../component/LoginProvider.jsx";
+import { MemberLogin } from "../member/MemberLogin.jsx";
 
 function PostWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [selectedPlaces, setSelectedPlaces] = useState([]);
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
+
+  const account = useContext(LoginContext); // 로그인 상태를 확인하기 위해 LoginContext 에서 isLoggedIn 함수를 가져옴
+
   const {
     isOpen: isModalOpenOfSave,
     onOpen: onModalOpenOfSave,
@@ -55,12 +61,36 @@ function PostWrite() {
     axios
       .postForm("/api/post/add", { title, content })
       .then((res) => {
-        navigate(`/post/${res.data}`);
-        toast({
-          status: "success",
-          position: "bottom",
-          description: "게시글이 등록되었습니다.",
-        });
+        const postId = res.data;
+
+        axios
+          .post(
+            "/api/place/add",
+            selectedPlaces.map((place) => ({
+              placeName: place.place_name,
+              placeUrl: place.place_url,
+              address: place.address_name,
+              category: place.category,
+              latitude: parseFloat(place.y),
+              longitude: parseFloat(place.x),
+              postId: postId,
+            })),
+          )
+          .then(() => {
+            console.log("장소가 성공적으로 서버에 전송되었습니다.");
+            navigate(`/post/${res.data}`);
+            toast({
+              status: "success",
+              position: "bottom",
+              description: "게시글이 등록되었습니다.",
+            });
+          })
+          .catch((error) => {
+            console.error(
+              "장소를 서버에 전송하는 중 오류가 발생했습니다:",
+              error,
+            );
+          });
       })
       .catch()
       .finally(() => setLoading(false));
@@ -100,17 +130,20 @@ function PostWrite() {
           {/*<option value={"서울09"}>영등포/여의도/강서</option>*/}
           {/*<option value={"서울10"}>구로/관악/동작</option>*/}
         </Box>
-        <Box
-          w={{ base: "720px", lg: "1080px" }}
-          h={"160px"}
-          bg={"lightgray"}
-          my={"32px"}
-        >
-          장소 선택
-          {/* Todo 장소 내용 표기 필요 */}
-        </Box>
+        {/* Todo 장소 내용 표기 필요 */}
+        {/*<Box*/}
+        {/*  w={{ base: "720px", lg: "1080px" }}*/}
+        {/*  h={"160px"}*/}
+        {/*  bg={"lightgray"}*/}
+        {/*  my={"32px"}*/}
+        {/*>*/}
+        {/*  장소 선택*/}
+        {/*</Box>*/}
         <Box w={"576px"} bg={"lightgray"} my={"32px"}>
-          <MapAdd />
+          <MapAdd
+            selectedPlaces={selectedPlaces}
+            setSelectedPlaces={setSelectedPlaces}
+          />
         </Box>
         <Box>
           <Box>
