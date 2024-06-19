@@ -1,13 +1,14 @@
 package com.backend.Crawler;
 
 
+import com.backend.domain.place.Place;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -15,10 +16,13 @@ import java.util.Map;
 @RequestMapping("/api/web")
 public class WebcrawlerController {
 
-    private final WebCrawler webCrawler;
+    private final WebCrawlerService webCrawlerService;
 
-    @GetMapping("crawling/{keyword}")
-    public Map<String, String> getCrawler(@PathVariable String keyword) throws UnsupportedEncodingException, InterruptedException {
-        return webCrawler.crawler(keyword);
+    @PostMapping("crawling")
+    public Map<String, Map<String, String>> getCrawler(@RequestBody List<Place> places) throws InterruptedException {
+        for (Place place : places) {
+            System.out.println(place.getPlaceName());
+        }
+        return webCrawlerService.crawler(places);
     }
 }
