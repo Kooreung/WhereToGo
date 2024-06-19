@@ -24,11 +24,7 @@ const loadKakaoMapScript = (appKey, libraries = []) => {
   });
 };
 
-const KakaoMapSearch = ({
-  selectedPlaces,
-  setSelectedPlaces,
-  registerPlaces,
-}) => {
+const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   const mapRef = useRef(null);
   const kakaoMapAppKey = import.meta.env.VITE_KAKAO_MAP_APP_KEY;
   const [places, setPlaces] = useState([]);
@@ -224,7 +220,6 @@ const KakaoMapSearch = ({
           ))}
         </Box>
       </Box>
-      <Button onClick={registerPlaces}>제출</Button>
     </Box>
   );
 };

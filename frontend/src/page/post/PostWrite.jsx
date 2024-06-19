@@ -50,44 +50,45 @@ function PostWrite() {
     disableSaveButton = "disableToContent";
   }
 
-  function handleRegisterPlaces() {
-    console.log(selectedPlaces);
-  }
-
   // 저장 버튼 클릭 시
   function handleClickSave() {
     setLoading(true);
     axios
       .postForm("/api/post/add", { title, content })
       .then((res) => {
-        navigate(`/post/${res.data}`);
-        toast({
-          status: "success",
-          position: "bottom",
-          description: "게시글이 등록되었습니다.",
-        });
+        const postId = res.data;
+
+        axios
+          .post(
+            "/api/place/add",
+            selectedPlaces.map((place) => ({
+              placeName: place.place_name,
+              placeUrl: place.place_url,
+              address: place.address_name,
+              category: place.category,
+              latitude: parseFloat(place.y),
+              longitude: parseFloat(place.x),
+              postId: postId,
+            })),
+          )
+          .then(() => {
+            console.log("장소가 성공적으로 서버에 전송되었습니다.");
+            navigate(`/post/${res.data}`);
+            toast({
+              status: "success",
+              position: "bottom",
+              description: "게시글이 등록되었습니다.",
+            });
+          })
+          .catch((error) => {
+            console.error(
+              "장소를 서버에 전송하는 중 오류가 발생했습니다:",
+              error,
+            );
+          });
       })
       .catch()
       .finally(() => setLoading(false));
-    // TODO 맵 위치도 전송하기
-    // axios
-    //   .post(
-    //     "/api/place/add",
-    //     selectedPlaces.map((place) => ({
-    //       placeName: place.place_name,
-    //       placeUrl: place.place_url,
-    //       address: place.address_name,
-    //       category: place.category,
-    //       latitude: parseFloat(place.y),
-    //       longitude: parseFloat(place.x),
-    //     })),
-    //   )
-    //   .then(() => {
-    //     console.log("장소가 성공적으로 서버에 전송되었습니다.");
-    //   })
-    //   .catch((error) => {
-    //     console.error("장소를 서버에 전송하는 중 오류가 발생했습니다:", error);
-    //   });
   }
 
   // 취소 버튼 클릭 시
@@ -124,20 +125,19 @@ function PostWrite() {
           {/*<option value={"서울09"}>영등포/여의도/강서</option>*/}
           {/*<option value={"서울10"}>구로/관악/동작</option>*/}
         </Box>
-        <Box
-          w={{ base: "720px", lg: "1080px" }}
-          h={"160px"}
-          bg={"lightgray"}
-          my={"32px"}
-        >
-          장소 선택
-          {/* Todo 장소 내용 표기 필요 */}
-        </Box>
+        {/* Todo 장소 내용 표기 필요 */}
+        {/*<Box*/}
+        {/*  w={{ base: "720px", lg: "1080px" }}*/}
+        {/*  h={"160px"}*/}
+        {/*  bg={"lightgray"}*/}
+        {/*  my={"32px"}*/}
+        {/*>*/}
+        {/*  장소 선택*/}
+        {/*</Box>*/}
         <Box w={"576px"} bg={"lightgray"} my={"32px"}>
           <MapAdd
             selectedPlaces={selectedPlaces}
             setSelectedPlaces={setSelectedPlaces}
-            registerPlaces={handleRegisterPlaces}
           />
         </Box>
         <Box>
