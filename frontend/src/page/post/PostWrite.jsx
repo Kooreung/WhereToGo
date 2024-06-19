@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Button,
@@ -21,6 +21,8 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import SmartEditor from "../../component/SmartEditor.jsx";
+import { LoginContext } from "../../component/LoginProvider.jsx";
+import { MemberLogin } from "../member/MemberLogin.jsx";
 
 function PostWrite() {
   const [title, setTitle] = useState("");
@@ -31,6 +33,9 @@ function PostWrite() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
+
+  const account = useContext(LoginContext); // 로그인 상태를 확인하기 위해 LoginContext 에서 isLoggedIn 함수를 가져옴
+
   const {
     isOpen: isModalOpenOfSave,
     onOpen: onModalOpenOfSave,
@@ -91,6 +96,14 @@ function PostWrite() {
 
   function handleClickSelectArea(e) {
     setArea(e.target.value);
+  }
+
+  if (!account.isLoggedIn()) {
+    return (
+      <Box>
+        <MemberLogin />;
+      </Box>
+    );
   }
 
   return (
