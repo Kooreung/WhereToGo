@@ -141,7 +141,6 @@ export function PostEdit() {
                 <option value={"서울08"}>홍대/합정/마포</option>
                 <option value={"서울09"}>영등포/여의도/강서</option>
                 <option value={"서울10"}>구로/관악/동작</option>
-                {/* TODO City & Area Table 어떻게 할지 */}
               </Select>
               {/*)}*/}
             </FormControl>
@@ -182,7 +181,6 @@ export function PostEdit() {
                 hasArrow
                 label={"제목 또는 내용을 확인해주세요."}
               >
-                {/* TODO 내용 공백에 따라 라벨 내용 수정 필요 */}
                 <Button
                   onClick={onModalOpenOfSave}
                   isLoading={loading}

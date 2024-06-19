@@ -1,5 +1,6 @@
 package com.backend.service.post;
 
+import com.backend.domain.place.Place;
 import com.backend.domain.post.Post;
 import com.backend.mapper.post.PostMapper;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -98,6 +100,16 @@ public class PostService {
         return Map.of("pageInfo", pageInfo, "postList", postMapper.selectAllPost(offset, searchType, searchKeyword));
     }
 
+    // 게시글 Top 3 인기글 목록 서비스
+    public List<Post> postListOfBest() {
+        return postMapper.selectPostOfBest();
+    }
+
+    // 게시글 선택 장소 목록 서비스
+    public List<Place> placeList(Integer postId) {
+        return postMapper.getPlaceList(postId);
+    }
+
     // 게시글 수정 서비스
     public void edit(Post post) {
         postMapper.update(post);
@@ -128,4 +140,5 @@ public class PostService {
         result.put("count", postMapper.selectCountLikeByBoardId(postId));
         return result;
     }
+
 }

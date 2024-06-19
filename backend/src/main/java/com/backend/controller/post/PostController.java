@@ -1,5 +1,6 @@
 package com.backend.controller.post;
 
+import com.backend.domain.place.Place;
 import com.backend.domain.post.Post;
 import com.backend.service.post.PostService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -55,9 +57,16 @@ public class PostController {
     public void postListMd() {
     }
 
-    // 게시글 인기글 목록 Controller
-    @GetMapping("list/recommend")
-    public void postListRecommend() {
+    // 게시글 Top 3 인기글 목록 Controller
+    @GetMapping("list/postListOfBest")
+    public List<Post> postListOfBest() {
+        return postService.postListOfBest();
+    }
+
+    // 게시글 선택 장소 목록 Controller
+    @GetMapping("{postId}/place")
+    public List<Place> postPlace(@PathVariable Integer postId) {
+        return postService.placeList(postId);
     }
 
     // 게시글 삭제 Controller
@@ -70,7 +79,6 @@ public class PostController {
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-
     }
 
     // 게시글 수정 Controller
@@ -96,9 +104,9 @@ public class PostController {
         return postService.postLike(like, authentication);
     }
 
-    // 게시글 좋아요 목록 Controller
+    // 회원 당 게시글 좋아요 목록 Controller
     @PutMapping("likeList")
     public void postLikeList() {
     }
-    
+
 }

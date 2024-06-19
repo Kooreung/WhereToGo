@@ -1,5 +1,6 @@
 package com.backend.mapper.post;
 
+import com.backend.domain.place.Place;
 import com.backend.domain.post.Post;
 import org.apache.ibatis.annotations.*;
 
@@ -18,14 +19,20 @@ public interface PostMapper {
 
     // 게시글 조회 매퍼
     @Select("""
-            SELECT p.postid, p.title, p.content, p.createdate, p.view, p.memberid,
-                   m.nickname, 
+            SELECT p.postid,
+                   p.title,
+                   p.content,
+                   p.createdate,
+                   p.view,
+                   p.memberid,
+                   m.nickname,
                    COUNT(DISTINCT c.commentid) commentCount,
-                   COUNT(DISTINCT l.memberid) likeCount
-            FROM post p JOIN member m ON p.memberid = m.memberid
-                        LEFT JOIN comment c ON p.postid = c.postid
-                        LEFT JOIN likes l ON p.postid = l.postid
-            WHERE p.postid = #{postId}
+                   COUNT(DISTINCT l.memberid)  likeCount
+            FROM post p
+                     JOIN member m ON p.memberid = m.memberid
+                     LEFT JOIN comment c ON p.postid = c.postid
+                     LEFT JOIN likes l ON p.postid = l.postid
+            WHERE p.postid = #{postId};
             """)
     Post selectById(Integer postId);
 
@@ -58,12 +65,6 @@ public interface PostMapper {
             """)
     List<Post> selectAllPost(Integer offset, String searchType, String searchKeyword);
 
-    // 게시글 갯수 카운트 매퍼
-    @Select("""
-            SELECT COUNT(*) FROM post;
-            """)
-    Integer countAll();
-
     // 게시글 리스트 카운트 매퍼
     @Select("""
             <script>
@@ -84,6 +85,35 @@ public interface PostMapper {
             </script>
             """)
     Integer countAllPost(String searchType, String searchKeyword);
+
+    // 게시글 Top 3 인기글 목록 매퍼
+    @Select("""
+            SELECT p.postid,
+                   p.title,
+                   p.view,
+                   p.createDate,
+                   m.nickName,
+                   COUNT(DISTINCT c.commentid)                                                 commentCount,
+                   COUNT(DISTINCT l.memberid)                                                  likeCount,
+                   ROW_NUMBER() OVER (ORDER BY likeCount DESC, p.view DESC, commentCount DESC) postOfBest
+            FROM post p
+                     JOIN member m ON p.memberid = m.memberid
+                     LEFT JOIN comment c ON p.postid = c.postid
+                     LEFT JOIN likes l ON p.postid = l.postid
+            GROUP BY p.postid, p.title, p.view, m.nickName
+            LIMIT 3
+            """)
+    List<Post> selectPostOfBest();
+
+    // 게시글 선택 장소 목록 매퍼
+    @Select("""
+            SELECT p.postid,
+                   pl.placename
+            FROM post p
+                     JOIN place pl ON p.postid = pl.postid
+            WHERE p.postid = #{postId}
+            """)
+    List<Place> getPlaceList(Integer postId);
 
     // 게시글 수정 매퍼
     @Update("""
@@ -145,4 +175,5 @@ public interface PostMapper {
             WHERE postid=#{postId}
             """)
     int incrementViewCount(Integer postId);
+
 }
