@@ -20,7 +20,7 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import SmartEditor from "../../component/SmartEditor.jsx";
-import MapAdd from "../../MapAdd.jsx";
+import MapAdd from "../../component/Map/MapAdd.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 
 function PostWrite() {
