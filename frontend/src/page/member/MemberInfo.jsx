@@ -43,6 +43,7 @@ export function MemberInfo(props) {
       .then((res) => {
         setMember(res.data.member);
         setFile(res.data.profile);
+        setId(res.data.member.memberId);
         console.log(res.data.profile.src);
       })
       .catch((err) => {
@@ -71,7 +72,6 @@ export function MemberInfo(props) {
   }
 
   function handleCLickDelete() {
-    setId(member.memberId);
     console.log(id);
     axios
       .delete(`/api/member/delete`, {
