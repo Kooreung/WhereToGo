@@ -10,7 +10,7 @@ import java.util.Map;
 @Mapper
 public interface PostMapper {
 
-    // 게시글 추가 매퍼
+    // 게시글 추가 | 작성 매퍼
     @Insert("""
             INSERT INTO post (title, content, memberid)
             VALUES (#{title}, #{content}, #{memberId})
@@ -37,7 +37,7 @@ public interface PostMapper {
             """)
     Post selectById(Integer postId);
 
-    // 게시글 리스트 매퍼
+    // 게시글 목록 매퍼
     @Select("""
             <script>
             SELECT p.postid, p.title, p.content, p.createdate, p.view,
@@ -47,15 +47,22 @@ public interface PostMapper {
             FROM post p JOIN member m ON p.memberid = m.memberid
                         LEFT JOIN comment c ON p.postid = c.postid
                         LEFT JOIN likes l ON p.postid = l.postid
+                        LEFT JOIN place pl ON p.postid = pl.postid
             <where>
                 <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
-                    <if test="searchType =='all' || searchType =='title'">
+                    <if test="searchType =='all' || searchType =='titleAndContent'">
                         OR p.title LIKE #{pattern}
                         OR p.content LIKE #{pattern}
                     </if>
                     <if test="searchType == 'all' || searchType == 'nickName'">
                         OR m.nickname LIKE #{pattern}
+                    </if>
+                    <if test="searchType == 'all' || searchType == 'placeName'">
+                            OR pl.placename LIKE #{pattern}
+                        </if>
+                    <if test="searchType == 'all' || searchType == 'address'">
+                        OR pl.address LIKE #{pattern}
                     </if>
                 </if>
             </where>
@@ -66,20 +73,27 @@ public interface PostMapper {
             """)
     List<Post> selectAllPost(Integer offset, String searchType, String searchKeyword);
 
-    // 게시글 리스트 카운트 매퍼
+    // 게시글 목록 카운트 매퍼
     @Select("""
             <script>
-            SELECT COUNT(p.postid)
+            SELECT COUNT(DISTINCT p.postid)
             FROM post p JOIN member m ON p.memberid = m.memberid
+                        LEFT JOIN place pl ON p.postid = pl.postid
                 <where>
                     <if test="searchType != null">
                         <bind name="pattern" value="'%' + searchKeyword + '%'"/>
-                        <if test="searchType =='all' || searchType =='title'">
+                        <if test="searchType =='all' || searchType =='titleAndContent'">
                             OR p.title LIKE #{pattern}
                             OR p.content LIKE #{pattern}
                         </if>
                         <if test="searchType == 'all' || searchType == 'nickName'">
                             OR m.nickname LIKE #{pattern}
+                        </if>
+                        <if test="searchType == 'all' || searchType == 'placeName'">
+                            OR pl.placename LIKE #{pattern}
+                        </if>
+                        <if test="searchType == 'all' || searchType == 'address'">
+                            OR pl.address LIKE #{pattern}
                         </if>
                     </if>
                 </where>
@@ -106,15 +120,29 @@ public interface PostMapper {
             """)
     List<Post> selectPostOfBest();
 
-    // 게시글 선택 장소 목록 매퍼
+    // 게시글에서 선택한 장소 목록 매퍼
     @Select("""
             SELECT p.postid,
-                   pl.placename
+                   pl.placename,
+                   pl.address,
+                   pl.placeurl,
+                   pl.latitude,
+                   pl.longitude,
+                   (SELECT COUNT(pl_inner.postid)
+                    FROM place pl_inner
+                    WHERE pl_inner.placeurl = pl.placeurl) countPlace
             FROM post p
                      JOIN place pl ON p.postid = pl.postid
             WHERE p.postid = #{postId}
             """)
     List<Place> getPlaceList(Integer postId);
+
+    // 게시글 삭제 매퍼
+    @Delete("""
+            DELETE FROM post
+            WHERE postid=#{postId}
+            """)
+    Integer deleteById(Integer postId);
 
     // 게시글 수정 매퍼
     @Update("""
@@ -123,13 +151,6 @@ public interface PostMapper {
             WHERE postid=#{postId}
             """)
     void update(Post post);
-
-    // 게시글 삭제 매퍼
-    @Delete("""
-            DELETE FROM post
-            WHERE postid=#{postId}
-            """)
-    Integer deleteById(Integer postId);
 
     // 좋아요 추가 매퍼
     @Insert("""

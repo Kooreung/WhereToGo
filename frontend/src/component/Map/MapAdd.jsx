@@ -40,7 +40,10 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
       .then(() => {
         const container = mapRef.current;
         const options = {
-          center: new window.kakao.maps.LatLng(37.5664056, 126.9778222),
+          center: new window.kakao.maps.LatLng(
+            37.567157695939926,
+            126.979353948294,
+          ),
           level: 3,
         };
 
@@ -69,6 +72,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
           title: place.place_name,
         });
         bounds.extend(marker.getPosition());
+        console.log(marker);
         return marker;
       });
       setMarkers(newMarkers);
@@ -159,17 +163,6 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
     const newSelectedPlaces = selectedPlaces.filter((_, i) => i !== index);
     setSelectedPlaces(newSelectedPlaces);
   };
-
-  // function saveSelectedPlacesToServer() {
-  //   selectedPlaces.map((place) => ({
-  //     placeName: place.place_name,
-  //     placeUrl: place.place_url,
-  //     address: place.address_name,
-  //     category: place.category,
-  //     latitude: parseFloat(place.y),
-  //     longitude: parseFloat(place.x),
-  //   }));
-  // }
 
   return (
     <Box>

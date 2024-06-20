@@ -16,7 +16,6 @@ public class Place {
     private LocalDateTime createdAt;
 
     private Integer postId;
-    // 생성자, getter, setter 등 필요한 메서드들 추가
-
+    private Integer countPlace;
 }
 
