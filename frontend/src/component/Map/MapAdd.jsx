@@ -83,18 +83,11 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
 
   useEffect(() => {
     if (map && selectedPlaces.length > 0) {
-      // 이전에 생성된 마커들을 제거
-      markers.forEach((marker) => marker.setMap(null));
+      // 이전에 생성된 커스텀 마커들을 제거
+      markers.forEach((customOverlay) => customOverlay.setMap(null));
 
       const bounds = new window.kakao.maps.LatLngBounds();
       const newMarkers = selectedPlaces.map((place, index) => {
-        const marker = new window.kakao.maps.Marker({
-          position: new window.kakao.maps.LatLng(place.y, place.x),
-          map: map,
-          title: place.place_name,
-        });
-        bounds.extend(marker.getPosition());
-
         // 번호가 표시된 커스텀 오버레이 추가
         let content = `<Box style="position:relative;color:#000;background:#fff;border:1px solid #000;border-radius:3px;padding:2px 5px;">${index + 1}</Box>`;
         const customOverlay = new window.kakao.maps.CustomOverlay({
@@ -102,16 +95,15 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
           content: content,
           yAnchor: 1,
         });
-        if (selectedPlaces.length === 3) {
-          customOverlay.setMap(map);
-        } else {
-          customOverlay.setMap(null);
-        }
-
-        return marker;
+        customOverlay.setMap(map);
+        bounds.extend(customOverlay.getPosition());
+        return customOverlay;
       });
       setMarkers(newMarkers);
       map.setBounds(bounds);
+    }
+    if (map && selectedPlaces.length == 0) {
+      markers.forEach((customOverlay) => customOverlay.setMap(null));
     }
   }, [map, selectedPlaces]);
 
