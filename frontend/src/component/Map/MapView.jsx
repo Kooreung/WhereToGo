@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Box } from "@chakra-ui/react";
+import { Badge, Box, Flex, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -36,6 +36,7 @@ const KakaoMapSearch = () => {
 
   const [markers, setMarkers] = useState([]);
   const [polylines, setPolylines] = useState([]);
+  const [distanceOverlay, setDistanceOverlay] = useState(null);
 
   useEffect(() => {
     axios.get(`/api/post/${postId}/place`).then((res) => {
@@ -69,7 +70,7 @@ const KakaoMapSearch = () => {
   }, [kakaoMapAppKey]);
 
   useEffect(() => {
-    if (map && places.length > 0) {
+    if (places.length > 0) {
       const bounds = new window.kakao.maps.LatLngBounds();
 
       markers.forEach((marker) => marker.setMap(null));
@@ -121,10 +122,19 @@ const KakaoMapSearch = () => {
             strokeStyle: "shortdash",
           });
 
+          const distance = Math.round(polyline.getLength()); // 선의 총 거리를 계산합니다
+
           bounds.extend(path[0]);
           bounds.extend(path[1]);
+
+          if (index === places.length - 2) {
+            const content = DistanceInfo(distance);
+            showDistance(content, path[1]);
+          }
+
           return polyline;
         });
+
         setPolylines(newPolylines.filter((polyline) => polyline !== null));
         map.setBounds(bounds);
       } else {
@@ -132,6 +142,66 @@ const KakaoMapSearch = () => {
       }
     }
   }, [map, places]);
+
+  // 마우스 드래그로 그려지고 있는 선의 총거리 정보를 표시하거
+  // 마우스 오른쪽 클릭으로 선 그리가 종료됐을 때 선의 정보를 표시하는 커스텀 오버레이를 생성하고 지도에 표시하는 함수입니다
+  function showDistance(content, position) {
+    if (distanceOverlay) {
+      distanceOverlay.setMap(null);
+    }
+
+    // 커스텀 오버레이를 생성하고 지도에 표시합니다
+    const newDistanceOverlay = new kakao.maps.CustomOverlay({
+      map: map, // 커스텀오버레이를 표시할 지도입니다
+      content: content, // 커스텀오버레이에 표시할 내용입니다
+      position: position, // 커스텀오버레이를 표시할 위치입니다.
+      xAnchor: 0,
+      yAnchor: 0,
+      zIndex: 3,
+    });
+
+    setDistanceOverlay(newDistanceOverlay);
+  }
+
+  function DistanceInfo({ distance }) {
+    const walkSpeed = 67; // m/min
+    const bikeSpeed = 267; // m/min
+
+    const walkTime = Math.floor(distance / walkSpeed);
+    const bikeTime = Math.floor(distance / bikeSpeed);
+
+    const formatTime = (time) => {
+      const hours = Math.floor(time / 60);
+      const minutes = time % 60;
+      return (
+        <>
+          {hours > 0 && <Badge>{hours}시간 </Badge>}
+          <Badge>{minutes}분</Badge>
+        </>
+      );
+    };
+
+    return (
+      <Box style={{ backgroundColor: "white", border: "1px solid black" }}>
+        <Flex>
+          <Text fontWeight="bold">총거리: </Text>
+          <Text>{Math.round(distance)}</Text> m
+        </Flex>
+        <Box>
+          <Text as="span" fontWeight="bold">
+            도보:{" "}
+          </Text>
+          {formatTime(walkTime)}
+        </Box>
+        <Box>
+          <Text as="span" fontWeight="bold">
+            자전거:{" "}
+          </Text>
+          {formatTime(bikeTime)}
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <Box>
