@@ -54,7 +54,7 @@ public interface PostMapper {
                  <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
                     <if test="searchType == 'all'">
-                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern})
+                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern}  OR pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
                     </if>
                     <if test="searchType == 'titleAndContent'">
                         AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
@@ -89,7 +89,7 @@ public interface PostMapper {
                     <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
                     <if test="searchType == 'all'">
-                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern})
+                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern}  OR pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
                     </if>
                     <if test="searchType == 'titleAndContent'">
                         AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
@@ -240,12 +240,13 @@ public interface PostMapper {
                                LEFT JOIN comment c ON p.postid = c.postid
                                LEFT JOIN likes l2 ON p.postid = l2.postid
                                JOIN likes l ON p.postid = l.postid
+                                  LEFT JOIN  place pl ON p.postid = pl.postid
                        <where>
                l.memberid = #{memberId}
                <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
                     <if test="searchType == 'all'">
-                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern})
+                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern}  OR pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
                     </if>
                     <if test="searchType == 'titleAndContent'">
                         AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
@@ -271,15 +272,16 @@ public interface PostMapper {
     //좋아요 리스트 카운트
     @Select("""
             <script>
-            SELECT COUNT(p.postid)
+            SELECT COUNT(DISTINCT p.postid)
             FROM post p JOIN member m ON p.memberid = m.memberid
                                JOIN likes l ON p.postid = l.postid
+                                   LEFT  JOIN  place pl ON p.postid = pl.postid
             <where>
                 l.memberid = #{memberId}
                 <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
                     <if test="searchType == 'all'">
-                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern})
+                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern}  OR pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
                     </if>
                     <if test="searchType == 'titleAndContent'">
                         AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
