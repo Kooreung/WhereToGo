@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Box, Button } from "@chakra-ui/react";
+import { Avatar, Box, Button, Wrap, WrapItem } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import LobbyPlaceListProvider from "../component/Lobby/LobbyPlaceListProvider.jsx";
 import "/src/css/styles.css"; // CSS 파일을 가져옵니다
 
 const places = [
@@ -76,20 +75,16 @@ export function LobbyPlaceList() {
     <>
       <Box className="slide-container">
         {visiblePlaces.map((place, index) => (
-          <Box
-            key={index}
-            className={`slide-item ${animating ? "slide-enter" : ""}`}
-            textAlign={"center"}
-            fontWeight={"bolder"}
-          >
-            <LobbyPlaceListProvider
-              onClick={() =>
-                navigate(`/post/list?type=all&keyword=${place.keyword}`)
-              }
-              src={place.src}
-            />
-            <Box>{place.name}</Box>
-          </Box>
+          <Wrap>
+            <WrapItem
+              key={index}
+              className={`slide-item ${animating ? "slide-enter" : ""}`}
+              textAlign={"center"}
+              fontWeight={"bolder"}
+            >
+              <Avatar size="xl" name="Dan Abrahmov" src={place.src} />
+            </WrapItem>
+          </Wrap>
         ))}
       </Box>
       <Button onClick={handleNext}>옆으로</Button>
