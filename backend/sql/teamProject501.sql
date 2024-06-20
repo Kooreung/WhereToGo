@@ -176,3 +176,11 @@ FROM post p
          JOIN likes l ON p.postid = l.postid
          JOIN place pl ON p.postid = pl.postid
 WHERE l.memberid = 101;
+
+SELECT *
+FROM post;
+
+
+SELECT *
+FROM likes;
+

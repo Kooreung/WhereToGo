@@ -133,9 +133,25 @@ public interface MemberMapper {
             """)
     List<String> selectAuthorityByMemberId(Integer memberId);
 
+    // 탈퇴 시 랜덤 닉네임 중복 확인
     @Select("""
             SELECT COUNT(*) FROM member
             WHERE nickname=#{nickName}
             """)
     boolean isUsernameExists(String nickname);
+
+    // 가입 시 유저의 멤버 ID 가져오기
+    @Select("""
+            SELECT memberId
+            FROM member
+            WHERE email = #{email};
+            """)
+    int selectByLastMemberId(Member member);
+
+    // 가입 시 유저 권한 부여
+    @Insert("""
+            INSERT INTO authority (memberId, authtype) 
+            VALUES (#{memberId}, 'user') 
+            """)
+    int addAuthority(int memberId);
 }

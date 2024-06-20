@@ -208,4 +208,28 @@ public class PostService {
         result.put("post", posts);
         return result;
     }
+
+
+    public Map<String, Object> mdPickList(Map<String, Object> post) {
+        List<Post> posts = postMapper.selectMdPickPostList(post);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("post", posts);
+
+        return result;
+    }
+
+    public void mdPickPush(Integer postId) {
+        postMapper.mdPickPush(postId);
+    }
+
+    public void mdPickPop(Integer postId) {
+        postMapper.mdPickPop(postId);
+    }
+
+
+    public String getMdPick(Integer postId) {
+        return postMapper.getMdPick(postId);
+    }
+
 }

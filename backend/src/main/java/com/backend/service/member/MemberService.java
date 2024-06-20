@@ -290,4 +290,12 @@ public class MemberService {
 
         return result;
     }
+
+    public int selectByLastMemberId(Member member) {
+        return mapper.selectByLastMemberId(member);
+    }
+
+    public void addAuthority(int memberId) {
+        mapper.addAuthority(memberId);
+    }
 }

@@ -55,7 +55,7 @@ function Navbar() {
           )}
           {account.isAdmin() && (
             <Box onClick={() => navigate("/memberList")} cursor={"pointer"}>
-              멤버 리스트
+              admin 페이지
             </Box>
           )}
 
