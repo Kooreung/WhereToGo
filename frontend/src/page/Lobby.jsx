@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { Box, Button, Center, Flex, Input } from "@chakra-ui/react";
-import {
-  GuideLineLargeBanner,
-  GuideLineMediumBanner,
-} from "../css/CustomStyles.jsx";
+import { GuideLineMediumBanner } from "../css/CustomStyles.jsx";
 import axios from "axios";
+import { LobbyMdList } from "./LobbyMdList.jsx";
 
 function Lobby() {
   const [keyword, setKeyword] = useState("");
@@ -24,9 +22,7 @@ function Lobby() {
       <Box fontSize="3xl" pl={40}>
         MD 추천 Pick
       </Box>
-      <Flex direction={"column"} align={"center"} my={6}>
-        <Flex {...GuideLineLargeBanner}>MD 메뉴</Flex>
-      </Flex>
+      <LobbyMdList />
       <Box fontSize="3xl" pl={80}>
         회원 인기글
       </Box>
