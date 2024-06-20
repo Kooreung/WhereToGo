@@ -3,6 +3,7 @@ import { Box, Button, Center, Flex, Input } from "@chakra-ui/react";
 import { GuideLineMediumBanner } from "../css/CustomStyles.jsx";
 import axios from "axios";
 import { LobbyMdList } from "./LobbyMdList.jsx";
+import { LobbyPlaceList } from "./LobbyPlaceList.jsx";
 
 function Lobby() {
   const [keyword, setKeyword] = useState("");
@@ -17,7 +18,9 @@ function Lobby() {
       <Input onChange={(e) => setKeyword(e.target.value)}></Input>
       <Button onClick={crawling}>크롤링~</Button>
       <Center my={6}>
-        <Flex {...GuideLineMediumBanner}>원형 메뉴</Flex>
+        <Flex>
+          <LobbyPlaceList />
+        </Flex>
       </Center>
       <Box fontSize="3xl" pl={40}>
         MD 추천 Pick

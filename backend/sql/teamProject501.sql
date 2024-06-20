@@ -163,3 +163,16 @@ FROM post p
          LEFT JOIN likes l2 ON p.postid = l2.postid
          JOIN likes l ON p.postid = l.postid
 where l.memberid = 101;
+
+SELECT COUNT(p.postid)
+FROM post p
+         JOIN member m ON p.memberid = m.memberid
+         JOIN likes l ON p.postid = l.postid
+         LEFT JOIN place pl ON p.postid = pl.postid;
+
+SELECT COUNT(p.postid)
+FROM post p
+         JOIN member m ON p.memberid = m.memberid
+         JOIN likes l ON p.postid = l.postid
+         JOIN place pl ON p.postid = pl.postid
+WHERE l.memberid = 101;
