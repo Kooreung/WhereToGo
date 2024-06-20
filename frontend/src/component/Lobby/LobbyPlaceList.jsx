@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Avatar, Box, Button, Wrap, WrapItem } from "@chakra-ui/react";
+import React from "react";
+import { Avatar, Box, Stack, Wrap, WrapItem } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import "/src/css/styles.css"; // CSS 파일을 가져옵니다
 
@@ -54,40 +54,39 @@ const places = [
 
 export function LobbyPlaceList() {
   const navigate = useNavigate();
-  const [startIndex, setStartIndex] = useState(0);
-  const [animating, setAnimating] = useState(false);
-
-  const handleNext = () => {
-    if (animating) return;
-    setAnimating(true);
-    setTimeout(() => {
-      setStartIndex((prevIndex) => (prevIndex + 1) % places.length);
-      setAnimating(false);
-    }, 500);
-  };
-
-  const visiblePlaces = [];
-  for (let i = 0; i < 5; i++) {
-    visiblePlaces.push(places[(startIndex + i) % places.length]);
-  }
-
   return (
-    <>
-      <Box className="slide-container">
-        {visiblePlaces.map((place, index) => (
-          <Wrap>
-            <WrapItem
-              key={index}
-              className={`slide-item ${animating ? "slide-enter" : ""}`}
-              textAlign={"center"}
-              fontWeight={"bolder"}
-            >
-              <Avatar size="xl" name="Dan Abrahmov" src={place.src} />
+    <Box>
+      <Wrap>
+        <Box>
+          <Stack spacing={2} align="center">
+            <WrapItem>
+              <Avatar name="Dan Abrahmov" src="https://bit.ly/dan-abramov" />
             </WrapItem>
-          </Wrap>
-        ))}
-      </Box>
-      <Button onClick={handleNext}>옆으로</Button>
-    </>
+            <Box>강남</Box>
+          </Stack>
+        </Box>
+        <WrapItem>
+          <Avatar
+            name="Kola Tioluwani"
+            src="https://bit.ly/tioluwani-kolawole"
+          />
+        </WrapItem>
+        <WrapItem>
+          <Avatar name="Kent Dodds" src="https://bit.ly/kent-c-dodds" />
+        </WrapItem>
+        <WrapItem>
+          <Avatar name="Ryan Florence" src="https://bit.ly/ryan-florence" />
+        </WrapItem>
+        <WrapItem>
+          <Avatar name="Prosper Otemuyiwa" src="https://bit.ly/prosper-baba" />
+        </WrapItem>
+        <WrapItem>
+          <Avatar name="Christian Nwamba" src="https://bit.ly/code-beast" />
+        </WrapItem>
+        <WrapItem>
+          <Avatar name="Segun Adebayo" src="https://bit.ly/sage-adebayo" />
+        </WrapItem>
+      </Wrap>
+    </Box>
   );
 }

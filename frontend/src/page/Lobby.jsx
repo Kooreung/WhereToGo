@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Box, Button, Center, Flex, Input } from "@chakra-ui/react";
 import { GuideLineMediumBanner } from "../css/CustomStyles.jsx";
 import axios from "axios";
-import { LobbyMdList } from "./LobbyMdList.jsx";
-import { LobbyPlaceList } from "./LobbyPlaceList.jsx";
+import { LobbyMdList } from "../component/Lobby/LobbyMdList.jsx";
+import { LobbyPlaceList } from "../component/Lobby/LobbyPlaceList.jsx";
 
 function Lobby() {
   const [keyword, setKeyword] = useState("");
@@ -18,7 +18,7 @@ function Lobby() {
       <Input onChange={(e) => setKeyword(e.target.value)}></Input>
       <Button onClick={crawling}>크롤링~</Button>
       <Center my={6}>
-        <Flex>
+        <Flex {...GuideLineMediumBanner}>
           <LobbyPlaceList />
         </Flex>
       </Center>
