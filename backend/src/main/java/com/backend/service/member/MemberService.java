@@ -1,5 +1,6 @@
 package com.backend.service.member;
 
+import com.backend.NicknameGenerator.NickNameCreator;
 import com.backend.domain.member.Member;
 import com.backend.domain.member.MemberProfile;
 import com.backend.mapper.comment.CommentMapper;
@@ -42,6 +43,8 @@ public class MemberService {
     private final PostMapper postMapper;
     private final PostService postService;
     private final CommentMapper commentMapper;
+    private final NickNameCreator NickNameCreator;
+    private final NickNameCreator nickNameCreator;
 
 
     @Value("${aws.s3.bucket.name}")
@@ -143,9 +146,9 @@ public class MemberService {
         if (dbMember == null) {
             return false;
         }
-        if (!passwordEncoder.matches(member.getOldPassword(), dbMember.getPassword())) {
-            return false;
-        }
+//        if (!passwordEncoder.matches(member.getOldPassword(), dbMember.getPassword())) {
+//            return false;
+//        }
         return true;
     }
 
@@ -204,9 +207,10 @@ public class MemberService {
 
         s3Client.deleteObject(objectRequest);
 
+        String randomNickName = nickNameCreator.generateUniqueNicknameAndSave();
 //        List<Post> postList = postMapper.selectAllPost(memberId);
 
-        mapper.deleteByid(memberId);
+        mapper.deleteByid(memberId, randomNickName);
     }
 
     public boolean validate(Member member) {
@@ -262,7 +266,6 @@ public class MemberService {
                 Instant now = Instant.now();
 
                 List<String> authority = mapper.selectAuthorityByMemberId(db.getMemberId());
-                System.out.println(authority.get(0));
 
                 String authorityString = authority.stream()
                         .collect(Collectors.joining(""));
@@ -286,5 +289,13 @@ public class MemberService {
         }
 
         return result;
+    }
+
+    public int selectByLastMemberId(Member member) {
+        return mapper.selectByLastMemberId(member);
+    }
+
+    public void addAuthority(int memberId) {
+        mapper.addAuthority(memberId);
     }
 }

@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Button, Flex, Input, Link, Spacer } from "@chakra-ui/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
 
 const loadKakaoMapScript = (appKey, libraries = []) => {
   return new Promise((resolve, reject) => {
@@ -72,7 +74,6 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
           title: place.place_name,
         });
         bounds.extend(marker.getPosition());
-        console.log(marker);
         return marker;
       });
       setMarkers(newMarkers);
@@ -81,11 +82,45 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   }, [map, places]);
 
   useEffect(() => {
+    if (map && selectedPlaces.length > 0) {
+      // 이전에 생성된 마커들을 제거
+      markers.forEach((marker) => marker.setMap(null));
+
+      const bounds = new window.kakao.maps.LatLngBounds();
+      const newMarkers = selectedPlaces.map((place, index) => {
+        const marker = new window.kakao.maps.Marker({
+          position: new window.kakao.maps.LatLng(place.y, place.x),
+          map: map,
+          title: place.place_name,
+        });
+        bounds.extend(marker.getPosition());
+
+        // 번호가 표시된 커스텀 오버레이 추가
+        let content = `<Box style="position:relative;color:#000;background:#fff;border:1px solid #000;border-radius:3px;padding:2px 5px;">${index + 1}</Box>`;
+        const customOverlay = new window.kakao.maps.CustomOverlay({
+          position: new window.kakao.maps.LatLng(place.y, place.x),
+          content: content,
+          yAnchor: 1,
+        });
+        if (selectedPlaces.length === 3) {
+          customOverlay.setMap(map);
+        } else {
+          customOverlay.setMap(null);
+        }
+
+        return marker;
+      });
+      setMarkers(newMarkers);
+      map.setBounds(bounds);
+    }
+  }, [map, selectedPlaces]);
+
+  useEffect(() => {
     if (map) {
       polylines.forEach((polyline) => polyline.setMap(null));
-
       if (selectedPlaces.length > 1) {
         const bounds = new window.kakao.maps.LatLngBounds();
+
         const newPolylines = selectedPlaces.map((place, index) => {
           if (index === selectedPlaces.length - 1) return null;
           const polyline = new window.kakao.maps.Polyline({
@@ -142,7 +177,6 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
 
     ps.keywordSearch(searchTerm, callback, {
       radius: 20000,
-
       location: new kakao.maps.LatLng(
         getMapCenter.getLat(),
         getMapCenter.getLng(),
@@ -152,7 +186,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   };
 
   const selectPlace = (place) => {
-    if (selectedPlaces.length < 3) {
+    if (selectedPlaces.length < 5) {
       setSelectedPlaces([...selectedPlaces, place]);
       setSearchTerm("");
     } else {
@@ -163,18 +197,31 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   const removePlace = (index) => {
     const newSelectedPlaces = selectedPlaces.filter((_, i) => i !== index);
     setSelectedPlaces(newSelectedPlaces);
+    customOverlay.setMap(null);
   };
 
-  // function saveSelectedPlacesToServer() {
-  //   selectedPlaces.map((place) => ({
-  //     placeName: place.place_name,
-  //     placeUrl: place.place_url,
-  //     address: place.address_name,
-  //     category: place.category,
-  //     latitude: parseFloat(place.y),
-  //     longitude: parseFloat(place.x),
-  //   }));
-  // }
+  const movePlaceUp = (index) => {
+    if (index > 0) {
+      // 첫 번째 요소가 아닌 경우에만 실행
+      const newSelectedPlaces = [...selectedPlaces];
+      [newSelectedPlaces[index - 1], newSelectedPlaces[index]] = [
+        newSelectedPlaces[index],
+        newSelectedPlaces[index - 1],
+      ];
+      setSelectedPlaces(newSelectedPlaces);
+    }
+  };
+
+  const movePlaceDown = (index) => {
+    if (index < selectedPlaces.length - 1) {
+      const newSelectedPlaces = [...selectedPlaces];
+      [newSelectedPlaces[index + 1], newSelectedPlaces[index]] = [
+        newSelectedPlaces[index],
+        newSelectedPlaces[index + 1],
+      ];
+      setSelectedPlaces(newSelectedPlaces);
+    }
+  };
 
   return (
     <Box>
@@ -220,6 +267,12 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
                 {place.place_name}
               </Link>
               <Spacer />
+              <Button onClick={() => movePlaceUp(index)}>
+                <FontAwesomeIcon icon={faCaretUp} />
+              </Button>
+              <Button onClick={() => movePlaceDown(index)}>
+                <FontAwesomeIcon icon={faCaretDown} />
+              </Button>
               <Button onClick={() => removePlace(index)}>삭제하기</Button>
             </Flex>
           ))}

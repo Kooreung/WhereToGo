@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -20,14 +20,14 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import SmartEditor from "../../component/SmartEditor.jsx";
-import MapAdd from "../../MapAdd.jsx";
+import MapAdd from "../../component/Map/MapAdd.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
-import { MemberLogin } from "../member/MemberLogin.jsx";
 
 function PostWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectedPlaces, setSelectedPlaces] = useState([]);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -55,6 +55,19 @@ function PostWrite() {
     disableSaveButton = "disableToContent";
   }
 
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      event.preventDefault(); // 정확한 구현에 따라 이벤트를 취소할 수 있습니다.
+      return (event.returnValue = ""); // 일반적으로 이런 방식으로 경고창을 띄웁니다.
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
   // 저장 버튼 클릭 시
   function handleClickSave() {
     setLoading(true);
@@ -76,9 +89,21 @@ function PostWrite() {
               postId: postId,
             })),
           )
-          .then(() => {
+          .then((res) => {
+            console.log("place add", res.data);
+            const placeIdMap = res.data.places;
+            const placesWithId = selectedPlaces.map((place) => {
+              const placeId = placeIdMap[place.place_name]; // placeName을 키로 사용하여 placeId 추출
+              return {
+                placeId: placeId,
+                placeName: place.place_name,
+                address: place.address_name,
+              };
+            });
+
+            axios.post("/api/web/crawling", placesWithId);
             console.log("장소가 성공적으로 서버에 전송되었습니다.");
-            navigate(`/post/${res.data}`);
+            navigate(`/post/${res.data.postId}`);
             toast({
               status: "success",
               position: "bottom",
@@ -130,15 +155,6 @@ function PostWrite() {
           {/*<option value={"서울09"}>영등포/여의도/강서</option>*/}
           {/*<option value={"서울10"}>구로/관악/동작</option>*/}
         </Box>
-        {/* Todo 장소 내용 표기 필요 */}
-        {/*<Box*/}
-        {/*  w={{ base: "720px", lg: "1080px" }}*/}
-        {/*  h={"160px"}*/}
-        {/*  bg={"lightgray"}*/}
-        {/*  my={"32px"}*/}
-        {/*>*/}
-        {/*  장소 선택*/}
-        {/*</Box>*/}
         <Box w={"576px"} bg={"lightgray"} my={"32px"}>
           <MapAdd
             selectedPlaces={selectedPlaces}
