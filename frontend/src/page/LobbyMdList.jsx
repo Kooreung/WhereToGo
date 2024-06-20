@@ -39,10 +39,17 @@ export function LobbyMdList() {
     <>
       <Center>
         <Button onClick={() => {
-          if(nextPosts > 1){
-          setNextPosts(nextPosts  - 1);
+          if(nextPosts > 1) {
+          setNextPosts(nextPosts - 1);
           setPrevPosts(prevPosts - 1)}
+
+          if(nextPosts === 1) {
+            setNextPosts( mdPost.length);
+            setPrevPosts(mdPost.length - 1);
           }
+        }
+
+
         }>
         <FontAwesomeIcon icon={faArrowLeft} fontSize="2rem" />
         </Button>
