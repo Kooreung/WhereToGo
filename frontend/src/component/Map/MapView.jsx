@@ -38,7 +38,7 @@ const KakaoMapSearch = () => {
   const [markers, setMarkers] = useState([]);
   const [polylines, setPolylines] = useState([]);
   const [distanceOverlay, setDistanceOverlay] = useState(null);
-  const [distanceSum, setDistanceSum] = useState(0);
+  let distance = 0;
 
   useEffect(() => {
     axios.get(`/api/post/${postId}/place`).then((res) => {
@@ -98,51 +98,44 @@ const KakaoMapSearch = () => {
     if (map) {
       polylines.forEach((polyline) => polyline.setMap(null));
 
-      if (places.length > 1) {
-        const bounds = new window.kakao.maps.LatLngBounds();
+      const bounds = new window.kakao.maps.LatLngBounds();
 
-        const newPolylines = places.map((place, index) => {
-          if (index === places.length - 1) return null;
-          const path = [
-            new window.kakao.maps.LatLng(
-              places[index].latitude,
-              places[index].longitude,
-            ),
-            new window.kakao.maps.LatLng(
-              places[index + 1].latitude,
-              places[index + 1].longitude,
-            ),
-          ];
+      const newPolylines = places.map((place, index) => {
+        if (index === places.length - 1) return null;
+        const path = [
+          new window.kakao.maps.LatLng(
+            places[index].latitude,
+            places[index].longitude,
+          ),
+          new window.kakao.maps.LatLng(
+            places[index + 1].latitude,
+            places[index + 1].longitude,
+          ),
+        ];
 
-          const polyline = new window.kakao.maps.Polyline({
-            map: map,
-            path: path,
-            strokeWeight: 3,
-            strokeColor: "#FF0000",
-            strokeOpacity: 1,
-            strokeStyle: "shortdash",
-          });
-
-          const distance = Math.round(polyline.getLength()); // 선의 총 거리를 계산합니다
-          setDistanceSum(distanceSum + distance);
-
-          bounds.extend(path[0]);
-          bounds.extend(path[1]);
-
-          if (index === places.length - 2) {
-            const content = renderToString(
-              <DistanceInfo distance={distance} />,
-            );
-            showDistance(content, path[1]);
-          }
-          return polyline;
+        const polyline = new window.kakao.maps.Polyline({
+          map: map,
+          path: path,
+          strokeWeight: 3,
+          strokeColor: "#FF0000",
+          strokeOpacity: 1,
+          strokeStyle: "shortdash",
         });
 
-        setPolylines(newPolylines.filter((polyline) => polyline !== null));
-        map.setBounds(bounds);
-      } else {
-        setPolylines([]);
-      }
+        distance += Math.round(polyline.getLength()); // 선의 총 거리를 계산합니다
+
+        bounds.extend(path[0]);
+        bounds.extend(path[1]);
+
+        if (index === places.length - 2) {
+          const content = renderToString(<DistanceInfo distance={distance} />);
+          showDistance(content, path[1]);
+        }
+        return polyline;
+      });
+
+      setPolylines(newPolylines.filter((polyline) => polyline !== null));
+      map.setBounds(bounds);
     }
   }, [map, places]);
 
