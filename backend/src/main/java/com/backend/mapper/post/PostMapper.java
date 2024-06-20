@@ -233,6 +233,7 @@ public interface PostMapper {
             """)
     List<Post> selectLikeList(Integer memberId, Integer offset, String searchType, String searchKeyword);
 
+    //좋아요 리스트 카운트
     @Select("""
             <script>
             SELECT COUNT(p.postid)
