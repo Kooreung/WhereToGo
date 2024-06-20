@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
+  Button,
   Center,
   Divider,
   Flex,
@@ -14,24 +15,55 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
+import {
+  faAngleLeft,
+  faAngleRight,
+  faAnglesLeft,
+  faAnglesRight,
+  faCaretRight,
+} from "@fortawesome/free-solid-svg-icons";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { SearchIcon } from "@chakra-ui/icons";
 
 export function PostLikeList() {
   const [postLikeList, setPostLikeList] = useState([]);
+  const [pageInfo, setPageInfo] = useState({});
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
   useEffect(() => {
-    axios.get("/api/post/likeList").then((res) => {
-      setPostLikeList(res.data);
+    axios.get(`/api/post/likeList?${searchParams}`).then((res) => {
+      setPostLikeList(res.data.postList);
+      setPageInfo(res.data.pageInfo);
     });
-  }, []);
+    setSearchType("all");
+    setSearchKeyword("");
+    const typeParam = searchParams.get("type");
+    const keywordParam = searchParams.get("keyword");
+    if (typeParam) {
+      setSearchType(typeParam);
+    }
+    if (keywordParam) {
+      setSearchKeyword(keywordParam);
+    }
+  }, [searchParams]);
+
+  // 페이지 수
+  const pageNumbers = [];
+  for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {
+    pageNumbers.push(i);
+  }
 
   function handleSearchClick() {
-    navigate(`/post/likeList?type=${searchType}&keyword=${searchKeyword}`);
+    navigate(`/postLike/list?type=${searchType}&keyword=${searchKeyword}`);
+  }
+
+  // 페이지 버튼 클릭 시
+  function handlePageButtonClick(pageNumber) {
+    searchParams.set("page", pageNumber);
+    navigate(`/postLike/list?${searchParams}`);
   }
 
   return (
@@ -219,6 +251,46 @@ export function PostLikeList() {
             </Box>
           </Center>
         </Flex>
+      </Box>
+      <Box>
+        <Center>
+          {pageInfo.prevPageNumber && (
+            <>
+              <Button onClick={() => handlePageButtonClick(1)}>
+                <FontAwesomeIcon icon={faAnglesLeft} />
+              </Button>
+              <Button
+                onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
+              >
+                <FontAwesomeIcon icon={faAngleLeft} />
+              </Button>
+            </>
+          )}
+
+          {pageNumbers.map((pageNumber) => (
+            <Button
+              key={pageNumber}
+              onClick={() => handlePageButtonClick(pageNumber)}
+            >
+              {pageNumber}
+            </Button>
+          ))}
+
+          {pageInfo.nextPageNumber && (
+            <>
+              <Button
+                onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+              >
+                <FontAwesomeIcon icon={faAngleRight} />
+              </Button>
+              <Button
+                onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
+              >
+                <FontAwesomeIcon icon={faAnglesRight} />
+              </Button>
+            </>
+          )}
+        </Center>
       </Box>
     </Box>
   );
