@@ -45,10 +45,12 @@ public interface PostMapper {
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l.memberid) likeCount
             FROM post p JOIN member m ON p.memberid = m.memberid
+                        JOIN authority a ON p.memberid = a.memberid
                         LEFT JOIN comment c ON p.postid = c.postid
                         LEFT JOIN likes l ON p.postid = l.postid
                         LEFT JOIN place pl ON p.postid = pl.postid
             <where>
+            a.authtype != 'admin'
                 <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
                     <if test="searchType =='all' || searchType =='titleAndContent'">
@@ -78,8 +80,10 @@ public interface PostMapper {
             <script>
             SELECT COUNT(DISTINCT p.postid)
             FROM post p JOIN member m ON p.memberid = m.memberid
+                        JOIN authority a ON p.memberid = a.memberid
                         LEFT JOIN place pl ON p.postid = pl.postid
                 <where>
+            a.authtype != 'admin'
                     <if test="searchType != null">
                         <bind name="pattern" value="'%' + searchKeyword + '%'"/>
                         <if test="searchType =='all' || searchType =='titleAndContent'">
