@@ -1,5 +1,13 @@
 import React from "react";
-import { Avatar, Box, Stack, Wrap, WrapItem } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Button,
+  Center,
+  Stack,
+  Wrap,
+  WrapItem,
+} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import "/src/css/styles.css"; // CSS 파일을 가져옵니다
 
@@ -54,38 +62,41 @@ const places = [
 
 export function LobbyPlaceList() {
   const navigate = useNavigate();
+
+  function handleMoveRight() {}
+
+  function handleMoveLeft() {}
+
   return (
-    <Box>
-      <Wrap>
-        <Box>
-          <Stack spacing={2} align="center">
-            <WrapItem>
-              <Avatar name="Dan Abrahmov" src="https://bit.ly/dan-abramov" />
-            </WrapItem>
-            <Box>강남</Box>
-          </Stack>
-        </Box>
-        <WrapItem>
-          <Avatar
-            name="Kola Tioluwani"
-            src="https://bit.ly/tioluwani-kolawole"
-          />
-        </WrapItem>
-        <WrapItem>
-          <Avatar name="Kent Dodds" src="https://bit.ly/kent-c-dodds" />
-        </WrapItem>
-        <WrapItem>
-          <Avatar name="Ryan Florence" src="https://bit.ly/ryan-florence" />
-        </WrapItem>
-        <WrapItem>
-          <Avatar name="Prosper Otemuyiwa" src="https://bit.ly/prosper-baba" />
-        </WrapItem>
-        <WrapItem>
-          <Avatar name="Christian Nwamba" src="https://bit.ly/code-beast" />
-        </WrapItem>
-        <WrapItem>
-          <Avatar name="Segun Adebayo" src="https://bit.ly/sage-adebayo" />
-        </WrapItem>
+    <Box border={"5px solid green"}>
+      <Wrap spacing="20px" border={"5px solid red"}>
+        <Center>
+          <Button border={"1px solid black"} onClick={handleMoveLeft}>
+            옆
+          </Button>
+        </Center>
+        {places.slice(0, 5).map((place, index) => (
+          <WrapItem key={index} border={"5px solid blue"}>
+            <Box width="100px" border={"5px solid black"}>
+              {/* 조정 가능한 너비 */}
+              <Stack
+                spacing={2}
+                align="center"
+                onClick={() =>
+                  navigate(`/post/list?type=all&keyword=${place.keyword}`)
+                }
+              >
+                <Avatar size="xl" name="Dan Abrahmov" src={place.src} />
+                <Box textAlign="center">{place.name}</Box>
+              </Stack>
+            </Box>
+          </WrapItem>
+        ))}
+        <Center>
+          <Button border={"1px solid black"} onClick={handleMoveRight}>
+            옆
+          </Button>
+        </Center>
       </Wrap>
     </Box>
   );

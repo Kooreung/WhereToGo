@@ -18,7 +18,7 @@ function Lobby() {
       <Input onChange={(e) => setKeyword(e.target.value)}></Input>
       <Button onClick={crawling}>크롤링~</Button>
       <Center my={6}>
-        <Flex {...GuideLineMediumBanner}>
+        <Flex>
           <LobbyPlaceList />
         </Flex>
       </Center>
