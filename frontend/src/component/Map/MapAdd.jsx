@@ -72,7 +72,6 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
           title: place.place_name,
         });
         bounds.extend(marker.getPosition());
-        console.log(marker);
         return marker;
       });
       setMarkers(newMarkers);
@@ -151,7 +150,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   };
 
   const selectPlace = (place) => {
-    if (selectedPlaces.length < 3) {
+    if (selectedPlaces.length < 5) {
       setSelectedPlaces([...selectedPlaces, place]);
       setSearchTerm("");
     } else {

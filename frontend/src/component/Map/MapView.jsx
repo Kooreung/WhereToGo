@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Badge, Box, Flex, Text } from "@chakra-ui/react";
+import { Badge, Box, Text, UnorderedList } from "@chakra-ui/react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { renderToString } from "react-dom/server";
 
 const loadKakaoMapScript = (appKey, libraries = []) => {
   return new Promise((resolve, reject) => {
@@ -37,6 +38,7 @@ const KakaoMapSearch = () => {
   const [markers, setMarkers] = useState([]);
   const [polylines, setPolylines] = useState([]);
   const [distanceOverlay, setDistanceOverlay] = useState(null);
+  const [distanceSum, setDistanceSum] = useState(0);
 
   useEffect(() => {
     axios.get(`/api/post/${postId}/place`).then((res) => {
@@ -57,8 +59,7 @@ const KakaoMapSearch = () => {
         };
 
         const map = new window.kakao.maps.Map(container, options);
-        map.setDraggable(false);
-        map.setZoomable(false);
+
         setMap(map);
 
         const placesService = new window.kakao.maps.services.Places();
@@ -70,7 +71,7 @@ const KakaoMapSearch = () => {
   }, [kakaoMapAppKey]);
 
   useEffect(() => {
-    if (places.length > 0) {
+    if (map !== null && places.length > 0) {
       const bounds = new window.kakao.maps.LatLngBounds();
 
       markers.forEach((marker) => marker.setMap(null));
@@ -115,7 +116,7 @@ const KakaoMapSearch = () => {
 
           const polyline = new window.kakao.maps.Polyline({
             map: map,
-            path,
+            path: path,
             strokeWeight: 3,
             strokeColor: "#FF0000",
             strokeOpacity: 1,
@@ -123,15 +124,17 @@ const KakaoMapSearch = () => {
           });
 
           const distance = Math.round(polyline.getLength()); // 선의 총 거리를 계산합니다
+          setDistanceSum(distanceSum + distance);
 
           bounds.extend(path[0]);
           bounds.extend(path[1]);
 
           if (index === places.length - 2) {
-            const content = DistanceInfo(distance);
+            const content = renderToString(
+              <DistanceInfo distance={distance} />,
+            );
             showDistance(content, path[1]);
           }
-
           return polyline;
         });
 
@@ -164,41 +167,49 @@ const KakaoMapSearch = () => {
   }
 
   function DistanceInfo({ distance }) {
-    const walkSpeed = 67; // m/min
-    const bikeSpeed = 267; // m/min
+    // 도보의 시속은 평균 4km/h 이고 도보의 분속은 67m/min입니다
+    const walkTime = Math.floor(distance / 67);
+    const walkHour = Math.floor(walkTime / 60);
+    const walkMin = walkTime % 60;
 
-    const walkTime = Math.floor(distance / walkSpeed);
-    const bikeTime = Math.floor(distance / bikeSpeed);
-
-    const formatTime = (time) => {
-      const hours = Math.floor(time / 60);
-      const minutes = time % 60;
-      return (
-        <>
-          {hours > 0 && <Badge>{hours}시간 </Badge>}
-          <Badge>{minutes}분</Badge>
-        </>
-      );
-    };
+    // 자전거의 평균 시속은 16km/h 이고 자전거의 분속은 267m/min입니다
+    const bicycleTime = Math.floor(distance / 267);
+    const bicycleHour = Math.floor(bicycleTime / 60);
+    const bicycleMin = bicycleTime % 60;
 
     return (
-      <Box style={{ backgroundColor: "white", border: "1px solid black" }}>
-        <Flex>
-          <Text fontWeight="bold">총거리: </Text>
-          <Text>{Math.round(distance)}</Text> m
-        </Flex>
-        <Box>
-          <Text as="span" fontWeight="bold">
-            도보:{" "}
-          </Text>
-          {formatTime(walkTime)}
-        </Box>
-        <Box>
-          <Text as="span" fontWeight="bold">
-            자전거:{" "}
-          </Text>
-          {formatTime(bikeTime)}
-        </Box>
+      <Box
+        style={{
+          border: "1px solid black",
+          borderRadius: "10px",
+          backgroundColor: "white",
+          opacity: "0.75",
+          paddingLeft: "8px",
+          paddingRight: "8px",
+        }}
+      >
+        <UnorderedList>
+          <Box>
+            <Text as="span" style={{ fontWeight: "bold" }}>
+              총거리:{" "}
+            </Text>
+            <Badge>{distance}</Badge> m
+          </Box>
+          <Box>
+            <Text as="span" style={{ fontWeight: "bold" }}>
+              도보:{" "}
+            </Text>
+            {walkHour > 0 && <Badge>{walkHour}시간 </Badge>}
+            <Badge>{walkMin}분</Badge>
+          </Box>
+          <Box>
+            <Text as="span" style={{ fontWeight: "bold" }}>
+              자전거:{" "}
+            </Text>
+            {bicycleHour > 0 && <Badge>{bicycleHour}시간 </Badge>}
+            <Badge>{bicycleMin}분</Badge>
+          </Box>
+        </UnorderedList>
       </Box>
     );
   }
