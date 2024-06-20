@@ -69,11 +69,18 @@ public interface MemberMapper {
             """)
     int update(Member member);
 
-    @Delete("""
-            DELETE FROM member
-            where memberid = #{memberId}
-            """)
-    int deleteByid(Integer memberId);
+    @Update("""
+            UPDATE member
+            SET email = '1',
+                password = '1',
+                nickname = #{randomNickName},
+                name = '탈퇴유저',
+                birth = '1999-01-01',
+                address = '데이터 조각',
+                phonenumber = '01012341234'
+            WHERE memberid = #{memberId}
+                        """)
+    int deleteByid(Integer memberId, String randomNickName);
 
     @Insert("""
             insert into profile(memberid, profilename)
@@ -125,4 +132,10 @@ public interface MemberMapper {
             WHERE memberid=${memberId}
             """)
     List<String> selectAuthorityByMemberId(Integer memberId);
+
+    @Select("""
+            SELECT COUNT(*) FROM member
+            WHERE nickname=#{nickName}
+            """)
+    boolean isUsernameExists(String nickname);
 }

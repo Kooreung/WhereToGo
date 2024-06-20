@@ -85,6 +85,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
 
       if (selectedPlaces.length > 1) {
         const bounds = new window.kakao.maps.LatLngBounds();
+
         const newPolylines = selectedPlaces.map((place, index) => {
           if (index === selectedPlaces.length - 1) return null;
           const polyline = new window.kakao.maps.Polyline({

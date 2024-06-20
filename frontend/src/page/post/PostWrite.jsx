@@ -75,9 +75,21 @@ function PostWrite() {
               postId: postId,
             })),
           )
-          .then(() => {
+          .then((res) => {
+            console.log("place add", res.data);
+            const placeIdMap = res.data.places;
+            const placesWithId = selectedPlaces.map((place) => {
+              const placeId = placeIdMap[place.place_name]; // placeName을 키로 사용하여 placeId 추출
+              return {
+                placeId: placeId,
+                placeName: place.place_name,
+                address: place.address_name,
+              };
+            });
+
+            axios.post("/api/web/crawling", placesWithId);
             console.log("장소가 성공적으로 서버에 전송되었습니다.");
-            navigate(`/post/${res.data}`);
+            navigate(`/post/${res.data.postId}`);
             toast({
               status: "success",
               position: "bottom",
