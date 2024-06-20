@@ -53,9 +53,9 @@ function Navbar() {
               로그아웃
             </Center>
           )}
-          {account.isLoggedIn() && (
+          {account.isAdmin() && (
             <Box onClick={() => navigate("/memberList")} cursor={"pointer"}>
-              멤버 리스트
+              admin 페이지
             </Box>
           )}
           {account.isLoggedIn() && (

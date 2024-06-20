@@ -111,7 +111,7 @@ public class MemberController {
 
     // 회원 목록 보기
     @GetMapping("list")
-//    @PreAuthorize("hasAuthority('admin')")
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public List<Member> list() {
         return service.memberList();
     }
