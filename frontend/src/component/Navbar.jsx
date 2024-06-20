@@ -53,11 +53,12 @@ function Navbar() {
               로그아웃
             </Center>
           )}
-          {account.isLoggedIn() && (
+          {account.isAdmin() && (
             <Box onClick={() => navigate("/memberList")} cursor={"pointer"}>
               멤버 리스트
             </Box>
           )}
+
           {account.isLoggedIn() && (
             <Center onClick={() => navigate("/memberinfo")} cursor={"pointer"}>
               프로필
