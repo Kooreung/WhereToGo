@@ -51,20 +51,22 @@ public interface PostMapper {
                         LEFT JOIN place pl ON p.postid = pl.postid
             <where>
             a.authtype != 'admin'
-                <if test="searchType != null">
+                 <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
-                    <if test="searchType =='all' || searchType =='titleAndContent'">
-                        OR p.title LIKE #{pattern}
-                        OR p.content LIKE #{pattern}
+                    <if test="searchType == 'all'">
+                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern})
                     </if>
-                    <if test="searchType == 'all' || searchType == 'nickName'">
-                        OR m.nickname LIKE #{pattern}
+                    <if test="searchType == 'titleAndContent'">
+                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
                     </if>
-                    <if test="searchType == 'all' || searchType == 'placeName'">
-                            OR pl.placename LIKE #{pattern}
-                        </if>
-                    <if test="searchType == 'all' || searchType == 'address'">
-                        OR pl.address LIKE #{pattern}
+                    <if test="searchType == 'nickName'">
+                        AND m.nickname LIKE #{pattern}
+                    </if>
+                    <if test="searchType == 'placeName'">
+                        AND (pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
+                    </if>
+                    <if test="searchType == 'address'">
+                        AND (pl.address LIKE #{pattern} OR pl.address LIKE #{pattern})
                     </if>
                 </if>
             </where>
@@ -85,21 +87,23 @@ public interface PostMapper {
                 <where>
             a.authtype != 'admin'
                     <if test="searchType != null">
-                        <bind name="pattern" value="'%' + searchKeyword + '%'"/>
-                        <if test="searchType =='all' || searchType =='titleAndContent'">
-                            OR p.title LIKE #{pattern}
-                            OR p.content LIKE #{pattern}
-                        </if>
-                        <if test="searchType == 'all' || searchType == 'nickName'">
-                            OR m.nickname LIKE #{pattern}
-                        </if>
-                        <if test="searchType == 'all' || searchType == 'placeName'">
-                            OR pl.placename LIKE #{pattern}
-                        </if>
-                        <if test="searchType == 'all' || searchType == 'address'">
-                            OR pl.address LIKE #{pattern}
-                        </if>
+                    <bind name="pattern" value="'%' + searchKeyword + '%'"/>
+                    <if test="searchType == 'all'">
+                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern})
                     </if>
+                    <if test="searchType == 'titleAndContent'">
+                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
+                    </if>
+                    <if test="searchType == 'nickName'">
+                        AND m.nickname LIKE #{pattern}
+                    </if>
+                    <if test="searchType == 'placeName'">
+                        AND (pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
+                    </if>
+                    <if test="searchType == 'address'">
+                        AND (pl.address LIKE #{pattern} OR pl.address LIKE #{pattern})
+                    </if>
+                </if>
                 </where>
             </script>
             """)
@@ -239,17 +243,23 @@ public interface PostMapper {
                        <where>
                l.memberid = #{memberId}
                <if test="searchType != null">
-                   <bind name="pattern" value="'%' + searchKeyword + '%'"/>
-                   <if test="searchType == 'all'">
-                       AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern})
-                   </if>
-                   <if test="searchType == 'title'">
-                       AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
-                   </if>
-                   <if test="searchType == 'nickName'">
-                       AND m.nickname LIKE #{pattern}
-                   </if>
-               </if>
+                    <bind name="pattern" value="'%' + searchKeyword + '%'"/>
+                    <if test="searchType == 'all'">
+                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern})
+                    </if>
+                    <if test="searchType == 'titleAndContent'">
+                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
+                    </if>
+                    <if test="searchType == 'nickName'">
+                        AND m.nickname LIKE #{pattern}
+                    </if>
+                    <if test="searchType == 'placeName'">
+                        AND (pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
+                    </if>
+                    <if test="searchType == 'address'">
+                        AND (pl.address LIKE #{pattern} OR pl.address LIKE #{pattern})
+                    </if>
+                </if>
                        </where>
             GROUP BY p.postid
             ORDER BY p.postid DESC
@@ -271,11 +281,17 @@ public interface PostMapper {
                     <if test="searchType == 'all'">
                         AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern})
                     </if>
-                    <if test="searchType == 'title'">
+                    <if test="searchType == 'titleAndContent'">
                         AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
                     </if>
                     <if test="searchType == 'nickName'">
                         AND m.nickname LIKE #{pattern}
+                    </if>
+                    <if test="searchType == 'placeName'">
+                        AND (pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
+                    </if>
+                    <if test="searchType == 'address'">
+                        AND (pl.address LIKE #{pattern} OR pl.address LIKE #{pattern})
                     </if>
                 </if>
             </where>
