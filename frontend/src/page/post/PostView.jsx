@@ -41,6 +41,7 @@ export function PostView() {
   const [like, setLike] = useState({ like: false, count: 0 });
   const [isLikeLoading, setIsLikeLoading] = useState(false);
   const [comment, setComment] = useState({ count: 0 });
+  const [toggle, setToggle] = useState("");
   const account = useContext(LoginContext);
   const navigate = useNavigate();
   const [isTransition, setIsTransition] = useState(false);
@@ -72,9 +73,21 @@ export function PostView() {
   }, [isLikeLoading, isTransition]);
 
   useEffect(() => {
-    axios.get(`/api/post/${postId}/place`).then((res) => {
+    axios.get(`/api/post/${postId}/place`)
+      .then((res) => {
       setPlace(res.data);
     });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(`/api/post/${postId}/getMdPick`)
+      .then((res) => {
+        setToggle(res.data)
+        console.log(res.data)
+      })
+      .catch(() => {})
+      .finally(() => {})
   }, []);
 
   // 게시글 번호 확인
@@ -121,6 +134,49 @@ export function PostView() {
       .finally(() => {
         onModalCloseOfDelete();
       });
+  }
+
+  // mdpick push
+  function handleMdPickPush() {
+    axios
+      .post(`/api/post/${postId}/push`, { postId: post.postId })
+      .then(() => {
+        toast({
+        status: "success",
+        position: "bottom",
+        description: "성공",
+      })
+        window.location.reload();
+        })
+      .catch(() => {
+        toast({
+        status: "error",
+        position: "bottom",
+        description: "실패",
+      })
+      })
+      .finally(() => {})
+  }
+
+  // mdpick pop
+  function handleMdPickPop() {
+    axios
+      .post(`/api/post/${postId}/pop`, { postId: post.postId })
+      .then(() => {
+        toast({
+          status: "success",
+          position: "bottom",
+          description: "성공",
+        })
+        window.location.reload();
+      })
+      .catch(() => {
+        toast({
+          status: "error",
+          position: "bottom",
+          description: "실패",
+        });})
+      .finally(() => {})
   }
 
   return (
@@ -297,9 +353,19 @@ export function PostView() {
         </Tooltip>
         <Spacer />
         {/* 수정 및 삭제 버튼 */}
-        {account.hasAccessMemberId(post.memberId) && (
+        {account.isAdmin() && (
           <Box>
             <Box align={"left"} my={10}>
+
+              {toggle === "x" && <Button
+                onClick= {handleMdPickPush}>
+                Push
+              </Button>}
+              {toggle === "o" && <Button
+                onClick={handleMdPickPop}>
+                Pop
+              </Button>}
+
               <Button onClick={() => navigate(`/post/${postId}/edit`)}>
                 <FontAwesomeIcon icon={faPenToSquare} />
                 <Text display={{ base: "none", lg: "block" }} ml={1}>

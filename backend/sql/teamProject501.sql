@@ -163,3 +163,11 @@ FROM post p
          LEFT JOIN likes l2 ON p.postid = l2.postid
          JOIN likes l ON p.postid = l.postid
 where l.memberid = 101;
+
+SELECT *
+FROM post;
+
+
+SELECT *
+FROM likes;
+

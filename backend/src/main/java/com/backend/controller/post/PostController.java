@@ -58,6 +58,7 @@ public class PostController {
         return postService.mdlist(post);
     }
 
+
     // 게시글 Top 3 인기글 목록 Controller
     @GetMapping("list/postListOfBest")
     public List<Post> postListOfBest() {
@@ -114,5 +115,36 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     public Map<String, Object> postLike(@RequestBody Map<String, Object> like, Authentication authentication) {
         return postService.postLike(like, authentication);
+    }
+
+    // home mdpick list
+    @GetMapping("mdPickList")
+    public Map<String, Object> postMdPickList(Map<String, Object> post) {
+        return postService.mdPickList(post);
+    }
+
+    // mdPick push Controller
+    @PostMapping("{postId}/push")
+    public ResponseEntity postMdPickPush(@PathVariable Integer postId) {
+            postService.mdPickPush(postId);
+            return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("{postId}/pop")
+    public ResponseEntity postMdPickPop(@PathVariable Integer postId) {
+            postService.mdPickPop(postId);
+            return ResponseEntity.ok().build();
+    }
+
+
+
+    @GetMapping("{postId}/getMdPick")
+    public ResponseEntity getMdPick(@PathVariable Integer postId) {
+        String getMdPick = postService.getMdPick(postId);
+        if(getMdPick != null) {
+            return ResponseEntity.ok(getMdPick);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

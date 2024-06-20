@@ -1,54 +1,216 @@
 import {
+  Box,
   Button,
   Card,
   CardBody,
   CardFooter,
-  Center,
+  Center, Flex, Grid, GridItem,
   Heading,
   Image,
-  Stack,
-  Text,
+  Stack, StackDivider,
+  Text, VStack,
 } from "@chakra-ui/react";
-import React from "react";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import React, {useContext, useEffect, useState} from "react";
+import {faArrowRight, faCaretRight} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons/faArrowLeft";
+import {useNavigate} from "react-router-dom";
+import {LoginContext} from "../component/LoginProvider.jsx";
+import axios from "axios";
 
 export function LobbyMdList() {
+
+  const [mdPost, setMdPost] = useState([]);
+  const [prevPosts, setPrevPosts] = useState(0);
+  const [nextPosts, setNextPosts] = useState(1);
+  const navigate = useNavigate();
+  const account = useContext(LoginContext);
+
+  useEffect(() => {
+    axios.get("/api/post/mdPickList")
+      .then(res => {
+        setMdPost(res.data.post);
+      })
+      .catch(err => console.log(err))
+      .finally(() => {});
+  }, []);
+
   return (
     <>
       <Center>
+        <Button onClick={() => {
+          if(nextPosts > 1){
+          setNextPosts(nextPosts  - 1);
+          setPrevPosts(prevPosts - 1)}
+          }
+        }>
         <FontAwesomeIcon icon={faArrowLeft} fontSize="2rem" />
+        </Button>
         <Card
           direction={{ base: "column", sm: "row" }}
           overflow="hidden"
           variant="outline"
-          maxW="50%"
+          maxW="100%"
           justifyContent="center"
         >
-          <Image
-            objectFit="cover"
-            maxW={{ base: "100%", sm: "200px" }}
-            src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
-            alt="Caffe Latte"
-          />
           <Stack>
             <CardBody>
-              <Heading size="md">The perfect latte</Heading>
-              <Text py="2">
-                Caffè latte is a coffee beverage of Italian origin made with
-                espresso and steamed milk.
-              </Text>
+              <Heading size="md"></Heading>
+              {mdPost.length > 0 && (
+                <VStack
+                  divider={<StackDivider borderColor={"lightgray"} />}
+                  my={"2rem"}
+                  spacing={"2rem"}
+                  w={{ base: "720px", lg: "960px" }}
+                >
+                  {mdPost.slice(prevPosts, nextPosts).map((post) => (
+                    <Box
+                      w={"720px"}
+                      key={post.postId}
+                      onClick={() => navigate(`/post/${post.postId}`)}
+                    >
+                      <Box>
+                        <Grid
+                          w={"720px"}
+                          h={"224px"}
+                          templateColumns={"repeat(9, 1fr)"}
+                          templateRows={"1fr 1fr 5fr"}
+                          _hover={{ bgColor: "beige" }}
+                          cursor={"pointer"}
+                        >
+                          <GridItem
+                            colSpan={9}
+                            rowSpan={1}
+                            alignContent={"center"}
+                            whiteSpace={"nowrap"}
+                            borderY={"1px solid lightgray"}
+                          >
+                            <Flex pl={3}>
+                              <Text
+                                display={{ base: "none", lg: "block" }}
+                                mr={1}
+                                fontSize={"xl"}
+                                fontWeight={"bold"}
+                              >
+                                제목 <FontAwesomeIcon icon={faCaretRight} />
+                              </Text>
+                              <Text
+                                overflow={"hidden"}
+                                textOverflow={"ellipsis"}
+                                fontSize={"xl"}
+                                fontWeight={"bold"}
+                              >
+                                타이틀 {post.title}
+                              </Text>
+                            </Flex>
+                          </GridItem>
+                          <GridItem colSpan={3} rowSpan={1} alignContent={"center"}>
+                            <Flex pl={3}>
+                              <Text display={{ base: "none", lg: "block" }} mr={1}>
+                                작성자 <FontAwesomeIcon icon={faCaretRight} />
+                              </Text>
+                              <Text overflow={"hidden"} textOverflow={"ellipsis"}>
+                                닉네임 {post.nickName}
+                              </Text>
+                            </Flex>
+                          </GridItem>
+                          <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
+                            <Flex pl={3}>
+                              <Text display={{ base: "none", lg: "block" }} mr={1}>
+                                조회수 <FontAwesomeIcon icon={faCaretRight} />
+                              </Text>
+                              <Text>{post.view}</Text>
+                            </Flex>
+                          </GridItem>
+                          <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
+                            <Flex pl={3}>
+                              <Text display={{ base: "none", lg: "block" }} mr={1}>
+                                좋아요 <FontAwesomeIcon icon={faCaretRight} />
+                              </Text>
+                              <Text>{post.likeCount}</Text>
+                            </Flex>
+                          </GridItem>
+                          <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
+                            <Flex pl={3}>
+                              <Text display={{ base: "none", lg: "block" }} mr={1}>
+                                댓글 <FontAwesomeIcon icon={faCaretRight} />
+                              </Text>
+                              <Text>{post.commentCount}</Text>
+                            </Flex>
+                          </GridItem>
+                          <GridItem
+                            colSpan={2}
+                            rowSpan={1}
+                            alignContent={"center"}
+                            borderY={"1px solid lightgray"}
+                          >
+                            <Flex pl={3}>
+                              <Text display={{ base: "none", lg: "block" }} mr={1}>
+                                썸네일
+                              </Text>
+                            </Flex>
+                          </GridItem>
+                          <GridItem
+                            colSpan={7}
+                            rowSpan={1}
+                            alignContent={"center"}
+                            overflow={"hidden"}
+                            textOverflow={"ellipsis"}
+                            whiteSpace={"nowrap"}
+                            borderY={"1px solid lightgray"}
+                          >
+                            <Box pl={3}>
+                              <Flex>
+                                <Text display={{ base: "none", lg: "block" }} mr={1}>
+                                  내용 <FontAwesomeIcon icon={faCaretRight} />{" "}
+                                </Text>
+                                <Box
+                                  maxW={"560px"}
+                                  textAlign={"start"}
+                                  overflow={"hidden"}
+                                  textOverflow={"ellipsis"}
+                                  display={"-webkit-box"}
+                                  css={{
+                                    "-webkit-line-clamp": "4",
+                                    "-webkit-box-orient": "vertical",
+                                    wordBreak: "break-word",
+                                    whiteSpace: "pre-wrap",
+                                  }}
+                                >
+                                  {post.content}
+                                </Box>
+                              </Flex>
+                              <Text textAlign={"left"} mt={"1rem"} color={"lightgray"}>
+                                {post.createDate}
+                              </Text>
+                            </Box>
+                          </GridItem>
+                        </Grid>
+                      </Box>
+                    </Box>
+                  ))}
+                </VStack>
+              )}
             </CardBody>
 
             <CardFooter>
-              <Button variant="solid" colorScheme="blue">
-                Buy Latte
-              </Button>
+
             </CardFooter>
           </Stack>
         </Card>
-        <FontAwesomeIcon icon={faArrowRight} fontSize="2rem" />
+        <Button onClick={() => {
+          if(nextPosts < 5) {
+          setNextPosts(nextPosts + 1);
+          setPrevPosts(prevPosts + 1)}
+          if(nextPosts === 5) {
+            setNextPosts(1);
+            setPrevPosts(0);
+          }
+          }
+        }>
+          <FontAwesomeIcon icon={faArrowRight} fontSize="2rem" />
+        </Button>
+
       </Center>
     </>
   );
