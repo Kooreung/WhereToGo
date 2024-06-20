@@ -69,10 +69,16 @@ public interface MemberMapper {
             """)
     int update(Member member);
 
-    @Delete("""
-            DELETE FROM member
-            where memberid = #{memberId}
-            """)
+    @Update("""
+            UPDATE member
+            SET email = null,
+                password = '1',
+                name = '탈퇴한회원',
+                gender = null,
+                birth = null,
+                
+            WHERE email = #{email}
+                        """)
     int deleteByid(Integer memberId);
 
     @Insert("""
