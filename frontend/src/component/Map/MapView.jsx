@@ -31,7 +31,6 @@ const KakaoMapSearch = () => {
   const mapRef = useRef(null);
   const kakaoMapAppKey = import.meta.env.VITE_KAKAO_MAP_APP_KEY;
   const [places, setPlaces] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
   const [map, setMap] = useState(null);
   const [ps, setPs] = useState(null);
 
@@ -93,52 +92,46 @@ const KakaoMapSearch = () => {
     }
   }, [map, places]);
 
-  // useEffect(() => {
-  //   if (map) {
-  //     polylines.forEach((polyline) => polyline.setMap(null));
-  //
-  //     if (selectedPlaces.length > 1) {
-  //       const bounds = new window.kakao.maps.LatLngBounds();
-  //       const newPolylines = selectedPlaces.map((place, index) => {
-  //         if (index === selectedPlaces.length - 1) return null;
-  //         const polyline = new window.kakao.maps.Polyline({
-  //           map: map,
-  //           path: [
-  //             new window.kakao.maps.LatLng(
-  //               selectedPlaces[index].y,
-  //               selectedPlaces[index].x,
-  //             ),
-  //             new window.kakao.maps.LatLng(
-  //               selectedPlaces[index + 1].y,
-  //               selectedPlaces[index + 1].x,
-  //             ),
-  //           ],
-  //           strokeWeight: 3,
-  //           strokeColor: "#FF0000",
-  //           strokeOpacity: 0.7,
-  //           strokeStyle: "solid",
-  //         });
-  //         bounds.extend(
-  //           new window.kakao.maps.LatLng(
-  //             selectedPlaces[index].y,
-  //             selectedPlaces[index].x,
-  //           ),
-  //         );
-  //         bounds.extend(
-  //           new window.kakao.maps.LatLng(
-  //             selectedPlaces[index + 1].y,
-  //             selectedPlaces[index + 1].x,
-  //           ),
-  //         );
-  //         return polyline;
-  //       });
-  //       setPolylines(newPolylines.filter((polyline) => polyline !== null));
-  //       map.setBounds(bounds);
-  //     } else {
-  //       setPolylines([]);
-  //     }
-  //   }
-  // }, [map, selectedPlaces]);
+  useEffect(() => {
+    if (map) {
+      polylines.forEach((polyline) => polyline.setMap(null));
+
+      if (places.length > 1) {
+        const bounds = new window.kakao.maps.LatLngBounds();
+
+        const newPolylines = places.map((place, index) => {
+          if (index === places.length - 1) return null;
+          const path = [
+            new window.kakao.maps.LatLng(
+              places[index].latitude,
+              places[index].longitude,
+            ),
+            new window.kakao.maps.LatLng(
+              places[index + 1].latitude,
+              places[index + 1].longitude,
+            ),
+          ];
+
+          const polyline = new window.kakao.maps.Polyline({
+            map: map,
+            path,
+            strokeWeight: 3,
+            strokeColor: "#FF0000",
+            strokeOpacity: 1,
+            strokeStyle: "shortdash",
+          });
+
+          bounds.extend(path[0]);
+          bounds.extend(path[1]);
+          return polyline;
+        });
+        setPolylines(newPolylines.filter((polyline) => polyline !== null));
+        map.setBounds(bounds);
+      } else {
+        setPolylines([]);
+      }
+    }
+  }, [map, places]);
 
   return (
     <Box>
