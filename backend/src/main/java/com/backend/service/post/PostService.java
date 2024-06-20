@@ -25,6 +25,13 @@ public class PostService {
     @Autowired
     private HttpServletRequest request;
 
+    // 게시글 추가 | 작성 서비스
+    public Integer add(Post post, Authentication authentication) {
+        post.setMemberId(Integer.valueOf(authentication.getName()));
+        postMapper.insert(post);
+        return post.getPostId();
+    }
+
     // 게시글 작성 시 제목, 내용 공백 확인
     public boolean validate(Post post) {
         if (post.getTitle() == null || post.getTitle().isBlank()) {
@@ -36,13 +43,6 @@ public class PostService {
         return true;
     }
 
-    // 게시글 추가 서비스
-    public Integer add(Post post, Authentication authentication) {
-        post.setMemberId(Integer.valueOf(authentication.getName()));
-        postMapper.insert(post);
-        return post.getPostId();
-    }
-
     // 게시글 조회 서비스
     public Map<String, Object> get(Integer postId, Authentication authentication) {
         // 조회수 증가
@@ -52,12 +52,11 @@ public class PostService {
             session.setAttribute("lastViewTime_" + postId, Instant.now());
         }
         Post post = postMapper.selectById(postId);
+
         Map<String, Object> result = new HashMap<>();
-
-
         Map<String, Object> like = new HashMap<>();
 
-//        로그인안하면 빈하트 로그인하면 좋아요 한 게시물 하트
+        // 로그인 안하면 빈 하트 표기, 로그인 하면 좋아요 한 게시물 하트 표기
         if (authentication == null) {
             like.put("like", false);
         } else {
@@ -65,11 +64,12 @@ public class PostService {
             like.put("like", c == 1);
         }
 
-//        게시물 조회시 좋아요 카운트 전송
+        // 게시물 조회 시 좋아요 카운트 전송
         like.put("count", postMapper.selectCountLikeByBoardId(postId));
         result.put("like", like);
         result.put("post", post);
 
+        // 게시물 조회 시 댓글 수 카운트 전송
         int commentCount = postMapper.selectCountCommentByBoardId(postId);
         result.put("commentCount", commentCount);
 
@@ -91,15 +91,14 @@ public class PostService {
         }
     }
 
-    // 게시글 리스트 서비스
+    // 게시글 목록 서비스
     public Map<String, Object> list(Integer page, String searchType, String searchKeyword) {
-        // 페이징 내용
         Map pageInfo = new HashMap();
 
         Integer countAllPost = postMapper.countAllPost(searchType, searchKeyword);
         Integer offset = (page - 1) * 5;
-        Integer lastPageNumber = (countAllPost - 1) / 10 + 1;
-        Integer leftPageNumber = (page - 1) / 10 * 10 + 1;
+        Integer lastPageNumber = (countAllPost - 1) / 5 + 1;
+        Integer leftPageNumber = ((page - 1) / 10) * 10 + 1;
         Integer rightPageNumber = leftPageNumber + 9;
 
         rightPageNumber = Math.min(rightPageNumber, lastPageNumber);
@@ -121,7 +120,6 @@ public class PostService {
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
 
-
         return Map.of("pageInfo", pageInfo, "postList", postMapper.selectAllPost(offset, searchType, searchKeyword));
     }
 
@@ -130,7 +128,7 @@ public class PostService {
         return postMapper.selectPostOfBest();
     }
 
-    // 게시글 선택 장소 목록 서비스
+    // 게시글에서 선택한 장소 목록 서비스
     public List<Place> placeList(Integer postId) {
         return postMapper.getPlaceList(postId);
     }
@@ -165,10 +163,43 @@ public class PostService {
         result.put("count", postMapper.selectCountLikeByBoardId(postId));
         return result;
     }
+
     //좋아요 목록 서비스
-    public List<Post> getLikeAllList(Integer memberId) {
-        return postMapper.selectLikeList(memberId);
+    public Map<String, Object> getLikeAllList(Integer memberId, Integer page, String searchType, String searchKeyword) {
+        // 페이징 내용
+        Map pageInfo = new HashMap();
+
+        Integer countAllPost = postMapper.countAllLikePost(memberId, searchType, searchKeyword);
+        System.out.println(countAllPost);
+        Integer offset = (page - 1) * 5;
+        Integer lastPageNumber = (countAllPost - 1) / 5 + 1;
+        Integer leftPageNumber = (page - 1) / 10 * 10 + 1;
+        Integer rightPageNumber = leftPageNumber + 9;
+
+        rightPageNumber = Math.min(rightPageNumber, lastPageNumber);
+        leftPageNumber = rightPageNumber - 9;
+        leftPageNumber = Math.max(leftPageNumber, 1);
+
+        Integer prevPageNumber = leftPageNumber - 1;
+        Integer nextPageNumber = rightPageNumber + 1;
+
+        if (prevPageNumber > 0) {
+            pageInfo.put("prevPageNumber", prevPageNumber);
+        }
+        if (nextPageNumber <= lastPageNumber) {
+            pageInfo.put("nextPageNumber", nextPageNumber);
+        }
+
+        pageInfo.put("currentPageNumber", page);
+        pageInfo.put("lastPageNumber", lastPageNumber);
+        pageInfo.put("leftPageNumber", leftPageNumber);
+        pageInfo.put("rightPageNumber", rightPageNumber);
+
+        System.out.println(countAllPost);
+        return Map.of("pageInfo", pageInfo, "postList", postMapper.selectLikeList(memberId, offset, searchType, searchKeyword));
+
     }
+
     //md 게시물 목록 서비스
     public Map<String, Object> mdlist(Map<String, Object> post) {
         List<Post> posts = postMapper.selectMdPostList(post);

@@ -20,7 +20,7 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import SmartEditor from "../../component/SmartEditor.jsx";
-import MapAdd from "../../MapAdd.jsx";
+import MapAdd from "../../component/Map/MapAdd.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 
 function PostWrite() {
@@ -143,15 +143,6 @@ function PostWrite() {
           {/*<option value={"서울09"}>영등포/여의도/강서</option>*/}
           {/*<option value={"서울10"}>구로/관악/동작</option>*/}
         </Box>
-        {/* Todo 장소 내용 표기 필요 */}
-        {/*<Box*/}
-        {/*  w={{ base: "720px", lg: "1080px" }}*/}
-        {/*  h={"160px"}*/}
-        {/*  bg={"lightgray"}*/}
-        {/*  my={"32px"}*/}
-        {/*>*/}
-        {/*  장소 선택*/}
-        {/*</Box>*/}
         <Box w={"576px"} bg={"lightgray"} my={"32px"}>
           <MapAdd
             selectedPlaces={selectedPlaces}

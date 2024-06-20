@@ -64,10 +64,21 @@ public class PostController {
         return postService.postListOfBest();
     }
 
-    // 게시글 선택 장소 목록 Controller
+    // 게시글에서 선택한 장소 목록 Controller
     @GetMapping("{postId}/place")
     public List<Place> postPlace(@PathVariable Integer postId) {
         return postService.placeList(postId);
+    }
+
+    // 내가 좋아요한 게시글 목록 Controller
+    @GetMapping("likeList")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Map<String, Object>> getLikeList(Authentication authentication, @RequestParam(defaultValue = "1") Integer page, @RequestParam(value = "type", required = false) String searchType,
+                                                           @RequestParam(value = "keyword", defaultValue = "") String searchKeyword) {
+        Integer memberId = Integer.valueOf(authentication.getName());
+        System.out.println("searchKeyword = " + searchKeyword);
+        Map<String, Object> likedPosts = postService.getLikeAllList(memberId, page, searchType, searchKeyword);
+        return ResponseEntity.ok(likedPosts);
     }
 
     // 게시글 삭제 Controller
@@ -103,14 +114,5 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     public Map<String, Object> postLike(@RequestBody Map<String, Object> like, Authentication authentication) {
         return postService.postLike(like, authentication);
-    }
-
-    // 내가 좋아요한 게시글 목록 Controller
-    @GetMapping("likeList")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<Post>> getLikeList(Authentication authentication) {
-        Integer memberId = Integer.valueOf(authentication.getName());
-        List<Post> likedPosts = postService.getLikeAllList(memberId);
-        return ResponseEntity.ok(likedPosts);
     }
 }
