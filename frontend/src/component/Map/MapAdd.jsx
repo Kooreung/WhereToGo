@@ -55,6 +55,10 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
         const map = new window.kakao.maps.Map(container, options);
         setMap(map);
 
+        // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+        const zoomControl = new kakao.maps.ZoomControl();
+        map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
         const placesService = new window.kakao.maps.services.Places();
         setPs(placesService);
       })
@@ -103,7 +107,6 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
       });
       setSelectedMarkers(newMarkers);
       map.setBounds(bounds);
-      console.log(1);
     } else if (map && selectedPlaces.length == 0 && places.length > 0) {
       setSelectedMarkers([]);
       selectedMarkers.forEach((customOverlay) => customOverlay.setMap(null));
@@ -122,7 +125,6 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
       });
       setSearchedMarkers(newMarkers);
       map.setBounds(bounds);
-      console.log(2);
     }
   }, [map, selectedPlaces]);
 
@@ -149,8 +151,8 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
             ],
             strokeWeight: 3,
             strokeColor: "#FF0000",
-            strokeOpacity: 0.7,
-            strokeStyle: "solid",
+            strokeOpacity: 1,
+            strokeStyle: "shortdash",
           });
           bounds.extend(
             new window.kakao.maps.LatLng(
@@ -203,9 +205,17 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
 
   // 장소 선택 시
   const selectPlace = (place) => {
-    if (selectedPlaces.length < 5) {
+    if (selectedPlaces.length === 0) {
       setSelectedPlaces([...selectedPlaces, place]);
       setSearchTerm("");
+    }
+    if (selectedPlaces.length < 5) {
+      if (selectedPlaces.includes(place)) {
+        alert("한 장소는 한 번만 선택 가능합니다.");
+      } else {
+        setSelectedPlaces([...selectedPlaces, place]);
+        setSearchTerm("");
+      }
     } else {
       alert("최대 5개의 장소만 선택할 수 있습니다.");
     }
