@@ -21,6 +21,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import styled from "styled-components";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import CommentComponent from "../../component/Comment/CommentComponent.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -33,6 +34,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-regular-svg-icons";
 import MapView from "../../component/Map/MapView.jsx";
+
+const Viewer = styled.div`
+  width: calc(50% - 40px);
+  height: 400px;
+  padding: 20px;
+  margin-top: 20px;
+  border: 2px solid gray;
+`;
 
 export function PostView() {
   const { postId } = useParams();
@@ -320,13 +329,13 @@ export function PostView() {
       </Flex>
       <Box
         w={"720px"}
-        h={"360px"}
         bg={"lightgray"}
         my={"32px"}
         p={"1rem"}
         whiteSpace={"pre-wrap"}
       >
-        <Box>{post.content}</Box>
+        <div dangerouslySetInnerHTML={{ __html: post.content }} />
+        {/*<Box>{post.content}</Box>*/}
       </Box>
 
       <Divider border={"1px solid lightGray"} w={"720px"} />
@@ -363,6 +372,21 @@ export function PostView() {
           </Box>
         )}
         {/* 수정 및 삭제 버튼 */}
+        {account.isAdmin() && (
+          <Box>
+            <Box align={"left"} my={10}>
+
+              {toggle === "x" && <Button
+                onClick= {handleMdPickPush}>
+                Push
+              </Button>}
+              {toggle === "o" && <Button
+                onClick={handleMdPickPop}>
+                Pop
+              </Button>}
+            </Box>
+          </Box>
+        )}
         {account.hasAccessMemberId(post.memberId) ||
           (account.isAdmin() && (
             <Box>
@@ -381,7 +405,8 @@ export function PostView() {
                 </Button>
               </Box>
             </Box>
-          ))}
+        ))}
+
         {/* 목록 */}
         <Button onClick={() => navigate("/post/list")}>
           <FontAwesomeIcon icon={faList} />

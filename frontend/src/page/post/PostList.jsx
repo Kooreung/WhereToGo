@@ -79,6 +79,12 @@ function PostList() {
     navigate(`/post/list?${searchParams}`);
   }
 
+  function parseHtmlToText(htmlString) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlString, "text/html");
+    return doc.body.textContent || "";
+  }
+
   return (
     <Box align="center" justify="center" overflowX={"hidden"}>
       <PostListOfBest />
@@ -215,7 +221,11 @@ function PostList() {
                             whiteSpace: "pre-wrap",
                           }}
                         >
-                          {post.content}
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: parseHtmlToText(post.content),
+                            }}
+                          />
                         </Box>
                       </Flex>
                       <Text textAlign={"left"} mt={"1rem"} color={"lightgray"}>

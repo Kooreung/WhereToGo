@@ -71,6 +71,11 @@ public class PostController {
         return postService.placeList(postId);
     }
 
+    @GetMapping("place/{selectPlaces}")
+    public List<Place> postPlaceData(@PathVariable String selectPlaces) {
+        return postService.placeListData(selectPlaces);
+    }
+
     // 내가 좋아요한 게시글 목록 Controller
     @GetMapping("likeList")
     @PreAuthorize("isAuthenticated()")
@@ -126,22 +131,21 @@ public class PostController {
     // mdPick push Controller
     @PostMapping("{postId}/push")
     public ResponseEntity postMdPickPush(@PathVariable Integer postId) {
-            postService.mdPickPush(postId);
-            return ResponseEntity.ok().build();
+        postService.mdPickPush(postId);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("{postId}/pop")
     public ResponseEntity postMdPickPop(@PathVariable Integer postId) {
-            postService.mdPickPop(postId);
-            return ResponseEntity.ok().build();
+        postService.mdPickPop(postId);
+        return ResponseEntity.ok().build();
     }
-
 
 
     @GetMapping("{postId}/getMdPick")
     public ResponseEntity getMdPick(@PathVariable Integer postId) {
         String getMdPick = postService.getMdPick(postId);
-        if(getMdPick != null) {
+        if (getMdPick != null) {
             return ResponseEntity.ok(getMdPick);
         } else {
             return ResponseEntity.notFound().build();
