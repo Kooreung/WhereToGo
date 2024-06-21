@@ -107,7 +107,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
         bounds.extend(customOverlay.getPosition());
         return customOverlay;
       });
-      setSearchedMarkers(newMarkers);
+      setSelectedMarkers(newMarkers);
       map.setBounds(bounds);
       console.log(1);
     } else if (map && selectedPlaces.length == 0 && places.length > 0) {
@@ -218,6 +218,22 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   const removePlace = (index) => {
     const newSelectedPlaces = selectedPlaces.filter((_, i) => i !== index);
     setSelectedPlaces(newSelectedPlaces);
+
+    // 해당 인덱스의 마커 삭제
+    if (selectedMarkers[index]) {
+      selectedMarkers[index].setMap(null);
+    }
+
+    // selectedMarkers 업데이트
+    const newSelectedMarkers = selectedMarkers.filter((_, i) => i !== index);
+    setSelectedMarkers(newSelectedMarkers);
+
+    // SearchedMarkers 업데이트
+    if (searchedMarkers[index]) {
+      searchedMarkers[index].setMap(null);
+    }
+    const newSearchedMarkers = searchedMarkers.filter((_, i) => i !== index);
+    setSearchedMarkers(newSearchedMarkers);
   };
 
   const movePlaceUp = (index) => {
@@ -309,7 +325,13 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
               <Button onClick={() => movePlaceDown(index)}>
                 <FontAwesomeIcon icon={faCaretDown} />
               </Button>
-              <Button onClick={() => removePlace(index)}>삭제하기</Button>
+              <Button
+                onClick={() => {
+                  removePlace(index);
+                }}
+              >
+                삭제하기
+              </Button>
             </Flex>
           ))}
         </Box>
