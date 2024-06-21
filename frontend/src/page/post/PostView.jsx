@@ -361,6 +361,7 @@ export function PostView() {
           </Button>
         </Tooltip>
         <Spacer />
+        {/* PUSH & POP 버튼 */}
         {account.isAdmin() && (
           <Box>
             <Box align={"left"} my={10}>
@@ -372,21 +373,6 @@ export function PostView() {
           </Box>
         )}
         {/* 수정 및 삭제 버튼 */}
-        {account.isAdmin() && (
-          <Box>
-            <Box align={"left"} my={10}>
-
-              {toggle === "x" && <Button
-                onClick= {handleMdPickPush}>
-                Push
-              </Button>}
-              {toggle === "o" && <Button
-                onClick={handleMdPickPop}>
-                Pop
-              </Button>}
-            </Box>
-          </Box>
-        )}
         {account.hasAccessMemberId(post.memberId) ||
           (account.isAdmin() && (
             <Box>
@@ -405,7 +391,7 @@ export function PostView() {
                 </Button>
               </Box>
             </Box>
-        ))}
+          ))}
 
         {/* 목록 */}
         <Button onClick={() => navigate("/post/list")}>
