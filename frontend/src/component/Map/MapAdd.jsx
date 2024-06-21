@@ -34,7 +34,8 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   const [map, setMap] = useState(null);
   const [ps, setPs] = useState(null);
 
-  const [markers, setMarkers] = useState([]);
+  const [searchedMarkers, setSearchedMarkers] = useState([]);
+  const [selectedMarkers, setSelectedMarkers] = useState([]);
   const [polylines, setPolylines] = useState([]);
 
   useEffect(() => {
@@ -60,12 +61,13 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
       });
   }, [kakaoMapAppKey]);
 
+  // 검색 시 생성되는 마커
   useEffect(() => {
     if (map && places.length > 0) {
       const bounds = new window.kakao.maps.LatLngBounds();
 
-      markers.forEach((marker) => marker.setMap(null));
-      setMarkers([]);
+      setSearchedMarkers([]);
+      searchedMarkers.forEach((marker) => marker.setMap(null));
 
       const newMarkers = places.map((place) => {
         const marker = new window.kakao.maps.Marker({
@@ -76,15 +78,16 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
         bounds.extend(marker.getPosition());
         return marker;
       });
-      setMarkers(newMarkers);
+      setSearchedMarkers(newMarkers);
       map.setBounds(bounds);
     }
-  }, [map, places]);
+  }, [map, places, selectedPlaces]);
 
+  // 추가하기 버튼 클릭 시 생성되는 커스텀 마커
   useEffect(() => {
     if (map && selectedPlaces.length > 0) {
-      // 이전에 생성된 커스텀 마커들을 제거
-      markers.forEach((customOverlay) => customOverlay.setMap(null));
+      setSelectedMarkers([]);
+      selectedMarkers.forEach((customOverlay) => customOverlay.setMap(null));
 
       const bounds = new window.kakao.maps.LatLngBounds();
       const newMarkers = selectedPlaces.map((place, index) => {
@@ -99,11 +102,8 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
         bounds.extend(customOverlay.getPosition());
         return customOverlay;
       });
-      setMarkers(newMarkers);
+      setSearchedMarkers(newMarkers);
       map.setBounds(bounds);
-    }
-    if (map && selectedPlaces.length == 0) {
-      markers.forEach((customOverlay) => customOverlay.setMap(null));
     }
   }, [map, selectedPlaces]);
 
@@ -182,14 +182,13 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
       setSelectedPlaces([...selectedPlaces, place]);
       setSearchTerm("");
     } else {
-      alert("최대 3개의 장소만 선택할 수 있습니다.");
+      alert("최대 5개의 장소만 선택할 수 있습니다.");
     }
   };
 
   const removePlace = (index) => {
     const newSelectedPlaces = selectedPlaces.filter((_, i) => i !== index);
     setSelectedPlaces(newSelectedPlaces);
-    customOverlay.setMap(null);
   };
 
   const movePlaceUp = (index) => {
