@@ -297,24 +297,25 @@ export function PostView() {
         </Tooltip>
         <Spacer />
         {/* 수정 및 삭제 버튼 */}
-        {account.hasAccessMemberId(post.memberId) && (
-          <Box>
-            <Box align={"left"} my={10}>
-              <Button onClick={() => navigate(`/post/${postId}/edit`)}>
-                <FontAwesomeIcon icon={faPenToSquare} />
-                <Text display={{ base: "none", lg: "block" }} ml={1}>
-                  수정
-                </Text>
-              </Button>
-              <Button onClick={onModalOpenOfDelete}>
-                <FontAwesomeIcon icon={faTrash} />
-                <Text display={{ base: "none", lg: "block" }} ml={1}>
-                  삭제
-                </Text>
-              </Button>
+        {account.hasAccessMemberId(post.memberId) ||
+          (account.isAdmin() && (
+            <Box>
+              <Box align={"left"} my={10}>
+                <Button onClick={() => navigate(`/post/${postId}/edit`)}>
+                  <FontAwesomeIcon icon={faPenToSquare} />
+                  <Text display={{ base: "none", lg: "block" }} ml={1}>
+                    수정
+                  </Text>
+                </Button>
+                <Button onClick={onModalOpenOfDelete}>
+                  <FontAwesomeIcon icon={faTrash} />
+                  <Text display={{ base: "none", lg: "block" }} ml={1}>
+                    삭제
+                  </Text>
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        )}
+          ))}
         {/* 목록 */}
         <Button onClick={() => navigate("/post/list")}>
           <FontAwesomeIcon icon={faList} />
