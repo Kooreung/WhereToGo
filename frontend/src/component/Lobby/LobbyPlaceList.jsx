@@ -90,6 +90,7 @@ export function LobbyPlaceList() {
               transform: `translateX(${positionX}px)`,
               transition: "transform 0.5s ease",
             }}
+            cursor="pointer"
           >
             {places.map((place, index) => (
               <WrapItem key={index} border={"5px solid blue"}>

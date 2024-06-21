@@ -113,6 +113,7 @@ public interface PostMapper {
     @Select("""
             SELECT p.postid,
                    p.title,
+                p.content,
                    p.view,
                    p.createDate,
                    m.nickName,
@@ -123,7 +124,7 @@ public interface PostMapper {
                      JOIN member m ON p.memberid = m.memberid
                      LEFT JOIN comment c ON p.postid = c.postid
                      LEFT JOIN likes l ON p.postid = l.postid
-            GROUP BY p.postid, p.title, p.view, m.nickName
+            GROUP BY p.postid, p.title, p.view, m.nickName,p.content
             LIMIT 3
             """)
     List<Post> selectPostOfBest();
