@@ -35,14 +35,14 @@ export function MemberFindPassword() {
         toast({
           status: "success",
           description: "임시 비밀번호가 발급되었습니다.",
-          position: "top",
+          position: "bottom",
         });
       })
       .catch(() => {
         toast({
-          status: "warning",
+          status: "error",
           description: "해당 이메일이 존재하지 않습니다.",
-          position: "top",
+          position: "bottom",
         });
       });
   }
@@ -56,22 +56,22 @@ export function MemberFindPassword() {
         toast({
           status: "success",
           description: "인증 코드가 발송되었습니다.",
-          position: "top",
+          position: "bottom",
         });
         onOpen(); // 모달 열기는 이메일이 정상적으로 처리된 후에만 실행
       })
       .catch((error) => {
         if (error.response && error.response.status === 404) {
           toast({
-            status: "warning",
+            status: "error",
             description: "해당 이메일이 존재하지 않습니다.",
-            position: "top",
+            position: "bottom",
           });
         } else {
           toast({
             status: "error",
             description: "서버 오류가 발생했습니다.",
-            position: "top",
+            position: "bottom",
           });
         }
       });
@@ -83,14 +83,14 @@ export function MemberFindPassword() {
       toast({
         status: "success",
         description: "인증 코드가 확인되었습니다.",
-        position: "top",
+        position: "bottom",
       });
     } else {
       setIsCodeValid(false);
       toast({
         status: "error",
         description: "인증 코드가 잘못되었습니다.",
-        position: "top",
+        position: "bottom",
       });
     }
   }

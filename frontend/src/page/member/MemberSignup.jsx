@@ -179,7 +179,7 @@ export function MemberSignup() {
       toast({
         description: "입력값을 확인해 주세요.",
         status: "error",
-        position: "top",
+        position: "bottom",
       });
       return;
     }
@@ -203,7 +203,7 @@ export function MemberSignup() {
         toast({
           description: "회원가입이 완료되었습니다.",
           status: "success",
-          position: "top",
+          position: "bottom",
         });
         navigate("/login");
       })
@@ -211,7 +211,7 @@ export function MemberSignup() {
         toast({
           description: "입력값을 확인해 주세요.",
           status: "error",
-          position: "top",
+          position: "bottom",
         });
       })
       .finally(() => setIsLoading(false));

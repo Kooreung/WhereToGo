@@ -48,16 +48,16 @@ export function MemberInfo(props) {
       .catch((err) => {
         if (err.response.status === 404) {
           toast({
-            status: "warning",
+            status: "error",
             description: "존재하지 않는 회원입니다.",
-            position: "top",
+            position: "bottom",
           });
           navigate("/");
         } else if (err.response.status === 403) {
           toast({
             status: "error",
             description: "권한이 없습니다.",
-            position: "top",
+            position: "bottom",
           });
           navigate(-1);
         }
@@ -75,16 +75,16 @@ export function MemberInfo(props) {
         toast({
           status: "success",
           description: "회원 탈퇴하였습니다.",
-          position: "top",
+          position: "bottom",
         });
         account.logout();
         navigate("/");
       })
       .catch(() => {
         toast({
-          status: "warning",
+          status: "error",
           description: "탈퇴중 문제가 생겼습니다.",
-          position: "top",
+          position: "bottom",
         });
       });
   }
@@ -146,7 +146,6 @@ export function MemberInfo(props) {
               </FormControl>
             </ModalBody>
             <ModalFooter>
-              <Button onClick={onClose}>취소</Button>
               <Button
                 isLoading={isLoading}
                 colorScheme={"red"}
@@ -154,6 +153,7 @@ export function MemberInfo(props) {
               >
                 확인
               </Button>
+              <Button onClick={onClose}>취소</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>

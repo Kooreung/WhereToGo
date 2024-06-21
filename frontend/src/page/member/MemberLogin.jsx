@@ -35,7 +35,7 @@ export function MemberLogin() {
         toast({
           status: "success",
           description: "로그인 되었습니다.",
-          position: "top",
+          position: "bottom",
         });
         navigate("/");
       })
@@ -43,9 +43,9 @@ export function MemberLogin() {
         // localStorage 에서 토큰 정보 삭제
         account.logout();
         toast({
-          status: "warning",
+          status: "error",
           description: "이메일과 패스워드를 확인해주세요.",
-          position: "top",
+          position: "bottom",
         });
       })
       .finally(() => {});
