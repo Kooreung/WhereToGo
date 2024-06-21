@@ -39,10 +39,15 @@ export function LobbyMdList() {
     <>
       <Center>
         <Button onClick={() => {
-          if(nextPosts > 1){
-          setNextPosts(nextPosts  - 1);
+          if(nextPosts > 1) {
+          setNextPosts(nextPosts - 1);
           setPrevPosts(prevPosts - 1)}
+
+          if(nextPosts === 1) {
+            setNextPosts( mdPost.length);
+            setPrevPosts(mdPost.length - 1);
           }
+        }
         }>
         <FontAwesomeIcon icon={faArrowLeft} fontSize="2rem" />
         </Button>
@@ -54,6 +59,7 @@ export function LobbyMdList() {
           justifyContent="center"
         >
           <Stack>
+            {nextPosts >= 1 && nextPosts <= 3 && (
             <CardBody>
               <Heading size="md"></Heading>
               {mdPost.length > 0 && (
@@ -192,9 +198,24 @@ export function LobbyMdList() {
                 </VStack>
               )}
             </CardBody>
+            )}
+            {nextPosts >= 4 && nextPosts <= 5 && (
 
+            <CardBody>
+              <VStack
+                divider={<StackDivider borderColor={"lightgray"} />}
+                my={"2rem"}
+                spacing={"2rem"}
+                w={{ base: "720px", lg: "960px" }}
+              >
+                <Box>
+                  누르면 검색된 지역으로 가는 배너
+                </Box>
+              </VStack>
+            </CardBody>
+
+            )}
             <CardFooter>
-
             </CardFooter>
           </Stack>
         </Card>
