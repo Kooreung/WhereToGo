@@ -265,8 +265,8 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
         style={{
           borderRadius: "100%",
           backgroundColor: "white",
-          opacity: "0.75",
-          padding: "4px",
+          paddingLeft: "8px",
+          paddingRight: "8px",
           boxShadow: "0 0 0 4px white, 0 0 0 8px orange",
         }}
       >
