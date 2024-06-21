@@ -38,7 +38,9 @@ const KakaoMapSearch = () => {
   const [markers, setMarkers] = useState([]);
   const [polylines, setPolylines] = useState([]);
   const [distanceOverlay, setDistanceOverlay] = useState(null);
+  const [distancePartOverlay, setPartDistanceOverlay] = useState(null);
   let distance = 0;
+  let partDistance = 0;
 
   useEffect(() => {
     axios.get(`/api/post/${postId}/place`).then((res) => {
@@ -59,8 +61,11 @@ const KakaoMapSearch = () => {
         };
 
         const map = new window.kakao.maps.Map(container, options);
-
         setMap(map);
+
+        // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+        const zoomControl = new kakao.maps.ZoomControl();
+        map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
         const placesService = new window.kakao.maps.services.Places();
         setPs(placesService);
@@ -123,6 +128,12 @@ const KakaoMapSearch = () => {
         });
 
         distance += Math.round(polyline.getLength()); // 선의 총 거리를 계산합니다
+        partDistance = Math.round(polyline.getLength());
+
+        const partContent = renderToString(
+          <PartDistanceInfo distance={partDistance} />,
+        );
+        showPartDistance(partContent, path[1]);
 
         bounds.extend(path[0]);
         bounds.extend(path[1]);
@@ -139,8 +150,7 @@ const KakaoMapSearch = () => {
     }
   }, [map, places]);
 
-  // 마우스 드래그로 그려지고 있는 선의 총거리 정보를 표시하거
-  // 마우스 오른쪽 클릭으로 선 그리가 종료됐을 때 선의 정보를 표시하는 커스텀 오버레이를 생성하고 지도에 표시하는 함수입니다
+  // 선의 정보를 표시하는 커스텀 오버레이를 생성하고 지도에 표시하는 함수입니다
   function showDistance(content, position) {
     if (distanceOverlay) {
       distanceOverlay.setMap(null);
@@ -155,8 +165,49 @@ const KakaoMapSearch = () => {
       yAnchor: 0,
       zIndex: 3,
     });
-
     setDistanceOverlay(newDistanceOverlay);
+  }
+
+  // 선의 정보를 표시하는 커스텀 오버레이를 생성하고 지도에 표시하는 함수입니다
+  function showPartDistance(content, position) {
+    if (distanceOverlay) {
+      distanceOverlay.setMap(null);
+    }
+
+    // 커스텀 오버레이를 생성하고 지도에 표시합니다
+    const newPartDistanceOverlay = new kakao.maps.CustomOverlay({
+      map: map, // 커스텀오버레이를 표시할 지도입니다
+      content: content, // 커스텀오버레이에 표시할 내용입니다
+      position: position, // 커스텀오버레이를 표시할 위치입니다.
+      xAnchor: 1,
+      yAnchor: 2,
+      zIndex: 2,
+    });
+    setPartDistanceOverlay(newPartDistanceOverlay);
+  }
+
+  function PartDistanceInfo({ distance }) {
+    return (
+      <Box
+        style={{
+          border: "1px solid black",
+          borderRadius: "10px",
+          backgroundColor: "white",
+          opacity: "0.75",
+          paddingLeft: "8px",
+          paddingRight: "8px",
+        }}
+      >
+        <UnorderedList>
+          <Box>
+            <Text as="span" style={{ fontWeight: "bold" }}>
+              거리:{" "}
+            </Text>
+            <Badge style={{ color: "orange" }}>{distance}</Badge> m
+          </Box>
+        </UnorderedList>
+      </Box>
+    );
   }
 
   function DistanceInfo({ distance }) {
@@ -176,7 +227,7 @@ const KakaoMapSearch = () => {
           border: "1px solid black",
           borderRadius: "10px",
           backgroundColor: "white",
-          opacity: "0.75",
+          opacity: "0.9",
           paddingLeft: "8px",
           paddingRight: "8px",
         }}
@@ -186,21 +237,21 @@ const KakaoMapSearch = () => {
             <Text as="span" style={{ fontWeight: "bold" }}>
               총거리:{" "}
             </Text>
-            <Badge>{distance}</Badge> m
+            <Badge style={{ color: "orange" }}>{distance}</Badge> m
           </Box>
           <Box>
             <Text as="span" style={{ fontWeight: "bold" }}>
               도보:{" "}
             </Text>
             {walkHour > 0 && <Badge>{walkHour}시간 </Badge>}
-            <Badge>{walkMin}분</Badge>
+            <Badge style={{ color: "orange" }}>{walkMin}</Badge> 분
           </Box>
           <Box>
             <Text as="span" style={{ fontWeight: "bold" }}>
               자전거:{" "}
             </Text>
             {bicycleHour > 0 && <Badge>{bicycleHour}시간 </Badge>}
-            <Badge>{bicycleMin}분</Badge>
+            <Badge style={{ color: "orange" }}>{bicycleMin}</Badge> 분
           </Box>
         </UnorderedList>
       </Box>

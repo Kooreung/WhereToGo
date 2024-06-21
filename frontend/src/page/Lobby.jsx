@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Box, Button, Center, Flex, Input } from "@chakra-ui/react";
-import { GuideLineMediumBanner } from "../css/CustomStyles.jsx";
 import axios from "axios";
-import { LobbyMdList } from "./LobbyMdList.jsx";
-import { LobbyPlaceList } from "./LobbyPlaceList.jsx";
+import { LobbyMdList } from "../component/Lobby/LobbyMdList.jsx";
+import { LobbyPlaceList } from "../component/Lobby/LobbyPlaceList.jsx";
+import LobbyListOfBest from "../component/Lobby/LobbyListOfBest.jsx";
 
 function Lobby() {
   const [keyword, setKeyword] = useState("");
@@ -30,9 +30,9 @@ function Lobby() {
         회원 인기글
       </Box>
       <Flex direction={"column"} align={"center"} my={6}>
-        <Box {...GuideLineMediumBanner}></Box>
-        <Box {...GuideLineMediumBanner}></Box>
-        <Box {...GuideLineMediumBanner}></Box>
+        <Box>
+          <LobbyListOfBest />
+        </Box>
       </Flex>
       {/* TODO 다크/라이트 모드 추가 필요 */}
     </Box>

@@ -134,8 +134,34 @@ public class MemberService {
         return result;
     }
 
-    public List<Member> memberList() {
-        return mapper.selectAll();
+    public Map<String, Object> memberList(Integer page, String searchType, String keyword) {
+        Map pageInfo = new HashMap();
+        Integer countAll = mapper.countAllWithSearch(searchType, keyword);
+
+        Integer offset = (page - 1) * 10;
+        Integer lastPageNumber = (countAll - 1) / 10 + 1;
+        Integer leftPageNumber = (page - 1) / 10 * 10 + 1;
+        Integer rightPageNumber = leftPageNumber + 9;
+        rightPageNumber = Math.min(rightPageNumber, lastPageNumber);
+        leftPageNumber = rightPageNumber - 9;
+        leftPageNumber = Math.max(leftPageNumber, 1);
+        Integer prevPageNumber = leftPageNumber - 1;
+        Integer nextPageNumber = rightPageNumber + 1;
+
+        if (prevPageNumber > 0) {
+            pageInfo.put("prevPageNumber", prevPageNumber);
+        }
+        if (nextPageNumber <= lastPageNumber) {
+            pageInfo.put("nextPageNumber", nextPageNumber);
+        }
+
+        pageInfo.put("currentPageNumber", page);
+        pageInfo.put("lastPageNumber", lastPageNumber);
+        pageInfo.put("leftPageNumber", leftPageNumber);
+        pageInfo.put("rightPageNumber", rightPageNumber);
+
+        return Map.of("pageInfo", pageInfo,
+                "memberList", mapper.selectMemberAllPaging(offset, searchType, keyword));
     }
 
     public boolean hasAccessModify(Member member, Authentication authentication) {

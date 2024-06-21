@@ -133,6 +133,10 @@ public class PostService {
         return postMapper.getPlaceList(postId);
     }
 
+    public List<Place> placeListData(String selectPlaces) {
+        return postMapper.getPlaceListData(selectPlaces);
+    }
+
     // 게시글 수정 서비스
     public void edit(Post post) {
         postMapper.update(post);

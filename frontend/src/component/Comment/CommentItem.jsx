@@ -33,7 +33,7 @@ function CommentItem({ comment, isTransition, setIsTransition }) {
       .then((res) => {
         toast({
           status: "success",
-          position: "top",
+          position: "bottom",
           isClosable: true,
           description: "댓글 삭제 완료",
         });
@@ -70,8 +70,8 @@ function CommentItem({ comment, isTransition, setIsTransition }) {
               <ModalHeader>삭제 확인</ModalHeader>
               <ModalBody>삭제하시겠습니까?</ModalBody>
               <ModalFooter>
-                <Button onClick={onClose}>취소</Button>
                 <Button onClick={handleRemoveSubmit}>확인</Button>
+                <Button onClick={onClose}>취소</Button>
               </ModalFooter>
             </ModalContent>
           </Modal>

@@ -66,9 +66,9 @@ function MemberEdit(props) {
       })
       .catch(() => {
         toast({
-          status: "warning",
+          status: "error",
           description: "회원 정보 조회 중 문제가 발생하였습니다.",
-          position: "top",
+          position: "bottom",
         });
         navigate("/");
       });
@@ -116,7 +116,7 @@ function MemberEdit(props) {
         toast({
           status: "success",
           description: "회원 정보가 수정되었습니다.",
-          position: "top",
+          position: "bottom",
         });
         console.log("token", res.data.token);
         account.login(res.data.token);
@@ -126,7 +126,7 @@ function MemberEdit(props) {
         toast({
           status: "error",
           description: "회원 정보가 수정되지 않았습니다.",
-          position: "top",
+          position: "bottom",
         });
       })
       .finally(() => {
@@ -169,7 +169,7 @@ function MemberEdit(props) {
           toast({
             status: "info",
             description: "사용할 수 있는 별명입니다.",
-            position: "top",
+            position: "bottom",
           });
           setIsCheckedNickName(true);
         }
@@ -288,10 +288,10 @@ function MemberEdit(props) {
           <ModalHeader>기존 암호 확인</ModalHeader>
           <ModalBody>수정하시겠습니까</ModalBody>
           <ModalFooter>
-            <Button onClick={onClose}>취소</Button>
             <Button colorScheme="blue" onClick={handleClickSave}>
               확인
             </Button>
+            <Button onClick={onClose}>취소</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

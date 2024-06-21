@@ -29,7 +29,7 @@ function CommentEdit({ comment, isTransition, setIsEditing, setIsTransition }) {
       .then((res) => {
         toast({
           status: "success",
-          position: "top",
+          position: "bottom",
           isClosable: true,
           description: "수정완료",
         });
@@ -69,8 +69,8 @@ function CommentEdit({ comment, isTransition, setIsEditing, setIsTransition }) {
           <ModalHeader>수정 확인</ModalHeader>
           <ModalBody>수정하시겠습니까?</ModalBody>
           <ModalFooter>
-            <Button onClick={onClose}>취소</Button>
             <Button onClick={handleEditSubmit}>확인</Button>
+            <Button onClick={onClose}>취소</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

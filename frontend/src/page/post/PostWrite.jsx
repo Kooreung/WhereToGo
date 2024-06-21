@@ -12,22 +12,20 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Textarea,
   Tooltip,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import SmartEditor from "../../component/SmartEditor.jsx";
 import MapAdd from "../../component/Map/MapAdd.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
+import DraftEditor from "../../component/DraftEditor.jsx";
 
 function PostWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectedPlaces, setSelectedPlaces] = useState([]);
-  const [isNavigating, setIsNavigating] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -53,6 +51,9 @@ function PostWrite() {
   }
   if (content.trim().length === 0) {
     disableSaveButton = "disableToContent";
+  }
+  if (selectedPlaces.length === 0) {
+    disableSaveButton = "disableToPlace";
   }
 
   useEffect(() => {
@@ -144,16 +145,6 @@ function PostWrite() {
               ></Input>
             </FormControl>
           </Box>
-          {/*<option value={"서울01"}>강남/역삼</option>*/}
-          {/*<option value={"서울02"}>서초/교대/방배</option>*/}
-          {/*<option value={"서울03"}>잠실/송파/강동</option>*/}
-          {/*<option value={"서울04"}>건대/성수/왕십리</option>*/}
-          {/*<option value={"서울05"}>성북/노원/중랑</option>*/}
-          {/*<option value={"서울06"}>종로/중구</option>*/}
-          {/*<option value={"서울07"}>용산/이태원/한남</option>*/}
-          {/*<option value={"서울08"}>홍대/합정/마포</option>*/}
-          {/*<option value={"서울09"}>영등포/여의도/강서</option>*/}
-          {/*<option value={"서울10"}>구로/관악/동작</option>*/}
         </Box>
         <Box w={"576px"} bg={"lightgray"} my={"32px"}>
           <MapAdd
@@ -165,15 +156,7 @@ function PostWrite() {
           <Box>
             <Box w={"720px"} bg={"lightgray"} my={"32px"}>
               <Box align={"left"} my={10}>
-                <FormControl>
-                  <FormLabel>설명</FormLabel>
-                  <Textarea
-                    h={200}
-                    placeholder={"내용을 작성해주세요."}
-                    onChange={(e) => setContent(e.target.value)}
-                  ></Textarea>
-                  <SmartEditor />
-                </FormControl>
+                <DraftEditor setContent={setContent} />
               </Box>
             </Box>
             <Box align={"left"} my={10}>
@@ -185,7 +168,9 @@ function PostWrite() {
                     ? "제목을 확인해주세요."
                     : disableSaveButton === "disableToContent"
                       ? "내용을 확인해주세요."
-                      : ""
+                      : disableSaveButton === "disableToPlace"
+                        ? "장소를 선택해주세요."
+                        : ""
                 }
               >
                 <Button

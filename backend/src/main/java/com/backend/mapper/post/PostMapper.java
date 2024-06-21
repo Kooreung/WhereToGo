@@ -113,6 +113,7 @@ public interface PostMapper {
     @Select("""
             SELECT p.postid,
                    p.title,
+                p.content,
                    p.view,
                    p.createDate,
                    m.nickName,
@@ -123,7 +124,7 @@ public interface PostMapper {
                      JOIN member m ON p.memberid = m.memberid
                      LEFT JOIN comment c ON p.postid = c.postid
                      LEFT JOIN likes l ON p.postid = l.postid
-            GROUP BY p.postid, p.title, p.view, m.nickName
+            GROUP BY p.postid, p.title, p.view, m.nickName,p.content
             LIMIT 3
             """)
     List<Post> selectPostOfBest();
@@ -144,6 +145,16 @@ public interface PostMapper {
             WHERE p.postid = #{postId}
             """)
     List<Place> getPlaceList(Integer postId);
+
+    @Select("""
+            SELECT p.postid,
+                   (SELECT COUNT(pl_inner.postid)
+                    FROM place pl_inner
+                    WHERE pl_inner.placeurl = pl.placeurl) countPlace
+            FROM post p
+                     JOIN place pl ON p.postid = pl.postid
+            """)
+    List<Place> getPlaceListData(String selectPlaces);
 
     // 게시글 삭제 매퍼
     @Delete("""
@@ -302,45 +313,45 @@ public interface PostMapper {
     Integer countAllLikePost(Integer memberId, String searchType, String searchKeyword);
 
     @Update("""
-        UPDATE post
-        SET mdpick = 'o'
-        WHERE postid = #{postId}
-            """)
+            UPDATE post
+            SET mdpick = 'o'
+            WHERE postid = #{postId}
+                """)
     int mdPickPush(Integer postId);
 
 
     @Select("""
-            SELECT p.postid,
-                               p.title,
-                               p.content,
-                               p.createdate,
-                               p.view,
-                               m.memberid,
-                               COUNT(DISTINCT c.commentid) commentCount,
-                               COUNT(DISTINCT l.memberid)  likeCount
-                        FROM post p
-                                 JOIN member m ON p.memberid = m.memberid
-                                 JOIN authority a ON p.memberid = a.memberid
-                                 LEFT JOIN comment c ON p.postid = c.postid
-                                 LEFT JOIN likes l ON p.postid = l.postid
-                        WHERE a.authtype = 'admin' AND
-                              p.mdpick = 'o'
-            GROUP BY p.postid, p.title, p.content, p.createdate, p.view, m.memberid
-            ORDER BY p.postid DESC
-""")
+                        SELECT p.postid,
+                                           p.title,
+                                           p.content,
+                                           p.createdate,
+                                           p.view,
+                                           m.memberid,
+                                           COUNT(DISTINCT c.commentid) commentCount,
+                                           COUNT(DISTINCT l.memberid)  likeCount
+                                    FROM post p
+                                             JOIN member m ON p.memberid = m.memberid
+                                             JOIN authority a ON p.memberid = a.memberid
+                                             LEFT JOIN comment c ON p.postid = c.postid
+                                             LEFT JOIN likes l ON p.postid = l.postid
+                                    WHERE a.authtype = 'admin' AND
+                                          p.mdpick = 'o'
+                        GROUP BY p.postid, p.title, p.content, p.createdate, p.view, m.memberid
+                        ORDER BY p.postid DESC
+            """)
     List<Post> selectMdPickPostList(Map<String, Object> post);
 
     @Select("""
-    SELECT mdpick
-    FROM post
-    WHERE postid = #{postId}
-            """)
+            SELECT mdpick
+            FROM post
+            WHERE postid = #{postId}
+                    """)
     String getMdPick(Integer postId);
 
     @Update("""
-        UPDATE post
-        SET mdpick = 'x'
-        WHERE postid = #{postId}
-            """)
+            UPDATE post
+            SET mdpick = 'x'
+            WHERE postid = #{postId}
+                """)
     int mdPickPop(Integer postId);
 }

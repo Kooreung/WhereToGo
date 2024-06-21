@@ -61,14 +61,18 @@ export function PostMdList(props) {
               key={post.postId}
               onClick={() => navigate(`/post/${post.postId}`)}
             >
-              {/* Todo 조회수, 썸네일 JOIN */}
+              {/* Todo 썸네일 JOIN */}
               <Box>
                 <Grid
                   w={"720px"}
                   h={"224px"}
                   templateColumns={"repeat(9, 1fr)"}
                   templateRows={"1fr 1fr 5fr"}
-                  _hover={{ bgColor: "beige" }}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "RGBA(0, 0, 0, 0.06)",
+                    },
+                  }}
                   cursor={"pointer"}
                 >
                   <GridItem
