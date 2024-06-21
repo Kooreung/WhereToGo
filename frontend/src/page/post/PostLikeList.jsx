@@ -56,8 +56,16 @@ export function PostLikeList() {
     pageNumbers.push(i);
   }
 
+  // 검색 클릭 시 URL
   function handleSearchClick() {
     navigate(`/postLike/list?type=${searchType}&keyword=${searchKeyword}`);
+  }
+
+  // 검색 창 Enter 시 URL
+  function handleSearchKeyDown(e) {
+    if (e.key === "Enter") {
+      navigate(`/postLike/list?type=${searchType}&keyword=${searchKeyword}`);
+    }
   }
 
   // 페이지 버튼 클릭 시
@@ -87,7 +95,7 @@ export function PostLikeList() {
               onClick={() => navigate(`/post/${post.postId}`)}
               w={"720px"}
             >
-              {/* Todo 조회수, 썸네일 JOIN */}
+              {/* Todo 썸네일 JOIN */}
               <Box>
                 <Grid
                   w={"720px"}
@@ -235,10 +243,10 @@ export function PostLikeList() {
               </Select>
             </Box>
             <Box>
-              {/* Todo 검색에 엔터 적용 필요 */}
               <Input
                 value={searchKeyword}
                 onChange={(e) => setSearchKeyword(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
                 placeholder={"검색어"}
               />
             </Box>
