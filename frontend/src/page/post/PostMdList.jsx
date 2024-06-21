@@ -61,7 +61,7 @@ export function PostMdList(props) {
               key={post.postId}
               onClick={() => navigate(`/post/${post.postId}`)}
             >
-              {/* Todo 조회수, 썸네일 JOIN */}
+              {/* Todo 썸네일 JOIN */}
               <Box>
                 <Grid
                   w={"720px"}
