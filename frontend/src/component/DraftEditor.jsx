@@ -22,7 +22,7 @@ const Viewer = styled.div`
   border: 2px solid gray;
 `;
 
-const Draft = () => {
+const Draft = ({ setContent }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [htmlString, setHtmlString] = useState("");
   const isMounted = useRef(false); // 마운트 상태 추적용 ref
@@ -38,6 +38,7 @@ const Draft = () => {
     setEditorState(state);
     const contentState = state.getCurrentContent();
     const html = draftjsToHtml(convertToRaw(contentState));
+    setContent(html);
     setHtmlString(html);
   };
 
@@ -64,10 +65,6 @@ const Draft = () => {
           }}
         />
       </Container>
-      <RowBox>
-        <Viewer dangerouslySetInnerHTML={{ __html: htmlString }} />
-        <Viewer>{htmlString}</Viewer>
-      </RowBox>
     </>
   );
 };

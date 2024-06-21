@@ -164,7 +164,7 @@ function PostWrite() {
           <Box>
             <Box w={"720px"} bg={"lightgray"} my={"32px"}>
               <Box align={"left"} my={10}>
-                <DraftEditor />
+                <DraftEditor setContent={setContent} />
               </Box>
             </Box>
             <Box align={"left"} my={10}>
