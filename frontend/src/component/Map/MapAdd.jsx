@@ -67,9 +67,6 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   useEffect(() => {
     if (map && places.length > 0) {
       const bounds = new window.kakao.maps.LatLngBounds();
-
-      // searchedMarkers.forEach((searchedMarker) => searchedMarker.setMap(null));
-
       const newMarkers = places.map((place) => {
         const searchedMarker = new window.kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(place.y, place.x),
@@ -89,9 +86,6 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
     if (map && selectedPlaces.length > 0) {
       setSelectedMarkers([]);
       selectedMarkers.forEach((customOverlay) => customOverlay.setMap(null));
-
-      // setSearchedMarkers([]);
-      // searchedMarkers.forEach((searchedMarker) => searchedMarker.setMap(null));
 
       const bounds = new window.kakao.maps.LatLngBounds();
       const newMarkers = selectedPlaces.map((place, index) => {
@@ -183,6 +177,9 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   // 검색 시
   const searchPlaces = () => {
     if (!ps || !searchTerm) return;
+
+    setSearchedMarkers([]);
+    searchedMarkers.forEach((searchedMarker) => searchedMarker.setMap(null));
 
     const callback = (result, status) => {
       if (status === window.kakao.maps.services.Status.OK) {
