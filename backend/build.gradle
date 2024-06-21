@@ -24,6 +24,7 @@ repositories {
 dependencies {
     implementation 'org.seleniumhq.selenium:selenium-java:4.21.0'
     implementation 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'io.github.bonigarcia:webdrivermanager:5.8.0'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-web'

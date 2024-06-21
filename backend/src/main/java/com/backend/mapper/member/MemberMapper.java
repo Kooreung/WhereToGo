@@ -69,11 +69,18 @@ public interface MemberMapper {
             """)
     int update(Member member);
 
-    @Delete("""
-            DELETE FROM member
-            where memberid = #{memberId}
-            """)
-    int deleteByid(Integer memberId);
+    @Update("""
+            UPDATE member
+            SET email = '1',
+                password = '1',
+                nickname = #{randomNickName},
+                name = '탈퇴유저',
+                birth = '1999-01-01',
+                address = '데이터 조각',
+                phonenumber = '01012341234'
+            WHERE memberid = #{memberId}
+                        """)
+    int deleteByid(Integer memberId, String randomNickName);
 
     @Insert("""
             insert into profile(memberid, profilename)
@@ -125,4 +132,26 @@ public interface MemberMapper {
             WHERE memberid=${memberId}
             """)
     List<String> selectAuthorityByMemberId(Integer memberId);
+
+    // 탈퇴 시 랜덤 닉네임 중복 확인
+    @Select("""
+            SELECT COUNT(*) FROM member
+            WHERE nickname=#{nickName}
+            """)
+    boolean isUsernameExists(String nickname);
+
+    // 가입 시 유저의 멤버 ID 가져오기
+    @Select("""
+            SELECT memberId
+            FROM member
+            WHERE email = #{email};
+            """)
+    int selectByLastMemberId(Member member);
+
+    // 가입 시 유저 권한 부여
+    @Insert("""
+            INSERT INTO authority (memberId, authtype) 
+            VALUES (#{memberId}, 'user') 
+            """)
+    int addAuthority(int memberId);
 }

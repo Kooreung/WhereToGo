@@ -43,6 +43,7 @@ export function MemberInfo(props) {
       .then((res) => {
         setMember(res.data.member);
         setFile(res.data.profile);
+        setId(res.data.member.memberId);
         console.log(res.data.profile.src);
       })
       .catch((err) => {
@@ -64,8 +65,13 @@ export function MemberInfo(props) {
       });
   }, []);
 
+  function test() {
+    axios.get("/api/name/create").then((res) => {
+      console.log(res.data);
+    });
+  }
+
   function handleCLickDelete() {
-    setId(member.memberId);
     console.log(id);
     axios
       .delete(`/api/member/delete`, {
@@ -94,6 +100,9 @@ export function MemberInfo(props) {
   }
   return (
     <Flex alignContent="center" justifyContent="center" alignItems="center">
+      <Box>
+        <Button onClick={test}>국어사전 테스트 버튼</Button>
+      </Box>
       <Box mt="100">
         <Avatar
           name="defaultProfile"
