@@ -38,6 +38,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   const [selectedMarkers, setSelectedMarkers] = useState([]);
   const [polylines, setPolylines] = useState([]);
 
+  // 기본 지도 생성
   useEffect(() => {
     loadKakaoMapScript(kakaoMapAppKey, ["services"])
       .then(() => {
@@ -66,28 +67,30 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
     if (map && places.length > 0) {
       const bounds = new window.kakao.maps.LatLngBounds();
 
-      setSearchedMarkers([]);
-      searchedMarkers.forEach((marker) => marker.setMap(null));
+      // searchedMarkers.forEach((searchedMarker) => searchedMarker.setMap(null));
 
       const newMarkers = places.map((place) => {
-        const marker = new window.kakao.maps.Marker({
+        const searchedMarker = new window.kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(place.y, place.x),
           map: map,
           title: place.place_name,
         });
-        bounds.extend(marker.getPosition());
-        return marker;
+        bounds.extend(searchedMarker.getPosition());
+        return searchedMarker;
       });
       setSearchedMarkers(newMarkers);
       map.setBounds(bounds);
     }
-  }, [map, places, selectedPlaces]);
+  }, [map, places]);
 
   // 추가하기 버튼 클릭 시 생성되는 커스텀 마커
   useEffect(() => {
     if (map && selectedPlaces.length > 0) {
       setSelectedMarkers([]);
       selectedMarkers.forEach((customOverlay) => customOverlay.setMap(null));
+
+      setSearchedMarkers([]);
+      searchedMarkers.forEach((searchedMarker) => searchedMarker.setMap(null));
 
       const bounds = new window.kakao.maps.LatLngBounds();
       const newMarkers = selectedPlaces.map((place, index) => {
@@ -104,9 +107,30 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
       });
       setSearchedMarkers(newMarkers);
       map.setBounds(bounds);
+      console.log(1);
+    } else if (map && selectedPlaces.length == 0 && places.length > 0) {
+      setSelectedMarkers([]);
+      selectedMarkers.forEach((customOverlay) => customOverlay.setMap(null));
+      setSearchedMarkers([]);
+      searchedMarkers.forEach((searchedMarker) => searchedMarker.setMap(null));
+
+      const bounds = new window.kakao.maps.LatLngBounds();
+      const newMarkers = places.map((place) => {
+        const marker = new window.kakao.maps.Marker({
+          position: new window.kakao.maps.LatLng(place.y, place.x),
+          map: map,
+          title: place.place_name,
+        });
+        bounds.extend(marker.getPosition());
+        return marker;
+      });
+      setSearchedMarkers(newMarkers);
+      map.setBounds(bounds);
+      console.log(2);
     }
   }, [map, selectedPlaces]);
 
+  // 선택 된 장소에 따라 생성되는 폴리라인
   useEffect(() => {
     if (map) {
       polylines.forEach((polyline) => polyline.setMap(null));
@@ -154,6 +178,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
     }
   }, [map, selectedPlaces]);
 
+  // 검색 시
   const searchPlaces = () => {
     if (!ps || !searchTerm) return;
 
@@ -177,6 +202,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
     });
   };
 
+  // 장소 선택 시
   const selectPlace = (place) => {
     if (selectedPlaces.length < 5) {
       setSelectedPlaces([...selectedPlaces, place]);
@@ -186,6 +212,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
     }
   };
 
+  // 장소 삭제 시
   const removePlace = (index) => {
     const newSelectedPlaces = selectedPlaces.filter((_, i) => i !== index);
     setSelectedPlaces(newSelectedPlaces);
@@ -226,7 +253,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
           />
           <Button onClick={searchPlaces}>검색</Button>
         </Flex>
-        <Box maxH={"240px"} overflowY={"auto"}>
+        <Box maxH={"200px"} overflowY={"auto"}>
           {places.map((place, index) => (
             <Flex key={index}>
               <Box>
