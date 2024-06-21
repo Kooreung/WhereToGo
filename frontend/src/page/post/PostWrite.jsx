@@ -18,7 +18,6 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import SmartEditor from "../../component/SmartEditor.jsx";
 import MapAdd from "../../component/Map/MapAdd.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import DraftEditor from "../../component/DraftEditor.jsx";
