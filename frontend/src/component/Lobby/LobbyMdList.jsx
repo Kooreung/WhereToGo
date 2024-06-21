@@ -19,7 +19,6 @@ import {LoginContext} from "../component/LoginProvider.jsx";
 import axios from "axios";
 
 export function LobbyMdList() {
-
   const [mdPost, setMdPost] = useState([]);
   const [prevPosts, setPrevPosts] = useState(0);
   const [nextPosts, setNextPosts] = useState(1);
@@ -231,7 +230,6 @@ export function LobbyMdList() {
         }>
           <FontAwesomeIcon icon={faArrowRight} fontSize="2rem" />
         </Button>
-
       </Center>
     </>
   );

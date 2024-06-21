@@ -94,7 +94,11 @@ export function PostLikeList() {
                   h={"224px"}
                   templateColumns={"repeat(9, 1fr)"}
                   templateRows={"1fr 1fr 5fr"}
-                  _hover={{ bgColor: "beige" }}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "RGBA(0, 0, 0, 0.06)",
+                    },
+                  }}
                   cursor={"pointer"}
                 >
                   <GridItem

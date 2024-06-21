@@ -34,7 +34,7 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
         setComment("");
         toast({
           status: "success",
-          position: "top",
+          position: "bottom",
           description: "등록완료",
           isClosable: true,
         });
@@ -76,8 +76,8 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
           <ModalHeader>작성 확인</ModalHeader>
           <ModalBody>작성하시겠습니까?</ModalBody>
           <ModalFooter>
-            <Button onClick={onClose}>취소</Button>
             <Button onClick={handleSubmitComment}>확인</Button>
+            <Button onClick={onClose}>취소</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

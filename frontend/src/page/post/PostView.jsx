@@ -73,8 +73,7 @@ export function PostView() {
   }, [isLikeLoading, isTransition]);
 
   useEffect(() => {
-    axios.get(`/api/post/${postId}/place`)
-      .then((res) => {
+    axios.get(`/api/post/${postId}/place`).then((res) => {
       setPlace(res.data);
     });
   }, []);
@@ -83,11 +82,11 @@ export function PostView() {
     axios
       .get(`/api/post/${postId}/getMdPick`)
       .then((res) => {
-        setToggle(res.data)
-        console.log(res.data)
+        setToggle(res.data);
+        console.log(res.data);
       })
       .catch(() => {})
-      .finally(() => {})
+      .finally(() => {});
   }, []);
 
   // 게시글 번호 확인
@@ -142,20 +141,20 @@ export function PostView() {
       .post(`/api/post/${postId}/push`, { postId: post.postId })
       .then(() => {
         toast({
-        status: "success",
-        position: "bottom",
-        description: "성공",
-      })
+          status: "success",
+          position: "bottom",
+          description: "성공",
+        });
         window.location.reload();
-        })
+      })
       .catch(() => {
         toast({
-        status: "error",
-        position: "bottom",
-        description: "실패",
+          status: "error",
+          position: "bottom",
+          description: "실패",
+        });
       })
-      })
-      .finally(() => {})
+      .finally(() => {});
   }
 
   // mdpick pop
@@ -167,7 +166,7 @@ export function PostView() {
           status: "success",
           position: "bottom",
           description: "성공",
-        })
+        });
         window.location.reload();
       })
       .catch(() => {
@@ -175,8 +174,9 @@ export function PostView() {
           status: "error",
           position: "bottom",
           description: "실패",
-        });})
-      .finally(() => {})
+        });
+      })
+      .finally(() => {});
   }
 
   return (
@@ -352,35 +352,36 @@ export function PostView() {
           </Button>
         </Tooltip>
         <Spacer />
-        {/* 수정 및 삭제 버튼 */}
         {account.isAdmin() && (
           <Box>
             <Box align={"left"} my={10}>
-
-              {toggle === "x" && <Button
-                onClick= {handleMdPickPush}>
-                Push
-              </Button>}
-              {toggle === "o" && <Button
-                onClick={handleMdPickPop}>
-                Pop
-              </Button>}
-
-              <Button onClick={() => navigate(`/post/${postId}/edit`)}>
-                <FontAwesomeIcon icon={faPenToSquare} />
-                <Text display={{ base: "none", lg: "block" }} ml={1}>
-                  수정
-                </Text>
-              </Button>
-              <Button onClick={onModalOpenOfDelete}>
-                <FontAwesomeIcon icon={faTrash} />
-                <Text display={{ base: "none", lg: "block" }} ml={1}>
-                  삭제
-                </Text>
-              </Button>
+              {toggle === "x" && (
+                <Button onClick={handleMdPickPush}>Push</Button>
+              )}
+              {toggle === "o" && <Button onClick={handleMdPickPop}>Pop</Button>}
             </Box>
           </Box>
         )}
+        {/* 수정 및 삭제 버튼 */}
+        {account.hasAccessMemberId(post.memberId) ||
+          (account.isAdmin() && (
+            <Box>
+              <Box align={"left"} my={10}>
+                <Button onClick={() => navigate(`/post/${postId}/edit`)}>
+                  <FontAwesomeIcon icon={faPenToSquare} />
+                  <Text display={{ base: "none", lg: "block" }} ml={1}>
+                    수정
+                  </Text>
+                </Button>
+                <Button onClick={onModalOpenOfDelete}>
+                  <FontAwesomeIcon icon={faTrash} />
+                  <Text display={{ base: "none", lg: "block" }} ml={1}>
+                    삭제
+                  </Text>
+                </Button>
+              </Box>
+            </Box>
+          ))}
         {/* 목록 */}
         <Button onClick={() => navigate("/post/list")}>
           <FontAwesomeIcon icon={faList} />
