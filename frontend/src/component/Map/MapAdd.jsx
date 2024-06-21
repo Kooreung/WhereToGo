@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Box, Button, Flex, Input, Link, Spacer } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
+import { renderToString } from "react-dom/server";
 
 const loadKakaoMapScript = (appKey, libraries = []) => {
   return new Promise((resolve, reject) => {
@@ -89,16 +90,17 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
       setSelectedMarkers([]);
       selectedMarkers.forEach((customOverlay) => customOverlay.setMap(null));
 
-      setSearchedMarkers([]);
-      searchedMarkers.forEach((searchedMarker) => searchedMarker.setMap(null));
+      // setSearchedMarkers([]);
+      // searchedMarkers.forEach((searchedMarker) => searchedMarker.setMap(null));
 
       const bounds = new window.kakao.maps.LatLngBounds();
       const newMarkers = selectedPlaces.map((place, index) => {
         // 번호가 표시된 커스텀 오버레이 추가
-        let content = `<Box style="position:relative;color:#000;background:#fff;border:1px solid #000;border-radius:3px;padding:2px 5px;">${index + 1}</Box>`;
+        let content = renderToString(<SelectedPlaceMarker index={index} />);
         const customOverlay = new window.kakao.maps.CustomOverlay({
           position: new window.kakao.maps.LatLng(place.y, place.x),
           content: content,
+          xAnchor: -0.5,
           yAnchor: 1,
         });
         customOverlay.setMap(map);
@@ -240,6 +242,22 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
       setSelectedPlaces(newSelectedPlaces);
     }
   };
+
+  function SelectedPlaceMarker({ index }) {
+    return (
+      <Box
+        style={{
+          borderRadius: "100%",
+          backgroundColor: "white",
+          opacity: "0.75",
+          padding: "4px",
+          boxShadow: "0 0 0 4px white, 0 0 0 8px orange",
+        }}
+      >
+        {index + 1}
+      </Box>
+    );
+  }
 
   return (
     <Box>
