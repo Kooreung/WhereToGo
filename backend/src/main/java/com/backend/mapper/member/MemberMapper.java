@@ -45,21 +45,6 @@ public interface MemberMapper {
             """)
     Member selectById(int memberId);
 
-    @Select("""
-            SELECT memberid, 
-                   email, 
-                   password, 
-                   nickname, 
-                   name, 
-                   gender, 
-                   birth, 
-                   address, 
-                   phonenumber
-            FROM member
-            order by memberid ASC
-            """)
-    List<Member> selectAll();
-
     @Update("""
             UPDATE member 
             SET
@@ -138,4 +123,59 @@ public interface MemberMapper {
             VALUES (#{memberId}, 'user') 
             """)
     int addAuthority(int memberId);
+
+    // 회원 리스트 admin 권한 안나오면서 조회 및 검색
+    @Select("""
+        <script>
+        SELECT m.memberId, m.email, m.nickname
+        FROM member m JOIN authority a
+        ON m.memberId = a.memberId
+        <trim prefix="WHERE" prefixOverrides="OR">
+                   <if test="searchType != null">
+                       <bind name="pattern" value="'%' + keyword + '%'" />
+                       <if test="searchType == 'all' || searchType == 'email'">
+                           OR m.email LIKE #{pattern}
+                            AND a.authtype &lt;&gt; 'admin'
+                       </if>
+                       <if test="searchType == 'all' || searchType == 'nickName'">
+                           OR m.nickname LIKE #{pattern}
+                            AND a.authtype &lt;&gt; 'admin'
+                       </if>
+                   </if>
+               </trim>
+        ORDER BY m.memberId DESC
+        LIMIT #{offset}, 10
+        </script>
+        """)
+    List<Member> selectMemberAllPaging(Integer offset, String searchType, String keyword);
+
+    @Select("""
+    SELECT COUNT(*) 
+    FROM member m JOIN authority a
+    ON m.memberId = a.memberId
+    WHERE authtype <> 'admin'
+    """)
+    Integer countAll();
+
+    @Select("""
+<script>
+SELECT COUNT(m.memberId)
+FROM member m JOIN authority a
+ON m.memberId = a.memberId
+    <trim prefix="WHERE" prefixOverrides="OR">
+        <if test="searchType != null">
+            <bind name="pattern" value="'%' + keyword + '%'" />
+            <if test="searchType == 'all' || searchType == 'email'">
+                OR m.email LIKE #{pattern}
+                AND a.authtype &lt;&gt; 'admin'
+            </if>
+            <if test="searchType == 'all' || searchType == 'nickName'">
+                OR m.nickname LIKE #{pattern}
+                AND a.authtype &lt;&gt; 'admin'
+            </if>
+        </if>
+    </trim>
+</script>
+""")
+    Integer countAllWithSearch(String searchType, String keyword);
 }
