@@ -12,7 +12,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Textarea,
   Tooltip,
   useDisclosure,
   useToast,
@@ -21,6 +20,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import MapAdd from "../../component/Map/MapAdd.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
+import DraftEditor from "../../component/DraftEditor.jsx";
 
 function PostWrite() {
   const [title, setTitle] = useState("");
@@ -156,14 +156,7 @@ function PostWrite() {
           <Box>
             <Box w={"720px"} bg={"lightgray"} my={"32px"}>
               <Box align={"left"} my={10}>
-                <FormControl>
-                  <FormLabel>설명</FormLabel>
-                  <Textarea
-                    h={200}
-                    placeholder={"내용을 작성해주세요."}
-                    onChange={(e) => setContent(e.target.value)}
-                  ></Textarea>
-                </FormControl>
+                <DraftEditor setContent={setContent} />
               </Box>
             </Box>
             <Box align={"left"} my={10}>

@@ -9,6 +9,9 @@ export default defineConfig({
       "react-dom/server": "react-dom/server.browser",
     },
   },
+  define: {
+    global: "window",
+  },
   server: {
     proxy: {
       "/api": {
