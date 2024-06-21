@@ -22,9 +22,8 @@ const Viewer = styled.div`
   border: 2px solid gray;
 `;
 
-const Draft = ({ setContent }) => {
+const Draft = ({ setContent, setContentCheack }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const [htmlString, setHtmlString] = useState("");
   const isMounted = useRef(false); // 마운트 상태 추적용 ref
 
   useEffect(() => {
@@ -36,10 +35,17 @@ const Draft = ({ setContent }) => {
 
   const updateTextDescription = async (state) => {
     setEditorState(state);
+    console.log("state", state);
     const contentState = state.getCurrentContent();
     const html = draftjsToHtml(convertToRaw(contentState));
+
+    function parseHtmlToText(htmlString) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlString, "text/html");
+      return doc.body.textContent || "";
+    }
+    setContentCheack(parseHtmlToText(html));
     setContent(html);
-    setHtmlString(html);
   };
 
   const uploadCallback = () => {

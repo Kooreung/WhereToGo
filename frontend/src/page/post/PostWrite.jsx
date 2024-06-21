@@ -27,6 +27,7 @@ function PostWrite() {
   const [content, setContent] = useState("");
   const [selectedPlaces, setSelectedPlaces] = useState([]);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [contentCheack, setContentCheack] = useState("");
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ function PostWrite() {
   if (title.trim().length === 0) {
     disableSaveButton = "disableToTitle";
   }
-  if (content.trim().length === 0) {
+  if (contentCheack.trim().length === 0) {
     disableSaveButton = "disableToContent";
   }
 
@@ -164,7 +165,10 @@ function PostWrite() {
           <Box>
             <Box w={"720px"} bg={"lightgray"} my={"32px"}>
               <Box align={"left"} my={10}>
-                <DraftEditor setContent={setContent} />
+                <DraftEditor
+                  setContent={setContent}
+                  setContentCheack={setContentCheack}
+                />
               </Box>
             </Box>
             <Box align={"left"} my={10}>
