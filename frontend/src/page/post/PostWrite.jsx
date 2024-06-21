@@ -19,7 +19,6 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import SmartEditor from "../../component/SmartEditor.jsx";
 import MapAdd from "../../component/Map/MapAdd.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 
@@ -164,7 +163,6 @@ function PostWrite() {
                     placeholder={"내용을 작성해주세요."}
                     onChange={(e) => setContent(e.target.value)}
                   ></Textarea>
-                  <SmartEditor />
                 </FormControl>
               </Box>
             </Box>

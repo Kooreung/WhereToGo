@@ -1,8 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Button, Flex, Input, Link, Spacer } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCaretDown,
+  faCaretUp,
+  faPlus,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { renderToString } from "react-dom/server";
+import axios from "axios";
 
 const loadKakaoMapScript = (appKey, libraries = []) => {
   return new Promise((resolve, reject) => {
@@ -31,6 +37,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   const mapRef = useRef(null);
   const kakaoMapAppKey = import.meta.env.VITE_KAKAO_MAP_APP_KEY;
   const [places, setPlaces] = useState([]);
+  const [placeData, setPlaceData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [map, setMap] = useState(null);
   const [ps, setPs] = useState(null);
@@ -38,6 +45,13 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   const [searchedMarkers, setSearchedMarkers] = useState([]);
   const [selectedMarkers, setSelectedMarkers] = useState([]);
   const [polylines, setPolylines] = useState([]);
+
+  useEffect(() => {
+    axios.get(`/api/post/place/{selectPlaces}`).then((res) => {
+      setPlaceData(res.data);
+      console.log(placeData);
+    });
+  }, []);
 
   // 기본 지도 생성
   useEffect(() => {
@@ -266,6 +280,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
     }
   };
 
+  // 해당 인덱스의 마커
   function SelectedPlaceMarker({ index }) {
     return (
       <Box
@@ -307,24 +322,44 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
                 </Link>
               </Box>
               <Spacer />
-              <Button onClick={() => selectPlace(place)}>추가하기</Button>
+              <Button onClick={() => selectPlace(place)}>
+                <FontAwesomeIcon icon={faPlus} />
+              </Button>
             </Flex>
           ))}
         </Box>
       </Box>
 
       <Box id="map" ref={mapRef} w={"576px"} h={"360px"}></Box>
+
       <Box>
         <Box>
           {selectedPlaces.map((place, index) => (
-            <Flex key={index}>
-              <Link
-                href={place.place_url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {place.place_name}
-              </Link>
+            <Flex key={index} alignItems="center" justifyContent="center">
+              <Box border={"1px dotted red"}>
+                <Box>
+                  <Link
+                    href={place.place_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {place.place_name}
+                  </Link>
+                </Box>
+                <Box>{place.road_address_name}</Box>
+                <Box>{place.phone}</Box>
+                <Box>
+                  {placeData.map((place, index) => (
+                    <Box key={index}>
+                      <Box>
+                        <Box>{place.placeName}</Box>
+                        <Box>{place.address}</Box>
+                        <Box>게시글에 등록 된 횟수 : {place.countPlace} 건</Box>
+                      </Box>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
               <Spacer />
               <Button onClick={() => movePlaceUp(index)}>
                 <FontAwesomeIcon icon={faCaretUp} />
@@ -337,7 +372,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
                   removePlace(index);
                 }}
               >
-                삭제하기
+                <FontAwesomeIcon icon={faTrash} />
               </Button>
             </Flex>
           ))}
