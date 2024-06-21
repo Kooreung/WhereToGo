@@ -32,7 +32,7 @@ function LobbyListOfBest(props) {
             variant="outline"
             sx={{
               "&:hover": {
-                backgroundColor: "gray.50",
+                backgroundColor: "RGBA(0, 0, 0, 0.06)",
               },
             }}
           >
