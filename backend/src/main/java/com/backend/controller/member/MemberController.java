@@ -29,6 +29,8 @@ public class MemberController {
                                  MultipartFile file) throws IOException {
         if (service.validate(member)) {
             service.add(member, file);
+            int memberId = service.selectByLastMemberId(member);
+            service.addAuthority(memberId);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();
@@ -68,14 +70,25 @@ public class MemberController {
 
     // 임시 비밀번호 발급
     @PostMapping("sendEmail")
-    public ResponseEntity sendEmail(@RequestBody Member member) {
+    public ResponseEntity<String> sendEmail(@RequestBody Member member) {
         String email = member.getEmail();
         Member memberEmail = service.getByEmail(email);
         if (memberEmail == null) {
             return ResponseEntity.notFound().build();
         }
-        senderService.createMail(email);
-        return ResponseEntity.ok(email);
+        String tempPassword = senderService.createMail(email);
+        return ResponseEntity.ok(tempPassword); // 임시 비밀번호 반환
+    }
+
+    @PostMapping("sendCode")
+    public ResponseEntity<String> codeMail(@RequestBody Member member) {
+        String email = member.getEmail();
+        Member memberEmail = service.getByEmail(email);
+        if (memberEmail == null) {
+            return ResponseEntity.notFound().build();
+        }
+        String tempCode = senderService.createCode(email);
+        return ResponseEntity.ok(tempCode); // 코드 반환
     }
 
     // 회원 수정
@@ -98,7 +111,7 @@ public class MemberController {
 
     // 회원 목록 보기
     @GetMapping("list")
-//    @PreAuthorize("hasAuthority('admin')")
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public List<Member> list() {
         return service.memberList();
     }

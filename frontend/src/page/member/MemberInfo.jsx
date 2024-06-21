@@ -43,6 +43,7 @@ export function MemberInfo(props) {
       .then((res) => {
         setMember(res.data.member);
         setFile(res.data.profile);
+        setId(res.data.member.memberId);
         console.log(res.data.profile.src);
       })
       .catch((err) => {
@@ -64,8 +65,13 @@ export function MemberInfo(props) {
       });
   }, []);
 
+  function test() {
+    axios.get("/api/name/create").then((res) => {
+      console.log(res.data);
+    });
+  }
+
   function handleCLickDelete() {
-    setId(member.memberId);
     console.log(id);
     axios
       .delete(`/api/member/delete`, {
@@ -94,6 +100,9 @@ export function MemberInfo(props) {
   }
   return (
     <Flex alignContent="center" justifyContent="center" alignItems="center">
+      <Box>
+        <Button onClick={test}>국어사전 테스트 버튼</Button>
+      </Box>
       <Box mt="100">
         <Avatar
           name="defaultProfile"
@@ -103,6 +112,15 @@ export function MemberInfo(props) {
         />
         <Text mb="5" fontSize="25" ml="25%" mt={23}>
           이름 : {member.name}
+        </Text>
+        <Text
+          mb="5"
+          fontSize="20"
+          ml="25%"
+          mt={23}
+          onClick={() => navigate("/postLike/list")}
+        >
+          내가 좋아요한 목록
         </Text>
       </Box>
       <Box ml="100" fontSize="25" mt="100">

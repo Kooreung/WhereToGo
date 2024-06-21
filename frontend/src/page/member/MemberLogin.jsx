@@ -16,6 +16,7 @@ import { LoginContext } from "../../component/LoginProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
+import Lobby from "../Lobby.jsx";
 
 export function MemberLogin() {
   const [email, setEmail] = useState("");
@@ -48,6 +49,14 @@ export function MemberLogin() {
         });
       })
       .finally(() => {});
+  }
+
+  if (account.isLoggedIn()) {
+    return (
+      <Box>
+        <Lobby />;
+      </Box>
+    );
   }
 
   return (

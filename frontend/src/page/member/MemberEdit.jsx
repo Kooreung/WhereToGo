@@ -3,10 +3,14 @@ import {
   Avatar,
   Box,
   Button,
+  Card,
+  CardBody,
+  CardHeader,
   Flex,
   FormControl,
   FormHelperText,
   FormLabel,
+  Heading,
   Input,
   InputGroup,
   InputRightElement,
@@ -17,12 +21,15 @@ import {
   ModalHeader,
   ModalOverlay,
   Spinner,
+  Stack,
+  StackDivider,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../../component/LoginProvider.jsx";
+import { passwordPattern } from "../../Regex.jsx";
 
 function MemberEdit(props) {
   const [member, setMember] = useState(null);
@@ -31,13 +38,18 @@ function MemberEdit(props) {
   const [file, setFile] = useState(null);
   const [oldPassword, setOldPassword] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
-  const [isCheckedNickName, setIsCheckedNickName] = useState(true);
+  const [isCheckedNickName, setIsCheckedNickName] = useState(false);
   const [oldNickName, setOldNickName] = useState("");
   const account = useContext(LoginContext);
   const { id } = useParams();
   const toast = useToast();
   const navigate = useNavigate();
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [isDisableSaveButton, setIsDisableSaveButton] = useState(true);
+
+  const isValidPassword = (password) => passwordPattern.test(password);
+
   useEffect(() => {
     axios
       .get(`/api/member/memberinfo`, {
@@ -47,8 +59,6 @@ function MemberEdit(props) {
       })
       .then((res) => {
         const member1 = res.data.member;
-        console.log("member", member);
-        console.log("member1", member1);
         setMember({ ...member1, password: "" });
         setOldProfile(res.data.profile);
         setProfile(res.data.profile);
@@ -63,6 +73,29 @@ function MemberEdit(props) {
         navigate("/");
       });
   }, []);
+
+  useEffect(() => {
+    if (
+      member &&
+      (member.nickName !== oldNickName ||
+        member.password !== "" ||
+        profile.src !== oldProfile.src) &&
+      (member.nickName === oldNickName || isCheckedNickName) &&
+      (member.password === "" ||
+        (isValidPassword(member.password) && member.password === passwordCheck))
+    ) {
+      setIsDisableSaveButton(false);
+    } else {
+      setIsDisableSaveButton(true);
+    }
+  }, [
+    member,
+    profile,
+    oldNickName,
+    oldProfile,
+    isCheckedNickName,
+    passwordCheck,
+  ]);
 
   function handleClickSave() {
     axios
@@ -101,41 +134,14 @@ function MemberEdit(props) {
         setOldPassword("");
       });
   }
+
   if (member === null) {
     return <Spinner />;
   }
 
-  let isDisableNickNameCheckButton = false;
-
-  if (member.nickName === oldNickName) {
-    isDisableNickNameCheckButton = true;
-  }
-
-  if (member.nickName.length == 0) {
-    isDisableNickNameCheckButton = true;
-  }
-
-  if (isCheckedNickName) {
-    isDisableNickNameCheckButton = true;
-  }
-
-  let isDisableSaveButton = false;
-
-  if (member.password !== passwordCheck) {
-    isDisableSaveButton = true;
-  }
-
-  if (member.nickName.trim().length === 0) {
-    isDisableSaveButton = true;
-  }
-
-  if (!isCheckedNickName) {
-    isDisableSaveButton = true;
-  }
   function handleFileChange(e) {
     const file = e.target.files[0];
     if (file) {
-      // 파일이 선택되었는지 확인
       setFile(file);
 
       const reader = new FileReader();
@@ -144,8 +150,7 @@ function MemberEdit(props) {
       };
       reader.readAsDataURL(file);
     } else {
-      // 파일 선택이 취소되었을 때
-      setProfile({ src: oldProfile.src }); // 원래 사진으로 되돌림
+      setProfile({ src: oldProfile.src });
     }
   }
 
@@ -179,14 +184,13 @@ function MemberEdit(props) {
           <Avatar
             name="defaultProfile"
             src={profile.src}
-            w="200px" // 원하는 너비 값으로 조정
-            h="200px" // 원하는 높이 값으로 조정
+            w="200px"
+            h="200px"
             mb={30}
           />
           <Box mb={7}>
             <FormControl>
               <FormLabel>프로필 사진 선택</FormLabel>
-              {/* TODO 수정 시 사진 적용 안됨 */}
               <Input
                 multiple
                 type="file"
@@ -211,7 +215,9 @@ function MemberEdit(props) {
               />
               <InputRightElement w={"75px"} mr={1}>
                 <Button
-                  isDisabled={isDisableNickNameCheckButton}
+                  isDisabled={
+                    isCheckedNickName || member.nickName === oldNickName
+                  }
                   size={"sm"}
                   onClick={handleCheckNickName}
                 >
@@ -220,30 +226,51 @@ function MemberEdit(props) {
               </InputRightElement>
             </InputGroup>
             <FormControl>
-              <FormLabel>기존 비밀번호</FormLabel>
-              {/* TODO 비밀번호 수정 로직 가입 할 때랑 동일하게 설정 필요 */}
-              <Input onChange={(e) => setOldPassword(e.target.value)} />
-            </FormControl>
-            <FormControl>
-              <FormLabel>새로운 비밀번호</FormLabel>
-              <Input
-                onChange={(e) =>
-                  setMember({ ...member, password: e.target.value })
-                }
-                placeholder={"암호를 변경하려면 입력하세요"}
-              />
-              <FormHelperText>
-                입력하지 않으면 기존 암호를 변경하지 않습니다.
-              </FormHelperText>
-            </FormControl>
-          </Box>
-          <Box>
-            <FormControl>
-              <FormLabel>새로운 비밀번호 확인</FormLabel>
-              <Input onChange={(e) => setPasswordCheck(e.target.value)} />
-              {member.password === passwordCheck || (
-                <FormHelperText>암호가 일치하지 않습니다.</FormHelperText>
-              )}
+              <Card mt={10}>
+                <CardHeader>
+                  <Heading size="md">비밀번호 변경</Heading>
+                </CardHeader>
+                <CardBody>
+                  <Stack divider={<StackDivider />} spacing="4">
+                    <Box>
+                      <Heading size="xs" textTransform="uppercase" mb="2">
+                        기존 비밀번호
+                      </Heading>
+                      <Input onChange={(e) => setOldPassword(e.target.value)} />
+                    </Box>
+                    <Box>
+                      <Heading size="xs" textTransform="uppercase" mb="2">
+                        새로운 비밀번호
+                      </Heading>
+                      <Input
+                        onChange={(e) => {
+                          const newPassword = e.target.value;
+                          setMember({ ...member, password: newPassword });
+                          setIsPasswordValid(isValidPassword(newPassword));
+                        }}
+                        placeholder={"암호를 변경하려면 입력하세요"}
+                      />
+                      <Heading
+                        size="xs"
+                        textTransform="uppercase"
+                        mb="2"
+                        mt="3"
+                      >
+                        새로운 비밀번호 확인
+                      </Heading>
+                      <Input
+                        onChange={(e) => setPasswordCheck(e.target.value)}
+                      />
+                      {member.password === passwordCheck || (
+                        <FormHelperText>
+                          암호가 일치하지 않습니다.
+                        </FormHelperText>
+                      )}
+                    </Box>
+                    <Box></Box>
+                  </Stack>
+                </CardBody>
+              </Card>
             </FormControl>
           </Box>
         </Box>

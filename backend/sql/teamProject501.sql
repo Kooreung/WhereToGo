@@ -69,3 +69,118 @@ DESC post;
 
 INSERT INTO post (postid, memberid, title, content, createdate, view)
 VALUES (1090, 40, '조회수연습', 'ㅇㅁㄴㅇㄴㅁㅇㄴㅁ', '2020-02-21', 35);
+
+SELECT p.postid,
+       p.title,
+       p.content,
+       p.createdate,
+       p.view,
+       m.nickname,
+       COUNT(DISTINCT c.commentid) commentCount,
+       COUNT(DISTINCT l2.memberid) likeCount
+FROM post p
+         JOIN member m ON p.memberid = m.memberid
+         LEFT JOIN comment c ON p.postid = c.postid
+         LEFT JOIN likes l2 ON p.postid = l2.postid
+         JOIN likes l ON p.postid = l.postid
+WHERE l.memberid = 134
+GROUP BY p.postid
+ORDER BY p.postid DESC;
+
+INSERT INTO authority (memberid, authtype)
+VALUES (101, 'admin');
+
+SELECT p.postid,
+       p.title,
+       p.content,
+       p.createdate,
+       p.view,
+       m.memberid,
+       COUNT(DISTINCT c.commentid) commentCount,
+       COUNT(DISTINCT l.memberid)  likeCount
+FROM post p
+         JOIN member m ON p.memberid = m.memberid
+         JOIN authority a ON p.memberid = a.memberid
+         LEFT JOIN comment c ON p.postid = c.postid
+         LEFT JOIN likes l ON p.postid = l.postid
+WHERE a.authtype = 'admin'
+GROUP BY p.postid, p.title, p.content, p.createdate, p.view, m.memberid
+ORDER BY p.postid DESC;
+
+SELECT COUNT(p.postid)
+FROM post p
+         JOIN member m ON p.memberid = m.memberid
+         JOIN likes l ON p.postid = l.postid
+WHERE l.memberid = 101;
+
+SELECT p.postid,
+       p.title,
+       p.content,
+       p.createdate,
+       p.view,
+       m.nickname,
+       COUNT(DISTINCT c.commentid) commentCount,
+       COUNT(DISTINCT l2.memberid) likeCount
+FROM post p
+         JOIN member m ON p.memberid = m.memberid
+         LEFT JOIN comment c ON p.postid = c.postid
+         LEFT JOIN likes l2 ON p.postid = l2.postid
+         JOIN likes l ON p.postid = l.postid
+WHERE l.memberid = 101
+GROUP BY p.postid
+ORDER BY p.postid DESC;
+
+
+SELECT p.postid,
+       p.title,
+       p.content,
+       p.createdate,
+       p.view,
+       m.nickname,
+       COUNT(DISTINCT c.commentid) commentCount,
+       COUNT(DISTINCT l2.memberid) likeCount
+FROM post p
+         JOIN member m ON p.memberid = m.memberid
+         LEFT JOIN comment c ON p.postid = c.postid
+         LEFT JOIN likes l2 ON p.postid = l2.postid
+         JOIN likes l ON p.postid = l.postid
+WHERE l.memberid = 101
+GROUP BY p.postid
+ORDER BY p.postid DESC;
+
+
+SELECT p.postid,
+       p.title,
+       p.content,
+       p.createdate,
+       p.view,
+       m.nickname,
+       COUNT(DISTINCT c.commentid) commentCount,
+       COUNT(DISTINCT l2.memberid) likeCount
+FROM post p
+         JOIN member m ON p.memberid = m.memberid
+         LEFT JOIN comment c ON p.postid = c.postid
+         LEFT JOIN likes l2 ON p.postid = l2.postid
+         JOIN likes l ON p.postid = l.postid
+where l.memberid = 101;
+
+SELECT COUNT(p.postid)
+FROM post p
+         JOIN member m ON p.memberid = m.memberid
+         JOIN likes l ON p.postid = l.postid
+         LEFT JOIN place pl ON p.postid = pl.postid;
+
+SELECT COUNT(p.postid)
+FROM post p
+         JOIN member m ON p.memberid = m.memberid
+         JOIN likes l ON p.postid = l.postid
+         JOIN place pl ON p.postid = pl.postid
+WHERE l.memberid = 101;
+
+SELECT *
+FROM post;
+
+
+SELECT *
+FROM likes;
+

@@ -32,14 +32,18 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-regular-svg-icons";
+import MapView from "../../component/Map/MapView.jsx";
 
 export function PostView() {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
-  const account = useContext(LoginContext);
-  const navigate = useNavigate();
+  const [place, setPlace] = useState([]);
   const [like, setLike] = useState({ like: false, count: 0 });
   const [isLikeLoading, setIsLikeLoading] = useState(false);
+  const [comment, setComment] = useState({ count: 0 });
+  const [toggle, setToggle] = useState("");
+  const account = useContext(LoginContext);
+  const navigate = useNavigate();
   const [isTransition, setIsTransition] = useState(false);
   const toast = useToast();
   const {
@@ -47,7 +51,6 @@ export function PostView() {
     onOpen: onModalOpenOfDelete,
     onClose: onModalCloseOfDelete,
   } = useDisclosure();
-  const [comment, setComment] = useState({ count: 0 });
 
   useEffect(() => {
     axios
@@ -69,6 +72,24 @@ export function PostView() {
       });
   }, [isLikeLoading, isTransition]);
 
+  useEffect(() => {
+    axios.get(`/api/post/${postId}/place`)
+      .then((res) => {
+      setPlace(res.data);
+    });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(`/api/post/${postId}/getMdPick`)
+      .then((res) => {
+        setToggle(res.data)
+        console.log(res.data)
+      })
+      .catch(() => {})
+      .finally(() => {})
+  }, []);
+
   // 게시글 번호 확인
   if (post === null || post === undefined) {
     return <Spinner />;
@@ -85,7 +106,7 @@ export function PostView() {
       .then((res) => {
         setLike(res.data);
       })
-      .catch((err) => {})
+      .catch(() => {})
       .finally(() => {
         setIsLikeLoading(false);
       });
@@ -113,6 +134,49 @@ export function PostView() {
       .finally(() => {
         onModalCloseOfDelete();
       });
+  }
+
+  // mdpick push
+  function handleMdPickPush() {
+    axios
+      .post(`/api/post/${postId}/push`, { postId: post.postId })
+      .then(() => {
+        toast({
+        status: "success",
+        position: "bottom",
+        description: "성공",
+      })
+        window.location.reload();
+        })
+      .catch(() => {
+        toast({
+        status: "error",
+        position: "bottom",
+        description: "실패",
+      })
+      })
+      .finally(() => {})
+  }
+
+  // mdpick pop
+  function handleMdPickPop() {
+    axios
+      .post(`/api/post/${postId}/pop`, { postId: post.postId })
+      .then(() => {
+        toast({
+          status: "success",
+          position: "bottom",
+          description: "성공",
+        })
+        window.location.reload();
+      })
+      .catch(() => {
+        toast({
+          status: "error",
+          position: "bottom",
+          description: "실패",
+        });})
+      .finally(() => {})
   }
 
   return (
@@ -233,18 +297,26 @@ export function PostView() {
           </GridItem>
         </Grid>
         <Box w={"576px"} h={"360px"} bg={"lightgray"} my={"32px"}>
-          지도
-          {/* Todo 지도 표기 필요 */}
+          <MapView />
         </Box>
-        <Box
+        <Flex
           w={{ base: "720px", lg: "1080px" }}
           h={"160px"}
           bg={"lightgray"}
           my={"32px"}
+          justify={"space-evenly"}
+          alignItems={"center"}
         >
-          장소 선택
-          {/* Todo 장소 내용 표기 필요 */}
-        </Box>
+          {place.map((place, index) => (
+            <Box key={index}>
+              <Box>
+                <Box>{place.placeName}</Box>
+                <Box>{place.address}</Box>
+                <Box>게시글에 등록 된 횟수 : {place.countPlace} 건</Box>
+              </Box>
+            </Box>
+          ))}
+        </Flex>
       </Flex>
       <Box
         w={"720px"}
@@ -281,9 +353,19 @@ export function PostView() {
         </Tooltip>
         <Spacer />
         {/* 수정 및 삭제 버튼 */}
-        {account.hasAccessMemberId(post.memberId) && (
+        {account.isAdmin() && (
           <Box>
             <Box align={"left"} my={10}>
+
+              {toggle === "x" && <Button
+                onClick= {handleMdPickPush}>
+                Push
+              </Button>}
+              {toggle === "o" && <Button
+                onClick={handleMdPickPop}>
+                Pop
+              </Button>}
+
               <Button onClick={() => navigate(`/post/${postId}/edit`)}>
                 <FontAwesomeIcon icon={faPenToSquare} />
                 <Text display={{ base: "none", lg: "block" }} ml={1}>

@@ -1,7 +1,7 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import { Box, Center, Flex } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import {LoginContext} from "./LoginProvider.jsx";
+import { LoginContext } from "./LoginProvider.jsx";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -24,36 +24,45 @@ function Navbar() {
           <Box>홈페이지 제목</Box>
         </Flex>
         <Center gap={12}>
-          <Box>MD Pick</Box>
+          <Box onClick={() => navigate("/post/mdList")} cursor={"pointer"}>
+            MD Pick
+          </Box>
           <Box onClick={() => navigate("/post/list")} cursor={"pointer"}>
             회원 게시판
           </Box>
         </Center>
         <Flex gap={3}>
           {account.isLoggedIn() || (
-          <Center onClick={() => navigate("/signup")} cursor={"pointer"}>
-            회원가입
-          </Center>
+            <Center onClick={() => navigate("/signup")} cursor={"pointer"}>
+              회원가입
+            </Center>
           )}
-          {account.isLoggedIn() ||(
-          <Center onClick={() => navigate("/login")} cursor={"pointer"}>
-            로그인
-          </Center>
-          )}
-          {account.isLoggedIn() && (
-            <Center onClick={() => {account.logout(); navigate("/")}} cursor={"pointer"}>
-              로그아웃
+          {account.isLoggedIn() || (
+            <Center onClick={() => navigate("/login")} cursor={"pointer"}>
+              로그인
             </Center>
           )}
           {account.isLoggedIn() && (
-          <Box onClick={() => navigate("/memberList")} cursor={"pointer"}>
-            멤버 리스트
-          </Box>
+            <Center
+              onClick={() => {
+                account.logout();
+                navigate("/");
+              }}
+              cursor={"pointer"}
+            >
+              로그아웃
+            </Center>
           )}
+          {account.isAdmin() && (
+            <Box onClick={() => navigate("/memberList")} cursor={"pointer"}>
+              admin 페이지
+            </Box>
+          )}
+
           {account.isLoggedIn() && (
-          <Center onClick={() => navigate("/memberinfo")} cursor={"pointer"}>
-            프로필
-          </Center>
+            <Center onClick={() => navigate("/memberinfo")} cursor={"pointer"}>
+              프로필
+            </Center>
           )}
         </Flex>
       </Flex>
