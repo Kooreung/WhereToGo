@@ -27,7 +27,7 @@ function PostWrite() {
   const [content, setContent] = useState("");
   const [selectedPlaces, setSelectedPlaces] = useState([]);
   const [isNavigating, setIsNavigating] = useState(false);
-  const [contentCheack, setContentCheack] = useState("");
+  const [disableSaveButton, setDisableSaveButton] = useState("able");
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -47,13 +47,7 @@ function PostWrite() {
   } = useDisclosure();
 
   // 저장 버튼 비활성화 조건
-  let disableSaveButton = "able";
-  if (title.trim().length === 0) {
-    disableSaveButton = "disableToTitle";
-  }
-  if (contentCheack.trim().length === 0) {
-    disableSaveButton = "disableToContent";
-  }
+
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
@@ -70,6 +64,22 @@ function PostWrite() {
 
   // 저장 버튼 클릭 시
   function handleClickSave() {
+    if (title.trim().length === 0) {
+      toast({
+        status: "error",
+        position: "bottom",
+        description: "제목을 다시 확인해주세요.",
+      });
+      return;
+    }
+    if (content.trim().length <= 7) {
+      toast({
+        status: "error",
+        position: "bottom",
+        description: "내용을 다시 확인해주세요.",
+      });
+      return;
+    }
     setLoading(true);
     axios
       .postForm("/api/post/add", { title, content })
@@ -167,7 +177,6 @@ function PostWrite() {
               <Box align={"left"} my={10}>
                 <DraftEditor
                   setContent={setContent}
-                  setContentCheack={setContentCheack}
                 />
               </Box>
             </Box>

@@ -22,7 +22,7 @@ const Viewer = styled.div`
   border: 2px solid gray;
 `;
 
-const Draft = ({ setContent, setContentCheack }) => {
+const Draft = ({ setContent }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const isMounted = useRef(false); // 마운트 상태 추적용 ref
 
@@ -44,7 +44,6 @@ const Draft = ({ setContent, setContentCheack }) => {
       const doc = parser.parseFromString(htmlString, "text/html");
       return doc.body.textContent || "";
     }
-    setContentCheack(parseHtmlToText(html));
     setContent(html);
   };
 
