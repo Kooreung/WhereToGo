@@ -305,25 +305,30 @@ export function PostView() {
             </Flex>
           </GridItem>
         </Grid>
+
         <Box w={"576px"} h={"360px"} bg={"lightgray"} my={"32px"}>
           <MapView />
         </Box>
+
         <Flex
-          w={{ base: "720px", lg: "1080px" }}
+          w={{ base: "540px", lg: "540px" }}
           h={"160px"}
           bg={"lightgray"}
           my={"32px"}
-          justify={"space-evenly"}
+          gap={6}
           alignItems={"center"}
+          overflow={"hidden"}
+          border={"1px dotted red"}
         >
           {place.map((place, index) => (
-            <Box key={index}>
+            <Box key={index} w={"540px"}>
               <Link
                 href={place.placeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Box>
+                  <Box>{index + 1}번 장소</Box>
                   <Box>{place.placeName}</Box>
                   <Box>{place.address}</Box>
                   <Box>게시글에 등록 된 횟수 : {place.countPlace} 건</Box>
