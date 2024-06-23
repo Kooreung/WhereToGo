@@ -3,8 +3,6 @@ import {
   Box,
   Button,
   Flex,
-  FormControl,
-  FormLabel,
   Input,
   Modal,
   ModalBody,
@@ -135,56 +133,51 @@ function PostWrite() {
   return (
     <Flex direction={"column"} align={"center"}>
       <Flex direction={"column"} align={"center"}>
-        <Box w={"540px"} bg={"lightgray"} my={"2rem"}>
-          <Box align={"left"} mb={"1rem"}>
-            <FormControl>
-              <FormLabel>제목</FormLabel>
-              <Input
-                placeholder={"제목을 작성해주세요."}
-                onChange={(e) => setTitle(e.target.value)}
-              ></Input>
-            </FormControl>
+        <Box w={"720px"} mt={"2rem"}>
+          <Box>
+            <Input
+              placeholder={"제목을 작성해주세요."}
+              onChange={(e) => setTitle(e.target.value)}
+            />
           </Box>
         </Box>
-        <Box w={"576px"} bg={"lightgray"} my={"32px"}>
+        <Box w={"720px"} my={"2rem"}>
           <MapAdd
             selectedPlaces={selectedPlaces}
             setSelectedPlaces={setSelectedPlaces}
           />
         </Box>
         <Box>
-          <Box>
-            <Box w={"720px"} bg={"lightgray"} my={"32px"}>
-              <Box align={"left"} my={10}>
-                <DraftEditor setContent={setContent} />
-              </Box>
+          <Box w={"720px"}>
+            <Box>
+              <DraftEditor setContent={setContent} />
             </Box>
-            <Box align={"left"} my={10}>
-              <Tooltip
-                hasArrow
-                isDisabled={disableSaveButton === "able"}
-                label={
-                  disableSaveButton === "disableToTitle"
-                    ? "제목을 확인해주세요."
-                    : disableSaveButton === "disableToContent"
-                      ? "내용을 확인해주세요."
-                      : disableSaveButton === "disableToPlace"
-                        ? "장소를 선택해주세요."
-                        : ""
-                }
+          </Box>
+          <Box my={"2rem"}>
+            <Tooltip
+              hasArrow
+              isDisabled={disableSaveButton === "able"}
+              label={
+                disableSaveButton === "disableToTitle"
+                  ? "제목을 확인해주세요."
+                  : disableSaveButton === "disableToContent"
+                    ? "내용을 확인해주세요."
+                    : disableSaveButton === "disableToPlace"
+                      ? "장소를 선택해주세요."
+                      : ""
+              }
+            >
+              <Button
+                onClick={onModalOpenOfSave}
+                isLoading={loading}
+                isDisabled={disableSaveButton !== "able"}
               >
-                <Button
-                  onClick={onModalOpenOfSave}
-                  isLoading={loading}
-                  isDisabled={disableSaveButton !== "able"}
-                >
-                  등록
-                </Button>
-              </Tooltip>
-              <Button onClick={onModalOpenOfCancel}>취소</Button>
-              {/* Todo 게시글 작성 중 임시저장 필요 */}
-              {/* TODO 게시글 수정하다가 나가려고 하면 Modal 표기 */}
-            </Box>
+                등록
+              </Button>
+            </Tooltip>
+            <Button onClick={onModalOpenOfCancel}>취소</Button>
+            {/* Todo 게시글 작성 중 임시저장 필요 */}
+            {/* TODO 게시글 수정하다가 나가려고 하면 Modal 표기 */}
           </Box>
         </Box>
       </Flex>

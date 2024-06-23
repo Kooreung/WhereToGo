@@ -319,13 +319,17 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
     );
   }
 
-  // 클릭 시 나오는 인포윈도우
+  // 마우스 오버 시 나오는 인포윈도우
   function SelectedMarkersInfoWindow({ place }) {
     return (
       <Box
         style={{
-          borderRadius: "100%",
-          backgroundColor: "white",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+          paddingLeft: "8px",
+          paddingRight: "8px",
+          boxShadow: "0 0 0 2px white, 0 0 0 4px orange",
         }}
       >
         <Box>{place.place_name}</Box>
@@ -335,18 +339,18 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   }
 
   return (
-    <Box>
-      <Box mb={"2rem"}>
+    <Box w={"720px"}>
+      <Box>
         <Flex>
           <Input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="검색어를 입력하세요"
+            placeholder="검색어를 입력하세요."
           />
           <Button onClick={searchPlaces}>검색</Button>
         </Flex>
-        <Box maxH={"200px"} overflowY={"auto"}>
+        <Box maxH={"200px"} overflowY={"auto"} my={3}>
           {places.map((place, index) => (
             <Flex key={index}>
               <Box>
@@ -367,7 +371,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
         </Box>
       </Box>
 
-      <Box id="map" ref={mapRef} w={"576px"} h={"360px"}></Box>
+      <Box id="map" ref={mapRef} w={"720px"} h={"360px"} />
 
       <Box>
         <Box>
