@@ -36,7 +36,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   const mapRef = useRef(null);
   const kakaoMapAppKey = import.meta.env.VITE_KAKAO_MAP_APP_KEY;
   const [places, setPlaces] = useState([]);
-  const [placeData, setPlaceData] = useState([]);
+  // const [placeData, setPlaceData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [map, setMap] = useState(null);
   const [ps, setPs] = useState(null);
@@ -88,13 +88,34 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
         const searchedMarker = new window.kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(place.y, place.x),
           map: map,
-          title: place.place_name,
         });
+
+        // 인포윈도우 생성
+        let content = renderToString(
+          <SelectedMarkersInfoWindow place={place} />,
+        );
+        const infoWindow = new window.kakao.maps.InfoWindow({
+          position: new window.kakao.maps.LatLng(place.y, place.x),
+          content: content,
+        });
+
+        kakao.maps.event.addListener(searchedMarker, "mouseover", function () {
+          // 모든 인포윈도우를 닫습니다.
+          newMarkers.forEach(({ infoWindow }) => infoWindow.close());
+          // 현재 마커의 인포윈도우를 엽니다.
+          infoWindow.open(map, searchedMarker);
+        });
+        kakao.maps.event.addListener(searchedMarker, "mouseout", function () {
+          // 모든 인포윈도우를 닫습니다.
+          newMarkers.forEach(({ infoWindow }) => infoWindow.close());
+        });
+
         bounds.extend(searchedMarker.getPosition());
-        return searchedMarker;
+        // 마커와 인포윈도우 객체 저장
+        return { marker: searchedMarker, infoWindow: infoWindow };
       });
 
-      setSearchedMarkers(newMarkers);
+      setSearchedMarkers(newMarkers.map(({ marker }) => marker));
       map.setBounds(bounds);
     }
   }, [map, places]);
@@ -200,6 +221,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
     const callback = (result, status) => {
       if (status === window.kakao.maps.services.Status.OK) {
         setPlaces(result);
+        console.log(result);
       } else {
         alert("검색 결과가 존재하지 않습니다.");
       }
@@ -293,6 +315,21 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
         }}
       >
         {index + 1}
+      </Box>
+    );
+  }
+
+  // 클릭 시 나오는 인포윈도우
+  function SelectedMarkersInfoWindow({ place }) {
+    return (
+      <Box
+        style={{
+          borderRadius: "100%",
+          backgroundColor: "white",
+        }}
+      >
+        <Box>{place.place_name}</Box>
+        <Box>{place.address_name}</Box>
       </Box>
     );
   }
