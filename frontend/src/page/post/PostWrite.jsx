@@ -84,7 +84,7 @@ function PostWrite() {
               placeName: place.place_name,
               placeUrl: place.place_url,
               address: place.address_name,
-              category: place.category,
+              category: place.category_group_name,
               latitude: parseFloat(place.y),
               longitude: parseFloat(place.x),
               postId: postId,
