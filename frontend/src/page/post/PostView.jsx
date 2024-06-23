@@ -6,6 +6,7 @@ import {
   Flex,
   Grid,
   GridItem,
+  Link,
   Modal,
   ModalBody,
   ModalContent,
@@ -92,7 +93,6 @@ export function PostView() {
       .get(`/api/post/${postId}/getMdPick`)
       .then((res) => {
         setToggle(res.data);
-        console.log(res.data);
       })
       .catch(() => {})
       .finally(() => {});
@@ -318,11 +318,17 @@ export function PostView() {
         >
           {place.map((place, index) => (
             <Box key={index}>
-              <Box>
-                <Box>{place.placeName}</Box>
-                <Box>{place.address}</Box>
-                <Box>게시글에 등록 된 횟수 : {place.countPlace} 건</Box>
-              </Box>
+              <Link
+                href={place.placeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Box>
+                  <Box>{place.placeName}</Box>
+                  <Box>{place.address}</Box>
+                  <Box>게시글에 등록 된 횟수 : {place.countPlace} 건</Box>
+                </Box>
+              </Link>
             </Box>
           ))}
         </Flex>
