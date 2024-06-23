@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -52,9 +52,11 @@ export function PostView() {
   const [isLikeLoading, setIsLikeLoading] = useState(false);
   const [comment, setComment] = useState({ count: 0 });
   const [toggle, setToggle] = useState("");
+  const [isTransition, setIsTransition] = useState(false);
+  const dataRef = useRef(null);
+  const [positionX, setPositionX] = useState(0);
   const account = useContext(LoginContext);
   const navigate = useNavigate();
-  const [isTransition, setIsTransition] = useState(false);
   const toast = useToast();
   const {
     isOpen: isModalOpenOfDelete,
@@ -188,6 +190,16 @@ export function PostView() {
       .finally(() => {});
   }
 
+  function handleMoveLeft() {
+    setPositionX((prev) => Math.min(prev + 270, 0));
+  }
+
+  function handleMoveRight() {
+    const flexWidth = dataRef.current.scrollWidth;
+    const containerWidth = dataRef.current.parentElement.offsetWidth;
+    setPositionX((prev) => Math.max(prev - 270, containerWidth - flexWidth));
+  }
+
   return (
     <Flex direction="column" align="center">
       <Flex direction="column" align="center">
@@ -310,32 +322,59 @@ export function PostView() {
           <MapView />
         </Box>
 
-        <Flex
-          w={{ base: "540px", lg: "540px" }}
-          h={"160px"}
-          bg={"lightgray"}
-          my={"32px"}
-          gap={6}
-          alignItems={"center"}
-          overflow={"hidden"}
-          border={"1px dotted red"}
-        >
-          {place.map((place, index) => (
-            <Box key={index} w={"540px"}>
-              <Link
-                href={place.placeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Box>
-                  <Box>{index + 1}번 장소</Box>
-                  <Box>{place.placeName}</Box>
-                  <Box>{place.address}</Box>
-                  <Box>게시글에 등록 된 횟수 : {place.countPlace} 건</Box>
+        <Flex w={"540px"} h={"160px"} alignItems={"center"} bg={"lightgray"}>
+          <Button onClick={handleMoveLeft}>옆</Button>
+          <Box
+            w={"540px"}
+            overflow={"hidden"}
+            border={"1px dotted red"}
+            alignItems={"center"}
+            gap={6}
+          >
+            <Flex
+              ref={dataRef}
+              sx={{
+                transform: `translateX(${positionX}px)`,
+                transition: "transform 0.5s ease",
+              }}
+            >
+              {place.map((place, index) => (
+                <Box key={index}>
+                  <Link
+                    href={place.placeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Box w={"270px"} border={"1px dotted red"} p={3}>
+                      <Box
+                        overflow={"hidden"}
+                        textOverflow={"ellipsis"}
+                        whiteSpace={"nowrap"}
+                      >
+                        {index + 1}번 장소
+                      </Box>
+                      <Box
+                        overflow={"hidden"}
+                        textOverflow={"ellipsis"}
+                        whiteSpace={"nowrap"}
+                      >
+                        {place.placeName}
+                      </Box>
+                      <Box
+                        overflow={"hidden"}
+                        textOverflow={"ellipsis"}
+                        whiteSpace={"nowrap"}
+                      >
+                        {place.address}
+                      </Box>
+                      <Box>게시글 등록 횟수 : {place.countPlace} 건</Box>
+                    </Box>
+                  </Link>
                 </Box>
-              </Link>
-            </Box>
-          ))}
+              ))}
+            </Flex>
+          </Box>
+          <Button onClick={handleMoveRight}>옆</Button>
         </Flex>
       </Flex>
       <Box
