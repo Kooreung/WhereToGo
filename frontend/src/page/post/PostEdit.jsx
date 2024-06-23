@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -21,6 +21,8 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import Lobby from "../Lobby.jsx";
+import { LoginContext } from "../../component/LoginProvider.jsx";
 
 export function PostEdit() {
   const { postId } = useParams();
@@ -28,6 +30,8 @@ export function PostEdit() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
+  const account = useContext(LoginContext);
+
   const {
     isOpen: isModalOpenOfSave,
     onOpen: onModalOpenOfSave,
@@ -103,6 +107,14 @@ export function PostEdit() {
       position: "bottom",
       description: "게시글 수정이 취소되었습니다.",
     });
+  }
+
+  if (account.isLoggedIn()) {
+    return (
+      <Box>
+        <Lobby />;
+      </Box>
+    );
   }
 
   return (

@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import MapAdd from "../../component/Map/MapAdd.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import DraftEditor from "../../component/DraftEditor.jsx";
+import Lobby from "../Lobby.jsx";
 
 function PostWrite() {
   const [title, setTitle] = useState("");
@@ -130,6 +131,14 @@ function PostWrite() {
       position: "bottom",
       description: "게시글 작성이 취소되었습니다.",
     });
+  }
+
+  if (!account.isLoggedIn()) {
+    return (
+      <Box>
+        <Lobby />;
+      </Box>
+    );
   }
 
   return (

@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import {useNavigate, useSearchParams} from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
-  Box, Button, Center, Flex,
-  Heading, Input, Select,
-  Spinner,
+  Box,
+  Button,
+  Center,
+  Flex,
+  Heading,
+  Input,
+  Select,
   Table,
   Tbody,
   Td,
@@ -12,8 +16,10 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import Lobby from "../Lobby.jsx";
+import { LoginContext } from "../../component/LoginProvider.jsx";
 
 export function MemberList() {
   const [memberList, setMemberList] = useState([]);
@@ -22,7 +28,7 @@ export function MemberList() {
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
-
+  const account = useContext(LoginContext);
 
   useEffect(() => {
     axios.get(`/api/member/list?${searchParams}`).then((res) => {
@@ -58,6 +64,14 @@ export function MemberList() {
     navigate(`/memberList/?${searchParams}`);
   }
 
+  if (!account.isAdmin()) {
+    return (
+      <Box>
+        <Lobby />;
+      </Box>
+    );
+  }
+
   return (
     <Box>
       <Box mb={10}>
@@ -65,36 +79,36 @@ export function MemberList() {
       </Box>
       {memberList.length === 0 && <Center>조회 결과가 없습니다.</Center>}
       {memberList.length > 0 && (
-      <Box mb={10}>
-        <Table>
-          <Thead>
-            <Tr>
-              <Th w={20}>#</Th>
-              <Th>이메일</Th>
-              <Th w={"150px"}>별명</Th>
-              <Th w={96}>가입일시</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {memberList.map((member) => (
-              <Tr
-                cursor={"pointer"}
-                sx={{
-                  "&:hover": {
-                    backgroundColor: "RGBA(0, 0, 0, 0.06)",
-                  },
-                }}
-                onClick={() => navigate(`/member/${member.memberId}`)}
-                key={member.memberId}
-              >
-                <Td>{member.memberId}</Td>
-                <Td>{member.email}</Td>
-                <Td>{member.nickName}</Td>
+        <Box mb={10}>
+          <Table>
+            <Thead>
+              <Tr>
+                <Th w={20}>#</Th>
+                <Th>이메일</Th>
+                <Th w={"150px"}>별명</Th>
+                <Th w={96}>가입일시</Th>
               </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </Box>
+            </Thead>
+            <Tbody>
+              {memberList.map((member) => (
+                <Tr
+                  cursor={"pointer"}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "RGBA(0, 0, 0, 0.06)",
+                    },
+                  }}
+                  onClick={() => navigate(`/member/${member.memberId}`)}
+                  key={member.memberId}
+                >
+                  <Td>{member.memberId}</Td>
+                  <Td>{member.email}</Td>
+                  <Td>{member.nickName}</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </Box>
       )}
       <Center>
         <Flex>
@@ -120,39 +134,43 @@ export function MemberList() {
       </Center>
 
       <Center>
-      <Box>
-        {pageInfo.prevPageNumber && (
-          <>
-            <Button onClick={() => handlePageButtonClick(1)}>처음</Button>
-          <Button onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}>
-            이전
-          </Button>
-          </>
-        )}
-        {pageNumbers.map((pageNumber) => (
-          <Button
-            onClick={() => handlePageButtonClick(pageNumber)}
-            key={pageNumber}
-            colorScheme={
-              pageNumber === pageInfo.currentPageNumber ? "blue" : "gray"
-            }
-          >
-            {pageNumber}
-          </Button>
-        ))}
-        {pageInfo.nextPageNumber && (
-          <>
-          <Button onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}>
-            다음
-          </Button>
-        <Button
-          onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
-        >
-          맨끝
-        </Button>
-          </>
-        )}
-      </Box>
+        <Box>
+          {pageInfo.prevPageNumber && (
+            <>
+              <Button onClick={() => handlePageButtonClick(1)}>처음</Button>
+              <Button
+                onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
+              >
+                이전
+              </Button>
+            </>
+          )}
+          {pageNumbers.map((pageNumber) => (
+            <Button
+              onClick={() => handlePageButtonClick(pageNumber)}
+              key={pageNumber}
+              colorScheme={
+                pageNumber === pageInfo.currentPageNumber ? "blue" : "gray"
+              }
+            >
+              {pageNumber}
+            </Button>
+          ))}
+          {pageInfo.nextPageNumber && (
+            <>
+              <Button
+                onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
+              >
+                다음
+              </Button>
+              <Button
+                onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
+              >
+                맨끝
+              </Button>
+            </>
+          )}
+        </Box>
       </Center>
     </Box>
   );
