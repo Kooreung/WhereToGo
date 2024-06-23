@@ -8,7 +8,6 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { renderToString } from "react-dom/server";
-import axios from "axios";
 
 const loadKakaoMapScript = (appKey, libraries = []) => {
   return new Promise((resolve, reject) => {
@@ -46,12 +45,12 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   const [selectedMarkers, setSelectedMarkers] = useState([]);
   const [polylines, setPolylines] = useState([]);
 
-  useEffect(() => {
-    axios.get(`/api/post/place/{selectPlaces}`).then((res) => {
-      setPlaceData(res.data);
-      console.log(placeData);
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios.get(`/api/post/place/{selectPlaces}`).then((res) => {
+  //     setPlaceData(res.data);
+  //     console.log(placeData);
+  //   });
+  // }, []);
 
   // 기본 지도 생성
   useEffect(() => {
@@ -94,6 +93,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
         bounds.extend(searchedMarker.getPosition());
         return searchedMarker;
       });
+
       setSearchedMarkers(newMarkers);
       map.setBounds(bounds);
     }
@@ -343,21 +343,17 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {place.place_name}
-                  </Link>
-                </Box>
-                <Box>{place.road_address_name}</Box>
-                <Box>{place.phone}</Box>
-                <Box>
-                  {placeData.map((place, index) => (
-                    <Box key={index}>
-                      <Box>
-                        <Box>{place.placeName}</Box>
-                        <Box>{place.address}</Box>
-                        <Box>게시글에 등록 된 횟수 : {place.countPlace} 건</Box>
-                      </Box>
+                    <Box>
+                      <Box>{place.place_name}</Box>
+                      <Box>{place.road_address_name}</Box>
+                      <Box>{place.phone}</Box>
+                      {/*<Box>*/}
+                      {/*  {placeData.map((place, index) => (*/}
+                      {/*    <Box key={index}></Box>*/}
+                      {/*  ))}*/}
+                      {/*</Box>*/}
                     </Box>
-                  ))}
+                  </Link>
                 </Box>
               </Box>
               <Spacer />

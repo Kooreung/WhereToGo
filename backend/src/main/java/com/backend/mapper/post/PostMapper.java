@@ -146,6 +146,7 @@ public interface PostMapper {
             """)
     List<Place> getPlaceList(Integer postId);
 
+    // 게시글 작성 시 선택한 장소 카운트 매퍼
     @Select("""
             SELECT p.postid,
                    (SELECT COUNT(pl_inner.postid)
