@@ -63,7 +63,7 @@ const KakaoMapSearch = () => {
         const map = new window.kakao.maps.Map(container, options);
         setMap(map);
 
-        // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+        // 지도 확대 축소를 제어할 수 있는 줌 컨트롤을 생성합니다
         const zoomControl = new kakao.maps.ZoomControl();
         map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
@@ -78,21 +78,19 @@ const KakaoMapSearch = () => {
   useEffect(() => {
     if (map !== null && places.length > 0) {
       const bounds = new window.kakao.maps.LatLngBounds();
-
-      markers.forEach((marker) => marker.setMap(null));
-      setMarkers([]);
-
-      const postMarkers = places.map((place) => {
-        const marker = new window.kakao.maps.Marker({
+      const postMarkers = places.map((place, index) => {
+        let content = renderToString(<PostSelectedPlaceMarker index={index} />);
+        const customMarker = new window.kakao.maps.CustomOverlay({
           position: new window.kakao.maps.LatLng(
             place.latitude,
             place.longitude,
           ),
-          map: map,
+          content: content,
           title: place.place_name,
         });
-        bounds.extend(marker.getPosition());
-        return marker;
+        customMarker.setMap(map);
+        bounds.extend(customMarker.getPosition());
+        return customMarker;
       });
       setMarkers(postMarkers);
       map.setBounds(bounds);
@@ -104,7 +102,6 @@ const KakaoMapSearch = () => {
       polylines.forEach((polyline) => polyline.setMap(null));
 
       const bounds = new window.kakao.maps.LatLngBounds();
-
       const newPolylines = places.map((place, index) => {
         if (index === places.length - 1) return null;
         const path = [
@@ -206,6 +203,23 @@ const KakaoMapSearch = () => {
             <Badge style={{ color: "orange" }}>{distance}</Badge> m
           </Box>
         </UnorderedList>
+      </Box>
+    );
+  }
+
+  // 해당 인덱스의 마커
+  function PostSelectedPlaceMarker({ index }) {
+    return (
+      <Box
+        style={{
+          borderRadius: "100%",
+          backgroundColor: "white",
+          paddingLeft: "8px",
+          paddingRight: "8px",
+          boxShadow: "0 0 0 4px white, 0 0 0 8px orange",
+        }}
+      >
+        {index + 1}
       </Box>
     );
   }
