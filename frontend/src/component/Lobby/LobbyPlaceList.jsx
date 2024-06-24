@@ -56,6 +56,11 @@ const places = [
     keyword: "양천구",
     src: "https://kooreungsbucket.s3.ap-northeast-2.amazonaws.com/prj3/defaultProfile.png",
   },
+  {
+    name: "도봉구",
+    keyword: "도봉구",
+    src: "https://kooreungsbucket.s3.ap-northeast-2.amazonaws.com/prj3/defaultProfile.png",
+  },
   // 필요한 만큼 장소 추가
 ];
 
@@ -67,11 +72,11 @@ export function LobbyPlaceList() {
   function handleMoveRight() {
     const flexWidth = dataRef.current.scrollWidth;
     const containerWidth = dataRef.current.parentElement.offsetWidth;
-    setPositionX((prev) => Math.max(prev - 125, containerWidth - flexWidth));
+    setPositionX((prev) => Math.max(prev - 250, containerWidth - flexWidth));
   }
 
   function handleMoveLeft() {
-    setPositionX((prev) => Math.min(prev + 125, 0));
+    setPositionX((prev) => Math.min(prev + 250, 0));
   }
 
   return (
@@ -80,7 +85,7 @@ export function LobbyPlaceList() {
         <Center>
           <Button onClick={handleMoveLeft}>옆</Button>
         </Center>
-        <Box w={"554px"} overflow={"hidden"} border={"1px solid black"}>
+        <Box w={"800px"} overflow={"hidden"} border={"1px solid black"}>
           <Flex
             spacing="20px"
             border={"5px solid red"}
