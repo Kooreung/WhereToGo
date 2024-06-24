@@ -44,6 +44,7 @@ public interface PostMapper {
             <script>
             SELECT p.postid, p.title, p.content, p.createdate, p.view,
                    m.nickname,
+                   plpic.picurl,
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l.memberid) likeCount
             FROM post p JOIN member m ON p.memberid = m.memberid
@@ -51,6 +52,7 @@ public interface PostMapper {
                         LEFT JOIN comment c ON p.postid = c.postid
                         LEFT JOIN likes l ON p.postid = l.postid
                         LEFT JOIN place pl ON p.postid = pl.postid
+                        LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
             <where>
             a.authtype != 'admin'
                  <if test="searchType != null">
@@ -115,10 +117,11 @@ public interface PostMapper {
     @Select("""
             SELECT p.postid,
                    p.title,
-                p.content,
+                   p.content,
                    p.view,
                    p.createDate,
                    m.nickName,
+                   plpic.picurl,
                    COUNT(DISTINCT c.commentid)                                                 commentCount,
                    COUNT(DISTINCT l.memberid)                                                  likeCount,
                    ROW_NUMBER() OVER (ORDER BY likeCount DESC, p.view DESC, commentCount DESC) postOfBest
@@ -126,7 +129,9 @@ public interface PostMapper {
                      JOIN member m ON p.memberid = m.memberid
                      LEFT JOIN comment c ON p.postid = c.postid
                      LEFT JOIN likes l ON p.postid = l.postid
-            GROUP BY p.postid, p.title, p.view, m.nickName,p.content
+                     LEFT JOIN place pl ON p.postid = pl.postid
+                     LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
+            GROUP BY p.postid, p.title, p.view, m.nickName, p.content
             LIMIT 3
             """)
     List<Post> selectPostOfBest();

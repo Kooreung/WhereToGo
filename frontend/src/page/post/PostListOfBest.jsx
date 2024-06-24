@@ -1,5 +1,5 @@
 // 회원 인기 게시글
-import { Box, Flex, Heading, Spacer, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Image, Spacer, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -39,13 +39,13 @@ export function PostListOfBest() {
               },
             }}
           >
-            <Box
-              border={"1px dotted red"}
-              alignContent={"center"}
-              w={"160px"}
-              h={"160px"}
-            >
-              썸네일
+            <Box alignContent={"center"} w={"160px"} h={"160px"}>
+              <Image
+                src={post.picurl}
+                objectFit={"cover"}
+                w={"100%"}
+                h={"100%"}
+              />
             </Box>
             <Flex
               textAlign={"start"}
@@ -126,13 +126,13 @@ export function PostListOfBest() {
               },
             }}
           >
-            <Box
-              border={"1px dotted red"}
-              alignContent={"center"}
-              w={"120px"}
-              h={"120px"}
-            >
-              썸네일
+            <Box alignContent={"center"} w={"120px"} h={"120px"}>
+              <Image
+                src={post.picurl}
+                objectFit={"cover"}
+                w={"100%"}
+                h={"100%"}
+              />
             </Box>
             <Box
               w={"120px"}
