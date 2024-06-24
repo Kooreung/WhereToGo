@@ -33,6 +33,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
 import Lobby from "../Lobby.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
+import { getInputStyles } from '/src/css/styles.js';
 
 export function MemberSignup() {
   const [email, setEmail] = useState("");
@@ -60,6 +61,8 @@ export function MemberSignup() {
   const toast = useToast();
   const navigate = useNavigate();
   const account = useContext(LoginContext);
+
+  const inputStyles = getInputStyles();
 
   const isValidEmail = (email) => emailPattern.test(email);
   const isValidPassword = (password) => passwordPattern.test(password);
@@ -267,13 +270,14 @@ export function MemberSignup() {
   return (
     <Center>
       <Box w={500}>
-        <Box>
+        <Center mb={10}>
           <Heading>회원 가입</Heading>
-        </Box>
-        <Box mb={7}>
+        </Center>
+        <Box mb={6}>
           <FormControl>
             <FormLabel>파일</FormLabel>
             <Input
+              h={12}
               multiple
               type="file"
               accept="image/*"
@@ -289,6 +293,7 @@ export function MemberSignup() {
             <FormControl>
               <FormLabel>이메일</FormLabel>
               <Input
+                style={inputStyles}
                 maxLength="25"
                 placeholder="project@naver.com"
                 value={email}
@@ -318,6 +323,7 @@ export function MemberSignup() {
             <FormControl>
               <FormLabel>비밀번호</FormLabel>
               <Input
+                style={inputStyles}
                 maxLength="50"
                 placeholder="최소 8자 이상(알파벳, 숫자 필수)"
                 type="password"
@@ -338,6 +344,7 @@ export function MemberSignup() {
             <FormControl>
               <FormLabel>비밀번호 확인</FormLabel>
               <Input
+                style={inputStyles}
                 maxLength="50"
                 placeholder="비밀번호를 한번 더 입력해 주세요."
                 type="password"
@@ -355,6 +362,7 @@ export function MemberSignup() {
             <FormControl>
               <FormLabel>이름</FormLabel>
               <Input
+                style={inputStyles}
                 maxLength="30"
                 placeholder="홍길동"
                 value={name}
@@ -366,6 +374,7 @@ export function MemberSignup() {
             <FormControl>
               <FormLabel>닉네임</FormLabel>
               <Input
+                style={inputStyles}
                 maxLength="20"
                 placeholder="별명"
                 value={nickName}
@@ -386,7 +395,7 @@ export function MemberSignup() {
           <Box>
             <FormControl>
               <FormLabel>성별</FormLabel>
-              <RadioGroup value={gender} onChange={(e) => setGender(e)}>
+              <RadioGroup mb={6} value={gender} onChange={(e) => setGender(e)}>
                 <Radio value="남자">남자</Radio>
                 <Radio value="여자">여자</Radio>
               </RadioGroup>
@@ -397,8 +406,9 @@ export function MemberSignup() {
           <Box>
             <FormControl>
               <FormLabel>생년월일</FormLabel>
-              <Box display="flex" justifyContent="space-between">
+              <Box mb={6} display="flex" justifyContent="space-between">
                 <Select
+                  h={12}
                   placeholder="출생 연도"
                   value={birthYear}
                   onChange={(e) => setBirthYear(e.target.value)}
@@ -411,6 +421,7 @@ export function MemberSignup() {
                   ))}
                 </Select>
                 <Select
+                  h={12}
                   placeholder="월"
                   value={birthMonth}
                   onChange={(e) => setBirthMonth(e.target.value)}
@@ -423,6 +434,7 @@ export function MemberSignup() {
                   ))}
                 </Select>
                 <Select
+                  h={12}
                   placeholder="일"
                   value={birthDay}
                   onChange={(e) => setBirthDay(e.target.value)}
@@ -441,6 +453,7 @@ export function MemberSignup() {
             <FormControl>
               <FormLabel>전화번호</FormLabel>
               <Input
+                style={inputStyles}
                 maxLength="30"
                 placeholder="숫자만 입력해 주세요."
                 value={phoneNumber}
@@ -459,20 +472,22 @@ export function MemberSignup() {
           <Box>
             <FormControl>
               <FormLabel>주소</FormLabel>
-              <InputGroup>
-                <Input
-                  maxLength="100"
-                  placeholder="주소를 검색하거나 직접 입력해 주세요."
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value.trim())}
-                />
-                <InputRightElement w={"75px"} mr={1}>
-                  <Button onClick={onOpen}>
-                    <FontAwesomeIcon icon={faMagnifyingGlass} />
-                    검색
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
+                <InputGroup>
+                  <Input
+                    h={12}
+                    mb={10}
+                    maxLength="100"
+                    placeholder="주소를 검색하거나 직접 입력해 주세요."
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value.trim())}
+                  />
+                  <InputRightElement w={"75px"} mr={1}>
+                    <Button onClick={onOpen} mt={2}>
+                      <FontAwesomeIcon icon={faMagnifyingGlass} />
+                      검색
+                    </Button>
+                  </InputRightElement>
+                </InputGroup>
             </FormControl>
           </Box>
           <Modal isOpen={isOpen} onClose={onClose}>
@@ -491,6 +506,8 @@ export function MemberSignup() {
         <Box>
           <Button
             w={500}
+            h={12}
+            mb={10}
             onClick={handleClick}
             isLoading={isLoading}
             isDisabled={isDisabled}
@@ -498,7 +515,7 @@ export function MemberSignup() {
             회원가입
           </Button>
         </Box>
-        <Box>
+        <Center mb={20}>
           이미 회원이신가요? &nbsp;
           <Link
             to="/login"
@@ -506,7 +523,7 @@ export function MemberSignup() {
           >
             로그인
           </Link>
-        </Box>
+        </Center>
       </Box>
     </Center>
   );
