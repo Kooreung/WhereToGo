@@ -27,8 +27,6 @@ function PostWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectedPlaces, setSelectedPlaces] = useState([]);
-  const [isNavigating, setIsNavigating] = useState(false);
-  const [disableSaveButton, setDisableSaveButton] = useState("able");
   const [postType, setPostType] = useState("");
 
   const [loading, setLoading] = useState(false);

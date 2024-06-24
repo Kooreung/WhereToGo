@@ -74,6 +74,12 @@ export function PostView() {
     onClose: onModalCloseOfBanner,
   } = useDisclosure();
 
+  const {
+    isOpen: isModalOpenPop,
+    onOpen: onModalOpenPop,
+    onClose: onModalClosePop,
+  } = useDisclosure();
+
   useEffect(() => {
     axios
       .get(`/api/post/${postId}`)
@@ -414,8 +420,19 @@ export function PostView() {
               )}
               {toggle === "o" && <Button onClick={onModalOpenPop}>Pop</Button>}
             </Box>
-
+            <Modal isOpen={isModalOpenPop} onClose={onModalClosePop}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>MD PICK 제거</ModalHeader>
+                <ModalBody>게시글을 제거하시겠습니까?</ModalBody>
+                <ModalFooter>
+                  <Button onClick={handleMdPickPop}>제거</Button>
+                  <Button onClick={onModalClosePop}>취소</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
           </Box>
+
         )}
         {/* 수정 및 삭제 버튼 */}
         {account.hasAccessMemberId(post.memberId) ||
