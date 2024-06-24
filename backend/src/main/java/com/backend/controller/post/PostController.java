@@ -133,17 +133,23 @@ public class PostController {
     // mdPick push Controller
     @PostMapping("{postId}/push")
     public ResponseEntity postMdPickPush(@PathVariable Integer postId) {
-        postService.mdPickPush(postId);
-        return ResponseEntity.ok().build();
+        Integer mdPickCount = postService.mdPickCount();
+        if(mdPickCount < 3){
+            postService.mdPickPush(postId);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
+    // mdPick pop Controller
     @PostMapping("{postId}/pop")
     public ResponseEntity postMdPickPop(@PathVariable Integer postId) {
         postService.mdPickPop(postId);
         return ResponseEntity.ok().build();
     }
-
-
+    
+    // mdPick 된 게시물만 가져오기
     @GetMapping("{postId}/getMdPick")
     public ResponseEntity getMdPick(@PathVariable Integer postId) {
         String getMdPick = postService.getMdPick(postId);

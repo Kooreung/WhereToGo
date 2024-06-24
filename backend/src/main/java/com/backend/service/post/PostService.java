@@ -223,17 +223,22 @@ public class PostService {
         return result;
     }
 
+    // mdPick 추가(업데이트)
     public void mdPickPush(Integer postId) {
         postMapper.mdPickPush(postId);
     }
 
+    // mdPick 삭제(업데이트)
     public void mdPickPop(Integer postId) {
         postMapper.mdPickPop(postId);
     }
-
 
     public String getMdPick(Integer postId) {
         return postMapper.getMdPick(postId);
     }
 
+    // mdPick 한 게시물 개수
+    public Integer mdPickCount() {
+        return postMapper.getMdPickCount();
+    }
 }

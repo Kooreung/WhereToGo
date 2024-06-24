@@ -160,7 +160,7 @@ export function PostView() {
         toast({
           status: "error",
           position: "bottom",
-          description: "실패",
+          description: "push 할 수 있는 게시물을 초과하였습니다.",
         });
       })
       .finally(() => {});

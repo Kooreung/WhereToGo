@@ -372,4 +372,12 @@ public interface PostMapper {
             WHERE postid = #{postId}
                 """)
     int mdPickPop(Integer postId);
+
+    // mdPick 된 게시물 개수
+    @Select("""
+        SELECT COUNT(mdpick)
+        FROM post
+        WHERE mdpick = 'o';
+        """)
+    int getMdPickCount();
 }
