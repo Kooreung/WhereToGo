@@ -39,11 +39,6 @@ const Draft = ({ setContent }) => {
     const contentState = state.getCurrentContent();
     const html = draftjsToHtml(convertToRaw(contentState));
 
-    function parseHtmlToText(htmlString) {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlString, "text/html");
-      return doc.body.textContent || "";
-    }
     setContent(html);
   };
 

@@ -45,13 +45,6 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   const [selectedMarkers, setSelectedMarkers] = useState([]);
   const [polylines, setPolylines] = useState([]);
 
-  // useEffect(() => {
-  //   axios.get(`/api/post/place/{selectPlaces}`).then((res) => {
-  //     setPlaceData(res.data);
-  //     console.log(placeData);
-  //   });
-  // }, []);
-
   // 기본 지도 생성
   useEffect(() => {
     loadKakaoMapScript(kakaoMapAppKey, ["services"])
@@ -388,11 +381,6 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
                       <Box>{place.place_name}</Box>
                       <Box>{place.road_address_name}</Box>
                       <Box>{place.phone}</Box>
-                      {/*<Box>*/}
-                      {/*  {placeData.map((place, index) => (*/}
-                      {/*    <Box key={index}></Box>*/}
-                      {/*  ))}*/}
-                      {/*</Box>*/}
                     </Box>
                   </Link>
                 </Box>

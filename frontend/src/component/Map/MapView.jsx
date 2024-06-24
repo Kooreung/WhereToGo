@@ -75,6 +75,7 @@ const KakaoMapSearch = () => {
       });
   }, [kakaoMapAppKey]);
 
+  // 선택한 장소에 따른 커스텀 오버레이 생성
   useEffect(() => {
     if (map !== null && places.length > 0) {
       const bounds = new window.kakao.maps.LatLngBounds();
@@ -97,6 +98,7 @@ const KakaoMapSearch = () => {
     }
   }, [map, places]);
 
+  // 선택한 장소에 따른 폴리라인과 선의 거리 계산 해주는 오버레이 표기
   useEffect(() => {
     if (map) {
       polylines.forEach((polyline) => polyline.setMap(null));

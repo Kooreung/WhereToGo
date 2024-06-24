@@ -204,6 +204,11 @@ export function PostView() {
     setPositionX((prev) => Math.max(prev - 400, containerWidth - flexWidth));
   }
 
+  function handleSelectInfo(place, index) {
+    console.log(index);
+    console.log(place);
+  }
+
   return (
     <Flex direction="column" align="center">
       <Flex direction="column" align="center">
@@ -330,7 +335,10 @@ export function PostView() {
               }}
             >
               {place.map((place, index) => (
-                <Box key={index}>
+                <Box
+                  key={index}
+                  onMouseEnter={() => handleSelectInfo(place, index)}
+                >
                   <Link
                     href={place.placeUrl}
                     target="_blank"
@@ -386,7 +394,6 @@ export function PostView() {
         whiteSpace={"pre-wrap"}
       >
         <div dangerouslySetInnerHTML={{ __html: post.content }} />
-        {/*<Box>{post.content}</Box>*/}
       </Box>
 
       <Divider border={"1px solid lightGray"} w={"720px"} />

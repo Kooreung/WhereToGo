@@ -29,9 +29,7 @@ function PostWrite() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
-
   const account = useContext(LoginContext); // 로그인 상태를 확인하기 위해 LoginContext 에서 isLoggedIn 함수를 가져옴
-
   const {
     isOpen: isModalOpenOfSave,
     onOpen: onModalOpenOfSave,
@@ -82,7 +80,6 @@ function PostWrite() {
       });
       return;
     }
-
     setLoading(true);
     axios
       .postForm("/api/post/add", { title, content })
