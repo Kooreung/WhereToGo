@@ -7,14 +7,20 @@ import {
   Flex,
   Grid,
   GridItem,
-  Heading, Input, Select,
+  Heading,
+  Image,
+  Input,
+  Select,
   StackDivider,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faCaretRight, faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
-import {useNavigate, useSearchParams} from "react-router-dom";
+import {
+  faCaretRight,
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import axios from "axios";
 import ContentParser from "../../component/ContentParser.jsx";
@@ -28,28 +34,24 @@ export function PostMdList(props) {
   const navigate = useNavigate();
   const account = useContext(LoginContext);
 
-
   useEffect(() => {
-    axios
-      .get(`/api/post/mdList?${searchParams}`)
-      .then((res) => {
-        setMdPost(res.data.post);
-      });
+    axios.get(`/api/post/mdList?${searchParams}`).then((res) => {
+      setMdPost(res.data.post);
+      console.log(res.data);
+    });
 
     setSearchType("all");
     setSearchKeyword("");
 
     const typeParam = searchParams.get("type");
     const keywordParam = searchParams.get("keyword");
-    if(typeParam) {
+    if (typeParam) {
       setSearchType(typeParam);
     }
     if (keywordParam) {
       setSearchKeyword(keywordParam);
     }
-
   }, [searchParams]);
-
 
   function handleLoadMore() {
     setVisiblePosts((prevVisiblePosts) => prevVisiblePosts + 3);
@@ -79,13 +81,13 @@ export function PostMdList(props) {
                 <option value={"address"}>지역명</option>
               </Select>
             </Box>
-          <Box>
-            <Input
-              value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.target.value)}
-              placeholder="검색어"
-            />
-          </Box>
+            <Box>
+              <Input
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+                placeholder="검색어"
+              />
+            </Box>
             <Box>
               <Button onClick={handleSearchClick}>
                 <FontAwesomeIcon icon={faMagnifyingGlass} />
@@ -113,7 +115,6 @@ export function PostMdList(props) {
               key={post.postId}
               onClick={() => navigate(`/post/${post.postId}`)}
             >
-              {/* Todo 썸네일 JOIN */}
               <Box>
                 <Grid
                   w={"720px"}
@@ -193,11 +194,14 @@ export function PostMdList(props) {
                     alignContent={"center"}
                     borderY={"1px solid lightgray"}
                   >
-                    <Flex pl={3}>
-                      <Text display={{ base: "none", lg: "block" }} mr={1}>
-                        썸네일
-                      </Text>
-                    </Flex>
+                    <Box w={"100%"} h={"100%"}>
+                      <Image
+                        src={post.picurl}
+                        objectFit={"cover"}
+                        w={"100%"}
+                        h={"100%"}
+                      />
+                    </Box>
                   </GridItem>
                   <GridItem
                     colSpan={7}

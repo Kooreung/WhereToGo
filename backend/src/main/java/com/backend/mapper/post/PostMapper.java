@@ -227,12 +227,12 @@ public interface PostMapper {
             """)
     int incrementViewCount(Integer postId);
 
-
     //MD List
     @Select("""
             <script>
-            SELECT p.postid, p.title, p.content, p.createdate, p.view,
-                   m.nickname, p.mdpick,
+            SELECT p.postid, p.title, p.content, p.createdate, p.view, p.mdpick,
+                   m.nickname,
+                   plpic.picurl,
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l.memberid) likeCount
             FROM post p JOIN member m ON p.memberid = m.memberid
@@ -240,6 +240,7 @@ public interface PostMapper {
                         LEFT JOIN comment c ON p.postid = c.postid
                         LEFT JOIN likes l ON p.postid = l.postid
                         LEFT JOIN place pl ON p.postid = pl.postid
+                        LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
             <where>
             a.authtype = 'admin'
                  <if test="searchType != null">
