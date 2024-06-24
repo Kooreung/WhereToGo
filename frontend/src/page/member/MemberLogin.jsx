@@ -17,6 +17,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import Lobby from "../Lobby.jsx";
+import { getInputStyles } from '/src/css/styles.js';
+
 
 export function MemberLogin() {
   const [email, setEmail] = useState("");
@@ -25,6 +27,8 @@ export function MemberLogin() {
   const toast = useToast();
   const account = useContext(LoginContext);
   const navigate = useNavigate();
+
+  const inputStyles = getInputStyles();
 
   function handleLogin() {
     axios
@@ -69,7 +73,7 @@ export function MemberLogin() {
           <Box>
             <FormControl>
               <FormLabel>이메일</FormLabel>
-              <Input mb={6} h={12} onChange={(e) => setEmail(e.target.value)} />
+              <Input style={inputStyles} onChange={(e) => setEmail(e.target.value)} />
             </FormControl>
           </Box>
           <Box>
@@ -77,8 +81,7 @@ export function MemberLogin() {
               <FormLabel>비밀번호</FormLabel>
               <InputGroup>
                 <Input
-                  mb={6}
-                  h={12}
+                  style={inputStyles}
                   type={showAndPassword ? "text" : "password"}
                   onChange={(e) => setPassword(e.target.value)}
                 />
