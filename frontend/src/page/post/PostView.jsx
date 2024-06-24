@@ -60,6 +60,18 @@ export function PostView() {
     onOpen: onModalOpenOfDelete,
     onClose: onModalCloseOfDelete,
   } = useDisclosure();
+  const {
+    isOpen: isModalOpenPush,
+    onOpen: onModalOpenPush,
+    onClose: onModalClosePush,
+  } = useDisclosure();
+  const {
+    isOpen: isModalOpenPop,
+    onOpen: onModalOpenPop,
+    onClose: onModalClosePop,
+  } = useDisclosure();
+
+
 
   useEffect(() => {
     axios
@@ -366,10 +378,34 @@ export function PostView() {
           <Box>
             <Box align={"left"} my={10}>
               {toggle === "x" && (
-                <Button onClick={handleMdPickPush}>Push</Button>
+                <Button onClick={onModalOpenPush}>Push</Button>
               )}
-              {toggle === "o" && <Button onClick={handleMdPickPop}>Pop</Button>}
+              {toggle === "o" && <Button onClick={onModalOpenPop}>Pop</Button>}
             </Box>
+
+            <Modal isOpen={isModalOpenPush} onClose={onModalClosePush}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>MD PICK 추가</ModalHeader>
+                <ModalBody>게시글을 추가하시겠습니까?</ModalBody>
+                <ModalFooter>
+                  <Button onClick={handleMdPickPush}>추가</Button>
+                  <Button onClick={onModalClosePush}>취소</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+
+            <Modal isOpen={isModalOpenPop} onClose={onModalClosePop}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>MD PICK 제거</ModalHeader>
+                <ModalBody>게시글을 제거하시겠습니까?</ModalBody>
+                <ModalFooter>
+                  <Button onClick={handleMdPickPop}>제거</Button>
+                  <Button onClick={onModalClosePop}>취소</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
           </Box>
         )}
         {/* 수정 및 삭제 버튼 */}
