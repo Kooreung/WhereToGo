@@ -10,8 +10,9 @@ import {
   FormLabel,
   Grid,
   GridItem,
-  Link,
+  Image,
   Input,
+  Link,
   Modal,
   ModalBody,
   ModalContent,
@@ -27,7 +28,6 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import styled from "styled-components";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import CommentComponent from "../../component/Comment/CommentComponent.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -41,30 +41,24 @@ import {
 import { faHeart as fullHeart } from "@fortawesome/free-regular-svg-icons";
 import MapView from "../../component/Map/MapView.jsx";
 
-const Viewer = styled.div`
-  width: calc(50% - 40px);
-  height: 400px;
-  padding: 20px;
-  margin-top: 20px;
-  border: 2px solid gray;
-`;
-
 export function PostView() {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const [place, setPlace] = useState([]);
   const [like, setLike] = useState({ like: false, count: 0 });
-  const [isLikeLoading, setIsLikeLoading] = useState(false);
   const [comment, setComment] = useState({ count: 0 });
-  const [toggle, setToggle] = useState("");
-  const [isTransition, setIsTransition] = useState(false);
-  const dataRef = useRef(null);
-  const [positionX, setPositionX] = useState(0);
-  const account = useContext(LoginContext);
-  const navigate = useNavigate();
-  const toast = useToast();
+  const [placePic, setPlacePic] = useState(null);
   const [banner, setBanner] = useState(null);
   const [file, setFile] = useState(null);
+
+  const [toggle, setToggle] = useState("");
+  const [isLikeLoading, setIsLikeLoading] = useState(false);
+  const [isTransition, setIsTransition] = useState(false);
+  const account = useContext(LoginContext);
+  const navigate = useNavigate();
+  const dataRef = useRef(null);
+  const [positionX, setPositionX] = useState(0);
+  const toast = useToast();
   const {
     isOpen: isModalOpenOfDelete,
     onOpen: onModalOpenOfDelete,
@@ -392,8 +386,18 @@ export function PostView() {
                     rel="noopener noreferrer"
                   >
                     <Flex w={"400px"} justifyContent={"center"}>
-                      <Box w={"120px"} h={"120px"} border={"1px dotted red"}>
-                        썸네일
+                      <Box
+                        w={"120px"}
+                        h={"120px"}
+                        border={"1px dotted red"}
+                        alignContent={"center"}
+                      >
+                        <Image
+                          src={place.picurl}
+                          objectFit={"cover"}
+                          w={"100%"}
+                          h={"100%"}
+                        />
                       </Box>
                       <Box
                         w={"260px"}

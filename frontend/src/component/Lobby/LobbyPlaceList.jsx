@@ -9,7 +9,6 @@ import {
   WrapItem,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import "/src/css/styles.css"; // CSS 파일을 가져옵니다
 
 const places = [
   {

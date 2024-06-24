@@ -16,6 +16,7 @@ public class Place {
     private LocalDateTime createdAt;
 
     private Integer postId;
+    private String picurl;
     private Integer countPlace;
 }
 

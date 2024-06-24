@@ -21,7 +21,6 @@ import { LoginContext } from "../../component/LoginProvider.jsx";
 import MapView from "../../component/Map/MapView.jsx";
 import DraftEditorEdit from "../../component/TextEditor/DraftEditorEdit.jsx";
 import Lobby from "../Lobby.jsx";
-import { LoginContext } from "../../component/LoginProvider.jsx";
 
 export function PostEdit() {
   const { postId } = useParams();

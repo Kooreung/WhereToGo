@@ -35,7 +35,7 @@ public interface PostMapper {
                      JOIN member m ON p.memberid = m.memberid
                      LEFT JOIN comment c ON p.postid = c.postid
                      LEFT JOIN likes l ON p.postid = l.postid
-            WHERE p.postid = #{postId};
+            WHERE p.postid = #{postId}
             """)
     Post selectById(Integer postId);
 
@@ -139,11 +139,13 @@ public interface PostMapper {
                    pl.placeurl,
                    pl.latitude,
                    pl.longitude,
+                   plpic.picurl,
                    (SELECT COUNT(pl_inner.postid)
                     FROM place pl_inner
                     WHERE pl_inner.placeurl = pl.placeurl) countPlace
             FROM post p
                      JOIN place pl ON p.postid = pl.postid
+                     LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
             WHERE p.postid = #{postId}
             """)
     List<Place> getPlaceList(Integer postId);
@@ -378,10 +380,10 @@ public interface PostMapper {
 
     // mdPick 된 게시물 개수
     @Select("""
-        SELECT COUNT(mdpick)
-        FROM post
-        WHERE mdpick = 'o';
-        """)
+            SELECT COUNT(mdpick)
+            FROM post
+            WHERE mdpick = 'o';
+            """)
     int getMdPickCount();
 
 
