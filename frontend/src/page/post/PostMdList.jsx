@@ -7,40 +7,91 @@ import {
   Flex,
   Grid,
   GridItem,
-  Heading,
+  Heading, Input, Select,
   StackDivider,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
+import {faCaretRight, faMagnifyingGlass} from "@fortawesome/free-solid-svg-icons";
+import {useNavigate, useSearchParams} from "react-router-dom";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import axios from "axios";
 
 export function PostMdList(props) {
   const [mdPost, setMdPost] = useState([]);
   const [visiblePosts, setVisiblePosts] = useState(3);
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchType, setSearchType] = useState("all");
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const account = useContext(LoginContext);
+
+
   useEffect(() => {
     axios
-      .get("/api/post/mdList")
+      .get(`/api/post/mdList?${searchParams}`)
       .then((res) => {
         setMdPost(res.data.post);
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {});
-  }, []);
+      });
+
+    setSearchType("all");
+    setSearchKeyword("");
+
+    const typeParam = searchParams.get("type");
+    const keywordParam = searchParams.get("keyword");
+    if(typeParam) {
+      setSearchType(typeParam);
+    }
+    if (keywordParam) {
+      setSearchKeyword(keywordParam);
+    }
+
+  }, [searchParams]);
+
 
   function handleLoadMore() {
     setVisiblePosts((prevVisiblePosts) => prevVisiblePosts + 3);
   }
 
+  function handleSearchClick() {
+    navigate(`/post/mdList?type=${searchType}&keyword=${searchKeyword}`);
+  }
+
   return (
     <Box align="center" justify="center">
       <Box mb={"2rem"}>
-        <Heading align={"center"}>MD'S PICK</Heading>
+        <Heading align={"center"}>
+          MD'S PICK
+          <Center>
+            <Box>
+              <Select
+                value={searchType}
+                onChange={(e) => {
+                  setSearchType(e.target.value);
+                }}
+              >
+                <option value={"all"}>전체</option>
+                <option value={"titleAndContent"}>제목+내용</option>
+                <option value={"nickName"}>닉네임</option>
+                <option value={"placeName"}>장소명</option>
+                <option value={"address"}>지역명</option>
+              </Select>
+            </Box>
+          <Box>
+            <Input
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              placeholder="검색어"
+            />
+          </Box>
+            <Box>
+              <Button onClick={handleSearchClick}>
+                <FontAwesomeIcon icon={faMagnifyingGlass} />
+              </Button>
+            </Box>
+          </Center>
+        </Heading>
       </Box>
       <Divider
         border={"1px solid lightGray"}

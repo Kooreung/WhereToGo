@@ -54,8 +54,10 @@ public class PostController {
 
     // 게시글 MD추천 목록 Controller
     @GetMapping("mdList")
-    public Map<String, Object> postListMd(Map<String, Object> post) {
-        return postService.mdlist(post);
+    public Map<String, Object> postListMd(Map<String, Object> post,
+                                          @RequestParam(value = "type", required = false) String searchType,
+                                          @RequestParam(value = "keyword", defaultValue = "") String searchKeyword) {
+        return postService.mdlist(post, searchType, searchKeyword);
     }
 
 

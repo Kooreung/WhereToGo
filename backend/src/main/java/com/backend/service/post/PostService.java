@@ -205,8 +205,8 @@ public class PostService {
     }
 
     //md 게시물 목록 서비스
-    public Map<String, Object> mdlist(Map<String, Object> post) {
-        List<Post> posts = postMapper.selectMdPostList(post);
+    public Map<String, Object> mdlist(Map<String, Object> post, String searchType, String searchKeyword) {
+        List<Post> posts = postMapper.selectMdPostList(post, searchType, searchKeyword);
 
         Map<String, Object> result = new HashMap<>();
         result.put("post", posts);
