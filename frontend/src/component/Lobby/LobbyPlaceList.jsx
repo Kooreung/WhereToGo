@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons/faArrowLeft";
+import ButtonCustom from "../../css/ButtonCustom.jsx";
 
 const places = [
   {
@@ -78,18 +79,9 @@ export function LobbyPlaceList() {
     <Box>
       <Flex>
         <Center>
-          <Box
-            onClick={handleMoveLeft}
-            fontSize="xl"
-            fontWeight="bolder"
-            color={"#D8B7E5"}
-            boxShadow="2xl"
-            p="4"
-            rounded="3xl"
-            backgroundColor={"RGBA(255, 255, 255, 0.92)"}
-          >
+          <ButtonCustom onClick={handleMoveLeft}>
             <FontAwesomeIcon icon={faArrowLeft} />
-          </Box>
+          </ButtonCustom>
         </Center>
         <Box w={"950px"} overflow={"hidden"}>
           <Flex
