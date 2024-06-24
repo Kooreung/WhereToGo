@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -54,8 +56,10 @@ public class PostController {
 
     // 게시글 MD추천 목록 Controller
     @GetMapping("mdList")
-    public Map<String, Object> postListMd(Map<String, Object> post) {
-        return postService.mdlist(post);
+    public Map<String, Object> postListMd(Map<String, Object> post,
+                                          @RequestParam(value = "type", required = false) String searchType,
+                                          @RequestParam(value = "keyword", defaultValue = "") String searchKeyword) {
+        return postService.mdlist(post, searchType, searchKeyword);
     }
 
 
@@ -130,18 +134,24 @@ public class PostController {
 
     // mdPick push Controller
     @PostMapping("{postId}/push")
-    public ResponseEntity postMdPickPush(@PathVariable Integer postId) {
-        postService.mdPickPush(postId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity postMdPickPush(@PathVariable Integer postId, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+        Integer mdPickCount = postService.mdPickCount();
+        if(mdPickCount < 3){
+            postService.mdPickPush(postId, file);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
+    // mdPick pop Controller
     @PostMapping("{postId}/pop")
     public ResponseEntity postMdPickPop(@PathVariable Integer postId) {
         postService.mdPickPop(postId);
         return ResponseEntity.ok().build();
     }
 
-
+    // mdPick 된 게시물만 가져오기
     @GetMapping("{postId}/getMdPick")
     public ResponseEntity getMdPick(@PathVariable Integer postId) {
         String getMdPick = postService.getMdPick(postId);

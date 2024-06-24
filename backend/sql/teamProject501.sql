@@ -184,3 +184,5 @@ FROM post;
 SELECT *
 FROM likes;
 
+select *
+from authority;

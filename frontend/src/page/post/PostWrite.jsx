@@ -19,12 +19,14 @@ import { useNavigate } from "react-router-dom";
 import MapAdd from "../../component/Map/MapAdd.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import DraftEditor from "../../component/TextEditor/DraftEditorWrite.jsx";
+import Lobby from "../Lobby.jsx";
 
 function PostWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectedPlaces, setSelectedPlaces] = useState([]);
   const [disableSaveButton, setDisableSaveButton] = useState("able");
+  const [postType, setPostType] = useState("");
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -81,8 +83,14 @@ function PostWrite() {
       return;
     }
     setLoading(true);
+
+    if (account.isAdmin()) {
+      setPostType("admin");
+    } else {
+      setPostType("user");
+    }
     axios
-      .postForm("/api/post/add", { title, content })
+      .postForm("/api/post/add", { title, content, postType })
       .then((res) => {
         const postId = res.data;
 
@@ -139,6 +147,14 @@ function PostWrite() {
       position: "bottom",
       description: "게시글 작성이 취소되었습니다.",
     });
+  }
+
+  if (!account.isLoggedIn()) {
+    return (
+      <Box>
+        <Lobby />;
+      </Box>
+    );
   }
 
   return (

@@ -20,6 +20,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import MapView from "../../component/Map/MapView.jsx";
 import DraftEditorEdit from "../../component/TextEditor/DraftEditorEdit.jsx";
+import Lobby from "../Lobby.jsx";
+import { LoginContext } from "../../component/LoginProvider.jsx";
 
 export function PostEdit() {
   const { postId } = useParams();
@@ -118,6 +120,14 @@ export function PostEdit() {
   const handleContentChange = (content) => {
     setPost({ ...post, content });
   };
+
+  if (!account.isLoggedIn()) {
+    return (
+      <Box>
+        <Lobby />;
+      </Box>
+    );
+  }
 
   return (
     <Flex direction={"column"} align={"center"}>

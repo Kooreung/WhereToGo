@@ -27,6 +27,7 @@ import { SearchIcon } from "@chakra-ui/icons";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import axios from "axios";
 import { PostListOfBest } from "./PostListOfBest.jsx";
+import ContentParser from "../../component/ContentParser.jsx";
 
 function PostList() {
   const navigate = useNavigate();
@@ -77,12 +78,6 @@ function PostList() {
   function handlePageButtonClick(pageNumber) {
     searchParams.set("page", pageNumber);
     navigate(`/post/list?${searchParams}`);
-  }
-
-  function parseHtmlToText(htmlString) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlString, "text/html");
-    return doc.body.textContent || "";
   }
 
   return (
@@ -221,11 +216,7 @@ function PostList() {
                             whiteSpace: "pre-wrap",
                           }}
                         >
-                          <div
-                            dangerouslySetInnerHTML={{
-                              __html: parseHtmlToText(post.content),
-                            }}
-                          />
+                          <ContentParser content={post.content} />
                         </Box>
                       </Flex>
                       <Text textAlign={"left"} mt={"1rem"} color={"lightgray"}>

@@ -12,8 +12,8 @@ public interface PostMapper {
 
     // 게시글 추가 | 작성 매퍼
     @Insert("""
-            INSERT INTO post (title, content, memberid)
-            VALUES (#{title}, #{content}, #{memberId})
+            INSERT INTO post (title, content, memberid, postType)
+            VALUES (#{title}, #{content}, #{memberId}, #{postType})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "postId")
     int insert(Post post);
@@ -27,6 +27,8 @@ public interface PostMapper {
                    p.view,
                    p.memberid,
                    m.nickname,
+                   p.mdpick,
+                   p.posttype,
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l.memberid)  likeCount
             FROM post p
@@ -221,24 +223,42 @@ public interface PostMapper {
 
     //MD List
     @Select("""
-                        SELECT p.postid,
-                               p.title,
-                               p.content,
-                               p.createdate,
-                               p.view,
-                               m.memberid,
-                               COUNT(DISTINCT c.commentid) commentCount,
-                               COUNT(DISTINCT l.memberid)  likeCount
-                        FROM post p
-                                 JOIN member m ON p.memberid = m.memberid
-                                 JOIN authority a ON p.memberid = a.memberid
-                                 LEFT JOIN comment c ON p.postid = c.postid
-                                 LEFT JOIN likes l ON p.postid = l.postid
-                        WHERE a.authtype = 'admin'
-            GROUP BY p.postid, p.title, p.content, p.createdate, p.view, m.memberid
+            <script>
+            SELECT p.postid, p.title, p.content, p.createdate, p.view,
+                   m.nickname, p.mdpick,
+                   COUNT(DISTINCT c.commentid) commentCount,
+                   COUNT(DISTINCT l.memberid) likeCount
+            FROM post p JOIN member m ON p.memberid = m.memberid
+                        JOIN authority a ON p.memberid = a.memberid
+                        LEFT JOIN comment c ON p.postid = c.postid
+                        LEFT JOIN likes l ON p.postid = l.postid
+                        LEFT JOIN place pl ON p.postid = pl.postid
+            <where>
+            a.authtype = 'admin'
+                 <if test="searchType != null">
+                    <bind name="pattern" value="'%' + searchKeyword + '%'"/>
+                    <if test="searchType == 'all'">
+                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern}  OR pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
+                    </if>
+                    <if test="searchType == 'titleAndContent'">
+                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
+                    </if>
+                    <if test="searchType == 'nickName'">
+                        AND m.nickname LIKE #{pattern}
+                    </if>
+                    <if test="searchType == 'placeName'">
+                        AND (pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
+                    </if>
+                    <if test="searchType == 'address'">
+                        AND (pl.address LIKE #{pattern} OR pl.address LIKE #{pattern})
+                    </if>
+                </if>
+            </where>
+            GROUP BY p.postid
             ORDER BY p.postid DESC
+            </script>
             """)
-    List<Post> selectMdPostList(Map<String, Object> post);
+    List<Post> selectMdPostList(Map<String, Object> post, String searchType, String searchKeyword);
 
     //좋아요 리스트
     @Select("""
@@ -355,4 +375,20 @@ public interface PostMapper {
             WHERE postid = #{postId}
                 """)
     int mdPickPop(Integer postId);
+
+    // mdPick 된 게시물 개수
+    @Select("""
+        SELECT COUNT(mdpick)
+        FROM post
+        WHERE mdpick = 'o';
+        """)
+    int getMdPickCount();
+
+
+    @Update("""
+            UPDATE post
+            set banner = #{key}
+            where postid = #{postid}
+            """)
+    int bannerUpdate(Integer postid, String key);
 }

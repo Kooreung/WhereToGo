@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Avatar, Box, Flex, Spinner, Text } from "@chakra-ui/react";
+import Lobby from "../Lobby.jsx";
+import { LoginContext } from "../../component/LoginProvider.jsx";
 
 export function MemberInfoAdmin() {
   const { memberId } = useParams();
   const [member, setMember] = useState(null);
   const [profile, setProfile] = useState(null);
+  const account = useContext(LoginContext);
 
   useEffect(() => {
     axios
@@ -19,6 +22,14 @@ export function MemberInfoAdmin() {
         console.log(err);
       });
   }, []);
+
+  if (!account.isAdmin()) {
+    return (
+      <Box>
+        <Lobby />;
+      </Box>
+    );
+  }
 
   if (member === null) {
     return <Spinner />;

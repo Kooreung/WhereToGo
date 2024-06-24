@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import {
   Box,
@@ -19,6 +19,8 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import Lobby from "../Lobby.jsx";
+import { LoginContext } from "../../component/LoginProvider.jsx";
 
 export function MemberFindPassword() {
   const [email, setEmail] = useState("");
@@ -27,6 +29,7 @@ export function MemberFindPassword() {
   const [isCodeValid, setIsCodeValid] = useState(false);
   const toast = useToast();
   const { onClose, onOpen, isOpen } = useDisclosure();
+  const account = useContext(LoginContext);
 
   function handleFindPassword() {
     axios
@@ -93,6 +96,14 @@ export function MemberFindPassword() {
         position: "bottom",
       });
     }
+  }
+
+  if (account.isLoggedIn()) {
+    return (
+      <Box>
+        <Lobby />;
+      </Box>
+    );
   }
 
   return (

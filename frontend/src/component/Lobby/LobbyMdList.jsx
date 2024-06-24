@@ -21,6 +21,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons/faArrowLeft";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../LoginProvider.jsx";
 import axios from "axios";
+import ContentParser from "../ContentParser.jsx";
 
 export function LobbyMdList() {
   const [mdPost, setMdPost] = useState([]);
@@ -50,8 +51,8 @@ export function LobbyMdList() {
             }
 
             if (nextPosts === 1) {
-              setNextPosts(mdPost.length);
-              setPrevPosts(mdPost.length - 1);
+              setNextPosts(5);
+              setPrevPosts(4);
             }
           }}
         >
@@ -226,7 +227,7 @@ export function LobbyMdList() {
                                       whiteSpace: "pre-wrap",
                                     }}
                                   >
-                                    {post.content}
+                                    <ContentParser content={post.content} />
                                   </Box>
                                 </Flex>
                                 <Text
@@ -246,6 +247,7 @@ export function LobbyMdList() {
                 )}
               </CardBody>
             )}
+
             {nextPosts >= 4 && nextPosts <= 5 && (
               <CardBody>
                 <VStack
@@ -258,6 +260,7 @@ export function LobbyMdList() {
                 </VStack>
               </CardBody>
             )}
+
             <CardFooter></CardFooter>
           </Stack>
         </Card>

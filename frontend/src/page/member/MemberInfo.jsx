@@ -21,6 +21,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { LoginContext } from "../../component/LoginProvider.jsx";
+import Lobby from "../Lobby.jsx";
 
 export function MemberInfo(props) {
   const [member, setMember] = useState({});
@@ -88,6 +89,14 @@ export function MemberInfo(props) {
           position: "bottom",
         });
       });
+  }
+
+  if (!account.isLoggedIn()) {
+    return (
+      <Box>
+        <Lobby />;
+      </Box>
+    );
   }
 
   if (member === null) {
