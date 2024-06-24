@@ -74,11 +74,11 @@ function PostWrite() {
       });
       return;
     }
-    if (selectedPlaces.length === 0) {
+    if (selectedPlaces.length <= 1) {
       toast({
         status: "error",
         position: "bottom",
-        description: "장소 선택을 다시 확인해주세요.",
+        description: "장소를 하나 이상 선택해주세요.",
       });
       return;
     }
