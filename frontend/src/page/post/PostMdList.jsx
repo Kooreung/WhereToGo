@@ -17,6 +17,7 @@ import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import axios from "axios";
+import ContentParser from "../../component/ContentParser.jsx";
 
 export function PostMdList(props) {
   const [mdPost, setMdPost] = useState([]);
@@ -170,7 +171,7 @@ export function PostMdList(props) {
                             whiteSpace: "pre-wrap",
                           }}
                         >
-                          {post.content}
+                          <ContentParser content={post.content} />
                         </Box>
                       </Flex>
                       <Text textAlign={"left"} mt={"1rem"} color={"lightgray"}>
