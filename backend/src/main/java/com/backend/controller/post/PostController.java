@@ -89,7 +89,7 @@ public class PostController {
 
     // 게시글 삭제 Controller
     @DeleteMapping("{postId}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated()||hasAuthority('SCOPE_admin')")
     public ResponseEntity postDelete(@PathVariable Integer postId, Authentication authentication) {
         if (postService.hasMemberIdAccess(postId, authentication)) {
             postService.remove(postId);
