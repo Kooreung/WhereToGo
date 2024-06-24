@@ -1,11 +1,18 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
+  Avatar,
   Box,
   Button,
   Divider,
   Flex,
+  FormControl,
+  FormHelperText,
+  FormLabel,
   Grid,
   GridItem,
+  Image,
+  Input,
+  Link,
   Modal,
   ModalBody,
   ModalContent,
@@ -21,7 +28,6 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import styled from "styled-components";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import CommentComponent from "../../component/Comment/CommentComponent.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -35,30 +41,38 @@ import {
 import { faHeart as fullHeart } from "@fortawesome/free-regular-svg-icons";
 import MapView from "../../component/Map/MapView.jsx";
 
-const Viewer = styled.div`
-  width: calc(50% - 40px);
-  height: 400px;
-  padding: 20px;
-  margin-top: 20px;
-  border: 2px solid gray;
-`;
-
 export function PostView() {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const [place, setPlace] = useState([]);
   const [like, setLike] = useState({ like: false, count: 0 });
-  const [isLikeLoading, setIsLikeLoading] = useState(false);
   const [comment, setComment] = useState({ count: 0 });
+  const [placePic, setPlacePic] = useState(null);
+  const [banner, setBanner] = useState(null);
+  const [file, setFile] = useState(null);
+
   const [toggle, setToggle] = useState("");
+  const [isLikeLoading, setIsLikeLoading] = useState(false);
+  const [isTransition, setIsTransition] = useState(false);
   const account = useContext(LoginContext);
   const navigate = useNavigate();
-  const [isTransition, setIsTransition] = useState(false);
+  const dataRef = useRef(null);
+  const [positionX, setPositionX] = useState(0);
   const toast = useToast();
   const {
     isOpen: isModalOpenOfDelete,
     onOpen: onModalOpenOfDelete,
     onClose: onModalCloseOfDelete,
+  } = useDisclosure();
+  const {
+    isOpen: isModalOpenOfBanner,
+    onOpen: onModalOpenOfBanner,
+    onClose: onModalCloseOfBanner,
+  } = useDisclosure();
+  const {
+    isOpen: isModalOpenPop,
+    onOpen: onModalOpenPop,
+    onClose: onModalClosePop,
   } = useDisclosure();
 
   useEffect(() => {
@@ -68,6 +82,9 @@ export function PostView() {
         setPost(res.data.post);
         setLike(res.data.like);
         setComment({ count: res.data.commentCount });
+        setBanner(
+          "https://kooreungsbucket.s3.ap-northeast-2.amazonaws.com/prj3/167/defaultProfile.png",
+        );
       })
       .catch((err) => {
         navigate("/post/list");
@@ -92,7 +109,6 @@ export function PostView() {
       .get(`/api/post/${postId}/getMdPick`)
       .then((res) => {
         setToggle(res.data);
-        console.log(res.data);
       })
       .catch(() => {})
       .finally(() => {});
@@ -123,7 +139,11 @@ export function PostView() {
   // 게시글 삭제 클릭 시
   function handleClickDelete() {
     axios
-      .delete(`/api/post/${postId}`)
+      .delete(`/api/post/${postId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       .then(() => {
         navigate(`/post/list`);
         toast({
@@ -146,8 +166,17 @@ export function PostView() {
 
   // mdpick push
   function handleMdPickPush() {
+    if (!file) {
+      toast({
+        status: "warning",
+        position: "bottom",
+        description: "배너를 꼭 넣어주세요.",
+      });
+      return; // file이 null이면 여기서 함수 실행을 중단합니다.
+    }
+
     axios
-      .post(`/api/post/${postId}/push`, { postId: post.postId })
+      .postForm(`/api/post/${postId}/push`, { postId: post.postId, file })
       .then(() => {
         toast({
           status: "success",
@@ -160,10 +189,28 @@ export function PostView() {
         toast({
           status: "error",
           position: "bottom",
-          description: "실패",
+          description: "push 할 수 있는 게시물을 초과하였습니다.",
         });
       })
       .finally(() => {});
+  }
+
+  function handleFileChange(e) {
+    const file = e.target.files[0];
+    console.log(file);
+    if (file) {
+      setFile(file);
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setBanner(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setBanner(
+        "https://kooreungsbucket.s3.ap-northeast-2.amazonaws.com/prj3/images.jpg",
+      );
+    }
   }
 
   // mdpick pop
@@ -188,6 +235,21 @@ export function PostView() {
       .finally(() => {});
   }
 
+  function handleMoveLeft() {
+    setPositionX((prev) => Math.min(prev + 400, 0));
+  }
+
+  function handleMoveRight() {
+    const flexWidth = dataRef.current.scrollWidth;
+    const containerWidth = dataRef.current.parentElement.offsetWidth;
+    setPositionX((prev) => Math.max(prev - 400, containerWidth - flexWidth));
+  }
+
+  function handleSelectInfo(place, index) {
+    console.log(index);
+    console.log(place);
+  }
+
   return (
     <Flex direction="column" align="center">
       <Flex direction="column" align="center">
@@ -195,40 +257,9 @@ export function PostView() {
           w={{ base: "720px", lg: "1080px" }}
           h={"80px"}
           my={"32px"}
-          templateColumns={"repeat(5,1fr)"}
+          templateColumns={"repeat(4,1fr)"}
           templateRows={"1fr 1fr"}
         >
-          <GridItem
-            rowSpan={1}
-            colSpan={1}
-            alignContent={"center"}
-            overflow={"hidden"}
-            textOverflow={"ellipsis"}
-            whiteSpace={"nowrap"}
-          >
-            <Flex pl={3}>
-              <Text>
-                지역 <FontAwesomeIcon icon={faCaretRight} />
-              </Text>
-            </Flex>
-          </GridItem>
-          <GridItem
-            rowSpan={1}
-            colSpan={4}
-            alignContent={"center"}
-            overflow={"hidden"}
-            textOverflow={"ellipsis"}
-            whiteSpace={"nowrap"}
-          >
-            <Flex pl={3}>
-              <Text display={{ base: "none", lg: "block" }} mr={1}>
-                제목 <FontAwesomeIcon icon={faCaretRight} />
-              </Text>
-              <Text overflow={"hidden"} textOverflow={"ellipsis"}>
-                {post.title}
-              </Text>
-            </Flex>
-          </GridItem>
           <GridItem
             rowSpan={1}
             colSpan={1}
@@ -244,6 +275,24 @@ export function PostView() {
               <Text>{post.nickName}</Text>
             </Flex>
           </GridItem>
+          <GridItem
+            rowSpan={1}
+            colSpan={3}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Flex pl={3}>
+              <Text display={{ base: "none", lg: "block" }} mr={1}>
+                제목 <FontAwesomeIcon icon={faCaretRight} />
+              </Text>
+              <Text overflow={"hidden"} textOverflow={"ellipsis"}>
+                {post.title}
+              </Text>
+            </Flex>
+          </GridItem>
+
           <GridItem
             rowSpan={1}
             colSpan={1}
@@ -305,26 +354,87 @@ export function PostView() {
             </Flex>
           </GridItem>
         </Grid>
+
         <Box w={"576px"} h={"360px"} bg={"lightgray"} my={"32px"}>
           <MapView />
         </Box>
+
         <Flex
-          w={{ base: "720px", lg: "1080px" }}
+          w={"540px"}
           h={"160px"}
-          bg={"lightgray"}
-          my={"32px"}
-          justify={"space-evenly"}
           alignItems={"center"}
+          justify={"space-evenly"}
+          bg={"lightgray"}
         >
-          {place.map((place, index) => (
-            <Box key={index}>
-              <Box>
-                <Box>{place.placeName}</Box>
-                <Box>{place.address}</Box>
-                <Box>게시글에 등록 된 횟수 : {place.countPlace} 건</Box>
-              </Box>
-            </Box>
-          ))}
+          <Button onClick={handleMoveLeft}>옆</Button>
+          <Box w={"400px"} overflow={"hidden"} alignItems={"center"}>
+            <Flex
+              ref={dataRef}
+              sx={{
+                transform: `translateX(${positionX}px)`,
+                transition: "transform 0.5s ease",
+              }}
+            >
+              {place.map((place, index) => (
+                <Box
+                  key={index}
+                  onMouseEnter={() => handleSelectInfo(place, index)}
+                >
+                  <Link
+                    href={place.placeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Flex w={"400px"} justifyContent={"center"}>
+                      <Box
+                        w={"120px"}
+                        h={"120px"}
+                        border={"1px dotted red"}
+                        alignContent={"center"}
+                      >
+                        <Image
+                          src={place.picurl}
+                          objectFit={"cover"}
+                          w={"100%"}
+                          h={"100%"}
+                        />
+                      </Box>
+                      <Box
+                        w={"260px"}
+                        h={"120px"}
+                        border={"1px dotted red"}
+                        p={3}
+                      >
+                        <Box
+                          overflow={"hidden"}
+                          textOverflow={"ellipsis"}
+                          whiteSpace={"nowrap"}
+                        >
+                          {index + 1}번 장소
+                        </Box>
+                        <Box
+                          overflow={"hidden"}
+                          textOverflow={"ellipsis"}
+                          whiteSpace={"nowrap"}
+                        >
+                          {place.placeName}
+                        </Box>
+                        <Box
+                          overflow={"hidden"}
+                          textOverflow={"ellipsis"}
+                          whiteSpace={"nowrap"}
+                        >
+                          {place.address}
+                        </Box>
+                        <Box>게시글 등록 횟수 : {place.countPlace} 건</Box>
+                      </Box>
+                    </Flex>
+                  </Link>
+                </Box>
+              ))}
+            </Flex>
+          </Box>
+          <Button onClick={handleMoveRight}>옆</Button>
         </Flex>
       </Flex>
       <Box
@@ -335,7 +445,6 @@ export function PostView() {
         whiteSpace={"pre-wrap"}
       >
         <div dangerouslySetInnerHTML={{ __html: post.content }} />
-        {/*<Box>{post.content}</Box>*/}
       </Box>
 
       <Divider border={"1px solid lightGray"} w={"720px"} />
@@ -366,32 +475,43 @@ export function PostView() {
           <Box>
             <Box align={"left"} my={10}>
               {toggle === "x" && (
-                <Button onClick={handleMdPickPush}>Push</Button>
+                <Button onClick={onModalOpenOfBanner}>Push</Button>
               )}
-              {toggle === "o" && <Button onClick={handleMdPickPop}>Pop</Button>}
+              {toggle === "o" && <Button onClick={onModalOpenPop}>Pop</Button>}
+            </Box>
+            <Modal isOpen={isModalOpenPop} onClose={onModalClosePop}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>MD PICK 제거</ModalHeader>
+                <ModalBody>게시글을 제거하시겠습니까?</ModalBody>
+                <ModalFooter>
+                  <Button onClick={handleMdPickPop}>제거</Button>
+                  <Button onClick={onModalClosePop}>취소</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+          </Box>
+        )}
+
+        {/* 수정 및 삭제 버튼 */}
+        {(account.hasAccessMemberId(post.memberId) || account.isAdmin()) && (
+          <Box>
+            <Box align={"left"} my={10}>
+              <Button onClick={() => navigate(`/post/${postId}/edit`)}>
+                <FontAwesomeIcon icon={faPenToSquare} />
+                <Text display={{ base: "none", lg: "block" }} ml={1}>
+                  수정
+                </Text>
+              </Button>
+              <Button onClick={onModalOpenOfDelete}>
+                <FontAwesomeIcon icon={faTrash} />
+                <Text display={{ base: "none", lg: "block" }} ml={1}>
+                  삭제
+                </Text>
+              </Button>
             </Box>
           </Box>
         )}
-        {/* 수정 및 삭제 버튼 */}
-        {account.hasAccessMemberId(post.memberId) ||
-          (account.isAdmin() && (
-            <Box>
-              <Box align={"left"} my={10}>
-                <Button onClick={() => navigate(`/post/${postId}/edit`)}>
-                  <FontAwesomeIcon icon={faPenToSquare} />
-                  <Text display={{ base: "none", lg: "block" }} ml={1}>
-                    수정
-                  </Text>
-                </Button>
-                <Button onClick={onModalOpenOfDelete}>
-                  <FontAwesomeIcon icon={faTrash} />
-                  <Text display={{ base: "none", lg: "block" }} ml={1}>
-                    삭제
-                  </Text>
-                </Button>
-              </Box>
-            </Box>
-          ))}
 
         {/* 목록 */}
         <Button onClick={() => navigate("/post/list")}>
@@ -416,6 +536,39 @@ export function PostView() {
           <ModalFooter>
             <Button onClick={handleClickDelete}>삭제</Button>
             <Button onClick={onModalCloseOfDelete}>취소</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Modal isOpen={isModalOpenOfBanner} onClose={onModalCloseOfBanner}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>배너등록</ModalHeader>
+          <ModalBody>배너를 등록 해주세요</ModalBody>
+          <Avatar
+            name="defaultProfile"
+            src={banner}
+            w="200px"
+            h="200px"
+            mb={30}
+          />
+          <Box mb={7}>
+            <FormControl>
+              <FormLabel>배너를 선택해주세요</FormLabel>
+              <Input
+                multiple
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+              <FormHelperText>
+                총 용량은 10MB, 한 파일은 1MB를 초과할 수 없습니다.
+              </FormHelperText>
+            </FormControl>
+          </Box>
+          <ModalFooter>
+            <Button onClick={handleMdPickPush}>등록</Button>
+            <Button onClick={onModalCloseOfBanner}>취소</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

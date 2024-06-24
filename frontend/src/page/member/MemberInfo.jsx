@@ -21,6 +21,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { LoginContext } from "../../component/LoginProvider.jsx";
+import Lobby from "../Lobby.jsx";
 
 export function MemberInfo(props) {
   const [member, setMember] = useState({});
@@ -65,11 +66,6 @@ export function MemberInfo(props) {
       });
   }, []);
 
-  function test() {
-    axios.get("/api/name/create").then((res) => {
-      console.log(res.data);
-    });
-  }
 
   function handleCLickDelete() {
     console.log(id);
@@ -95,14 +91,19 @@ export function MemberInfo(props) {
       });
   }
 
+  if (!account.isLoggedIn()) {
+    return (
+      <Box>
+        <Lobby />;
+      </Box>
+    );
+  }
+
   if (member === null) {
     return <Spinner />;
   }
   return (
     <Flex alignContent="center" justifyContent="center" alignItems="center">
-      <Box>
-        <Button onClick={test}>국어사전 테스트 버튼</Button>
-      </Box>
       <Box mt="100">
         <Avatar
           name="defaultProfile"

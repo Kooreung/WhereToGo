@@ -17,5 +17,7 @@ public class Post {
     private Integer memberId;
     private Integer likeCount;
     private Integer commentCount;
+
     private String mdpick;
+    private String postType;
 }

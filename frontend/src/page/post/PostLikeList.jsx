@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -25,6 +25,8 @@ import {
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { SearchIcon } from "@chakra-ui/icons";
+import { LoginContext } from "../../component/LoginProvider.jsx";
+import Lobby from "../Lobby.jsx";
 
 export function PostLikeList() {
   const [postLikeList, setPostLikeList] = useState([]);
@@ -33,6 +35,8 @@ export function PostLikeList() {
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
+  const account = useContext(LoginContext);
+
   useEffect(() => {
     axios.get(`/api/post/likeList?${searchParams}`).then((res) => {
       setPostLikeList(res.data.postList);
@@ -72,6 +76,14 @@ export function PostLikeList() {
   function handlePageButtonClick(pageNumber) {
     searchParams.set("page", pageNumber);
     navigate(`/postLike/list?${searchParams}`);
+  }
+
+  if (!account.isLoggedIn()) {
+    return (
+      <Box>
+        <Lobby />;
+      </Box>
+    );
   }
 
   return (

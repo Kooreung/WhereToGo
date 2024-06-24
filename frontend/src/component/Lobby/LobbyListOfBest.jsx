@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ContentParser from "../ContentParser.jsx";
 
 function LobbyListOfBest(props) {
   const [postListOfBest, setPostListOfBest] = useState([]);
@@ -45,7 +46,7 @@ function LobbyListOfBest(props) {
             <Stack>
               <CardBody onClick={() => navigate(`/post/${post.postId}`)}>
                 <Heading size="md">{post.title}</Heading>
-                <Text py="2">{post.content}</Text>
+                <ContentParser py="2" content={post.content} />
               </CardBody>
 
               <CardFooter>

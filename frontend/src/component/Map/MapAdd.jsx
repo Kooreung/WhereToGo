@@ -8,7 +8,6 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { renderToString } from "react-dom/server";
-import axios from "axios";
 
 const loadKakaoMapScript = (appKey, libraries = []) => {
   return new Promise((resolve, reject) => {
@@ -37,7 +36,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   const mapRef = useRef(null);
   const kakaoMapAppKey = import.meta.env.VITE_KAKAO_MAP_APP_KEY;
   const [places, setPlaces] = useState([]);
-  const [placeData, setPlaceData] = useState([]);
+  // const [placeData, setPlaceData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [map, setMap] = useState(null);
   const [ps, setPs] = useState(null);
@@ -45,13 +44,6 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   const [searchedMarkers, setSearchedMarkers] = useState([]);
   const [selectedMarkers, setSelectedMarkers] = useState([]);
   const [polylines, setPolylines] = useState([]);
-
-  useEffect(() => {
-    axios.get(`/api/post/place/{selectPlaces}`).then((res) => {
-      setPlaceData(res.data);
-      console.log(placeData);
-    });
-  }, []);
 
   // 기본 지도 생성
   useEffect(() => {
@@ -89,12 +81,34 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
         const searchedMarker = new window.kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(place.y, place.x),
           map: map,
-          title: place.place_name,
         });
+
+        // 인포윈도우 생성
+        let content = renderToString(
+          <SelectedMarkersInfoWindow place={place} />,
+        );
+        const infoWindow = new window.kakao.maps.InfoWindow({
+          position: new window.kakao.maps.LatLng(place.y, place.x),
+          content: content,
+        });
+
+        kakao.maps.event.addListener(searchedMarker, "mouseover", function () {
+          // 모든 인포윈도우를 닫습니다.
+          newMarkers.forEach(({ infoWindow }) => infoWindow.close());
+          // 현재 마커의 인포윈도우를 엽니다.
+          infoWindow.open(map, searchedMarker);
+        });
+        kakao.maps.event.addListener(searchedMarker, "mouseout", function () {
+          // 모든 인포윈도우를 닫습니다.
+          newMarkers.forEach(({ infoWindow }) => infoWindow.close());
+        });
+
         bounds.extend(searchedMarker.getPosition());
-        return searchedMarker;
+        // 마커와 인포윈도우 객체 저장
+        return { marker: searchedMarker, infoWindow: infoWindow };
       });
-      setSearchedMarkers(newMarkers);
+
+      setSearchedMarkers(newMarkers.map(({ marker }) => marker));
       map.setBounds(bounds);
     }
   }, [map, places]);
@@ -200,6 +214,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
     const callback = (result, status) => {
       if (status === window.kakao.maps.services.Status.OK) {
         setPlaces(result);
+        console.log(result);
       } else {
         alert("검색 결과가 존재하지 않습니다.");
       }
@@ -297,19 +312,38 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
     );
   }
 
+  // 마우스 오버 시 나오는 인포윈도우
+  function SelectedMarkersInfoWindow({ place }) {
+    return (
+      <Box
+        style={{
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+          paddingLeft: "8px",
+          paddingRight: "8px",
+          boxShadow: "0 0 0 2px white, 0 0 0 4px orange",
+        }}
+      >
+        <Box>{place.place_name}</Box>
+        <Box>{place.address_name}</Box>
+      </Box>
+    );
+  }
+
   return (
-    <Box>
-      <Box mb={"2rem"}>
+    <Box w={"720px"}>
+      <Box>
         <Flex>
           <Input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="검색어를 입력하세요"
+            placeholder="검색어를 입력하세요."
           />
           <Button onClick={searchPlaces}>검색</Button>
         </Flex>
-        <Box maxH={"200px"} overflowY={"auto"}>
+        <Box maxH={"200px"} overflowY={"auto"} my={3}>
           {places.map((place, index) => (
             <Flex key={index}>
               <Box>
@@ -330,7 +364,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
         </Box>
       </Box>
 
-      <Box id="map" ref={mapRef} w={"576px"} h={"360px"}></Box>
+      <Box id="map" ref={mapRef} w={"720px"} h={"360px"} />
 
       <Box>
         <Box>
@@ -343,21 +377,12 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {place.place_name}
-                  </Link>
-                </Box>
-                <Box>{place.road_address_name}</Box>
-                <Box>{place.phone}</Box>
-                <Box>
-                  {placeData.map((place, index) => (
-                    <Box key={index}>
-                      <Box>
-                        <Box>{place.placeName}</Box>
-                        <Box>{place.address}</Box>
-                        <Box>게시글에 등록 된 횟수 : {place.countPlace} 건</Box>
-                      </Box>
+                    <Box>
+                      <Box>{place.place_name}</Box>
+                      <Box>{place.road_address_name}</Box>
+                      <Box>{place.phone}</Box>
                     </Box>
-                  ))}
+                  </Link>
                 </Box>
               </Box>
               <Spacer />

@@ -3,8 +3,6 @@ import {
   Box,
   Button,
   Flex,
-  FormControl,
-  FormLabel,
   Input,
   Modal,
   ModalBody,
@@ -20,19 +18,20 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import MapAdd from "../../component/Map/MapAdd.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
-import DraftEditor from "../../component/DraftEditor.jsx";
+import DraftEditor from "../../component/TextEditor/DraftEditorWrite.jsx";
+import Lobby from "../Lobby.jsx";
 
 function PostWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectedPlaces, setSelectedPlaces] = useState([]);
+  const [disableSaveButton, setDisableSaveButton] = useState("able");
+  const [postType, setPostType] = useState("");
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
-
   const account = useContext(LoginContext); // 로그인 상태를 확인하기 위해 LoginContext 에서 isLoggedIn 함수를 가져옴
-
   const {
     isOpen: isModalOpenOfSave,
     onOpen: onModalOpenOfSave,
@@ -43,18 +42,6 @@ function PostWrite() {
     onOpen: onModalOpenOfCancel,
     onClose: onModalCloseOfCancel,
   } = useDisclosure();
-
-  // 저장 버튼 비활성화 조건
-  let disableSaveButton = "able";
-  if (title.trim().length === 0) {
-    disableSaveButton = "disableToTitle";
-  }
-  if (content.trim().length === 0) {
-    disableSaveButton = "disableToContent";
-  }
-  if (selectedPlaces.length === 0) {
-    disableSaveButton = "disableToPlace";
-  }
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
@@ -71,9 +58,39 @@ function PostWrite() {
 
   // 저장 버튼 클릭 시
   function handleClickSave() {
+    if (title.trim().length === 0) {
+      toast({
+        status: "error",
+        position: "bottom",
+        description: "제목을 다시 확인해주세요.",
+      });
+      return;
+    }
+    if (content.trim().length <= 7) {
+      toast({
+        status: "error",
+        position: "bottom",
+        description: "내용을 다시 확인해주세요.",
+      });
+      return;
+    }
+    if (selectedPlaces.length <= 1) {
+      toast({
+        status: "error",
+        position: "bottom",
+        description: "장소를 하나 이상 선택해주세요.",
+      });
+      return;
+    }
     setLoading(true);
+
+    if (account.isAdmin()) {
+      setPostType("admin");
+    } else {
+      setPostType("user");
+    }
     axios
-      .postForm("/api/post/add", { title, content })
+      .postForm("/api/post/add", { title, content, postType })
       .then((res) => {
         const postId = res.data;
 
@@ -84,7 +101,7 @@ function PostWrite() {
               placeName: place.place_name,
               placeUrl: place.place_url,
               address: place.address_name,
-              category: place.category,
+              category: place.category_group_name,
               latitude: parseFloat(place.y),
               longitude: parseFloat(place.x),
               postId: postId,
@@ -132,59 +149,62 @@ function PostWrite() {
     });
   }
 
+  if (!account.isLoggedIn()) {
+    return (
+      <Box>
+        <Lobby />;
+      </Box>
+    );
+  }
+
   return (
     <Flex direction={"column"} align={"center"}>
       <Flex direction={"column"} align={"center"}>
-        <Box w={"540px"} bg={"lightgray"} my={"2rem"}>
-          <Box align={"left"} mb={"1rem"}>
-            <FormControl>
-              <FormLabel>제목</FormLabel>
-              <Input
-                placeholder={"제목을 작성해주세요."}
-                onChange={(e) => setTitle(e.target.value)}
-              ></Input>
-            </FormControl>
+        <Box w={"720px"} mt={"2rem"}>
+          <Box>
+            <Input
+              placeholder={"제목을 작성해주세요."}
+              onChange={(e) => setTitle(e.target.value)}
+            />
           </Box>
         </Box>
-        <Box w={"576px"} bg={"lightgray"} my={"32px"}>
+        <Box w={"720px"} my={"2rem"}>
           <MapAdd
             selectedPlaces={selectedPlaces}
             setSelectedPlaces={setSelectedPlaces}
           />
         </Box>
         <Box>
-          <Box>
-            <Box w={"720px"} bg={"lightgray"} my={"32px"}>
-              <Box align={"left"} my={10}>
-                <DraftEditor setContent={setContent} />
-              </Box>
+          <Box w={"720px"}>
+            <Box>
+              <DraftEditor setContent={setContent} />
             </Box>
-            <Box align={"left"} my={10}>
-              <Tooltip
-                hasArrow
-                isDisabled={disableSaveButton === "able"}
-                label={
-                  disableSaveButton === "disableToTitle"
-                    ? "제목을 확인해주세요."
-                    : disableSaveButton === "disableToContent"
-                      ? "내용을 확인해주세요."
-                      : disableSaveButton === "disableToPlace"
-                        ? "장소를 선택해주세요."
-                        : ""
-                }
+          </Box>
+          <Box my={"2rem"}>
+            <Tooltip
+              hasArrow
+              isDisabled={disableSaveButton === "able"}
+              label={
+                disableSaveButton === "disableToTitle"
+                  ? "제목을 확인해주세요."
+                  : disableSaveButton === "disableToContent"
+                    ? "내용을 확인해주세요."
+                    : disableSaveButton === "disableToPlace"
+                      ? "장소를 선택해주세요."
+                      : ""
+              }
+            >
+              <Button
+                onClick={onModalOpenOfSave}
+                isLoading={loading}
+                isDisabled={disableSaveButton !== "able"}
               >
-                <Button
-                  onClick={onModalOpenOfSave}
-                  isLoading={loading}
-                  isDisabled={disableSaveButton !== "able"}
-                >
-                  등록
-                </Button>
-              </Tooltip>
-              <Button onClick={onModalOpenOfCancel}>취소</Button>
-              {/* Todo 게시글 작성 중 임시저장 필요 */}
-              {/* TODO 게시글 수정하다가 나가려고 하면 Modal 표기 */}
-            </Box>
+                등록
+              </Button>
+            </Tooltip>
+            <Button onClick={onModalOpenOfCancel}>취소</Button>
+            {/* Todo 게시글 작성 중 임시저장 필요 */}
+            {/* TODO 게시글 수정하다가 나가려고 하면 Modal 표기 */}
           </Box>
         </Box>
       </Flex>

@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
   Flex,
-  FormControl,
-  FormLabel,
   Input,
   Modal,
   ModalBody,
@@ -12,22 +10,28 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Select,
   Spinner,
-  Textarea,
   Tooltip,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { LoginContext } from "../../component/LoginProvider.jsx";
+import MapView from "../../component/Map/MapView.jsx";
+import DraftEditorEdit from "../../component/TextEditor/DraftEditorEdit.jsx";
+import Lobby from "../Lobby.jsx";
 
 export function PostEdit() {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
+  const [selectedPlaces, setSelectedPlaces] = useState([]);
+  const [disableSaveButton, setDisableSaveButton] = useState("able");
+
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
+  const account = useContext(LoginContext); // 로그인 상태를 확인하기 위해 LoginContext 에서 isLoggedIn 함수를 가져옴
   const {
     isOpen: isModalOpenOfSave,
     onOpen: onModalOpenOfSave,
@@ -50,17 +54,24 @@ export function PostEdit() {
     return <Spinner />;
   }
 
-  // 저장 버튼 비활성화 조건
-  let disableSaveButton = false;
-  if (post.title.trim().length === 0) {
-    disableSaveButton = true;
-  }
-  if (post.content.trim().length === 0) {
-    disableSaveButton = true;
-  }
-
   // 저장 버튼 클릭 시
   function handleClickSave() {
+    if (post.title.trim().length === 0) {
+      toast({
+        status: "error",
+        position: "bottom",
+        description: "제목을 다시 확인해주세요.",
+      });
+      return;
+    }
+    if (post.content.trim().length <= 7) {
+      toast({
+        status: "error",
+        position: "bottom",
+        description: "내용을 다시 확인해주세요.",
+      });
+      return;
+    }
     setLoading(true);
     axios
       .putForm(`/api/post/edit`, {
@@ -105,86 +116,59 @@ export function PostEdit() {
     });
   }
 
+  const handleContentChange = (content) => {
+    setPost({ ...post, content });
+  };
+
+  if (!account.isLoggedIn()) {
+    return (
+      <Box>
+        <Lobby />;
+      </Box>
+    );
+  }
+
   return (
     <Flex direction={"column"} align={"center"}>
       <Flex direction={"column"} align={"center"}>
-        <Box w={"540px"} bg={"lightgray"} my={"2rem"}>
-          <Box align={"left"} mb={"1rem"}>
-            <FormControl>
-              <FormLabel>제목</FormLabel>
-              <Input
-                defaultValue={post.title}
-                onChange={(e) => setPost({ ...post, title: e.target.value })}
-              ></Input>
-            </FormControl>
-          </Box>
-          <Box align={"left"}>
-            <FormControl>
-              <Select
-                placeholder={"지역을 선택해주세요."}
-                // onChange={handleClickSelectCity}
-              >
-                <option value={"서울"}>서울</option>
-              </Select>
-              {/*{city === "서울" && (*/}
-              <Select
-                placeholder={"상세 지역을 선택해주세요."}
-                // onChange={handleClickSelectArea}
-              >
-                <option value={"서울01"}>강남/역삼</option>
-                <option value={"서울02"}>서초/교대/방배</option>
-                <option value={"서울03"}>잠실/송파/강동</option>
-                <option value={"서울04"}>건대/성수/왕십리</option>
-                <option value={"서울05"}>성북/노원/중랑</option>
-                <option value={"서울06"}>종로/중구</option>
-                <option value={"서울07"}>용산/이태원/한남</option>
-                <option value={"서울08"}>홍대/합정/마포</option>
-                <option value={"서울09"}>영등포/여의도/강서</option>
-                <option value={"서울10"}>구로/관악/동작</option>
-              </Select>
-              {/*)}*/}
-            </FormControl>
+        <Box w={"720px"} mt={"2rem"}>
+          <Box>
+            <Input
+              defaultValue={post.title}
+              onChange={(e) => setPost({ ...post, title: e.target.value })}
+            />
           </Box>
         </Box>
-        <Box
-          w={{ base: "720px", lg: "1080px" }}
-          h={"160px"}
-          bg={"lightgray"}
-          my={"32px"}
-        >
-          장소 선택
-          {/* Todo 장소 내용 표기 필요 */}
+
+        <Box w={"720px"} my={"2rem"}>
+          <MapView />
         </Box>
-        <Box w={"576px"} h={"360px"} bg={"lightgray"} my={"32px"}>
-          {/* Todo 지도 표기 필요 */}
-        </Box>
+
         <Box>
           <Box>
-            <Box w={"720px"} bg={"lightgray"} my={"32px"}>
-              <Box align={"left"} my={10}>
-                <FormControl>
-                  <FormLabel>설명</FormLabel>
-                  <Textarea
-                    h={200}
-                    defaultValue={post.content}
-                    onChange={(e) =>
-                      setPost({ ...post, content: e.target.value })
-                    }
-                  ></Textarea>
-                  {/* TODO Text Editor 추가 */}
-                </FormControl>
-              </Box>
+            <Box w={"720px"}>
+              <DraftEditorEdit
+                prevContent={post.content}
+                onContentChange={handleContentChange}
+              />
             </Box>
-            <Box align={"left"} my={10}>
+
+            <Box my={"2rem"}>
               <Tooltip
-                isDisabled={disableSaveButton === false}
                 hasArrow
-                label={"제목 또는 내용을 확인해주세요."}
+                isDisabled={disableSaveButton === "able"}
+                label={
+                  disableSaveButton === "disableToTitle"
+                    ? "제목을 확인해주세요."
+                    : disableSaveButton === "disableToContent"
+                      ? "내용을 확인해주세요."
+                      : ""
+                }
               >
                 <Button
                   onClick={onModalOpenOfSave}
                   isLoading={loading}
-                  isDisabled={disableSaveButton}
+                  isDisabled={disableSaveButton !== "able"}
                 >
                   등록
                 </Button>

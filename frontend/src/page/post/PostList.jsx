@@ -12,6 +12,7 @@ import {
   Select,
   StackDivider,
   Text,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -27,6 +28,7 @@ import { SearchIcon } from "@chakra-ui/icons";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import axios from "axios";
 import { PostListOfBest } from "./PostListOfBest.jsx";
+import ContentParser from "../../component/ContentParser.jsx";
 
 function PostList() {
   const navigate = useNavigate();
@@ -36,6 +38,7 @@ function PostList() {
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
+  const logoColor = useColorModeValue("red.500", "gray.200");
 
   useEffect(() => {
     axios.get(`/api/post/list?${searchParams}`).then((res) => {
@@ -79,12 +82,6 @@ function PostList() {
     navigate(`/post/list?${searchParams}`);
   }
 
-  function parseHtmlToText(htmlString) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(htmlString, "text/html");
-    return doc.body.textContent || "";
-  }
-
   return (
     <Box align="center" justify="center" overflowX={"hidden"}>
       <PostListOfBest />
@@ -119,7 +116,7 @@ function PostList() {
                   cursor={"pointer"}
                   sx={{
                     "&:hover": {
-                      backgroundColor: "RGBA(0, 0, 0, 0.06)",
+                      backgroundColor: logoColor,
                     },
                   }}
                 >
@@ -221,11 +218,7 @@ function PostList() {
                             whiteSpace: "pre-wrap",
                           }}
                         >
-                          <div
-                            dangerouslySetInnerHTML={{
-                              __html: parseHtmlToText(post.content),
-                            }}
-                          />
+                          <ContentParser content={post.content} />
                         </Box>
                       </Flex>
                       <Text textAlign={"left"} mt={"1rem"} color={"lightgray"}>
