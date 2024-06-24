@@ -33,6 +33,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
 import Lobby from "../Lobby.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
+import { getInputStyles } from '/src/css/styles.js';
 
 export function MemberSignup() {
   const [email, setEmail] = useState("");
@@ -60,6 +61,8 @@ export function MemberSignup() {
   const toast = useToast();
   const navigate = useNavigate();
   const account = useContext(LoginContext);
+
+  const inputStyles = getInputStyles();
 
   const isValidEmail = (email) => emailPattern.test(email);
   const isValidPassword = (password) => passwordPattern.test(password);
@@ -290,8 +293,7 @@ export function MemberSignup() {
             <FormControl>
               <FormLabel>이메일</FormLabel>
               <Input
-                h={12}
-                mb={6}
+                style={inputStyles}
                 maxLength="25"
                 placeholder="project@naver.com"
                 value={email}
@@ -321,8 +323,7 @@ export function MemberSignup() {
             <FormControl>
               <FormLabel>비밀번호</FormLabel>
               <Input
-                h={12}
-                mb={6}
+                style={inputStyles}
                 maxLength="50"
                 placeholder="최소 8자 이상(알파벳, 숫자 필수)"
                 type="password"
@@ -343,8 +344,7 @@ export function MemberSignup() {
             <FormControl>
               <FormLabel>비밀번호 확인</FormLabel>
               <Input
-                h={12}
-                mb={6}
+                style={inputStyles}
                 maxLength="50"
                 placeholder="비밀번호를 한번 더 입력해 주세요."
                 type="password"
@@ -362,8 +362,7 @@ export function MemberSignup() {
             <FormControl>
               <FormLabel>이름</FormLabel>
               <Input
-                h={12}
-                mb={6}
+                style={inputStyles}
                 maxLength="30"
                 placeholder="홍길동"
                 value={name}
@@ -375,8 +374,7 @@ export function MemberSignup() {
             <FormControl>
               <FormLabel>닉네임</FormLabel>
               <Input
-                h={12}
-                mb={6}
+                style={inputStyles}
                 maxLength="20"
                 placeholder="별명"
                 value={nickName}
@@ -455,8 +453,7 @@ export function MemberSignup() {
             <FormControl>
               <FormLabel>전화번호</FormLabel>
               <Input
-                h={12}
-                mb={6}
+                style={inputStyles}
                 maxLength="30"
                 placeholder="숫자만 입력해 주세요."
                 value={phoneNumber}
