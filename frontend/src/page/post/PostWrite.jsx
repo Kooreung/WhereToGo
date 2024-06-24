@@ -18,7 +18,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import MapAdd from "../../component/Map/MapAdd.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
-import DraftEditor from "../../component/TextEditor/DraftEditor.jsx";
+import DraftEditor from "../../component/TextEditor/DraftEditorWrite.jsx";
 
 function PostWrite() {
   const [title, setTitle] = useState("");
