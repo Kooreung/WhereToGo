@@ -81,6 +81,7 @@ export function LobbyPlaceList() {
           <Box
             onClick={handleMoveLeft}
             fontSize="xl"
+            fontWeight="bolder"
             color={"#D8B7E5"}
             boxShadow="2xl"
             p="4"

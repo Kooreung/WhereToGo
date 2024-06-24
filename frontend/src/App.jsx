@@ -1,4 +1,3 @@
-import { ChakraProvider } from "@chakra-ui/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./page/Home.jsx";
 import Lobby from "./page/Lobby.jsx";
@@ -68,9 +67,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <LoginProvider>
-      <ChakraProvider>
-        <RouterProvider router={router} />
-      </ChakraProvider>
+      <RouterProvider router={router} />
     </LoginProvider>
   );
 }
