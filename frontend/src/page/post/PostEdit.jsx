@@ -109,7 +109,7 @@ export function PostEdit() {
     });
   }
 
-  if (account.isLoggedIn()) {
+  if (!account.isLoggedIn()) {
     return (
       <Box>
         <Lobby />;
