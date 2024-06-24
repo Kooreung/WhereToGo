@@ -125,7 +125,11 @@ export function PostView() {
   // 게시글 삭제 클릭 시
   function handleClickDelete() {
     axios
-      .delete(`/api/post/${postId}`)
+      .delete(`/api/post/${postId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       .then(() => {
         navigate(`/post/list`);
         toast({
@@ -420,25 +424,24 @@ export function PostView() {
           </Box>
         )}
         {/* 수정 및 삭제 버튼 */}
-        {account.hasAccessMemberId(post.memberId) ||
-          (account.isAdmin() && (
-            <Box>
-              <Box align={"left"} my={10}>
-                <Button onClick={() => navigate(`/post/${postId}/edit`)}>
-                  <FontAwesomeIcon icon={faPenToSquare} />
-                  <Text display={{ base: "none", lg: "block" }} ml={1}>
-                    수정
-                  </Text>
-                </Button>
-                <Button onClick={onModalOpenOfDelete}>
-                  <FontAwesomeIcon icon={faTrash} />
-                  <Text display={{ base: "none", lg: "block" }} ml={1}>
-                    삭제
-                  </Text>
-                </Button>
-              </Box>
+        {(account.hasAccessMemberId(post.memberId) || account.isAdmin()) && (
+          <Box>
+            <Box align={"left"} my={10}>
+              <Button onClick={() => navigate(`/post/${postId}/edit`)}>
+                <FontAwesomeIcon icon={faPenToSquare} />
+                <Text display={{ base: "none", lg: "block" }} ml={1}>
+                  수정
+                </Text>
+              </Button>
+              <Button onClick={onModalOpenOfDelete}>
+                <FontAwesomeIcon icon={faTrash} />
+                <Text display={{ base: "none", lg: "block" }} ml={1}>
+                  삭제
+                </Text>
+              </Button>
             </Box>
-          ))}
+          </Box>
+        )}
 
         {/* 목록 */}
         <Button onClick={() => navigate("/post/list")}>
