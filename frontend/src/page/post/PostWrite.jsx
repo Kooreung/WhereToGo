@@ -24,6 +24,7 @@ function PostWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectedPlaces, setSelectedPlaces] = useState([]);
+  const [disableSaveButton, setDisableSaveButton] = useState("able");
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -42,18 +43,6 @@ function PostWrite() {
     onClose: onModalCloseOfCancel,
   } = useDisclosure();
 
-  // 저장 버튼 비활성화 조건
-  let disableSaveButton = "able";
-  if (title.trim().length === 0) {
-    disableSaveButton = "disableToTitle";
-  }
-  if (content.trim().length === 0) {
-    disableSaveButton = "disableToContent";
-  }
-  if (selectedPlaces.length === 0) {
-    disableSaveButton = "disableToPlace";
-  }
-
   useEffect(() => {
     const handleBeforeUnload = (event) => {
       event.preventDefault(); // 정확한 구현에 따라 이벤트를 취소할 수 있습니다.
@@ -69,6 +58,31 @@ function PostWrite() {
 
   // 저장 버튼 클릭 시
   function handleClickSave() {
+    if (title.trim().length === 0) {
+      toast({
+        status: "error",
+        position: "bottom",
+        description: "제목을 다시 확인해주세요.",
+      });
+      return;
+    }
+    if (content.trim().length <= 7) {
+      toast({
+        status: "error",
+        position: "bottom",
+        description: "내용을 다시 확인해주세요.",
+      });
+      return;
+    }
+    if (selectedPlaces.length === 0) {
+      toast({
+        status: "error",
+        position: "bottom",
+        description: "장소 선택을 다시 확인해주세요.",
+      });
+      return;
+    }
+
     setLoading(true);
     axios
       .postForm("/api/post/add", { title, content })
