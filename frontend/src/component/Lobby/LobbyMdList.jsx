@@ -21,6 +21,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons/faArrowLeft";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../LoginProvider.jsx";
 import axios from "axios";
+import ContentParser from "../ContentParser.jsx";
 
 export function LobbyMdList() {
   const [mdPost, setMdPost] = useState([]);
@@ -226,7 +227,7 @@ export function LobbyMdList() {
                                       whiteSpace: "pre-wrap",
                                     }}
                                   >
-                                    {post.content}
+                                    <ContentParser content={post.content} />
                                   </Box>
                                 </Flex>
                                 <Text
