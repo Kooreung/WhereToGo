@@ -62,14 +62,14 @@ export function MemberLogin() {
   return (
     <Center>
       <Box w={500}>
-        <Box>
-          <Heading>로그인</Heading>
-        </Box>
+        <Center mb={10}>
+          <Heading>어디가지</Heading>
+        </Center>
         <Box>
           <Box>
             <FormControl>
               <FormLabel>이메일</FormLabel>
-              <Input onChange={(e) => setEmail(e.target.value)} />
+              <Input mb={6} h={12} onChange={(e) => setEmail(e.target.value)} />
             </FormControl>
           </Box>
           <Box>
@@ -77,6 +77,8 @@ export function MemberLogin() {
               <FormLabel>비밀번호</FormLabel>
               <InputGroup>
                 <Input
+                  mb={6}
+                  h={12}
                   type={showAndPassword ? "text" : "password"}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -91,7 +93,7 @@ export function MemberLogin() {
               </InputGroup>
             </FormControl>
           </Box>
-          <Box style={{ textAlign: "right" }}>
+          <Box mb={6} style={{ textAlign: "right" }}>
             <Link
               to="/findPassword"
               style={{ textDecoration: "underline", color: "dodgerblue" }}
@@ -99,12 +101,12 @@ export function MemberLogin() {
               비밀번호 찾기
             </Link>
           </Box>
-          <Box>
-            <Button w={500} onClick={handleLogin}>
+          <Box mb={6}>
+            <Button h={12} w={500} onClick={handleLogin}>
               로그인
             </Button>
           </Box>
-          <Box>
+          <Center>
             아직 회원이 아니신가요? &nbsp;
             <Link
               to="/signup"
@@ -112,7 +114,7 @@ export function MemberLogin() {
             >
               회원가입
             </Link>
-          </Box>
+          </Center>
         </Box>
       </Box>
     </Center>
