@@ -28,6 +28,7 @@ function PostWrite() {
   const [selectedPlaces, setSelectedPlaces] = useState([]);
   const [isNavigating, setIsNavigating] = useState(false);
   const [disableSaveButton, setDisableSaveButton] = useState("able");
+  const [postType, setPostType] = useState("");
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -47,7 +48,6 @@ function PostWrite() {
   } = useDisclosure();
 
   // 저장 버튼 비활성화 조건
-
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
@@ -81,8 +81,14 @@ function PostWrite() {
       return;
     }
     setLoading(true);
+
+    if (account.isAdmin()) {
+      setPostType("admin");
+    } else {
+      setPostType("user");
+    }
     axios
-      .postForm("/api/post/add", { title, content })
+      .postForm("/api/post/add", { title, content, postType })
       .then((res) => {
         const postId = res.data;
 
@@ -175,9 +181,7 @@ function PostWrite() {
           <Box>
             <Box w={"720px"} bg={"lightgray"} my={"32px"}>
               <Box align={"left"} my={10}>
-                <DraftEditor
-                  setContent={setContent}
-                />
+                <DraftEditor setContent={setContent} />
               </Box>
             </Box>
             <Box align={"left"} my={10}>

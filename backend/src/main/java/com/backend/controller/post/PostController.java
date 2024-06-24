@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -125,23 +127,24 @@ public class PostController {
 
     // mdPick push Controller
     @PostMapping("{postId}/push")
-    public ResponseEntity postMdPickPush(@PathVariable Integer postId) {
-            postService.mdPickPush(postId);
-            return ResponseEntity.ok().build();
+    public ResponseEntity postMdPickPush(Integer postId, @RequestParam(value = "file", required = false)
+    MultipartFile file) throws IOException {
+        System.out.println("postid = " + postId);
+        postService.mdPickPush(postId, file);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("{postId}/pop")
     public ResponseEntity postMdPickPop(@PathVariable Integer postId) {
-            postService.mdPickPop(postId);
-            return ResponseEntity.ok().build();
+        postService.mdPickPop(postId);
+        return ResponseEntity.ok().build();
     }
-
 
 
     @GetMapping("{postId}/getMdPick")
     public ResponseEntity getMdPick(@PathVariable Integer postId) {
         String getMdPick = postService.getMdPick(postId);
-        if(getMdPick != null) {
+        if (getMdPick != null) {
             return ResponseEntity.ok(getMdPick);
         } else {
             return ResponseEntity.notFound().build();

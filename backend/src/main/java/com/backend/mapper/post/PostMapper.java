@@ -12,8 +12,8 @@ public interface PostMapper {
 
     // 게시글 추가 | 작성 매퍼
     @Insert("""
-            INSERT INTO post (title, content, memberid)
-            VALUES (#{title}, #{content}, #{memberId})
+            INSERT INTO post (title, content, memberid, postType)
+            VALUES (#{title}, #{content}, #{memberId}, #{postType})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "postId")
     int insert(Post post);
@@ -27,6 +27,8 @@ public interface PostMapper {
                    p.view,
                    p.memberid,
                    m.nickname,
+                   p.mdpick,
+                   p.posttype,
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l.memberid)  likeCount
             FROM post p
@@ -302,45 +304,53 @@ public interface PostMapper {
     Integer countAllLikePost(Integer memberId, String searchType, String searchKeyword);
 
     @Update("""
-        UPDATE post
-        SET mdpick = 'o'
-        WHERE postid = #{postId}
-            """)
+            UPDATE post
+            SET mdpick = 'o'
+            WHERE postid = #{postId}
+                """)
     int mdPickPush(Integer postId);
 
 
     @Select("""
-            SELECT p.postid,
-                               p.title,
-                               p.content,
-                               p.createdate,
-                               p.view,
-                               m.memberid,
-                               COUNT(DISTINCT c.commentid) commentCount,
-                               COUNT(DISTINCT l.memberid)  likeCount
-                        FROM post p
-                                 JOIN member m ON p.memberid = m.memberid
-                                 JOIN authority a ON p.memberid = a.memberid
-                                 LEFT JOIN comment c ON p.postid = c.postid
-                                 LEFT JOIN likes l ON p.postid = l.postid
-                        WHERE a.authtype = 'admin' AND
-                              p.mdpick = 'o'
-            GROUP BY p.postid, p.title, p.content, p.createdate, p.view, m.memberid
-            ORDER BY p.postid DESC
-""")
+                        SELECT p.postid,
+                                           p.title,
+                                           p.content,
+                                           p.createdate,
+                                           p.view,
+                                           m.memberid,
+                                           COUNT(DISTINCT c.commentid) commentCount,
+                                           COUNT(DISTINCT l.memberid)  likeCount
+                                    FROM post p
+                                             JOIN member m ON p.memberid = m.memberid
+                                             JOIN authority a ON p.memberid = a.memberid
+                                             LEFT JOIN comment c ON p.postid = c.postid
+                                             LEFT JOIN likes l ON p.postid = l.postid
+                                    WHERE a.authtype = 'admin' AND
+                                          p.mdpick = 'o'
+                        GROUP BY p.postid, p.title, p.content, p.createdate, p.view, m.memberid
+                        ORDER BY p.postid DESC
+            """)
     List<Post> selectMdPickPostList(Map<String, Object> post);
 
     @Select("""
-    SELECT mdpick
-    FROM post
-    WHERE postid = #{postId}
-            """)
+            SELECT mdpick
+            FROM post
+            WHERE postid = #{postId}
+                    """)
     String getMdPick(Integer postId);
 
     @Update("""
-        UPDATE post
-        SET mdpick = 'x'
-        WHERE postid = #{postId}
-            """)
+            UPDATE post
+            SET mdpick = 'x'
+            WHERE postid = #{postId}
+                """)
     int mdPickPop(Integer postId);
+
+
+    @Update("""
+            UPDATE post
+            set banner = #{key}
+            where postid = #{postid}
+            """)
+    int bannerUpdate(Integer postid, String key);
 }
