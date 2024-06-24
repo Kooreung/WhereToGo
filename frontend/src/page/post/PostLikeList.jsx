@@ -89,14 +89,20 @@ export function PostLikeList() {
   return (
     <Box align="center" justify="center">
       <Divider
-        border={"1px solid lightGray"}
+        border="3px solid #836091" // 경계선 정의
+        borderRadius="10px"
         w={{ base: "720px", lg: "960px" }}
         my={"2rem"}
       ></Divider>
       {postLikeList.length === 0 && <Center>조회 결과가 없습니다.</Center>}
       {postLikeList.length > 0 && (
         <VStack
-          divider={<StackDivider borderColor={"lightgray"} />}
+          divider={
+            <StackDivider
+              border="1px solid #836091" // 경계선 정의
+              borderRadius="10px"
+            />
+          }
           my={"2rem"}
           spacing={"2rem"}
           w={{ base: "720px", lg: "960px" }}
@@ -235,7 +241,8 @@ export function PostLikeList() {
         </VStack>
       )}
       <Divider
-        border={"1px solid lightGray"}
+        border="3px solid #836091" // 경계선 정의
+        borderRadius="10px"
         w={{ base: "720px", lg: "960px" }}
         my={"2rem"}
       ></Divider>

@@ -1,14 +1,9 @@
 import React, { useRef, useState } from "react";
-import {
-  Avatar,
-  Box,
-  Button,
-  Center,
-  Flex,
-  Stack,
-  WrapItem,
-} from "@chakra-ui/react";
+import { Avatar, Box, Center, Flex, Stack, WrapItem } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons/faArrowLeft";
 
 const places = [
   {
@@ -80,15 +75,25 @@ export function LobbyPlaceList() {
   }
 
   return (
-    <Box border={"1px solid green"}>
+    <Box>
       <Flex>
         <Center>
-          <Button onClick={handleMoveLeft}>옆</Button>
+          <Box
+            onClick={handleMoveLeft}
+            fontSize="xl"
+            fontWeight="bolder"
+            color={"#D8B7E5"}
+            boxShadow="2xl"
+            p="4"
+            rounded="3xl"
+            backgroundColor={"RGBA(255, 255, 255, 0.92)"}
+          >
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </Box>
         </Center>
-        <Box w={"800px"} overflow={"hidden"} border={"1px solid black"}>
+        <Box w={"950px"} overflow={"hidden"}>
           <Flex
             spacing="20px"
-            border={"5px solid red"}
             ref={dataRef}
             sx={{
               transform: `translateX(${positionX}px)`,
@@ -97,8 +102,8 @@ export function LobbyPlaceList() {
             cursor="pointer"
           >
             {places.map((place, index) => (
-              <WrapItem key={index} border={"5px solid blue"}>
-                <Box width="100px" border={"5px solid black"}>
+              <WrapItem key={index}>
+                <Box width="120px">
                   {/* 조정 가능한 너비 */}
                   <Stack
                     spacing={2}
@@ -115,9 +120,18 @@ export function LobbyPlaceList() {
             ))}
           </Flex>
         </Box>
-
         <Center>
-          <Button onClick={handleMoveRight}>옆</Button>
+          <Box
+            onClick={handleMoveRight}
+            fontSize="xl"
+            color={"#D8B7E5"}
+            boxShadow="2xl"
+            p="4"
+            rounded="3xl"
+            bg="white"
+          >
+            <FontAwesomeIcon icon={faArrowRight} />
+          </Box>
         </Center>
       </Flex>
     </Box>
