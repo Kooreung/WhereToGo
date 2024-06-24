@@ -50,8 +50,8 @@ export function LobbyMdList() {
             }
 
             if (nextPosts === 1) {
-              setNextPosts(mdPost.length);
-              setPrevPosts(mdPost.length - 1);
+              setNextPosts(5);
+              setPrevPosts(4);
             }
           }}
         >
@@ -246,6 +246,7 @@ export function LobbyMdList() {
                 )}
               </CardBody>
             )}
+
             {nextPosts >= 4 && nextPosts <= 5 && (
               <CardBody>
                 <VStack
@@ -258,6 +259,7 @@ export function LobbyMdList() {
                 </VStack>
               </CardBody>
             )}
+
             <CardFooter></CardFooter>
           </Stack>
         </Card>
