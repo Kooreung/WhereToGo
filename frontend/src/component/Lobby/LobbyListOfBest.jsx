@@ -65,7 +65,6 @@ function LobbyListOfBest(props) {
                   댓글 <FontAwesomeIcon icon={faCaretRight} />{" "}
                   {post.commentCount}
                 </Text>
-                {/*todo 위치 잡기*/}
                 <Text ml={2}>{post.createDate}</Text>
               </CardFooter>
             </Stack>

@@ -17,16 +17,18 @@ function Navbar() {
   const account = useContext(LoginContext);
   const { colorMode, toggleColorMode } = useColorMode();
   return (
-    <Flex alignItems="center" justifyContent="center">
+    <Flex alignItems="center" justifyContent="center" w={"100%"}>
       <Flex
-        w={{ base: "1080px", lg: "1440px" }}
+        w={{ base: "960px", lg: "1024px", xl: "1080px" }}
         h={"96px"}
         px={6}
         mt={"4rem"}
         mb={"4rem"}
         align={"center"}
         justify={"space-between"}
-        border={"red dotted 1px"}
+        boxShadow={"md"}
+        rounded={"md"}
+        boxSizing={"border-box"}
       >
         {/* 로고 */}
         <Box onClick={() => navigate("/")} cursor={"pointer"}>

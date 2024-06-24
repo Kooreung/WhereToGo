@@ -113,7 +113,6 @@ export function PostLikeList() {
               onClick={() => navigate(`/post/${post.postId}`)}
               w={"720px"}
             >
-              {/* Todo 썸네일 JOIN */}
               <Box>
                 <Grid
                   w={"720px"}

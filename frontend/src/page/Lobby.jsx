@@ -1,31 +1,36 @@
 import React from "react";
-import { Box, Center, Flex,  } from "@chakra-ui/react";
+import { Box, Center, Flex, Heading } from "@chakra-ui/react";
 import { LobbyMdList } from "../component/Lobby/LobbyMdList.jsx";
 import { LobbyPlaceList } from "../component/Lobby/LobbyPlaceList.jsx";
 import LobbyListOfBest from "../component/Lobby/LobbyListOfBest.jsx";
 
 function Lobby() {
   return (
-    <Box>
-      <Center my={6}>
-        <Flex>
-          <LobbyPlaceList />
-        </Flex>
+    <Flex
+      w={{ base: "960px", lg: "1024px", xl: "1080px" }}
+      direction={"column"}
+      alignItems={"center"}
+      justify={"center"}
+    >
+      <Center>
+        <LobbyPlaceList />
       </Center>
-      <Box fontSize="3xl" pl={40}>
-        MD 추천 Pick
+      <Box>
+        <Heading>MD 추천 Pick</Heading>
       </Box>
+
       <LobbyMdList />
-      <Box fontSize="3xl" pl={80}>
-        회원 인기글
+
+      <Box>
+        <Heading>회원 인기글</Heading>
       </Box>
+
       <Flex direction={"column"} align={"center"} my={6}>
         <Box>
           <LobbyListOfBest />
         </Box>
       </Flex>
-      {/* TODO 다크/라이트 모드 추가 필요 */}
-    </Box>
+    </Flex>
   );
 }
 
