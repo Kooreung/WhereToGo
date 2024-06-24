@@ -191,13 +191,13 @@ export function PostView() {
   }
 
   function handleMoveLeft() {
-    setPositionX((prev) => Math.min(prev + 270, 0));
+    setPositionX((prev) => Math.min(prev + 400, 0));
   }
 
   function handleMoveRight() {
     const flexWidth = dataRef.current.scrollWidth;
     const containerWidth = dataRef.current.parentElement.offsetWidth;
-    setPositionX((prev) => Math.max(prev - 270, containerWidth - flexWidth));
+    setPositionX((prev) => Math.max(prev - 400, containerWidth - flexWidth));
   }
 
   return (
@@ -207,40 +207,9 @@ export function PostView() {
           w={{ base: "720px", lg: "1080px" }}
           h={"80px"}
           my={"32px"}
-          templateColumns={"repeat(5,1fr)"}
+          templateColumns={"repeat(4,1fr)"}
           templateRows={"1fr 1fr"}
         >
-          <GridItem
-            rowSpan={1}
-            colSpan={1}
-            alignContent={"center"}
-            overflow={"hidden"}
-            textOverflow={"ellipsis"}
-            whiteSpace={"nowrap"}
-          >
-            <Flex pl={3}>
-              <Text>
-                지역 <FontAwesomeIcon icon={faCaretRight} />
-              </Text>
-            </Flex>
-          </GridItem>
-          <GridItem
-            rowSpan={1}
-            colSpan={4}
-            alignContent={"center"}
-            overflow={"hidden"}
-            textOverflow={"ellipsis"}
-            whiteSpace={"nowrap"}
-          >
-            <Flex pl={3}>
-              <Text display={{ base: "none", lg: "block" }} mr={1}>
-                제목 <FontAwesomeIcon icon={faCaretRight} />
-              </Text>
-              <Text overflow={"hidden"} textOverflow={"ellipsis"}>
-                {post.title}
-              </Text>
-            </Flex>
-          </GridItem>
           <GridItem
             rowSpan={1}
             colSpan={1}
@@ -256,6 +225,24 @@ export function PostView() {
               <Text>{post.nickName}</Text>
             </Flex>
           </GridItem>
+          <GridItem
+            rowSpan={1}
+            colSpan={3}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Flex pl={3}>
+              <Text display={{ base: "none", lg: "block" }} mr={1}>
+                제목 <FontAwesomeIcon icon={faCaretRight} />
+              </Text>
+              <Text overflow={"hidden"} textOverflow={"ellipsis"}>
+                {post.title}
+              </Text>
+            </Flex>
+          </GridItem>
+
           <GridItem
             rowSpan={1}
             colSpan={1}
@@ -322,15 +309,15 @@ export function PostView() {
           <MapView />
         </Box>
 
-        <Flex w={"540px"} h={"160px"} alignItems={"center"} bg={"lightgray"}>
+        <Flex
+          w={"540px"}
+          h={"160px"}
+          alignItems={"center"}
+          justify={"space-evenly"}
+          bg={"lightgray"}
+        >
           <Button onClick={handleMoveLeft}>옆</Button>
-          <Box
-            w={"540px"}
-            overflow={"hidden"}
-            border={"1px dotted red"}
-            alignItems={"center"}
-            gap={6}
-          >
+          <Box w={"400px"} overflow={"hidden"} alignItems={"center"}>
             <Flex
               ref={dataRef}
               sx={{
@@ -345,30 +332,40 @@ export function PostView() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Box w={"270px"} border={"1px dotted red"} p={3}>
-                      <Box
-                        overflow={"hidden"}
-                        textOverflow={"ellipsis"}
-                        whiteSpace={"nowrap"}
-                      >
-                        {index + 1}번 장소
+                    <Flex w={"400px"} justifyContent={"center"}>
+                      <Box w={"120px"} h={"120px"} border={"1px dotted red"}>
+                        썸네일
                       </Box>
                       <Box
-                        overflow={"hidden"}
-                        textOverflow={"ellipsis"}
-                        whiteSpace={"nowrap"}
+                        w={"260px"}
+                        h={"120px"}
+                        border={"1px dotted red"}
+                        p={3}
                       >
-                        {place.placeName}
+                        <Box
+                          overflow={"hidden"}
+                          textOverflow={"ellipsis"}
+                          whiteSpace={"nowrap"}
+                        >
+                          {index + 1}번 장소
+                        </Box>
+                        <Box
+                          overflow={"hidden"}
+                          textOverflow={"ellipsis"}
+                          whiteSpace={"nowrap"}
+                        >
+                          {place.placeName}
+                        </Box>
+                        <Box
+                          overflow={"hidden"}
+                          textOverflow={"ellipsis"}
+                          whiteSpace={"nowrap"}
+                        >
+                          {place.address}
+                        </Box>
+                        <Box>게시글 등록 횟수 : {place.countPlace} 건</Box>
                       </Box>
-                      <Box
-                        overflow={"hidden"}
-                        textOverflow={"ellipsis"}
-                        whiteSpace={"nowrap"}
-                      >
-                        {place.address}
-                      </Box>
-                      <Box>게시글 등록 횟수 : {place.countPlace} 건</Box>
-                    </Box>
+                    </Flex>
                   </Link>
                 </Box>
               ))}
