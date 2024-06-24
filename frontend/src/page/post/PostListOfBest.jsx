@@ -17,7 +17,7 @@ export function PostListOfBest() {
   }, []);
 
   return (
-    <Box w={{ base: "960px", lg: "1440px" }}>
+    <Box w={{ base: "960px", lg: "1080px" }}>
       <Box mb={"2rem"}>
         <Heading align={"center"}>회원 인기글</Heading>
       </Box>
@@ -28,7 +28,7 @@ export function PostListOfBest() {
             key={index}
             onClick={() => navigate(`/post/${post.postId}`)}
             display={{ base: "none", lg: "flex" }}
-            w={"480px"}
+            w={"400px"}
             h={"160px"}
             boxSizing={"content-box"}
             alignItems={"center"}
@@ -51,7 +51,7 @@ export function PostListOfBest() {
               textAlign={"start"}
               alignContent={"center"}
               direction={"column"}
-              w={"320px"}
+              w={"240px"}
               h={"160px"}
               fontSize={"14px"}
             >
