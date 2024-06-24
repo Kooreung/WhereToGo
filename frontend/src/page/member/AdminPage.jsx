@@ -4,10 +4,20 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Box,
   Button,
+  Card,
+  CardBody,
+  CardHeader,
   Center,
   Flex,
   Heading,
+  IconButton,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Select,
   Tab,
   Table,
@@ -20,20 +30,29 @@ import {
   Th,
   Thead,
   Tr,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import Lobby from "../Lobby.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
+import { SmallAddIcon } from "@chakra-ui/icons";
+import ContentParser from "../../component/ContentParser.jsx";
 
 export function AdminPage() {
   const [memberList, setMemberList] = useState([]);
+  const [mdPicks, setMdPicks] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
   const account = useContext(LoginContext);
+  const {
+    isOpen: isModalOpenOfAdd,
+    onOpen: onModalOpenOfAdd,
+    onClose: onModalCloseOfAdd,
+  } = useDisclosure();
 
   useEffect(() => {
     axios.get(`/api/member/list?${searchParams}`).then((res) => {
@@ -60,6 +79,13 @@ export function AdminPage() {
     pageNumbers.push(i);
   }
 
+  function handleBanner() {
+    axios.get("/api/post/mdPickList").then((res) => {
+      setMdPicks(res.data.post);
+      console.log(res.data);
+    });
+  }
+
   function handleSearchClick() {
     navigate(`/memberList/?type=${searchType}&keyword=${searchKeyword}`);
   }
@@ -82,7 +108,7 @@ export function AdminPage() {
       <Tabs variant="enclosed">
         <TabList>
           <Tab>회원관리</Tab>
-          <Tab>배너 등록</Tab>
+          <Tab onClick={handleBanner}>배너 등록</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -196,10 +222,46 @@ export function AdminPage() {
             </Center>
           </TabPanel>
           <TabPanel>
-            <p>two!</p>
+            <Box>
+              <IconButton
+                onClick={onModalOpenOfAdd}
+                aria-label="Search database"
+                icon={<SmallAddIcon />}
+              />
+              <Card w={500} h={500}>
+                <CardBody>asd</CardBody>
+              </Card>
+            </Box>
           </TabPanel>
         </TabPanels>
       </Tabs>
+      <Modal isOpen={isModalOpenOfAdd} onClose={onModalCloseOfAdd}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>MD 리스트</ModalHeader>
+          <ModalBody>배너에 등록할 게시글을 선택 해주세요.</ModalBody>
+          {mdPicks.map((mdpick) => (
+            <Box key={mdpick.postId}>
+              <Card border="1px" mb="3px">
+                <CardHeader>
+                  <Heading size="md">{mdpick.title}</Heading>
+                </CardHeader>
+
+                <CardBody>
+                  <Box>
+                    <ContentParser content={mdpick.content} />
+                  </Box>
+                </CardBody>
+              </Card>
+            </Box>
+          ))}
+
+          <ModalFooter>
+            {/*<Button onClick={handleClickDelete}>추가</Button>*/}
+            <Button onClick={onModalCloseOfAdd}>취소</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }

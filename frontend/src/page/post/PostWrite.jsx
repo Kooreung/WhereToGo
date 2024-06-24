@@ -112,6 +112,7 @@ function PostWrite() {
               latitude: parseFloat(place.y),
               longitude: parseFloat(place.x),
               postId: postId,
+              postType: postType,
             })),
           )
           .then((res) => {
