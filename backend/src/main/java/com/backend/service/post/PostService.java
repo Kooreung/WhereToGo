@@ -7,10 +7,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +31,14 @@ public class PostService {
     private final PostMapper postMapper;
     @Autowired
     private HttpServletRequest request;
+
+    final S3Client s3Client;
+
+    @Value("${aws.s3.bucket.name}")
+    String bucketName;
+
+    @Value("${image.src.prefix}")
+    String srcPrefix;
 
     // 게시글 추가 | 작성 서비스
     public Integer add(Post post, Authentication authentication) {
@@ -224,8 +239,17 @@ public class PostService {
     }
 
     // mdPick 추가(업데이트)
-    public void mdPickPush(Integer postId) {
+    public void mdPickPush(Integer postId, MultipartFile banner) throws IOException {
         postMapper.mdPickPush(postId);
+
+        String key = String.format("prj3/banner%s/%s", postId, banner.getOriginalFilename());
+        PutObjectRequest objectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .acl(ObjectCannedACL.PUBLIC_READ)
+                .build();
+        s3Client.putObject(objectRequest, RequestBody.fromInputStream(banner.getInputStream(), banner.getSize()));
+        postMapper.bannerUpdate(postId, key);
     }
 
     // mdPick 삭제(업데이트)

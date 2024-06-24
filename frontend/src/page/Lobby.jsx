@@ -6,17 +6,10 @@ import { LobbyPlaceList } from "../component/Lobby/LobbyPlaceList.jsx";
 import LobbyListOfBest from "../component/Lobby/LobbyListOfBest.jsx";
 
 function Lobby() {
-  const [keyword, setKeyword] = useState("");
 
-  function crawling() {
-    axios.get(`/api/web/crawling/${keyword}`).then((response) => {
-      console.log(response.data);
-    });
-  }
+
   return (
     <Box>
-      <Input onChange={(e) => setKeyword(e.target.value)}></Input>
-      <Button onClick={crawling}>크롤링~</Button>
       <Center my={6}>
         <Flex>
           <LobbyPlaceList />

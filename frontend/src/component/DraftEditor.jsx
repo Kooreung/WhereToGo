@@ -24,7 +24,6 @@ const Viewer = styled.div`
 
 const Draft = ({ setContent }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  const [htmlString, setHtmlString] = useState("");
   const isMounted = useRef(false); // 마운트 상태 추적용 ref
 
   useEffect(() => {
@@ -36,10 +35,16 @@ const Draft = ({ setContent }) => {
 
   const updateTextDescription = async (state) => {
     setEditorState(state);
+    console.log("state", state);
     const contentState = state.getCurrentContent();
     const html = draftjsToHtml(convertToRaw(contentState));
+
+    function parseHtmlToText(htmlString) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlString, "text/html");
+      return doc.body.textContent || "";
+    }
     setContent(html);
-    setHtmlString(html);
   };
 
   const uploadCallback = () => {

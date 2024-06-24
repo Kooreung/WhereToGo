@@ -27,6 +27,9 @@ function PostWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectedPlaces, setSelectedPlaces] = useState([]);
+  const [isNavigating, setIsNavigating] = useState(false);
+  const [disableSaveButton, setDisableSaveButton] = useState("able");
+  const [postType, setPostType] = useState("");
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -72,9 +75,31 @@ function PostWrite() {
 
   // 저장 버튼 클릭 시
   function handleClickSave() {
+    if (title.trim().length === 0) {
+      toast({
+        status: "error",
+        position: "bottom",
+        description: "제목을 다시 확인해주세요.",
+      });
+      return;
+    }
+    if (content.trim().length <= 7) {
+      toast({
+        status: "error",
+        position: "bottom",
+        description: "내용을 다시 확인해주세요.",
+      });
+      return;
+    }
     setLoading(true);
+
+    if (account.isAdmin()) {
+      setPostType("admin");
+    } else {
+      setPostType("user");
+    }
     axios
-      .postForm("/api/post/add", { title, content })
+      .postForm("/api/post/add", { title, content, postType })
       .then((res) => {
         const postId = res.data;
 
@@ -154,6 +179,16 @@ function PostWrite() {
               ></Input>
             </FormControl>
           </Box>
+          {/*<option value={"서울01"}>강남/역삼</option>*/}
+          {/*<option value={"서울02"}>서초/교대/방배</option>*/}
+          {/*<option value={"서울03"}>잠실/송파/강동</option>*/}
+          {/*<option value={"서울04"}>건대/성수/왕십리</option>*/}
+          {/*<option value={"서울05"}>성북/노원/중랑</option>*/}
+          {/*<option value={"서울06"}>종로/중구</option>*/}
+          {/*<option value={"서울07"}>용산/이태원/한남</option>*/}
+          {/*<option value={"서울08"}>홍대/합정/마포</option>*/}
+          {/*<option value={"서울09"}>영등포/여의도/강서</option>*/}
+          {/*<option value={"서울10"}>구로/관악/동작</option>*/}
         </Box>
         <Box w={"576px"} bg={"lightgray"} my={"32px"}>
           <MapAdd
