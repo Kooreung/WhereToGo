@@ -19,5 +19,23 @@ export const customTheme = extendTheme({
       },
     },
   },
-  components: {},
+  components: {
+    Button: {
+      variants: {
+        solid: {
+          bgColor: "#D8B7E5",
+          color: "blackAlpha.900",
+          _hover: {
+            bgColor: "#836091",
+          },
+          _dark: {
+            bgColor: "#836091",
+            _hover: {
+              bgColor: "#D8B7E5",
+            },
+          },
+        },
+      },
+    },
+  },
 });
