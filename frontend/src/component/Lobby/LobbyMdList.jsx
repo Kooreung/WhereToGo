@@ -25,6 +25,7 @@ import ContentParser from "../ContentParser.jsx";
 
 export function LobbyMdList() {
   const [mdPost, setMdPost] = useState([]);
+  const [banner, setBanner] = useState([]);
   const [prevPosts, setPrevPosts] = useState(0);
   const [nextPosts, setNextPosts] = useState(1);
   const navigate = useNavigate();
@@ -38,6 +39,17 @@ export function LobbyMdList() {
       })
       .catch((err) => console.log(err))
       .finally(() => {});
+
+    axios
+      .get("/api/post/bannerList")
+      .then((response) => {
+        // 상태 업데이트로 리스트를 다시 렌더링
+        setBanner(response.data);
+      })
+      .catch((error) => {
+        // 오류 처리
+        console.error("배너 리스트 불러오기 실패:", error);
+      });
   }, []);
 
   return (
@@ -248,16 +260,14 @@ export function LobbyMdList() {
               </CardBody>
             )}
 
-            {nextPosts >= 4 && nextPosts <= 5 && (
-              <CardBody>
-                <VStack
-                  divider={<StackDivider borderColor={"lightgray"} />}
-                  my={"2rem"}
-                  spacing={"2rem"}
-                  w={{ base: "720px", lg: "960px" }}
-                >
-                  <Box>누르면 검색된 지역으로 가는 배너</Box>
-                </VStack>
+            {nextPosts === 4 && banner.length > 0 && (
+              <CardBody key={banner[0].id}>
+                <Box>{banner[0].city}</Box>
+              </CardBody>
+            )}
+            {nextPosts === 5 && banner.length > 1 && (
+              <CardBody key={banner[1].id}>
+                <Box>{banner[1].city}</Box>
               </CardBody>
             )}
 
