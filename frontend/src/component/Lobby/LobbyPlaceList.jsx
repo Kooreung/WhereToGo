@@ -89,7 +89,15 @@ export function LobbyPlaceList() {
       </HeadingLarge>
       <Flex alignItems={"center"} justifyContent={"center"}>
         <Box>
-          <ButtonCircle onClick={handleMoveLeft}>
+          <ButtonCircle
+            onClick={handleMoveLeft}
+            cursor={"pointer"}
+            sx={{
+              "&:hover": {
+                backgroundColor: "RGBA(0, 0, 0, 0.1)",
+              },
+            }}
+          >
             <FontAwesomeIcon icon={faChevronLeft} size={"2xl"} />
           </ButtonCircle>
         </Box>
@@ -131,7 +139,15 @@ export function LobbyPlaceList() {
           </Flex>
         </Box>
         <Center>
-          <ButtonCircle onClick={handleMoveRight}>
+          <ButtonCircle
+            onClick={handleMoveRight}
+            cursor={"pointer"}
+            sx={{
+              "&:hover": {
+                backgroundColor: "RGBA(0, 0, 0, 0.1)",
+              },
+            }}
+          >
             <FontAwesomeIcon icon={faChevronRight} size={"2xl"} />
           </ButtonCircle>
         </Center>

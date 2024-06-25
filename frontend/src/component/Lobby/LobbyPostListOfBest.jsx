@@ -28,6 +28,7 @@ function LobbyPostListOfBest(props) {
           variant="outline"
           cursor="pointer"
           p={"1rem"}
+          my={"1rem"}
           sx={{
             "&:hover": {
               backgroundColor: "RGBA(0, 0, 0, 0.02)",
@@ -48,9 +49,9 @@ function LobbyPostListOfBest(props) {
             textAlign={"start"}
             alignContent={"center"}
             direction={"column"}
-            w={"480px"}
+            w={"560px"}
             h={"160px"}
-            ml={"8px"}
+            ml={"1rem"}
           >
             <Flex>
               <HeadingMedium
@@ -70,19 +71,19 @@ function LobbyPostListOfBest(props) {
             <Spacer />
             <Flex justify={"space-between"} fontSize={"14px"}>
               <Flex>
-                <Text ml={1}>
+                <Text>
                   조회수 <FontAwesomeIcon icon={faCaretRight} />
                 </Text>
                 <Text ml={1}>{post.view}</Text>
               </Flex>
               <Flex>
-                <Text ml={1}>
+                <Text>
                   좋아요 <FontAwesomeIcon icon={faCaretRight} />
                 </Text>
                 <Text ml={1}>{post.likeCount}</Text>
               </Flex>
               <Flex>
-                <Text ml={1}>
+                <Text>
                   댓글 <FontAwesomeIcon icon={faCaretRight} />
                 </Text>
                 <Text ml={1}>{post.commentCount}</Text>
@@ -90,13 +91,13 @@ function LobbyPostListOfBest(props) {
             </Flex>
             <Flex justify={"space-between"} fontSize={"14px"}>
               <Flex>
-                <Text ml={1}>
+                <Text>
                   작성자 <FontAwesomeIcon icon={faCaretRight} />
                 </Text>
                 <Text ml={1}>{post.nickName}</Text>
               </Flex>
               <Flex color={"lightgray"}>
-                <Text ml={1}>
+                <Text>
                   작성일자 <FontAwesomeIcon icon={faCaretRight} />
                 </Text>
                 <Text ml={1}>{post.createDate}</Text>
