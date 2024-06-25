@@ -1,6 +1,7 @@
 package com.backend.service.post;
 
 import com.backend.domain.place.Place;
+import com.backend.domain.post.Banner;
 import com.backend.domain.post.Post;
 import com.backend.mapper.post.PostMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
@@ -229,8 +231,8 @@ public class PostService {
     }
 
 
-    public Map<String, Object> mdPickList(Map<String, Object> post) {
-        List<Post> posts = postMapper.selectMdPickPostList(post);
+    public Map<String, Object> mdPickList() {
+        List<Post> posts = postMapper.selectMdPickPostList();
 
         Map<String, Object> result = new HashMap<>();
         result.put("post", posts);
@@ -264,5 +266,38 @@ public class PostService {
     // mdPick 한 게시물 개수
     public Integer mdPickCount() {
         return postMapper.getMdPickCount();
+    }
+
+
+    public void addBanner(String city, String link, MultipartFile file) throws IOException {
+
+        String key = String.format("prj3/banner%s/%s", city, file.getOriginalFilename());
+        PutObjectRequest objectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .acl(ObjectCannedACL.PUBLIC_READ)
+                .build();
+        s3Client.putObject(objectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+
+        postMapper.addBanner(city, link, key);
+    }
+
+
+    public List<Banner> getBannerList() {
+        return postMapper.gatBannerList();
+    }
+
+
+    public int removeBanner(Integer bannerId) {
+
+        Banner banner = postMapper.getBannerSrcById(bannerId);
+
+        String key = banner.getBannerSrc();
+        DeleteObjectRequest objectRequest2 = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .build();
+        s3Client.deleteObject(objectRequest2);
+        return postMapper.deleteBannerById(bannerId);
     }
 }

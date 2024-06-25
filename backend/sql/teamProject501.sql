@@ -186,3 +186,23 @@ FROM likes;
 
 select *
 from authority;
+
+
+SELECT p.postid,
+       p.title,
+       p.content,
+       p.createdate,
+       p.view,
+       m.memberid,
+       COUNT(DISTINCT c.commentid) commentCount,
+       COUNT(DISTINCT l.memberid)  likeCount,
+       p.mdpick
+FROM post p
+         JOIN member m ON p.memberid = m.memberid
+         JOIN authority a ON p.memberid = a.memberid
+         LEFT JOIN comment c ON p.postid = c.postid
+         LEFT JOIN likes l ON p.postid = l.postid
+WHERE a.authtype = 'admin'
+  AND p.mdpick = 'o'
+GROUP BY p.postid, p.title, p.content, p.createdate, p.view, m.memberid
+ORDER BY p.postid DESC;

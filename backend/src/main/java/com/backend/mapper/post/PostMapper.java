@@ -1,6 +1,7 @@
 package com.backend.mapper.post;
 
 import com.backend.domain.place.Place;
+import com.backend.domain.post.Banner;
 import com.backend.domain.post.Post;
 import org.apache.ibatis.annotations.*;
 
@@ -12,8 +13,8 @@ public interface PostMapper {
 
     // 게시글 추가 | 작성 매퍼
     @Insert("""
-            INSERT INTO post (title, content, memberid, postType)
-            VALUES (#{title}, #{content}, #{memberId}, #{postType})
+            INSERT INTO post (title, content, memberid)
+            VALUES (#{title}, #{content}, #{memberId})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "postId")
     int insert(Post post);
@@ -28,7 +29,6 @@ public interface PostMapper {
                    p.memberid,
                    m.nickname,
                    p.mdpick,
-                   p.posttype,
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l.memberid)  likeCount
             FROM post p
@@ -348,7 +348,8 @@ public interface PostMapper {
                                            p.view,
                                            m.memberid,
                                            COUNT(DISTINCT c.commentid) commentCount,
-                                           COUNT(DISTINCT l.memberid)  likeCount
+                                           COUNT(DISTINCT l.memberid)  likeCount,
+                                            p.mdpick
                                     FROM post p
                                              JOIN member m ON p.memberid = m.memberid
                                              JOIN authority a ON p.memberid = a.memberid
@@ -359,7 +360,7 @@ public interface PostMapper {
                         GROUP BY p.postid, p.title, p.content, p.createdate, p.view, m.memberid
                         ORDER BY p.postid DESC
             """)
-    List<Post> selectMdPickPostList(Map<String, Object> post);
+    List<Post> selectMdPickPostList();
 
     @Select("""
             SELECT mdpick
@@ -377,10 +378,10 @@ public interface PostMapper {
 
     // mdPick 된 게시물 개수
     @Select("""
-        SELECT COUNT(mdpick)
-        FROM post
-        WHERE mdpick = 'o';
-        """)
+            SELECT COUNT(mdpick)
+            FROM post
+            WHERE mdpick = 'o';
+            """)
     int getMdPickCount();
 
 
@@ -390,4 +391,31 @@ public interface PostMapper {
             where postid = #{postid}
             """)
     int bannerUpdate(Integer postid, String key);
+
+
+    @Insert("""
+            INSERT INTO mdpostbanner (city,link, bannersrc)
+            values (#{city},#{link}, #{bannersrc})
+            """)
+    void addBanner(String city, String link, String bannersrc);
+
+
+    @Select("""
+            SELECT * FROM mdpostbanner
+            """)
+    List<Banner> gatBannerList();
+
+
+    @Delete("""
+            DELETE FROM mdpostbanner
+            WHERE bannerid = #{bannerId}
+            """)
+    int deleteBannerById(Integer bannerId);
+
+
+    @Select("""
+            SELECT * FROM mdpostbanner
+            where bannerid = #{bannerId}
+            """)
+    Banner getBannerSrcById(Integer bannerId);
 }

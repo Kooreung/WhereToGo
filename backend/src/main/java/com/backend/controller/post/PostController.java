@@ -1,6 +1,7 @@
 package com.backend.controller.post;
 
 import com.backend.domain.place.Place;
+import com.backend.domain.post.Banner;
 import com.backend.domain.post.Post;
 import com.backend.service.post.PostService;
 import lombok.RequiredArgsConstructor;
@@ -128,16 +129,22 @@ public class PostController {
 
     // home mdpick list
     @GetMapping("mdPickList")
-    public Map<String, Object> postMdPickList(Map<String, Object> post) {
-        return postService.mdPickList(post);
+    public Map<String, Object> postMdPickList() {
+        return postService.mdPickList();
     }
 
     // mdPick push Controller
-    @PostMapping("{postId}/push")
-    public ResponseEntity postMdPickPush(@PathVariable Integer postId, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+    @PostMapping("push")
+    public ResponseEntity postMdPickPush(Integer postId, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+        System.out.println(postId);
+        System.out.println(file.getOriginalFilename());
         Integer mdPickCount = postService.mdPickCount();
-        if(mdPickCount < 3){
-            postService.mdPickPush(postId, file);
+        if (mdPickCount < 3) {
+
+            for (int i = 0; i < 3; i++) {
+                postService.mdPickPush(postId, file);
+            }
+
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();
@@ -145,8 +152,9 @@ public class PostController {
     }
 
     // mdPick pop Controller
-    @PostMapping("{postId}/pop")
+    @PostMapping("/{postId}/pop")
     public ResponseEntity postMdPickPop(@PathVariable Integer postId) {
+        System.out.println(postId);
         postService.mdPickPop(postId);
         return ResponseEntity.ok().build();
     }
@@ -160,5 +168,28 @@ public class PostController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PostMapping("banner/add")
+    public ResponseEntity addBanner(String city, String link, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+        postService.addBanner(city, link, file);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("banner/remove/{bannerId}")
+    public ResponseEntity removeBanner(@PathVariable Integer bannerId) {
+
+
+        if (postService.removeBanner(bannerId) == 1) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("bannerList")
+    public ResponseEntity getBannerList() {
+        List<Banner> bannerList = postService.getBannerList();
+        return ResponseEntity.ok(bannerList);
     }
 }

@@ -27,7 +27,6 @@ function PostWrite() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectedPlaces, setSelectedPlaces] = useState([]);
-  const [postType, setPostType] = useState("");
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -91,13 +90,8 @@ function PostWrite() {
     }
     setLoading(true);
 
-    if (account.isAdmin()) {
-      setPostType("admin");
-    } else {
-      setPostType("user");
-    }
     axios
-      .postForm("/api/post/add", { title, content, postType })
+      .postForm("/api/post/add", { title, content })
       .then((res) => {
         const postId = res.data;
 
@@ -112,7 +106,6 @@ function PostWrite() {
               latitude: parseFloat(place.y),
               longitude: parseFloat(place.x),
               postId: postId,
-              postType: postType,
             })),
           )
           .then((res) => {
