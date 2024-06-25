@@ -9,10 +9,24 @@ export const customTheme = extendTheme({
     xl: "80em",
     "2xl": "96em",
   },
+  fonts: {
+    heading: "Pretendard, sans-serif",
+    body: "Pretendard, sans-serif",
+  },
   styles: {
     global: {
+      heading: {
+        textColor: "blackAlpha.900",
+        fontFamily: "Pretendard",
+        fontWeight: 400,
+        _dark: {
+          textColor: "pink",
+        },
+      },
       body: {
         textColor: "blackAlpha.900",
+        fontFamily: "Pretendard",
+        fontWeight: 400,
         _dark: {
           textColor: "pink",
         },
@@ -20,6 +34,16 @@ export const customTheme = extendTheme({
     },
   },
   components: {
+    Heading: {
+      baseStyle: {
+        color: "blackAlpha.900",
+        fontFamily: "Pretendard, sans-serif",
+        fontWeight: 800,
+        _dark: {
+          color: "pink",
+        },
+      },
+    },
     Button: {
       variants: {
         solid: {
