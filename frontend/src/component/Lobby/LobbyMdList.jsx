@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Card,
   CardBody,
   Flex,
@@ -261,20 +262,19 @@ export function LobbyMdList() {
                 </CardBody>
               )}
 
-            {nextPosts === 4 && banner.length > 0 && (
-              <CardBody key={banner[0].id}>
-                <Box>{banner[0].city}</Box>
-              </CardBody>
-            )}
-            {nextPosts === 5 && banner.length > 1 && (
-              <CardBody key={banner[1].id}>
-                <Box>{banner[1].city}</Box>
-              </CardBody>
-            )}
-
-            <CardFooter></CardFooter>
-          </Stack>
-        </Card>
+              {nextPosts === 4 && banner.length > 0 && (
+                <CardBody key={banner[0].id}>
+                  <Box>{banner[0].city}</Box>
+                </CardBody>
+              )}
+              {nextPosts === 5 && banner.length > 1 && (
+                <CardBody key={banner[1].id}>
+                  <Box>{banner[1].city}</Box>
+                </CardBody>
+              )}
+            </Stack>
+          </Card>
+        </Box>
         <Button
           onClick={() => {
             if (nextPosts < 5) {
@@ -289,7 +289,7 @@ export function LobbyMdList() {
         >
           <FontAwesomeIcon icon={faArrowRight} fontSize="2rem" />
         </Button>
-      </Center>
+      </Flex>
     </Box>
   );
 }
