@@ -84,7 +84,7 @@ function PostList() {
   }
 
   return (
-    <Box align="center" justify="center" overflowX={"hidden"}>
+    <Box align="center" justify="center">
       <PostListOfBest />
       <Divider
         border={"1px solid lightGray"}
