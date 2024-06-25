@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import HeadingMedium from "../../css/Heading/HeadingMedium.jsx";
+import HeadingLarge from "../../css/Heading/HeadingLarge.jsx";
 
 function LobbyPostListOfBest(props) {
   const [postListOfBest, setPostListOfBest] = useState([]);
@@ -14,7 +16,10 @@ function LobbyPostListOfBest(props) {
     });
   }, []);
   return (
-    <Box px={"1rem"}>
+    <Box>
+      <HeadingLarge mb={"1rem"} textAlign={"start"}>
+        회원 인기글
+      </HeadingLarge>
       {postListOfBest.map((post, index) => (
         <Card
           key={index}
@@ -23,32 +28,32 @@ function LobbyPostListOfBest(props) {
           variant="outline"
           cursor="pointer"
           p={"1rem"}
-          my={"2rem"}
           sx={{
             "&:hover": {
               backgroundColor: "RGBA(0, 0, 0, 0.02)",
             },
           }}
         >
-          <Box alignContent={"center"} w={"160px"} h={"160px"}>
-            <Image
-              src={post.picurl}
-              objectFit={"cover"}
-              w={"100%"}
-              h={"100%"}
-            />
-          </Box>
+          <Flex>
+            <Box w={"160px"} h={"160px"}>
+              <Image
+                src={post.picurl}
+                objectFit={"cover"}
+                w={"100%"}
+                h={"100%"}
+              />
+            </Box>
+          </Flex>
           <Flex
             textAlign={"start"}
             alignContent={"center"}
             direction={"column"}
             w={"480px"}
             h={"160px"}
-            fontSize={"14px"}
+            ml={"8px"}
           >
             <Flex>
-              <Text
-                fontSize={"16px"}
+              <HeadingMedium
                 overflow={"hidden"}
                 textOverflow={"ellipsis"}
                 display={"-webkit-box"}
@@ -60,10 +65,10 @@ function LobbyPostListOfBest(props) {
                 }}
               >
                 {post.title}
-              </Text>
+              </HeadingMedium>
             </Flex>
             <Spacer />
-            <Flex justify={"space-between"}>
+            <Flex justify={"space-between"} fontSize={"14px"}>
               <Flex>
                 <Text ml={1}>
                   조회수 <FontAwesomeIcon icon={faCaretRight} />
@@ -83,7 +88,7 @@ function LobbyPostListOfBest(props) {
                 <Text ml={1}>{post.commentCount}</Text>
               </Flex>
             </Flex>
-            <Flex justify={"space-between"}>
+            <Flex justify={"space-between"} fontSize={"14px"}>
               <Flex>
                 <Text ml={1}>
                   작성자 <FontAwesomeIcon icon={faCaretRight} />

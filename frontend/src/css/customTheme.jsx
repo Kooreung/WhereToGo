@@ -28,7 +28,7 @@ export const customTheme = extendTheme({
     Heading: {
       baseStyle: {
         color: "blackAlpha.900",
-        fontFamily: "Pretendard-Regular, sans-serif",
+        fontFamily: "Pretendard-Bold, sans-serif",
         fontWeight: 800,
         _dark: {
           color: "pink",
