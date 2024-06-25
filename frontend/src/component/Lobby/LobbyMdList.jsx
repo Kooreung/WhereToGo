@@ -40,7 +40,11 @@ export function LobbyMdList() {
   }, []);
 
   return (
-    <>
+    <Flex
+      w={{ base: "960px", lg: "1024px", xl: "1080px" }}
+      alignContent={"center"}
+      justify={"center"}
+    >
       <Center>
         <Card
           w={{ base: "720px", lg: "960px" }}
@@ -59,7 +63,7 @@ export function LobbyMdList() {
                     divider={<StackDivider borderColor={"lightgray"} />}
                     my={"2rem"}
                     spacing={"2rem"}
-                    w={{ base: "720px", lg: "960px" }}
+                    w={"720px"}
                   >
                     {mdPost.slice(prevPosts, nextPosts).map((post) => (
                       <Box
@@ -281,6 +285,6 @@ export function LobbyMdList() {
           </Stack>
         </Card>
       </Center>
-    </>
+    </Flex>
   );
 }

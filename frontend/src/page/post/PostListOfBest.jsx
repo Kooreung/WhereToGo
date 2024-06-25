@@ -1,5 +1,5 @@
 // 회원 인기 게시글
-import { Box, Flex, Heading, Spacer, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Image, Spacer, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,7 +17,7 @@ export function PostListOfBest() {
   }, []);
 
   return (
-    <Box w={{ base: "960px", lg: "1440px" }}>
+    <Box w={{ base: "960px", lg: "1080px" }}>
       <Box mb={"2rem"}>
         <Heading align={"center"}>회원 인기글</Heading>
       </Box>
@@ -28,7 +28,7 @@ export function PostListOfBest() {
             key={index}
             onClick={() => navigate(`/post/${post.postId}`)}
             display={{ base: "none", lg: "flex" }}
-            w={"480px"}
+            w={"400px"}
             h={"160px"}
             boxSizing={"content-box"}
             alignItems={"center"}
@@ -39,19 +39,19 @@ export function PostListOfBest() {
               },
             }}
           >
-            <Box
-              border={"1px dotted red"}
-              alignContent={"center"}
-              w={"160px"}
-              h={"160px"}
-            >
-              썸네일
+            <Box alignContent={"center"} w={"160px"} h={"160px"}>
+              <Image
+                src={post.picurl}
+                objectFit={"cover"}
+                w={"100%"}
+                h={"100%"}
+              />
             </Box>
             <Flex
               textAlign={"start"}
               alignContent={"center"}
               direction={"column"}
-              w={"320px"}
+              w={"240px"}
               h={"160px"}
               fontSize={"14px"}
             >
@@ -126,13 +126,13 @@ export function PostListOfBest() {
               },
             }}
           >
-            <Box
-              border={"1px dotted red"}
-              alignContent={"center"}
-              w={"120px"}
-              h={"120px"}
-            >
-              썸네일
+            <Box alignContent={"center"} w={"120px"} h={"120px"}>
+              <Image
+                src={post.picurl}
+                objectFit={"cover"}
+                w={"100%"}
+                h={"100%"}
+              />
             </Box>
             <Box
               w={"120px"}

@@ -1,5 +1,12 @@
 import React, { useContext } from "react";
-import { Box, Button, Center, Flex, useColorMode } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Heading,
+  useColorMode,
+} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "./LoginProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,29 +17,35 @@ function Navbar() {
   const account = useContext(LoginContext);
   const { colorMode, toggleColorMode } = useColorMode();
   return (
-    <Flex alignItems="center" justifyContent="center">
+    <Flex alignItems="center" justifyContent="center" w={"100%"}>
       <Flex
-        w={{ base: "1080px", lg: "1440px" }}
+        w={{ base: "960px", lg: "1024px", xl: "1080px" }}
         h={"96px"}
         px={6}
         mt={"4rem"}
         mb={"4rem"}
         align={"center"}
         justify={"space-between"}
-        border={"red dotted 1px"}
+        boxShadow={"md"}
+        rounded={"md"}
+        boxSizing={"border-box"}
       >
-        <Flex gap={3} onClick={() => navigate("/")} cursor={"pointer"}>
-          <Box>로고</Box>
-          <Box>홈페이지 제목</Box>
-        </Flex>
-        <Center gap={12}>
+        {/* 로고 */}
+        <Box onClick={() => navigate("/")} cursor={"pointer"}>
+          <Heading>어디가지</Heading>
+        </Box>
+
+        {/* 중간 메뉴 */}
+        <Flex gap={12}>
           <Box onClick={() => navigate("/post/mdList")} cursor={"pointer"}>
             MD Pick
           </Box>
           <Box onClick={() => navigate("/post/list")} cursor={"pointer"}>
             회원 게시판
           </Box>
-        </Center>
+        </Flex>
+
+        {/* 회원 메뉴 */}
         <Flex gap={3}>
           {account.isLoggedIn() || (
             <Center onClick={() => navigate("/signup")} cursor={"pointer"}>
@@ -56,8 +69,8 @@ function Navbar() {
             </Center>
           )}
           {account.isAdmin() && (
-            <Center onClick={() => navigate("/memberList")} cursor={"pointer"}>
-              admin 페이지
+            <Center onClick={() => navigate("/AdminPage")} cursor={"pointer"}>
+              관리 페이지
             </Center>
           )}
 

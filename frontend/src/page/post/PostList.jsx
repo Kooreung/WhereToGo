@@ -8,6 +8,7 @@ import {
   Grid,
   GridItem,
   IconButton,
+  Image,
   Input,
   Select,
   StackDivider,
@@ -106,7 +107,6 @@ function PostList() {
               cursor={"pointer"}
               w={"720px"}
             >
-              {/* Todo 썸네일 JOIN */}
               <Box>
                 <Grid
                   w={"720px"}
@@ -186,11 +186,14 @@ function PostList() {
                     alignContent={"center"}
                     borderY={"1px solid lightgray"}
                   >
-                    <Flex pl={3}>
-                      <Text display={{ base: "none", lg: "block" }} mr={1}>
-                        썸네일
-                      </Text>
-                    </Flex>
+                    <Box w={"100%"} h={"100%"}>
+                      <Image
+                        src={post.picurl}
+                        objectFit={"cover"}
+                        w={"100%"}
+                        h={"100%"}
+                      />
+                    </Box>
                   </GridItem>
                   <GridItem
                     colSpan={7}

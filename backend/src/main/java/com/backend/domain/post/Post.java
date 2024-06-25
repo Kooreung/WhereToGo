@@ -19,5 +19,6 @@ public class Post {
     private Integer commentCount;
 
     private String mdpick;
+    private String picurl;
     private String postType;
 }
