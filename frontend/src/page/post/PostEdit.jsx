@@ -174,8 +174,6 @@ export function PostEdit() {
                 </Button>
               </Tooltip>
               <Button onClick={onModalOpenOfCancel}>취소</Button>
-              {/* Todo 게시글 작성 중 임시저장 필요 */}
-              {/* TODO 게시글 수정하다가 나가려고 하면 Modal 표기 */}
             </Box>
           </Box>
         </Box>

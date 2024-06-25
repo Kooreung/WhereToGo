@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons/faArrowLeft";
+import ButtonCustom from "../../css/ButtonCustom.jsx";
 
 const places = [
   {
@@ -76,22 +77,13 @@ export function LobbyPlaceList() {
 
   return (
     <Box>
-      <Flex>
+      <Flex border={"1px dotted red"}>
         <Center>
-          <Box
-            onClick={handleMoveLeft}
-            fontSize="xl"
-            fontWeight="bolder"
-            color={"#D8B7E5"}
-            boxShadow="2xl"
-            p="4"
-            rounded="3xl"
-            backgroundColor={"RGBA(255, 255, 255, 0.92)"}
-          >
+          <ButtonCustom onClick={handleMoveLeft}>
             <FontAwesomeIcon icon={faArrowLeft} />
-          </Box>
+          </ButtonCustom>
         </Center>
-        <Box w={"950px"} overflow={"hidden"}>
+        <Box w={"720px"} overflow={"hidden"} border={"1px dotted red"}>
           <Flex
             spacing="20px"
             ref={dataRef}
@@ -103,7 +95,7 @@ export function LobbyPlaceList() {
           >
             {places.map((place, index) => (
               <WrapItem key={index}>
-                <Box width="120px">
+                <Box w={"120px"}>
                   {/* 조정 가능한 너비 */}
                   <Stack
                     spacing={2}
@@ -121,17 +113,9 @@ export function LobbyPlaceList() {
           </Flex>
         </Box>
         <Center>
-          <Box
-            onClick={handleMoveRight}
-            fontSize="xl"
-            color={"#D8B7E5"}
-            boxShadow="2xl"
-            p="4"
-            rounded="3xl"
-            bg="white"
-          >
+          <ButtonCustom onClick={handleMoveRight}>
             <FontAwesomeIcon icon={faArrowRight} />
-          </Box>
+          </ButtonCustom>
         </Center>
       </Flex>
     </Box>
