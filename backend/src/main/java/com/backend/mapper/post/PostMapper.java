@@ -12,8 +12,8 @@ public interface PostMapper {
 
     // 게시글 추가 | 작성 매퍼
     @Insert("""
-            INSERT INTO post (title, content, memberid, postType)
-            VALUES (#{title}, #{content}, #{memberId}, #{postType})
+            INSERT INTO post (title, content, memberid)
+            VALUES (#{title}, #{content}, #{memberId})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "postId")
     int insert(Post post);
@@ -28,7 +28,6 @@ public interface PostMapper {
                    p.memberid,
                    m.nickname,
                    p.mdpick,
-                   p.posttype,
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l.memberid)  likeCount
             FROM post p
