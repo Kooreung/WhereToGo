@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -6,6 +6,8 @@ import {
   Flex,
   Grid,
   GridItem,
+  Image,
+  Link,
   Modal,
   ModalBody,
   ModalContent,
@@ -21,7 +23,6 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import styled from "styled-components";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import CommentComponent from "../../component/Comment/CommentComponent.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -35,27 +36,21 @@ import {
 import { faHeart as fullHeart } from "@fortawesome/free-regular-svg-icons";
 import MapView from "../../component/Map/MapView.jsx";
 
-const Viewer = styled.div`
-  width: calc(50% - 40px);
-  height: 400px;
-  padding: 20px;
-  margin-top: 20px;
-  border: 2px solid gray;
-`;
-
 export function PostView() {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const [place, setPlace] = useState([]);
   const [like, setLike] = useState({ like: false, count: 0 });
-  const [isLikeLoading, setIsLikeLoading] = useState(false);
   const [comment, setComment] = useState({ count: 0 });
-  const [toggle, setToggle] = useState("");
+
+
+  const [isLikeLoading, setIsLikeLoading] = useState(false);
+  const [isTransition, setIsTransition] = useState(false);
   const account = useContext(LoginContext);
   const navigate = useNavigate();
-  const [isTransition, setIsTransition] = useState(false);
+  const dataRef = useRef(null);
+  const [positionX, setPositionX] = useState(0);
   const toast = useToast();
-
   const {
     isOpen: isModalOpenOfDelete,
     onOpen: onModalOpenOfDelete,
@@ -86,17 +81,6 @@ export function PostView() {
     axios.get(`/api/post/${postId}/place`).then((res) => {
       setPlace(res.data);
     });
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get(`/api/post/${postId}/getMdPick`)
-      .then((res) => {
-        setToggle(res.data);
-        console.log(res.data);
-      })
-      .catch(() => {})
-      .finally(() => {});
   }, []);
 
   // 게시글 번호 확인
@@ -144,6 +128,20 @@ export function PostView() {
         onModalCloseOfDelete();
       });
   }
+  function handleMoveLeft() {
+    setPositionX((prev) => Math.min(prev + 400, 0));
+  }
+
+  function handleMoveRight() {
+    const flexWidth = dataRef.current.scrollWidth;
+    const containerWidth = dataRef.current.parentElement.offsetWidth;
+    setPositionX((prev) => Math.max(prev - 400, containerWidth - flexWidth));
+  }
+
+  function handleSelectInfo(place, index) {
+    console.log(index);
+    console.log(place);
+  }
 
   return (
     <Flex direction="column" align="center">
@@ -152,40 +150,9 @@ export function PostView() {
           w={{ base: "720px", lg: "1080px" }}
           h={"80px"}
           my={"32px"}
-          templateColumns={"repeat(5,1fr)"}
+          templateColumns={"repeat(4,1fr)"}
           templateRows={"1fr 1fr"}
         >
-          <GridItem
-            rowSpan={1}
-            colSpan={1}
-            alignContent={"center"}
-            overflow={"hidden"}
-            textOverflow={"ellipsis"}
-            whiteSpace={"nowrap"}
-          >
-            <Flex pl={3}>
-              <Text>
-                지역 <FontAwesomeIcon icon={faCaretRight} />
-              </Text>
-            </Flex>
-          </GridItem>
-          <GridItem
-            rowSpan={1}
-            colSpan={4}
-            alignContent={"center"}
-            overflow={"hidden"}
-            textOverflow={"ellipsis"}
-            whiteSpace={"nowrap"}
-          >
-            <Flex pl={3}>
-              <Text display={{ base: "none", lg: "block" }} mr={1}>
-                제목 <FontAwesomeIcon icon={faCaretRight} />
-              </Text>
-              <Text overflow={"hidden"} textOverflow={"ellipsis"}>
-                {post.title}
-              </Text>
-            </Flex>
-          </GridItem>
           <GridItem
             rowSpan={1}
             colSpan={1}
@@ -201,6 +168,24 @@ export function PostView() {
               <Text>{post.nickName}</Text>
             </Flex>
           </GridItem>
+          <GridItem
+            rowSpan={1}
+            colSpan={3}
+            alignContent={"center"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+          >
+            <Flex pl={3}>
+              <Text display={{ base: "none", lg: "block" }} mr={1}>
+                제목 <FontAwesomeIcon icon={faCaretRight} />
+              </Text>
+              <Text overflow={"hidden"} textOverflow={"ellipsis"}>
+                {post.title}
+              </Text>
+            </Flex>
+          </GridItem>
+
           <GridItem
             rowSpan={1}
             colSpan={1}
@@ -262,38 +247,97 @@ export function PostView() {
             </Flex>
           </GridItem>
         </Grid>
+
         <Box w={"576px"} h={"360px"} bg={"lightgray"} my={"32px"}>
           <MapView />
         </Box>
+
         <Flex
-          w={{ base: "720px", lg: "1080px" }}
+          w={"540px"}
           h={"160px"}
-          bg={"lightgray"}
-          my={"32px"}
-          justify={"space-evenly"}
           alignItems={"center"}
+          justify={"space-evenly"}
+          bg={"lightgray"}
         >
-          {place.map((place, index) => (
-            <Box key={index}>
-              <Box>
-                <Box>{place.placeName}</Box>
-                <Box>{place.address}</Box>
-                <Box>게시글에 등록 된 횟수 : {place.countPlace} 건</Box>
-              </Box>
-            </Box>
-          ))}
+          <Button onClick={handleMoveLeft}>옆</Button>
+          <Box w={"400px"} overflow={"hidden"} alignItems={"center"}>
+            <Flex
+              ref={dataRef}
+              sx={{
+                transform: `translateX(${positionX}px)`,
+                transition: "transform 0.5s ease",
+              }}
+            >
+              {place.map((place, index) => (
+                <Box
+                  key={index}
+                  onMouseEnter={() => handleSelectInfo(place, index)}
+                >
+                  <Link
+                    href={place.placeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Flex w={"400px"} justifyContent={"center"}>
+                      <Box
+                        w={"120px"}
+                        h={"120px"}
+                        border={"1px dotted red"}
+                        alignContent={"center"}
+                      >
+                        <Image
+                          src={place.picurl}
+                          objectFit={"cover"}
+                          w={"100%"}
+                          h={"100%"}
+                        />
+                      </Box>
+                      <Box
+                        w={"260px"}
+                        h={"120px"}
+                        border={"1px dotted red"}
+                        p={3}
+                      >
+                        <Box
+                          overflow={"hidden"}
+                          textOverflow={"ellipsis"}
+                          whiteSpace={"nowrap"}
+                        >
+                          {index + 1}번 장소
+                        </Box>
+                        <Box
+                          overflow={"hidden"}
+                          textOverflow={"ellipsis"}
+                          whiteSpace={"nowrap"}
+                        >
+                          {place.placeName}
+                        </Box>
+                        <Box
+                          overflow={"hidden"}
+                          textOverflow={"ellipsis"}
+                          whiteSpace={"nowrap"}
+                        >
+                          {place.address}
+                        </Box>
+                        <Box>게시글 등록 횟수 : {place.countPlace} 건</Box>
+                      </Box>
+                    </Flex>
+                  </Link>
+                </Box>
+              ))}
+            </Flex>
+          </Box>
+          <Button onClick={handleMoveRight}>옆</Button>
         </Flex>
       </Flex>
       <Box
         w={"720px"}
-        // h={"360px"}
         bg={"lightgray"}
         my={"32px"}
         p={"1rem"}
         whiteSpace={"pre-wrap"}
       >
         <div dangerouslySetInnerHTML={{ __html: post.content }} />
-        {/*<Box>{post.content}</Box>*/}
       </Box>
 
       <Divider border={"1px solid lightGray"} w={"720px"} />
@@ -320,25 +364,24 @@ export function PostView() {
         </Tooltip>
         <Spacer />
         {/* 수정 및 삭제 버튼 */}
-        {account.hasAccessMemberId(post.memberId) ||
-          (account.isAdmin() && (
-            <Box>
-              <Box align={"left"} my={10}>
-                <Button onClick={() => navigate(`/post/${postId}/edit`)}>
-                  <FontAwesomeIcon icon={faPenToSquare} />
-                  <Text display={{ base: "none", lg: "block" }} ml={1}>
-                    수정
-                  </Text>
-                </Button>
-                <Button onClick={onModalOpenOfDelete}>
-                  <FontAwesomeIcon icon={faTrash} />
-                  <Text display={{ base: "none", lg: "block" }} ml={1}>
-                    삭제
-                  </Text>
-                </Button>
-              </Box>
+        {(account.hasAccessMemberId(post.memberId) || account.isAdmin()) && (
+          <Box>
+            <Box align={"left"} my={10}>
+              <Button onClick={() => navigate(`/post/${postId}/edit`)}>
+                <FontAwesomeIcon icon={faPenToSquare} />
+                <Text display={{ base: "none", lg: "block" }} ml={1}>
+                  수정
+                </Text>
+              </Button>
+              <Button onClick={onModalOpenOfDelete}>
+                <FontAwesomeIcon icon={faTrash} />
+                <Text display={{ base: "none", lg: "block" }} ml={1}>
+                  삭제
+                </Text>
+              </Button>
             </Box>
-          ))}
+          </Box>
+        )}
 
         {/* 목록 */}
         <Button onClick={() => navigate("/post/list")}>

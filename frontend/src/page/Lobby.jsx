@@ -1,13 +1,10 @@
-import React, { useState } from "react";
-import { Box, Button, Center, Flex, Input } from "@chakra-ui/react";
-import axios from "axios";
+import React from "react";
+import { Box, Center, Flex,  } from "@chakra-ui/react";
 import { LobbyMdList } from "../component/Lobby/LobbyMdList.jsx";
 import { LobbyPlaceList } from "../component/Lobby/LobbyPlaceList.jsx";
 import LobbyListOfBest from "../component/Lobby/LobbyListOfBest.jsx";
 
 function Lobby() {
-
-
   return (
     <Box>
       <Center my={6}>

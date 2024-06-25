@@ -161,8 +161,9 @@ public class PostService {
 
     // 게시글 수정 시 권한 체크 서비스
     public boolean hasMemberIdAccess(Integer postId, Authentication authentication) {
+        boolean scopeAdmin = authentication.getAuthorities().stream().map(a -> a.toString()).anyMatch(a -> a.equals("SCOPE_admin"));
         Post post = postMapper.selectById(postId);
-        return post.getMemberId().equals(Integer.valueOf(authentication.getName()));
+        return post.getMemberId().equals(Integer.valueOf(authentication.getName())) || scopeAdmin;
     }
 
     // 게시글 삭제 서비스

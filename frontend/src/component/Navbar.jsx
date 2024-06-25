@@ -1,12 +1,14 @@
 import React, { useContext } from "react";
-import { Box, Center, Flex } from "@chakra-ui/react";
+import { Box, Button, Center, Flex, useColorMode } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "./LoginProvider.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 
 function Navbar() {
   const navigate = useNavigate();
   const account = useContext(LoginContext);
-
+  const { colorMode, toggleColorMode } = useColorMode();
   return (
     <Flex alignItems="center" justifyContent="center">
       <Flex
@@ -54,9 +56,9 @@ function Navbar() {
             </Center>
           )}
           {account.isAdmin() && (
-            <Box onClick={() => navigate("/memberList")} cursor={"pointer"}>
+            <Center onClick={() => navigate("/memberList")} cursor={"pointer"}>
               admin 페이지
-            </Box>
+            </Center>
           )}
 
           {account.isLoggedIn() && (
@@ -64,6 +66,14 @@ function Navbar() {
               프로필
             </Center>
           )}
+          <Button onClick={toggleColorMode}>
+            {" "}
+            {colorMode === "light" ? (
+              <FontAwesomeIcon icon={faMoon} />
+            ) : (
+              <FontAwesomeIcon icon={faSun} />
+            )}
+          </Button>
         </Flex>
       </Flex>
     </Flex>

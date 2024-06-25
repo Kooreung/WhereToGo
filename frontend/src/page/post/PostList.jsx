@@ -12,6 +12,7 @@ import {
   Select,
   StackDivider,
   Text,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -37,6 +38,7 @@ function PostList() {
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
+  const logoColor = useColorModeValue("red.500", "gray.200");
 
   useEffect(() => {
     axios.get(`/api/post/list?${searchParams}`).then((res) => {
@@ -114,7 +116,7 @@ function PostList() {
                   cursor={"pointer"}
                   sx={{
                     "&:hover": {
-                      backgroundColor: "RGBA(0, 0, 0, 0.06)",
+                      backgroundColor: logoColor,
                     },
                   }}
                 >
