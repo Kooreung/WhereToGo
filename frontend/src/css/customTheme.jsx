@@ -10,22 +10,14 @@ export const customTheme = extendTheme({
     "2xl": "96em",
   },
   fonts: {
-    heading: "Pretendard-Regular, sans-serif",
-    body: "ONE-Mobile-POP, sans-serif",
+    body: "Pretendard-Regular, sans-serif",
   },
   styles: {
     global: {
-      heading: {
+      body: {
         textColor: "blackAlpha.900",
         fontFamily: "Pretendard-Regular, sans-serif",
         fontWeight: 400,
-        _dark: {
-          textColor: "pink",
-        },
-      },
-      "html, body": {
-        textColor: "blackAlpha.900",
-        fontFamily: "ONE-Mobile-POP",
         _dark: {
           textColor: "pink",
         },
