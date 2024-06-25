@@ -3,7 +3,6 @@ import {
   Button,
   Card,
   CardBody,
-  CardFooter,
   Center,
   Flex,
   Grid,
@@ -43,22 +42,8 @@ export function LobbyMdList() {
   return (
     <>
       <Center>
-        <Button
-          onClick={() => {
-            if (nextPosts > 1) {
-              setNextPosts(nextPosts - 1);
-              setPrevPosts(prevPosts - 1);
-            }
-
-            if (nextPosts === 1) {
-              setNextPosts(5);
-              setPrevPosts(4);
-            }
-          }}
-        >
-          <FontAwesomeIcon icon={faArrowLeft} fontSize="2rem" />
-        </Button>
         <Card
+          w={{ base: "720px", lg: "960px" }}
           direction={{ base: "column", sm: "row" }}
           overflow="hidden"
           variant="outline"
@@ -260,24 +245,41 @@ export function LobbyMdList() {
                 </VStack>
               </CardBody>
             )}
+            <Flex>
+              <Button
+                width="50%"
+                onClick={() => {
+                  if (nextPosts > 1) {
+                    setNextPosts(nextPosts - 1);
+                    setPrevPosts(prevPosts - 1);
+                  }
 
-            <CardFooter></CardFooter>
+                  if (nextPosts === 1) {
+                    setNextPosts(5);
+                    setPrevPosts(4);
+                  }
+                }}
+              >
+                <FontAwesomeIcon icon={faArrowLeft} fontSize="2rem" />
+              </Button>
+              <Button
+                width="50%"
+                onClick={() => {
+                  if (nextPosts < 5) {
+                    setNextPosts(nextPosts + 1);
+                    setPrevPosts(prevPosts + 1);
+                  }
+                  if (nextPosts === 5) {
+                    setNextPosts(1);
+                    setPrevPosts(0);
+                  }
+                }}
+              >
+                <FontAwesomeIcon icon={faArrowRight} fontSize="2rem" />
+              </Button>
+            </Flex>
           </Stack>
         </Card>
-        <Button
-          onClick={() => {
-            if (nextPosts < 5) {
-              setNextPosts(nextPosts + 1);
-              setPrevPosts(prevPosts + 1);
-            }
-            if (nextPosts === 5) {
-              setNextPosts(1);
-              setPrevPosts(0);
-            }
-          }}
-        >
-          <FontAwesomeIcon icon={faArrowRight} fontSize="2rem" />
-        </Button>
       </Center>
     </>
   );

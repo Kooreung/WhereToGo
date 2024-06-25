@@ -77,7 +77,7 @@ export function LobbyPlaceList() {
 
   return (
     <Box>
-      <Flex>
+      <Flex w={{ base: "720px", lg: "960px" }}>
         <Center>
           <ButtonCustom onClick={handleMoveLeft}>
             <FontAwesomeIcon icon={faArrowLeft} />

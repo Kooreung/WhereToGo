@@ -28,6 +28,7 @@ function LobbyListOfBest(props) {
       {postListOfBest.map((post, index) => (
         <Stack key={index} mt={2} spacing={2} cursor="pointer">
           <Card
+            w={{ base: "720px", lg: "960px" }}
             direction={{ base: "column", sm: "row" }}
             overflow="hidden"
             variant="outline"
