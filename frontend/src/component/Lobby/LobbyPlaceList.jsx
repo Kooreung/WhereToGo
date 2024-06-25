@@ -1,10 +1,12 @@
 import React, { useRef, useState } from "react";
 import { Avatar, Box, Center, Flex, Stack, WrapItem } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons/faArrowLeft";
-import ButtonCustom from "../../css/ButtonCustom.jsx";
+import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 
 const places = [
   {
@@ -77,15 +79,14 @@ export function LobbyPlaceList() {
 
   return (
     <Box>
-      <Flex border={"1px dotted red"}>
-        <Center>
-          <ButtonCustom onClick={handleMoveLeft}>
-            <FontAwesomeIcon icon={faArrowLeft} />
-          </ButtonCustom>
-        </Center>
-        <Box w={"720px"} overflow={"hidden"} border={"1px dotted red"}>
+      <Flex alignItems={"center"} justifyContent={"center"}>
+        <Box>
+          <ButtonCircle onClick={handleMoveLeft}>
+            <FontAwesomeIcon icon={faChevronLeft} size={"2xl"} />
+          </ButtonCircle>
+        </Box>
+        <Box w={"720px"} overflow={"hidden"}>
           <Flex
-            spacing="20px"
             ref={dataRef}
             sx={{
               transform: `translateX(${positionX}px)`,
@@ -96,15 +97,18 @@ export function LobbyPlaceList() {
             {places.map((place, index) => (
               <WrapItem key={index}>
                 <Box w={"120px"}>
-                  {/* 조정 가능한 너비 */}
                   <Stack
-                    spacing={2}
                     align="center"
                     onClick={() =>
                       navigate(`/post/list?type=all&keyword=${place.keyword}`)
                     }
                   >
-                    <Avatar size="xl" name="Dan Abrahmov" src={place.src} />
+                    <Avatar
+                      size="xl"
+                      boxShadow={"md"}
+                      name={place.src}
+                      src={place.src}
+                    />
                     <Box textAlign="center">{place.name}</Box>
                   </Stack>
                 </Box>
@@ -113,9 +117,9 @@ export function LobbyPlaceList() {
           </Flex>
         </Box>
         <Center>
-          <ButtonCustom onClick={handleMoveRight}>
-            <FontAwesomeIcon icon={faArrowRight} />
-          </ButtonCustom>
+          <ButtonCircle onClick={handleMoveRight}>
+            <FontAwesomeIcon icon={faChevronRight} size={"2xl"} />
+          </ButtonCircle>
         </Center>
       </Flex>
     </Box>
