@@ -78,8 +78,8 @@ export function AdminPage() {
   }
 
   return (
-    <Box>
-      <Tabs variant="enclosed">
+    <Center>
+      <Tabs variant="enclosed" w={{ base: "720px", lg: "960px" }}>
         <TabList>
           <Tab>회원관리</Tab>
           <Tab>배너 등록</Tab>
@@ -122,31 +122,36 @@ export function AdminPage() {
                 </Table>
               </Box>
             )}
-            <Center>
-              <Flex>
-                <Box>
-                  <Select onChange={(e) => setSearchType(e.target.value)}>
-                    <option value="all">전체</option>
-                    <option value="email">이메일</option>
-                    <option value="nickName">작성자</option>
-                  </Select>
-                </Box>
-                <Box>
-                  <Input
-                    onChange={(e) => setSearchKeyword(e.target.value)}
-                    placeholder="검색어"
-                  />
-                </Box>
-                <Box>
-                  <Button onClick={handleSearchClick}>
-                    <FontAwesomeIcon icon={faMagnifyingGlass} />
-                  </Button>
-                </Box>
+            <Box my={"2rem"}>
+              <Flex align={"center"} justify={"center"} gap={10}>
+                <Box w={"80px"}></Box>
+                <Center>
+                  <Flex>
+                    <Box>
+                      <Select onChange={(e) => setSearchType(e.target.value)}>
+                        <option value="all">전체</option>
+                        <option value="email">이메일</option>
+                        <option value="nickName">작성자</option>
+                      </Select>
+                    </Box>
+                    <Box>
+                      <Input
+                        onChange={(e) => setSearchKeyword(e.target.value)}
+                        placeholder="검색어"
+                      />
+                    </Box>
+                    <Box>
+                      <Button onClick={handleSearchClick}>
+                        <FontAwesomeIcon icon={faMagnifyingGlass} />
+                      </Button>
+                    </Box>
+                  </Flex>
+                </Center>
               </Flex>
-            </Center>
+            </Box>
 
-            <Center>
-              <Box>
+            <Box>
+              <Center>
                 {pageInfo.prevPageNumber && (
                   <>
                     <Button onClick={() => handlePageButtonClick(1)}>
@@ -192,15 +197,15 @@ export function AdminPage() {
                     </Button>
                   </>
                 )}
-              </Box>
-            </Center>
+              </Center>
+            </Box>
           </TabPanel>
           <TabPanel>
             <p>two!</p>
           </TabPanel>
         </TabPanels>
       </Tabs>
-    </Box>
+    </Center>
   );
 }
 

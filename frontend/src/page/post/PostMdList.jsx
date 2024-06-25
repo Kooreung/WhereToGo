@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
+  ButtonGroup,
   Center,
   Divider,
   Flex,
@@ -11,19 +12,24 @@ import {
   Image,
   Input,
   Select,
+  Stack,
   StackDivider,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faBars,
   faCaretRight,
+  faEye,
+  faHeart,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import axios from "axios";
 import ContentParser from "../../component/ContentParser.jsx";
+import { faComment } from "@fortawesome/free-regular-svg-icons";
 
 export function PostMdList(props) {
   const [mdPost, setMdPost] = useState([]);
@@ -33,6 +39,7 @@ export function PostMdList(props) {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const account = useContext(LoginContext);
+  const [showFirstScreen, setShowFirstScreen] = useState(true);
 
   useEffect(() => {
     axios.get(`/api/post/mdList?${searchParams}`).then((res) => {
@@ -54,56 +61,144 @@ export function PostMdList(props) {
   }, [searchParams]);
 
   function handleLoadMore() {
-    setVisiblePosts((prevVisiblePosts) => prevVisiblePosts + 3);
+    setVisiblePosts((prevVisiblePosts) => prevVisiblePosts + 2);
   }
 
   function handleSearchClick() {
     navigate(`/post/mdList?type=${searchType}&keyword=${searchKeyword}`);
   }
-
-  return (
-    <Box align="center" justify="center">
-      <Box mb={"2rem"}>
-        <Heading align={"center"}>
-          MD'S PICK
-          <Center>
-            <Box>
-              <Select
-                value={searchType}
-                onChange={(e) => {
-                  setSearchType(e.target.value);
-                }}
+  const handleListButtonClick = () => {
+    setShowFirstScreen(!showFirstScreen); // 화면전환
+  };
+  // 목록버튼 누르기전 화면
+  const FirstScreen = () => (
+    <Box align="center" justify="center" overflowX={"hidden"}>
+      {mdPost.length === 0 && <Center>조회 결과가 없습니다.</Center>}
+      {mdPost.length > 0 && (
+        <>
+          {Array.from({ length: Math.ceil(visiblePosts / 3) }).map(
+            (_, rowIndex) => (
+              <Stack
+                key={rowIndex}
+                // border="5px solid #836091"
+                divider={<StackDivider borderColor={"blue"} />}
+                my={"2rem"}
+                spacing={"2rem"}
+                w={{ base: "720px", lg: "960px" }}
               >
-                <option value={"all"}>전체</option>
-                <option value={"titleAndContent"}>제목+내용</option>
-                <option value={"nickName"}>닉네임</option>
-                <option value={"placeName"}>장소명</option>
-                <option value={"address"}>지역명</option>
-              </Select>
-            </Box>
-            <Box>
-              <Input
-                value={searchKeyword}
-                onChange={(e) => setSearchKeyword(e.target.value)}
-                placeholder="검색어"
-              />
-            </Box>
-            <Box>
-              <Button onClick={handleSearchClick}>
-                <FontAwesomeIcon icon={faMagnifyingGlass} />
-              </Button>
-            </Box>
-          </Center>
-        </Heading>
-      </Box>
-      <Divider
-        border={"1px solid lightGray"}
-        w={{ base: "720px", lg: "960px" }}
-        my={"2rem"}
-      ></Divider>
+                <Flex wrap="wrap" justify="flex-start" w="100%">
+                  {mdPost
+                    .slice(rowIndex * 3, rowIndex * 3 + 3)
+                    .map((post, index) => (
+                      <Box
+                        key={index}
+                        maxW="sm"
+                        borderWidth="1px"
+                        borderRadius="lg"
+                        overflow="hidden"
+                        border="1px solid lightGray"
+                        w="280px"
+                        h="380px"
+                        m="1rem"
+                        boxShadow={"md"}
+                        key={post.postId}
+                        onClick={() => navigate(`/post/${post.postId}`)}
+                        cursor="pointer"
+                        sx={{
+                          transition: "transform 0.3s ease",
+                          "&:hover": {
+                            transform: "scale(1.05)",
+                          },
+                        }}
+                      >
+                        <Box>
+                          <Image
+                            mt={3}
+                            boxSize="230px"
+                            boxShadow={"md"}
+                            src={post.picurl}
+                            alt="Green double couch with wooden legs"
+                            borderRadius="lg"
+                          />
+                        </Box>
+                        <Box
+                          colSpan={7}
+                          rowSpan={1}
+                          alignContent={"center"}
+                          overflow={"hidden"}
+                          textOverflow={"ellipsis"}
+                          whiteSpace={"nowrap"}
+                          mt={3}
+                        >
+                          <Stack
+                            ml="6"
+                            mr={"6"}
+                            spacing="3"
+                            textAlign={"start"}
+                            noOfLines={2}
+                          >
+                            <Heading color="#33664F" fontSize="2xl">
+                              {post.title}
+                            </Heading>
+                            <ContentParser
+                              content={post.content}
+                            ></ContentParser>
+                          </Stack>
+                        </Box>
+                        <Flex
+                          justifyContent={"space-between"}
+                          ml="6"
+                          mr={"6"}
+                          fontSize="xs"
+                        >
+                          <Box>{post.nickName}</Box>
+                          <Box>{post.createDate}</Box>
+                        </Flex>
+                        <Divider />
+                        <ButtonGroup spacing="4" mt={3}>
+                          <Box>
+                            <FontAwesomeIcon
+                              icon={faHeart}
+                              style={{ color: "#D8B7E5" }}
+                              size={"lg"}
+                            />{" "}
+                            {post.likeCount}
+                          </Box>
+                          <Box>
+                            <FontAwesomeIcon
+                              icon={faComment}
+                              style={{ color: "#33664F" }}
+                              size={"lg"}
+                            />
+                            {post.commentCount}
+                          </Box>
+                          <Box>
+                            <FontAwesomeIcon
+                              icon={faEye}
+                              size="lg"
+                              style={{ color: "#836091" }}
+                            />
+                            {""}
+                            {post.view}
+                          </Box>
+                        </ButtonGroup>
+                      </Box>
+                    ))}
+                </Flex>
+              </Stack>
+            ),
+          )}
+        </>
+      )}
+    </Box>
+  );
+  // 목록버튼 누른후 화면
+  const SecondScreen = () => (
+    <Box align="center" justify="center" overflowX={"hidden"}>
       {mdPost.length === 0 && <Center>조회 결과가 없습니다.</Center>}
       {mdPost.length > 0 && (
         <VStack
+          //border="5px solid #836091"
           divider={<StackDivider borderColor={"lightgray"} />}
           my={"2rem"}
           spacing={"2rem"}
@@ -117,6 +212,7 @@ export function PostMdList(props) {
             >
               <Box>
                 <Grid
+                  //border="5px solid lightGray"
                   w={"720px"}
                   h={"224px"}
                   templateColumns={"repeat(9, 1fr)"}
@@ -244,14 +340,67 @@ export function PostMdList(props) {
           ))}
         </VStack>
       )}
+    </Box>
+  );
+
+  return (
+    <Box align="center" justify="center">
+      <Box mb={"2rem"}>
+        <Heading align={"center"}>
+          MD'S PICK
+          <Center>
+            <Box>
+              <Select
+                value={searchType}
+                onChange={(e) => {
+                  setSearchType(e.target.value);
+                }}
+              >
+                <option value={"all"}>전체</option>
+                <option value={"titleAndContent"}>제목+내용</option>
+                <option value={"nickName"}>닉네임</option>
+                <option value={"placeName"}>장소명</option>
+                <option value={"address"}>지역명</option>
+              </Select>
+            </Box>
+            <Box>
+              <Input
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+                placeholder="검색어"
+              />
+            </Box>
+            <Box>
+              <Button onClick={handleSearchClick}>
+                <FontAwesomeIcon icon={faMagnifyingGlass} />
+              </Button>
+            </Box>
+            <Box>
+              {account.isAdmin() && (
+                <Button onClick={() => navigate(`/post/write`)}>글쓰기</Button>
+              )}
+            </Box>
+            <Box>
+              <Button onClick={handleListButtonClick}>
+                <FontAwesomeIcon icon={faBars} size="lg" />
+              </Button>
+            </Box>
+          </Center>
+        </Heading>
+      </Box>
+      {/*검색기능 */}
+      <Divider
+        border={"1px solid lightGray"}
+        w={{ base: "720px", lg: "960px" }}
+        my={"2rem"}
+      ></Divider>
+      {/*게시물 시작*/}
+      <Box>{showFirstScreen ? <FirstScreen /> : <SecondScreen />}</Box>
       <Box>
         {visiblePosts < mdPost.length && (
           <Button onClick={handleLoadMore}>더보기</Button>
         )}
       </Box>
-      {account.isAdmin() && (
-        <Button onClick={() => navigate(`/post/write`)}>글쓰기</Button>
-      )}
     </Box>
   );
 }

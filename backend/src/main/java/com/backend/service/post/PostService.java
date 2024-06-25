@@ -96,7 +96,7 @@ public class PostService {
         HttpSession session = request.getSession();
         Instant lastViewTime = (Instant) session.getAttribute("lastViewTime_" + postId);
         if (lastViewTime != null) {
-            // 마지막 조회 시간부터 일정 시간(예: 1시간)이 지났는지 확인
+            // 마지막 조회 시간부터 일정 시간(10분)이 지났는지 확인
             Instant now = Instant.now();
             Instant earliestTimeToIncrement = lastViewTime.plusSeconds(600);
             return now.isAfter(earliestTimeToIncrement);
