@@ -1,9 +1,17 @@
 // 회원 인기 게시글
-import { Box, Flex, Heading, Image, Spacer, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Card,
+  Flex,
+  Heading,
+  Image,
+  Spacer,
+  Text,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
+import { faAngleRight, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
 export function PostListOfBest() {
@@ -17,42 +25,69 @@ export function PostListOfBest() {
   }, []);
 
   return (
-    <Box w={{ base: "960px", lg: "1080px" }}>
+    <Box w={{ base: "960px", sm: "720px", lg: "1080px" }}>
       <Box mb={"2rem"}>
         <Heading align={"center"}>회원 인기글</Heading>
       </Box>
-      <Flex justify={"center"} gap={6}>
+      <Flex justify={"center"} gap={3}>
         {/* 사이즈가 lg 이상일 때 */}
         {postListOfBest.map((post, index) => (
-          <Flex
+          <Card
             key={index}
             onClick={() => navigate(`/post/${post.postId}`)}
-            display={{ base: "none", lg: "flex" }}
-            w={"400px"}
-            h={"160px"}
-            boxSizing={"content-box"}
-            alignItems={"center"}
-            cursor={"pointer"}
+            display={{ base: "none", lg: "block" }}
+            variant="outline"
+            cursor="pointer"
+            p={"1rem"}
             sx={{
               "&:hover": {
-                backgroundColor: "RGBA(0, 0, 0, 0.06)",
+                backgroundColor: "RGBA(0, 0, 0, 0.02)",
               },
             }}
           >
-            <Box alignContent={"center"} w={"160px"} h={"160px"}>
-              <Image
-                src={post.picurl}
-                objectFit={"cover"}
-                w={"100%"}
-                h={"100%"}
-              />
-            </Box>
+            <Flex w={"300px"} h={"160px"}>
+              <Box>
+                <Image
+                  src={post.picurl}
+                  objectFit={"cover"}
+                  w={"160px"}
+                  h={"160px"}
+                />
+              </Box>
+              <Flex direction={"column"} ml={"4px"}>
+                <Flex>
+                  <Text ml={1}>
+                    조회수 <FontAwesomeIcon icon={faAngleRight} />
+                  </Text>
+                  <Text ml={1}>{post.view}</Text>
+                </Flex>
+                <Flex>
+                  <Text ml={1}>
+                    좋아요 <FontAwesomeIcon icon={faAngleRight} />
+                  </Text>
+                  <Text ml={1}>{post.likeCount}</Text>
+                </Flex>
+                <Flex>
+                  <Text ml={1}>
+                    댓글 <FontAwesomeIcon icon={faAngleRight} />
+                  </Text>
+                  <Text ml={1}>{post.commentCount}</Text>
+                </Flex>
+                <Spacer />
+                <Flex color={"gray"}>
+                  <Box>
+                    <FontAwesomeIcon icon={faCaretRight} />
+                  </Box>
+                  <Text ml={1}>{post.createDate}</Text>
+                </Flex>
+              </Flex>
+            </Flex>
             <Flex
               textAlign={"start"}
               alignContent={"center"}
               direction={"column"}
-              w={"240px"}
-              h={"160px"}
+              w={"300px"}
+              h={"80px"}
               fontSize={"14px"}
             >
               <Flex>
@@ -72,26 +107,7 @@ export function PostListOfBest() {
                 </Text>
               </Flex>
               <Spacer />
-              <Flex justify={"space-between"}>
-                <Flex>
-                  <Text ml={1}>
-                    조회수 <FontAwesomeIcon icon={faCaretRight} />
-                  </Text>
-                  <Text ml={1}>{post.view}</Text>
-                </Flex>
-                <Flex>
-                  <Text ml={1}>
-                    좋아요 <FontAwesomeIcon icon={faCaretRight} />
-                  </Text>
-                  <Text ml={1}>{post.likeCount}</Text>
-                </Flex>
-                <Flex>
-                  <Text ml={1}>
-                    댓글 <FontAwesomeIcon icon={faCaretRight} />
-                  </Text>
-                  <Text ml={1}>{post.commentCount}</Text>
-                </Flex>
-              </Flex>
+              <Flex justify={"space-between"}></Flex>
               <Flex justify={"space-between"}>
                 <Flex>
                   <Text ml={1}>
@@ -99,15 +115,9 @@ export function PostListOfBest() {
                   </Text>
                   <Text ml={1}>{post.nickName}</Text>
                 </Flex>
-                <Flex color={"lightgray"}>
-                  <Text ml={1}>
-                    <FontAwesomeIcon icon={faCaretRight} />
-                  </Text>
-                  <Text ml={1}>{post.createDate}</Text>
-                </Flex>
               </Flex>
             </Flex>
-          </Flex>
+          </Card>
         ))}
         {/* 사이즈가 lg 이하일 때 */}
         {postListOfBest.map((post, index) => (

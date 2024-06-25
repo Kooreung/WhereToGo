@@ -10,23 +10,22 @@ export const customTheme = extendTheme({
     "2xl": "96em",
   },
   fonts: {
-    heading: "Pretendard, sans-serif",
-    body: "Pretendard, sans-serif",
+    heading: "Pretendard-Regular, sans-serif",
+    body: "ONE-Mobile-POP, sans-serif",
   },
   styles: {
     global: {
       heading: {
         textColor: "blackAlpha.900",
-        fontFamily: "Pretendard",
+        fontFamily: "Pretendard-Regular, sans-serif",
         fontWeight: 400,
         _dark: {
           textColor: "pink",
         },
       },
-      body: {
+      "html, body": {
         textColor: "blackAlpha.900",
-        fontFamily: "Pretendard",
-        fontWeight: 400,
+        fontFamily: "ONE-Mobile-POP",
         _dark: {
           textColor: "pink",
         },
@@ -37,7 +36,7 @@ export const customTheme = extendTheme({
     Heading: {
       baseStyle: {
         color: "blackAlpha.900",
-        fontFamily: "Pretendard, sans-serif",
+        fontFamily: "Pretendard-Regular, sans-serif",
         fontWeight: 800,
         _dark: {
           color: "pink",

@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Flex } from "@chakra-ui/react";
 import { LobbyMdList } from "../component/Lobby/LobbyMdList.jsx";
 import { LobbyPlaceList } from "../component/Lobby/LobbyPlaceList.jsx";
-import LobbyListOfBest from "../component/Lobby/LobbyListOfBest.jsx";
+import LobbyPostListOfBest from "../component/Lobby/LobbyPostListOfBest.jsx";
 import HeadingMedium from "../css/Heading/HeadingMedium.jsx";
 
 function Lobby() {
@@ -39,7 +39,7 @@ function Lobby() {
         </HeadingMedium>
         <Flex direction={"column"} align={"center"}>
           <Box w={{ base: "720px", sm: "600px", lg: "720px" }}>
-            <LobbyListOfBest />
+            <LobbyPostListOfBest />
           </Box>
         </Flex>
       </Box>
