@@ -1,17 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import {
-  Avatar,
   Box,
   Button,
   Divider,
   Flex,
-  FormControl,
-  FormHelperText,
-  FormLabel,
   Grid,
   GridItem,
   Image,
-  Input,
   Link,
   Modal,
   ModalBody,
@@ -47,11 +42,8 @@ export function PostView() {
   const [place, setPlace] = useState([]);
   const [like, setLike] = useState({ like: false, count: 0 });
   const [comment, setComment] = useState({ count: 0 });
-  const [placePic, setPlacePic] = useState(null);
-  const [banner, setBanner] = useState(null);
-  const [file, setFile] = useState(null);
 
-  const [toggle, setToggle] = useState("");
+
   const [isLikeLoading, setIsLikeLoading] = useState(false);
   const [isTransition, setIsTransition] = useState(false);
   const account = useContext(LoginContext);
@@ -64,16 +56,6 @@ export function PostView() {
     onOpen: onModalOpenOfDelete,
     onClose: onModalCloseOfDelete,
   } = useDisclosure();
-  const {
-    isOpen: isModalOpenOfBanner,
-    onOpen: onModalOpenOfBanner,
-    onClose: onModalCloseOfBanner,
-  } = useDisclosure();
-  const {
-    isOpen: isModalOpenPop,
-    onOpen: onModalOpenPop,
-    onClose: onModalClosePop,
-  } = useDisclosure();
 
   useEffect(() => {
     axios
@@ -82,9 +64,6 @@ export function PostView() {
         setPost(res.data.post);
         setLike(res.data.like);
         setComment({ count: res.data.commentCount });
-        setBanner(
-          "https://kooreungsbucket.s3.ap-northeast-2.amazonaws.com/prj3/167/defaultProfile.png",
-        );
       })
       .catch((err) => {
         navigate("/post/list");
@@ -102,16 +81,6 @@ export function PostView() {
     axios.get(`/api/post/${postId}/place`).then((res) => {
       setPlace(res.data);
     });
-  }, []);
-
-  useEffect(() => {
-    axios
-      .get(`/api/post/${postId}/getMdPick`)
-      .then((res) => {
-        setToggle(res.data);
-      })
-      .catch(() => {})
-      .finally(() => {});
   }, []);
 
   // 게시글 번호 확인
@@ -139,11 +108,7 @@ export function PostView() {
   // 게시글 삭제 클릭 시
   function handleClickDelete() {
     axios
-      .delete(`/api/post/${postId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+      .delete(`/api/post/${postId}`)
       .then(() => {
         navigate(`/post/list`);
         toast({
@@ -163,78 +128,6 @@ export function PostView() {
         onModalCloseOfDelete();
       });
   }
-
-  // mdpick push
-  function handleMdPickPush() {
-    if (!file) {
-      toast({
-        status: "warning",
-        position: "bottom",
-        description: "배너를 꼭 넣어주세요.",
-      });
-      return; // file이 null이면 여기서 함수 실행을 중단합니다.
-    }
-
-    axios
-      .postForm(`/api/post/${postId}/push`, { postId: post.postId, file })
-      .then(() => {
-        toast({
-          status: "success",
-          position: "bottom",
-          description: "성공",
-        });
-        window.location.reload();
-      })
-      .catch(() => {
-        toast({
-          status: "error",
-          position: "bottom",
-          description: "push 할 수 있는 게시물을 초과하였습니다.",
-        });
-      })
-      .finally(() => {});
-  }
-
-  function handleFileChange(e) {
-    const file = e.target.files[0];
-    console.log(file);
-    if (file) {
-      setFile(file);
-
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setBanner(reader.result);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setBanner(
-        "https://kooreungsbucket.s3.ap-northeast-2.amazonaws.com/prj3/images.jpg",
-      );
-    }
-  }
-
-  // mdpick pop
-  function handleMdPickPop() {
-    axios
-      .post(`/api/post/${postId}/pop`, { postId: post.postId })
-      .then(() => {
-        toast({
-          status: "success",
-          position: "bottom",
-          description: "성공",
-        });
-        window.location.reload();
-      })
-      .catch(() => {
-        toast({
-          status: "error",
-          position: "bottom",
-          description: "실패",
-        });
-      })
-      .finally(() => {});
-  }
-
   function handleMoveLeft() {
     setPositionX((prev) => Math.min(prev + 400, 0));
   }
@@ -470,29 +363,6 @@ export function PostView() {
           </Button>
         </Tooltip>
         <Spacer />
-        {/* PUSH & POP 버튼 */}
-        {account.isAdmin() && (
-          <Box>
-            <Box align={"left"} my={10}>
-              {toggle === "x" && (
-                <Button onClick={onModalOpenOfBanner}>Push</Button>
-              )}
-              {toggle === "o" && <Button onClick={onModalOpenPop}>Pop</Button>}
-            </Box>
-            <Modal isOpen={isModalOpenPop} onClose={onModalClosePop}>
-              <ModalOverlay />
-              <ModalContent>
-                <ModalHeader>MD PICK 제거</ModalHeader>
-                <ModalBody>게시글을 제거하시겠습니까?</ModalBody>
-                <ModalFooter>
-                  <Button onClick={handleMdPickPop}>제거</Button>
-                  <Button onClick={onModalClosePop}>취소</Button>
-                </ModalFooter>
-              </ModalContent>
-            </Modal>
-          </Box>
-        )}
-
         {/* 수정 및 삭제 버튼 */}
         {(account.hasAccessMemberId(post.memberId) || account.isAdmin()) && (
           <Box>
@@ -536,39 +406,6 @@ export function PostView() {
           <ModalFooter>
             <Button onClick={handleClickDelete}>삭제</Button>
             <Button onClick={onModalCloseOfDelete}>취소</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-
-      <Modal isOpen={isModalOpenOfBanner} onClose={onModalCloseOfBanner}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>배너등록</ModalHeader>
-          <ModalBody>배너를 등록 해주세요</ModalBody>
-          <Avatar
-            name="defaultProfile"
-            src={banner}
-            w="200px"
-            h="200px"
-            mb={30}
-          />
-          <Box mb={7}>
-            <FormControl>
-              <FormLabel>배너를 선택해주세요</FormLabel>
-              <Input
-                multiple
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-              />
-              <FormHelperText>
-                총 용량은 10MB, 한 파일은 1MB를 초과할 수 없습니다.
-              </FormHelperText>
-            </FormControl>
-          </Box>
-          <ModalFooter>
-            <Button onClick={handleMdPickPush}>등록</Button>
-            <Button onClick={onModalCloseOfBanner}>취소</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

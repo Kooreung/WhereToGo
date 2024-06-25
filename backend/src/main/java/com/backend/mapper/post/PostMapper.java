@@ -1,6 +1,7 @@
 package com.backend.mapper.post;
 
 import com.backend.domain.place.Place;
+import com.backend.domain.post.Banner;
 import com.backend.domain.post.Post;
 import org.apache.ibatis.annotations.*;
 
@@ -356,7 +357,8 @@ public interface PostMapper {
                                            p.view,
                                            m.memberid,
                                            COUNT(DISTINCT c.commentid) commentCount,
-                                           COUNT(DISTINCT l.memberid)  likeCount
+                                           COUNT(DISTINCT l.memberid)  likeCount,
+                                            p.mdpick
                                     FROM post p
                                              JOIN member m ON p.memberid = m.memberid
                                              JOIN authority a ON p.memberid = a.memberid
@@ -367,7 +369,7 @@ public interface PostMapper {
                         GROUP BY p.postid, p.title, p.content, p.createdate, p.view, m.memberid
                         ORDER BY p.postid DESC
             """)
-    List<Post> selectMdPickPostList(Map<String, Object> post);
+    List<Post> selectMdPickPostList();
 
     @Select("""
             SELECT mdpick
@@ -398,4 +400,31 @@ public interface PostMapper {
             where postid = #{postid}
             """)
     int bannerUpdate(Integer postid, String key);
+
+
+    @Insert("""
+            INSERT INTO mdpostbanner (city,link, bannersrc)
+            values (#{city},#{link}, #{bannersrc})
+            """)
+    void addBanner(String city, String link, String bannersrc);
+
+
+    @Select("""
+            SELECT * FROM mdpostbanner
+            """)
+    List<Banner> gatBannerList();
+
+
+    @Delete("""
+            DELETE FROM mdpostbanner
+            WHERE bannerid = #{bannerId}
+            """)
+    int deleteBannerById(Integer bannerId);
+
+
+    @Select("""
+            SELECT * FROM mdpostbanner
+            where bannerid = #{bannerId}
+            """)
+    Banner getBannerSrcById(Integer bannerId);
 }

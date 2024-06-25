@@ -21,6 +21,7 @@ import HeadingLarge from "../../css/Heading/HeadingLarge.jsx";
 
 export function LobbyMdList() {
   const [mdPost, setMdPost] = useState([]);
+  const [banner, setBanner] = useState([]);
   const [prevPosts, setPrevPosts] = useState(0);
   const [nextPosts, setNextPosts] = useState(1);
   const navigate = useNavigate();
@@ -34,6 +35,17 @@ export function LobbyMdList() {
       })
       .catch((err) => console.log(err))
       .finally(() => {});
+
+    axios
+      .get("/api/post/bannerList")
+      .then((response) => {
+        // 상태 업데이트로 리스트를 다시 렌더링
+        setBanner(response.data);
+      })
+      .catch((error) => {
+        // 오류 처리
+        console.error("배너 리스트 불러오기 실패:", error);
+      });
   }, []);
 
   return (
@@ -249,44 +261,35 @@ export function LobbyMdList() {
                 </CardBody>
               )}
 
-              {nextPosts >= 4 && nextPosts <= 5 && (
-                <CardBody>
-                  <Box
-                    w={{ base: "720px", sm: "720px", lg: "960px" }}
-                    h={{ base: "150px", sm: "150px", lg: "175px" }}
-                  >
-                    누르면 검색된 지역으로 가는 배너
-                  </Box>
-                </CardBody>
-              )}
-            </Stack>
-          </Card>
-        </Box>
+            {nextPosts === 4 && banner.length > 0 && (
+              <CardBody key={banner[0].id}>
+                <Box>{banner[0].city}</Box>
+              </CardBody>
+            )}
+            {nextPosts === 5 && banner.length > 1 && (
+              <CardBody key={banner[1].id}>
+                <Box>{banner[1].city}</Box>
+              </CardBody>
+            )}
 
-        <Box
-          w={"60px"}
-          h={"60px"}
-          position={"relative"}
-          left={"-70px"}
-          zIndex={"1"}
-          cursor={"pointer"}
+            <CardFooter></CardFooter>
+          </Stack>
+        </Card>
+        <Button
+          onClick={() => {
+            if (nextPosts < 5) {
+              setNextPosts(nextPosts + 1);
+              setPrevPosts(prevPosts + 1);
+            }
+            if (nextPosts === 5) {
+              setNextPosts(1);
+              setPrevPosts(0);
+            }
+          }}
         >
-          <ButtonCircle
-            onClick={() => {
-              if (nextPosts < 5) {
-                setNextPosts(nextPosts + 1);
-                setPrevPosts(prevPosts + 1);
-              }
-              if (nextPosts === 5) {
-                setNextPosts(1);
-                setPrevPosts(0);
-              }
-            }}
-          >
-            <FontAwesomeIcon icon={faArrowRight} fontSize="2rem" />
-          </ButtonCircle>
-        </Box>
-      </Flex>
+          <FontAwesomeIcon icon={faArrowRight} fontSize="2rem" />
+        </Button>
+      </Center>
     </Box>
   );
 }
