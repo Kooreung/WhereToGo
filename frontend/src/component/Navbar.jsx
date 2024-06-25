@@ -69,7 +69,7 @@ function Navbar() {
             </Center>
           )}
           {account.isAdmin() && (
-            <Center onClick={() => navigate("/AdminPage")} cursor={"pointer"}>
+            <Center onClick={() => navigate("/memberList")} cursor={"pointer"}>
               관리 페이지
             </Center>
           )}

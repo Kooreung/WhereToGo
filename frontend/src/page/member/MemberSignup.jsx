@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Box,
   Button,
   Center,
@@ -21,14 +22,14 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, {useCallback, useContext, useEffect, useRef, useState} from "react";
 import {
   emailPattern,
   passwordPattern,
   phoneNumberPattern,
 } from "../../Regex.jsx";
 import DaumPostcodeEmbed from "react-daum-postcode";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {faMagnifyingGlass, faXmark} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
 import Lobby from "../Lobby.jsx";
@@ -56,7 +57,8 @@ export function MemberSignup() {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(true);
-  const [file, setFiles] = useState(null);
+  const [file, setFile] = useState(null);
+  const [fileUrl, setFileUrl] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
   const { onClose, onOpen, isOpen } = useDisclosure();
   const toast = useToast();
   const navigate = useNavigate();
@@ -273,25 +275,45 @@ export function MemberSignup() {
         <Center mb={10}>
           <Heading>회원 가입</Heading>
         </Center>
-        <Box mb={6}>
-          <FormControl>
-            <FormLabel>파일</FormLabel>
-            <Input
-              h={12}
-              multiple
-              type="file"
-              accept="image/*"
-              onChange={(e) => setFiles(e.target.files[0])}
+        <Center>
+          <label style={{display: 'inline-block', width: '200px', height: '200px', cursor: 'pointer'}}>
+            <Avatar
+              src={fileUrl}
+              w="200px"
+              h="200px"
+              cursor="pointer"
             />
-            <FormHelperText>
-              총 용량은 10MB, 한 파일은 1MB를 초과할 수 없습니다.
-            </FormHelperText>
-          </FormControl>
-        </Box>
+            <Box mb={6}>
+              <FormControl>
+                <Input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  style={{display: "none"}}
+                  onChange={(e) => {
+                    const selectedFile = e.target.files[0];
+                    setFile(e.target.files[0]);
+                    if (selectedFile) {
+                      const url = URL.createObjectURL(selectedFile);
+                      setFileUrl(url);
+                    } else {
+                      setFileUrl("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+                    }
+                  }}
+                />
+                <Center>
+                  <FormHelperText>
+                    프로필 이미지 설정
+                  </FormHelperText>
+                </Center>
+              </FormControl>
+            </Box>
+          </label>
+        </Center>
         <Box>
           <Box>
             <FormControl>
-              <FormLabel>이메일</FormLabel>
+              <FormLabel mt={14}>이메일</FormLabel>
               <Input
                 style={inputStyles}
                 maxLength="25"
@@ -321,7 +343,7 @@ export function MemberSignup() {
           </Box>
           <Box>
             <FormControl>
-              <FormLabel>비밀번호</FormLabel>
+              <FormLabel mt={6}>비밀번호</FormLabel>
               <Input
                 style={inputStyles}
                 maxLength="50"
@@ -342,7 +364,7 @@ export function MemberSignup() {
           </Box>
           <Box>
             <FormControl>
-              <FormLabel>비밀번호 확인</FormLabel>
+              <FormLabel mt={6}>비밀번호 확인</FormLabel>
               <Input
                 style={inputStyles}
                 maxLength="50"
@@ -360,7 +382,7 @@ export function MemberSignup() {
           </Box>
           <Box>
             <FormControl>
-              <FormLabel>이름</FormLabel>
+              <FormLabel mt={6}>이름</FormLabel>
               <Input
                 style={inputStyles}
                 maxLength="30"
@@ -372,7 +394,7 @@ export function MemberSignup() {
           </Box>
           <Box>
             <FormControl>
-              <FormLabel>닉네임</FormLabel>
+              <FormLabel mt={6}>닉네임</FormLabel>
               <Input
                 style={inputStyles}
                 maxLength="20"
@@ -394,10 +416,10 @@ export function MemberSignup() {
           </Box>
           <Box>
             <FormControl>
-              <FormLabel>성별</FormLabel>
+              <FormLabel mt={6}>성별</FormLabel>
               <RadioGroup mb={6} value={gender} onChange={(e) => setGender(e)}>
                 <Radio value="남자">남자</Radio>
-                <Radio value="여자">여자</Radio>
+                <Radio style={{ marginLeft: '20px' }} value="여자">여자</Radio>
               </RadioGroup>
             </FormControl>
           </Box>
@@ -405,8 +427,8 @@ export function MemberSignup() {
           {/* ***************현재보다 뒤인 생년월일 사용불가하도록 짜기*************** 아직 안했음 */}
           <Box>
             <FormControl>
-              <FormLabel>생년월일</FormLabel>
-              <Box mb={6} display="flex" justifyContent="space-between">
+              <FormLabel mt={6}>생년월일</FormLabel>
+              <Box display="flex" justifyContent="space-between">
                 <Select
                   h={12}
                   placeholder="출생 연도"
@@ -451,7 +473,7 @@ export function MemberSignup() {
           </Box>
           <Box>
             <FormControl>
-              <FormLabel>전화번호</FormLabel>
+              <FormLabel mt={6}>전화번호</FormLabel>
               <Input
                 style={inputStyles}
                 maxLength="30"
@@ -471,7 +493,7 @@ export function MemberSignup() {
           </Box>
           <Box>
             <FormControl>
-              <FormLabel>주소</FormLabel>
+              <FormLabel mt={6}>주소</FormLabel>
                 <InputGroup>
                   <Input
                     h={12}
@@ -493,9 +515,9 @@ export function MemberSignup() {
           <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-              <ModalHeader>
+              <ModalHeader style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 주소 입력
-                <Button onClick={onClose}>✖</Button>
+                <Button style={{ backgroundColor: 'white' }} onClick={onClose}><FontAwesomeIcon icon={faXmark} size="lg"/></Button>
               </ModalHeader>
               <ModalBody>
                 <DaumPostcodeEmbed onComplete={handleComplete} />
