@@ -6,8 +6,8 @@ import {
   CardFooter,
   Heading,
   Image,
-  Stack,
   Text,
+  VStack,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -24,21 +24,23 @@ function LobbyListOfBest(props) {
     });
   }, []);
   return (
-    <Box>
+    <Box border={"1px dotted red"}>
       {postListOfBest.map((post, index) => (
-        <Stack key={index} mt={2} spacing={2} cursor="pointer">
+        <VStack key={index} p={"1rem"}>
           <Card
+            onClick={() => navigate(`/post/${post.postId}`)}
             direction={{ base: "column", sm: "row" }}
             overflow="hidden"
             variant="outline"
+            cursor="pointer"
             p={"1rem"}
             sx={{
               "&:hover": {
-                backgroundColor: "RGBA(0, 0, 0, 0.06)",
+                backgroundColor: "RGBA(0, 0, 0, 0.02)",
               },
             }}
           >
-            <Box w={"160px"} h={"160px"}>
+            <Box w="160px" h="160px">
               <Image
                 src={post.picurl}
                 objectFit={"cover"}
@@ -46,30 +48,29 @@ function LobbyListOfBest(props) {
                 h={"100%"}
               />
             </Box>
-            <Stack>
-              <CardBody onClick={() => navigate(`/post/${post.postId}`)}>
+            <Box w={{ base: "480px", sm: "360px", lg: "480px" }}>
+              <CardBody>
                 <Heading size="md">{post.title}</Heading>
                 <ContentParser py="2" content={post.content} />
               </CardBody>
-
               <CardFooter>
-                <Text ml={2}>{post.nickName}</Text>
-                <Text ml={2}>
+                <Text>{post.nickName}</Text>
+                <Text>
                   조회수 <FontAwesomeIcon icon={faCaretRight} /> {post.view}
                 </Text>
-                <Text ml={2}>
+                <Text>
                   좋아요 <FontAwesomeIcon icon={faCaretRight} />{" "}
                   {post.likeCount}
                 </Text>
-                <Text ml={2}>
+                <Text>
                   댓글 <FontAwesomeIcon icon={faCaretRight} />{" "}
                   {post.commentCount}
                 </Text>
-                <Text ml={2}>{post.createDate}</Text>
+                <Text>{post.createDate}</Text>
               </CardFooter>
-            </Stack>
+            </Box>
           </Card>
-        </Stack>
+        </VStack>
       ))}
     </Box>
   );

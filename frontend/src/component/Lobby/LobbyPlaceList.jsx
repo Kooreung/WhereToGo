@@ -85,7 +85,13 @@ export function LobbyPlaceList() {
             <FontAwesomeIcon icon={faChevronLeft} size={"2xl"} />
           </ButtonCircle>
         </Box>
-        <Box w={"720px"} overflow={"hidden"}>
+        <Box
+          overflow={"hidden"}
+          border={"1px solid lightGray"}
+          borderRadius={"12px"}
+          py={"1rem"}
+          mx={"1rem"}
+        >
           <Flex
             ref={dataRef}
             sx={{
