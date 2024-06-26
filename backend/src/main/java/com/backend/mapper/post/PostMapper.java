@@ -53,42 +53,7 @@ public interface PostMapper {
                         LEFT JOIN likes l ON p.postid = l.postid
                         LEFT JOIN place pl ON p.postid = pl.postid
                         LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
-            <where>
-            a.authtype != 'admin'
-                 <if test="searchType != null">
-                    <bind name="pattern" value="'%' + searchKeyword + '%'"/>
-                    <if test="searchType == 'all'">
-                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern}  OR pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
-                    </if>
-                    <if test="searchType == 'titleAndContent'">
-                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
-                    </if>
-                    <if test="searchType == 'nickName'">
-                        AND m.nickname LIKE #{pattern}
-                    </if>
-                    <if test="searchType == 'placeName'">
-                        AND (pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
-                    </if>
-                    <if test="searchType == 'address'">
-                        AND (pl.address LIKE #{pattern} OR pl.address LIKE #{pattern})
-                    </if>
-                </if>
-            </where>
-            GROUP BY p.postid
-            ORDER BY p.postid DESC
-            LIMIT #{offset}, 5
-            </script>
-            """)
-    List<Post> selectAllPost(Integer offset, String searchType, String searchKeyword);
-
-    // 게시글 목록 카운트 매퍼
-    @Select("""
-            <script>
-            SELECT COUNT(DISTINCT p.postid)
-            FROM post p JOIN member m ON p.memberid = m.memberid
-                        JOIN authority a ON p.memberid = a.memberid
-                        LEFT JOIN place pl ON p.postid = pl.postid
-                <where>
+             <where>
             a.authtype != 'admin'
                     <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
@@ -109,6 +74,41 @@ public interface PostMapper {
                     </if>
                 </if>
                 </where>
+            GROUP BY p.postid
+            ORDER BY p.postid DESC
+            LIMIT #{offset}, 5
+            </script>
+            """)
+    List<Post> selectAllPost(Integer offset, String searchType, String searchKeyword);
+
+    // 게시글 목록 카운트 매퍼
+    @Select("""
+            <script>
+            SELECT COUNT(DISTINCT p.postid)
+            FROM post p JOIN member m ON p.memberid = m.memberid
+                        JOIN authority a ON p.memberid = a.memberid
+                        LEFT JOIN place pl ON p.postid = pl.postid
+                <where>
+               a.authtype != 'admin'
+                       <if test="searchType != null">
+                       <bind name="pattern" value="'%' + searchKeyword + '%'"/>
+                       <if test="searchType == 'all'">
+                           AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern}  OR pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
+                       </if>
+                       <if test="searchType == 'titleAndContent'">
+                           AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
+                       </if>
+                       <if test="searchType == 'nickName'">
+                           AND m.nickname LIKE #{pattern}
+                       </if>
+                       <if test="searchType == 'placeName'">
+                           AND (pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
+                       </if>
+                       <if test="searchType == 'address'">
+                           AND (pl.address LIKE #{pattern} OR pl.address LIKE #{pattern})
+                       </if>
+                   </if>
+                   </where>
             </script>
             """)
     Integer countAllPost(String searchType, String searchKeyword);

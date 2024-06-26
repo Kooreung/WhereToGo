@@ -52,6 +52,7 @@ function PostList() {
 
     const typeParam = searchParams.get("type");
     const keywordParam = searchParams.get("keyword");
+
     if (typeParam) {
       setSearchType(typeParam);
     }
@@ -263,7 +264,9 @@ function PostList() {
             <Box>
               <Input
                 value={searchKeyword}
-                onChange={(e) => setSearchKeyword(e.target.value)}
+                onChange={(e) => {
+                  setSearchKeyword(e.target.value);
+                }}
                 onKeyDown={handleSearchKeyDown}
                 placeholder={"검색어"}
               />

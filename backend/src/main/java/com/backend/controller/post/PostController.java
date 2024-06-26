@@ -136,8 +136,6 @@ public class PostController {
     // mdPick push Controller
     @PostMapping("push")
     public ResponseEntity postMdPickPush(Integer postId, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
-        System.out.println(postId);
-        System.out.println(file.getOriginalFilename());
         Integer mdPickCount = postService.mdPickCount();
         if (mdPickCount < 3) {
 
@@ -154,7 +152,6 @@ public class PostController {
     // mdPick pop Controller
     @PostMapping("/{postId}/pop")
     public ResponseEntity postMdPickPop(@PathVariable Integer postId) {
-        System.out.println(postId);
         postService.mdPickPop(postId);
         return ResponseEntity.ok().build();
     }
