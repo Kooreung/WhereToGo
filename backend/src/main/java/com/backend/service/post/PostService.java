@@ -280,7 +280,8 @@ public class PostService {
                 .build();
         s3Client.putObject(objectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
-        postMapper.addBanner(city, link, key);
+        String src = String.format("%s/banner%s/%s", srcPrefix, city, file.getOriginalFilename());
+        postMapper.addBanner(city, link, src);
     }
 
 

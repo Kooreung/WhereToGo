@@ -1,16 +1,14 @@
 import React from "react";
-import { Box, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../component/Navbar.jsx";
 
 function Home() {
   return (
-    <Box>
+    <Flex direction="column" justify="center" alignItems="center">
       <Navbar />
-      <Flex justify={"center"}>
-        <Outlet />
-      </Flex>
-    </Box>
+      <Outlet />
+    </Flex>
   );
 }
 

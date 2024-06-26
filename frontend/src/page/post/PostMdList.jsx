@@ -30,6 +30,7 @@ import { LoginContext } from "../../component/LoginProvider.jsx";
 import axios from "axios";
 import ContentParser from "../../component/ContentParser.jsx";
 import { faComment } from "@fortawesome/free-regular-svg-icons";
+import defaultImage from "../../resource/img/unknownImage.png";
 
 export function PostMdList(props) {
   const [mdPost, setMdPost] = useState([]);
@@ -116,7 +117,7 @@ export function PostMdList(props) {
                             mt={3}
                             boxSize="230px"
                             boxShadow={"md"}
-                            src={post.picurl}
+                            src={post.picurl || defaultImage}
                             alt="Green double couch with wooden legs"
                             borderRadius="lg"
                           />
@@ -292,7 +293,7 @@ export function PostMdList(props) {
                   >
                     <Box w={"100%"} h={"100%"}>
                       <Image
-                        src={post.picurl}
+                        src={post.picurl || defaultImage}
                         objectFit={"cover"}
                         w={"100%"}
                         h={"100%"}

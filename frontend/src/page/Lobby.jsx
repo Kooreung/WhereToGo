@@ -19,10 +19,7 @@ function Lobby() {
         <LobbyPlaceList />
       </Box>
 
-      <Box
-        py={{ base: "2rem", sm: "1rem", lg: "2rem" }}
-        w={{ base: "720px", sm: "720px", lg: "960px" }}
-      >
+      <Box py={{ base: "2rem", sm: "1rem", lg: "2rem" }}>
         <LobbyMdList />
       </Box>
 

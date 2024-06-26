@@ -13,6 +13,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import defaultImage from "../../resource/img/unknownImage.png";
 
 export function PostListOfBest() {
   const [postListOfBest, setPostListOfBest] = useState([]);
@@ -21,6 +22,7 @@ export function PostListOfBest() {
   useEffect(() => {
     axios.get(`/api/post/list/postListOfBest`).then((res) => {
       setPostListOfBest(res.data);
+      console.log(res.data);
     });
   }, []);
 
@@ -48,7 +50,7 @@ export function PostListOfBest() {
             <Flex w={"300px"} h={"160px"}>
               <Box>
                 <Image
-                  src={post.picurl}
+                  src={post.picurl || defaultImage}
                   objectFit={"cover"}
                   w={"160px"}
                   h={"160px"}
@@ -138,11 +140,12 @@ export function PostListOfBest() {
           >
             <Box alignContent={"center"} w={"120px"} h={"120px"}>
               <Image
-                src={post.picurl}
+                src={post.picurl || defaultImage}
                 objectFit={"cover"}
                 w={"100%"}
                 h={"100%"}
               />
+              ,
             </Box>
             <Box
               w={"120px"}

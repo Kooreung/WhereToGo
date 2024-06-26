@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Box, Card, Flex, Image, Spacer, Text } from "@chakra-ui/react";
+import { Box, Card, Center, Flex, Image, Spacer, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import HeadingMedium from "../../css/Heading/HeadingMedium.jsx";
 import HeadingLarge from "../../css/Heading/HeadingLarge.jsx";
+import defaultImage from "../../resource/img/unknownImage.png";
 
 function LobbyPostListOfBest(props) {
   const [postListOfBest, setPostListOfBest] = useState([]);
@@ -38,7 +39,7 @@ function LobbyPostListOfBest(props) {
           <Flex>
             <Box w={"160px"} h={"160px"}>
               <Image
-                src={post.picurl}
+                src={post.picurl || defaultImage}
                 objectFit={"cover"}
                 w={"100%"}
                 h={"100%"}
@@ -106,6 +107,19 @@ function LobbyPostListOfBest(props) {
           </Flex>
         </Card>
       ))}
+      <Center>
+        <HeadingMedium
+          bg={"#836091"}
+          p={"1.2rem"}
+          color={"white"}
+          fontSize={"14px"}
+          borderRadius={"5rem"}
+          cursor={"pointer"}
+          onClick={() => navigate("/post/list")}
+        >
+          다른 글 더 보기
+        </HeadingMedium>
+      </Center>
     </Box>
   );
 }

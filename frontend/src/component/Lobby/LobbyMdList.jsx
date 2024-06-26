@@ -1,16 +1,6 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardBody,
-  Flex,
-  Grid,
-  GridItem,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Flex, Grid, GridItem, Image, Text } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
-import { faArrowRight, faCaretRight } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons/faArrowLeft";
 import { useNavigate } from "react-router-dom";
@@ -52,19 +42,18 @@ export function LobbyMdList() {
   return (
     <Box align={"center"}>
       <HeadingLarge
-        w={{ base: "720px", sm: "600px", lg: "720px" }}
+        w={{ base: "960px", sm: "720px", lg: "960px" }}
         mb={"1rem"}
         textAlign={"start"}
-        border={"1px dotted red"}
       >
         MD 추천 Pick
       </HeadingLarge>
       <Flex alignContent={"center"} alignItems={"center"} justify={"center"}>
         <Box
-          w={"60px"}
-          h={"60px"}
+          w={"40px"}
+          h={"40px"}
           position={"relative"}
-          left={"70px"}
+          left={"50px"}
           zIndex={"1"}
           cursor={"pointer"}
         >
@@ -87,47 +76,37 @@ export function LobbyMdList() {
 
         <Box
           w={{ base: "720px", sm: "720px", lg: "960px" }}
-          h={{ base: "150px", sm: "150px", lg: "175px" }}
-          border={"1px dotted red"}
+          h={{ base: "175px", sm: "175px", lg: "200px" }}
+          alignContent={"center"}
         >
-          <Card
+          <Box
+            w={"100%"}
+            h={"100%"}
+            borderRadius={"12px"}
             overflow="hidden"
-            maxW="100%"
-            maxH={"100%"}
             justifyContent="center"
             align={"center"}
           >
-            <Stack>
-              {nextPosts >= 1 && nextPosts <= 3 && (
-                <CardBody>
-                  {mdPost.slice(prevPosts, nextPosts).map((post) => (
-                    <Box
-                      key={post.postId}
-                      onClick={() => navigate(`/post/${post.postId}`)}
+            {nextPosts >= 1 && nextPosts <= 3 && (
+              <Box w={"100%"} h={"100%"}>
+                {mdPost.slice(prevPosts, nextPosts).map((post) => (
+                  <Box
+                    key={post.postId}
+                    onClick={() => navigate(`/post/${post.postId}`)}
+                    w={"100%"}
+                    h={"100%"}
+                  >
+                    <Grid
+                      w={"100%"}
+                      h={"100%"}
+                      templateColumns={"1fr 2fr"}
+                      templateRows={"1fr 1fr"}
+                      _hover={{ bgColor: "beige" }}
+                      cursor={"pointer"}
                     >
-                      <Grid
-                        w={"100%"}
-                        h={"100%"}
-                        templateColumns={"repeat(9, 1fr)"}
-                        templateRows={"1fr 1fr 5fr"}
-                        _hover={{ bgColor: "beige" }}
-                        cursor={"pointer"}
-                      >
-                        <GridItem
-                          colSpan={5}
-                          rowSpan={1}
-                          alignContent={"center"}
-                          whiteSpace={"nowrap"}
-                        >
+                      <GridItem>
+                        <Box alignContent={"center"} whiteSpace={"nowrap"}>
                           <Flex pl={3}>
-                            <Text
-                              display={{ base: "none", lg: "block" }}
-                              mr={1}
-                              fontSize={"xl"}
-                              fontWeight={"bold"}
-                            >
-                              제목 <FontAwesomeIcon icon={faCaretRight} />
-                            </Text>
                             <Text
                               overflow={"hidden"}
                               textOverflow={"ellipsis"}
@@ -137,86 +116,15 @@ export function LobbyMdList() {
                               타이틀 {post.title}
                             </Text>
                           </Flex>
-                        </GridItem>
-                        <GridItem
-                          colSpan={4}
-                          rowSpan={1}
-                          alignContent={"center"}
-                        >
+                        </Box>
+                        <Box alignContent={"center"}>
                           <Flex pl={3}>
-                            <Text
-                              display={{ base: "none", lg: "block" }}
-                              mr={1}
-                            >
-                              작성자 <FontAwesomeIcon icon={faCaretRight} />
-                            </Text>
                             <Text overflow={"hidden"} textOverflow={"ellipsis"}>
                               닉네임 {post.nickName}
                             </Text>
                           </Flex>
-                        </GridItem>
-                        <GridItem
-                          colSpan={2}
-                          rowSpan={1}
-                          alignContent={"center"}
-                        >
-                          <Flex pl={3}>
-                            <Text
-                              display={{ base: "none", lg: "block" }}
-                              mr={1}
-                            >
-                              조회수 <FontAwesomeIcon icon={faCaretRight} />
-                            </Text>
-                            <Text>{post.view}</Text>
-                          </Flex>
-                        </GridItem>
-                        <GridItem
-                          colSpan={2}
-                          rowSpan={1}
-                          alignContent={"center"}
-                        >
-                          <Flex pl={3}>
-                            <Text
-                              display={{ base: "none", lg: "block" }}
-                              mr={1}
-                            >
-                              좋아요 <FontAwesomeIcon icon={faCaretRight} />
-                            </Text>
-                            <Text>{post.likeCount}</Text>
-                          </Flex>
-                        </GridItem>
-                        <GridItem
-                          colSpan={2}
-                          rowSpan={1}
-                          alignContent={"center"}
-                        >
-                          <Flex pl={3}>
-                            <Text
-                              display={{ base: "none", lg: "block" }}
-                              mr={1}
-                            >
-                              댓글 <FontAwesomeIcon icon={faCaretRight} />
-                            </Text>
-                            <Text>{post.commentCount}</Text>
-                          </Flex>
-                        </GridItem>
-                        <GridItem
-                          colSpan={3}
-                          rowSpan={1}
-                          alignContent={"center"}
-                        >
-                          <Flex pl={3}>
-                            <Text
-                              display={{ base: "none", lg: "block" }}
-                              mr={1}
-                            >
-                              썸네일
-                            </Text>
-                          </Flex>
-                        </GridItem>
-                        <GridItem
-                          colSpan={7}
-                          rowSpan={1}
+                        </Box>
+                        <Box
                           alignContent={"center"}
                           overflow={"hidden"}
                           textOverflow={"ellipsis"}
@@ -225,12 +133,6 @@ export function LobbyMdList() {
                         >
                           <Box pl={3}>
                             <Flex>
-                              <Text
-                                display={{ base: "none", lg: "block" }}
-                                mr={1}
-                              >
-                                내용 <FontAwesomeIcon icon={faCaretRight} />{" "}
-                              </Text>
                               <Box
                                 maxW={"560px"}
                                 textAlign={"start"}
@@ -247,48 +149,79 @@ export function LobbyMdList() {
                                 <ContentParser content={post.content} />
                               </Box>
                             </Flex>
-                            <Text
-                              textAlign={"left"}
-                              mt={"1rem"}
-                              color={"lightgray"}
-                            >
-                              {post.createDate}
-                            </Text>
                           </Box>
-                        </GridItem>
-                      </Grid>
-                    </Box>
-                  ))}
-                </CardBody>
-              )}
+                        </Box>
+                      </GridItem>
 
-              {nextPosts === 4 && banner.length > 0 && (
-                <CardBody key={banner[0].id}>
-                  <Box>{banner[0].city}</Box>
-                </CardBody>
-              )}
-              {nextPosts === 5 && banner.length > 1 && (
-                <CardBody key={banner[1].id}>
-                  <Box>{banner[1].city}</Box>
-                </CardBody>
-              )}
-            </Stack>
-          </Card>
+                      <GridItem
+                        colSpan={1}
+                        rowSpan={3}
+                        alignContent={"center"}
+                        border={"1px dotted red"}
+                      >
+                        <Flex pl={3}>
+                          <Text display={{ base: "none", lg: "block" }} mr={1}>
+                            썸네일
+                          </Text>
+                        </Flex>
+                      </GridItem>
+                    </Grid>
+                  </Box>
+                ))}
+              </Box>
+            )}
+
+            {nextPosts === 4 && banner.length > 0 && (
+              <Box
+                key={banner[0].id}
+                display={"flex"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                w={"100%"}
+                h={"100%"}
+              >
+                <Image src={banner[0].bannerSrc} />
+              </Box>
+            )}
+            {nextPosts === 5 && banner.length > 1 && (
+              <Box
+                key={banner[1].id}
+                display={"flex"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                w={"100%"}
+                h={"100%"}
+              >
+                <Box>
+                  <Image src={banner[1].bannerSrc} />
+                </Box>
+              </Box>
+            )}
+          </Box>
         </Box>
-        <Button
-          onClick={() => {
-            if (nextPosts < 5) {
-              setNextPosts(nextPosts + 1);
-              setPrevPosts(prevPosts + 1);
-            }
-            if (nextPosts === 5) {
-              setNextPosts(1);
-              setPrevPosts(0);
-            }
-          }}
+        <Box
+          w={"40px"}
+          h={"40px"}
+          position={"relative"}
+          left={"-50px"}
+          zIndex={"1"}
+          cursor={"pointer"}
         >
-          <FontAwesomeIcon icon={faArrowRight} fontSize="2rem" />
-        </Button>
+          <ButtonCircle
+            onClick={() => {
+              if (nextPosts < 5) {
+                setNextPosts(nextPosts + 1);
+                setPrevPosts(prevPosts + 1);
+              }
+              if (nextPosts === 5) {
+                setNextPosts(1);
+                setPrevPosts(0);
+              }
+            }}
+          >
+            <FontAwesomeIcon icon={faArrowRight} fontSize="2rem" />
+          </ButtonCircle>
+        </Box>
       </Flex>
     </Box>
   );

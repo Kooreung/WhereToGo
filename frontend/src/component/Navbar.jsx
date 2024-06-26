@@ -30,6 +30,7 @@ function Navbar() {
         boxShadow={"md"}
         rounded={"md"}
         boxSizing={"border-box"}
+        bg={"#D8B7E5"}
       >
         {/* 로고 */}
         <Box

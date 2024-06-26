@@ -30,6 +30,7 @@ import { LoginContext } from "../../component/LoginProvider.jsx";
 import axios from "axios";
 import { PostListOfBest } from "./PostListOfBest.jsx";
 import ContentParser from "../../component/ContentParser.jsx";
+import defaultImage from "../../resource/img/unknownImage.png";
 
 function PostList() {
   const navigate = useNavigate();
@@ -188,7 +189,7 @@ function PostList() {
                   >
                     <Box w={"100%"} h={"100%"}>
                       <Image
-                        src={post.picurl}
+                        src={post.picurl || defaultImage}
                         objectFit={"cover"}
                         w={"100%"}
                         h={"100%"}

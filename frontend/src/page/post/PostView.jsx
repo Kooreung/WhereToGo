@@ -35,6 +35,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-regular-svg-icons";
 import MapView from "../../component/Map/MapView.jsx";
+import defaultImage from "../../resource/img/unknownImage.png";
 
 export function PostView() {
   const { postId } = useParams();
@@ -42,7 +43,6 @@ export function PostView() {
   const [place, setPlace] = useState([]);
   const [like, setLike] = useState({ like: false, count: 0 });
   const [comment, setComment] = useState({ count: 0 });
-
 
   const [isLikeLoading, setIsLikeLoading] = useState(false);
   const [isTransition, setIsTransition] = useState(false);
@@ -286,7 +286,7 @@ export function PostView() {
                         alignContent={"center"}
                       >
                         <Image
-                          src={place.picurl}
+                          src={place.picurl || defaultImage}
                           objectFit={"cover"}
                           w={"100%"}
                           h={"100%"}

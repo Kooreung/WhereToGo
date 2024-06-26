@@ -8,57 +8,58 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 import HeadingLarge from "../../css/Heading/HeadingLarge.jsx";
+import defaultImage from "../../resource/img/unknownImage.png";
 
 const places = [
   {
     name: "강남구",
     keyword: "강남구",
-    src: "https://kooreungsbucket.s3.ap-northeast-2.amazonaws.com/prj3/defaultProfile.png",
+    src: "",
   },
   {
     name: "강서구",
     keyword: "강서구",
-    src: "https://kooreungsbucket.s3.ap-northeast-2.amazonaws.com/prj3/defaultProfile.png",
+    src: "",
   },
   {
     name: "강북구",
     keyword: "강북구",
-    src: "https://kooreungsbucket.s3.ap-northeast-2.amazonaws.com/prj3/defaultProfile.png",
+    src: "",
   },
   {
     name: "강동구",
     keyword: "강동구",
-    src: "https://kooreungsbucket.s3.ap-northeast-2.amazonaws.com/prj3/defaultProfile.png",
+    src: "",
   },
   {
     name: "서초구",
     keyword: "서초구",
-    src: "https://kooreungsbucket.s3.ap-northeast-2.amazonaws.com/prj3/defaultProfile.png",
+    src: "",
   },
   {
     name: "마포구",
     keyword: "마포구",
-    src: "https://kooreungsbucket.s3.ap-northeast-2.amazonaws.com/prj3/defaultProfile.png",
+    src: "",
   },
   {
     name: "송파구",
     keyword: "송파구",
-    src: "https://kooreungsbucket.s3.ap-northeast-2.amazonaws.com/prj3/defaultProfile.png",
+    src: "",
   },
   {
     name: "종로구",
     keyword: "종로구",
-    src: "https://kooreungsbucket.s3.ap-northeast-2.amazonaws.com/prj3/defaultProfile.png",
+    src: "",
   },
   {
     name: "양천구",
     keyword: "양천구",
-    src: "https://kooreungsbucket.s3.ap-northeast-2.amazonaws.com/prj3/defaultProfile.png",
+    src: "",
   },
   {
     name: "도봉구",
     keyword: "도봉구",
-    src: "https://kooreungsbucket.s3.ap-northeast-2.amazonaws.com/prj3/defaultProfile.png",
+    src: "",
   },
   // 필요한 만큼 장소 추가
 ];
@@ -129,7 +130,7 @@ export function LobbyPlaceList() {
                       size="xl"
                       boxShadow={"md"}
                       name={place.src}
-                      src={place.src}
+                      src={place.src || defaultImage}
                     />
                     <Box textAlign="center">{place.name}</Box>
                   </Stack>
