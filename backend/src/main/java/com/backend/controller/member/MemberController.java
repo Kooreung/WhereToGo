@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -153,7 +152,9 @@ public class MemberController {
             @RequestBody Member member,
             Authentication authentication) {
         System.out.println("id" + member.getMemberId());
-        if (service.hasAccess(member, authentication)) {
+        if (service.hasAccess(member, authentication) || authentication.getAuthorities()
+                .stream()
+                .anyMatch(a -> a.getAuthority().equals("SCOPE_admin"))) {
             service.delete(member.getMemberId());
             return ResponseEntity.ok().build();
         }
