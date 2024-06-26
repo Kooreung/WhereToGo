@@ -82,7 +82,7 @@ export function LobbyPlaceList() {
   return (
     <Box align="center">
       <HeadingLarge
-        w={{ base: "580px", lg: "720px" }}
+        w={{ base: "640px", lg: "740px" }}
         mb={"1rem"}
         textAlign={"start"}
       >
@@ -90,16 +90,8 @@ export function LobbyPlaceList() {
       </HeadingLarge>
       <Flex alignItems={"center"} justifyContent={"center"}>
         <Box>
-          <ButtonCircle
-            onClick={handleMoveLeft}
-            cursor={"pointer"}
-            sx={{
-              "&:hover": {
-                backgroundColor: "RGBA(0, 0, 0, 0.1)",
-              },
-            }}
-          >
-            <FontAwesomeIcon icon={faChevronLeft} size={"2xl"} />
+          <ButtonCircle onClick={handleMoveLeft}>
+            <FontAwesomeIcon icon={faChevronLeft} size={"xl"} />
           </ButtonCircle>
         </Box>
         <Box
@@ -149,7 +141,7 @@ export function LobbyPlaceList() {
               },
             }}
           >
-            <FontAwesomeIcon icon={faChevronRight} size={"2xl"} />
+            <FontAwesomeIcon icon={faChevronRight} size={"xl"} />
           </ButtonCircle>
         </Center>
       </Flex>

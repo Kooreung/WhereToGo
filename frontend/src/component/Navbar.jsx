@@ -21,7 +21,7 @@ function Navbar() {
     <Flex alignItems="center" justifyContent="center" w={"100%"}>
       <Flex
         w={{ base: "960px", lg: "1024px", xl: "1080px" }}
-        h={"96px"}
+        h={"100px"}
         px={6}
         mt={"4rem"}
         mb={"4rem"}

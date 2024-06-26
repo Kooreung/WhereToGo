@@ -199,7 +199,6 @@ export function PostMdList(props) {
       {mdPost.length === 0 && <Center>조회 결과가 없습니다.</Center>}
       {mdPost.length > 0 && (
         <VStack
-          //border="5px solid #836091"
           divider={<StackDivider borderColor={"lightgray"} />}
           my={"2rem"}
           spacing={"2rem"}
@@ -213,7 +212,6 @@ export function PostMdList(props) {
             >
               <Box>
                 <Grid
-                  //border="5px solid lightGray"
                   w={"720px"}
                   h={"224px"}
                   templateColumns={"repeat(9, 1fr)"}
