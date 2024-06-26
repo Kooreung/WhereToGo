@@ -32,6 +32,7 @@ import ContentParser from "../../component/ContentParser.jsx";
 import defaultImage from "../../resource/img/unknownImage.png";
 import { faComment } from "@fortawesome/free-regular-svg-icons";
 import axios from "axios";
+import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 
 export function PostMdList(props) {
   const [mdPost, setMdPost] = useState([]);
@@ -43,7 +44,7 @@ export function PostMdList(props) {
   const account = useContext(LoginContext);
   const [showFirstScreen, setShowFirstScreen] = useState(true);
   // 화면 크기에 따라 항목 수 결정
-  const itemsPerRow = useBreakpointValue({ base: 1, md: 2, lg: 3 });
+  const itemsPerRow = useBreakpointValue({ base: 1, md: 4, lg: 3 });
   useEffect(() => {
     axios.get(`/api/post/mdList?${searchParams}`).then((res) => {
       setMdPost(res.data.post);
@@ -92,7 +93,12 @@ export function PostMdList(props) {
               spacing={"2rem"}
               w={{ base: "720px", lg: "960px" }}
             >
-              <Flex wrap="wrap" justify="flex-start" w="100%">
+              <Flex
+                wrap="wrap"
+                w="100%"
+                ml={{ base: 12, lg: 3 }}
+                justify={{ lg: "flex-start" }}
+              >
                 {mdPost
                   .slice(
                     rowIndex * (itemsPerRow || 3),
@@ -105,7 +111,6 @@ export function PostMdList(props) {
                       borderWidth="1px"
                       borderRadius="lg"
                       overflow="hidden"
-                      border="1px solid lightGray"
                       w="280px"
                       h="380px"
                       m="1rem"
@@ -123,6 +128,7 @@ export function PostMdList(props) {
                         <Image
                           mt={3}
                           boxSize="230px"
+                          objectFit={"cover"}
                           boxShadow={"md"}
                           src={post.picurl || defaultImage}
                           alt="Green double couch with wooden legs"
@@ -367,27 +373,32 @@ export function PostMdList(props) {
                 <option value={"address"}>지역명</option>
               </Select>
             </Box>
-            <Box>
+            <Box ml={1}>
               <Input
                 value={searchKeyword}
                 onChange={(e) => setSearchKeyword(e.target.value)}
                 placeholder="검색어"
               />
             </Box>
-            <Box>
-              <Button onClick={handleSearchClick}>
-                <FontAwesomeIcon icon={faMagnifyingGlass} />
-              </Button>
+            <Box ml={2}>
+              <ButtonCircle onClick={handleSearchClick}>
+                <FontAwesomeIcon icon={faMagnifyingGlass} fontSize="small" />
+              </ButtonCircle>
             </Box>
-            <Box>
+            <Box ml={1}>
               {account.isAdmin() && (
-                <Button onClick={() => navigate(`/post/write`)}>글쓰기</Button>
+                <ButtonCircle
+                  onClick={() => navigate(`/post/write`)}
+                  fontSize="small"
+                >
+                  작성
+                </ButtonCircle>
               )}
             </Box>
-            <Box>
-              <Button onClick={handleListButtonClick}>
-                <FontAwesomeIcon icon={faBars} size="lg" />
-              </Button>
+            <Box ml={1}>
+              <ButtonCircle onClick={handleListButtonClick}>
+                <FontAwesomeIcon icon={faBars} fontSize="small" />
+              </ButtonCircle>
             </Box>
           </Center>
         </Heading>
@@ -399,9 +410,17 @@ export function PostMdList(props) {
         my={"2rem"}
       ></Divider>
       {/*게시물 시작*/}
-      <Box>{showFirstScreen ? <FirstScreen /> : <SecondScreen />}</Box>
-      <Box>
-        {visiblePosts < mdPost.length && (
+      <Box
+        align="center"
+        justify="center"
+        overflowX={"hidden"}
+        borderWidth="1px"
+        borderRadius="lg"
+      >
+        {showFirstScreen ? <FirstScreen /> : <SecondScreen />}
+      </Box>
+      <Box mt={5}>
+        {visiblePosts < mdPost.length - 1 && (
           <Button onClick={handleLoadMore}>더보기</Button>
         )}
       </Box>
