@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Box, Card, Center, Flex, Image, Spacer, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Card,
+  Center,
+  Flex,
+  Image,
+  Spacer,
+  Text,
+} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
@@ -113,18 +122,7 @@ function LobbyPostListOfBest(props) {
         </Card>
       ))}
       <Center>
-        <HeadingVariant
-          variant={"medium"}
-          bg={"#836091"}
-          p={"1.2rem"}
-          color={"white"}
-          fontSize={"14px"}
-          borderRadius={"5rem"}
-          cursor={"pointer"}
-          onClick={() => navigate("/post/list")}
-        >
-          다른 글 더 보기
-        </HeadingVariant>
+        <Button onClick={() => navigate("/post/list")}>다른 글 더 보기</Button>
       </Center>
     </Box>
   );

@@ -104,7 +104,6 @@ export function LobbyPlaceList() {
           <Box
             h={{ base: "160px", lg: "160px", sm: "140px" }}
             overflow={"hidden"}
-            border={"1px solid lightGray"}
             borderRadius={"12px"}
             py={"1rem"}
           >
