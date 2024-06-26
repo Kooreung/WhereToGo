@@ -1,14 +1,22 @@
-import { Box, Flex, Grid, GridItem, Image, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Flex,
+  Grid,
+  GridItem,
+  Image,
+  Text,
+} from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons/faArrowLeft";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../LoginProvider.jsx";
 import axios from "axios";
 import ContentParser from "../ContentParser.jsx";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons/faArrowLeft";
 
 export function LobbyMdList() {
   const [mdPost, setMdPost] = useState([]);
@@ -43,40 +51,14 @@ export function LobbyMdList() {
     <Box align={"center"}>
       <HeadingVariant
         variant={"large"}
-        w={{ base: "960px", sm: "720px", lg: "960px" }}
-        mb={"1rem"}
+        mb={{ lg: "16px", sm: "8px" }}
         textAlign={"start"}
       >
         MD 추천 Pick
       </HeadingVariant>
-      <Flex alignContent={"center"} alignItems={"center"} justify={"center"}>
+      <Box w={"100%"} h={"100%"}>
         <Box
-          w={"40px"}
-          h={"40px"}
-          position={"relative"}
-          left={"50px"}
-          zIndex={"1"}
-          cursor={"pointer"}
-        >
-          <ButtonCircle
-            onClick={() => {
-              if (nextPosts > 1) {
-                setNextPosts(nextPosts - 1);
-                setPrevPosts(prevPosts - 1);
-              }
-
-              if (nextPosts === 1) {
-                setNextPosts(5);
-                setPrevPosts(4);
-              }
-            }}
-          >
-            <FontAwesomeIcon icon={faArrowLeft} fontSize="2rem" />
-          </ButtonCircle>
-        </Box>
-
-        <Box
-          w={{ base: "720px", sm: "720px", lg: "960px" }}
+          w="100%"
           h={{ base: "175px", sm: "175px", lg: "200px" }}
           alignContent={"center"}
         >
@@ -154,12 +136,7 @@ export function LobbyMdList() {
                         </Box>
                       </GridItem>
 
-                      <GridItem
-                        colSpan={1}
-                        rowSpan={3}
-                        alignContent={"center"}
-                        border={"1px dotted red"}
-                      >
+                      <GridItem colSpan={1} rowSpan={3} alignContent={"center"}>
                         <Flex pl={3}>
                           <Text display={{ base: "none", lg: "block" }} mr={1}>
                             썸네일
@@ -200,30 +177,53 @@ export function LobbyMdList() {
             )}
           </Box>
         </Box>
-        <Box
-          w={"40px"}
-          h={"40px"}
-          position={"relative"}
-          left={"-50px"}
-          zIndex={"1"}
-          cursor={"pointer"}
-        >
-          <ButtonCircle
-            onClick={() => {
-              if (nextPosts < 5) {
-                setNextPosts(nextPosts + 1);
-                setPrevPosts(prevPosts + 1);
-              }
-              if (nextPosts === 5) {
-                setNextPosts(1);
-                setPrevPosts(0);
-              }
-            }}
+        <Center>
+          <Box
+            cursor={"pointer"}
+            zIndex={"1"}
+            position={"relative"}
+            top={"-100px"}
+            left={{ base: "-320px", lg: "-430px" }}
           >
-            <FontAwesomeIcon icon={faArrowRight} fontSize="2rem" />
-          </ButtonCircle>
-        </Box>
-      </Flex>
+            <ButtonCircle
+              onClick={() => {
+                if (nextPosts > 1) {
+                  setNextPosts(nextPosts - 1);
+                  setPrevPosts(prevPosts - 1);
+                }
+                if (nextPosts === 1) {
+                  setNextPosts(5);
+                  setPrevPosts(4);
+                }
+              }}
+            >
+              <FontAwesomeIcon icon={faArrowLeft} fontSize="2rem" />
+            </ButtonCircle>
+          </Box>
+          <Box
+            cursor={"pointer"}
+            zIndex={"1"}
+            position={"relative"}
+            top={"-100px"}
+            left={{ base: "320px", lg: "430px" }}
+          >
+            <ButtonCircle
+              onClick={() => {
+                if (nextPosts < 5) {
+                  setNextPosts(nextPosts + 1);
+                  setPrevPosts(prevPosts + 1);
+                }
+                if (nextPosts === 5) {
+                  setNextPosts(1);
+                  setPrevPosts(0);
+                }
+              }}
+            >
+              <FontAwesomeIcon icon={faArrowRight} fontSize="2rem" />
+            </ButtonCircle>
+          </Box>
+        </Center>
+      </Box>
     </Box>
   );
 }

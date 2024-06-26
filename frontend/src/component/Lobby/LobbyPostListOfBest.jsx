@@ -17,7 +17,11 @@ function LobbyPostListOfBest(props) {
   }, []);
   return (
     <Box>
-      <HeadingVariant variant={"large"} mb={"1rem"} textAlign={"start"}>
+      <HeadingVariant
+        variant={"large"}
+        mb={{ lg: "16px", sm: "8px" }}
+        textAlign={"start"}
+      >
         회원 인기글
       </HeadingVariant>
       {postListOfBest.map((post, index) => (
@@ -59,6 +63,7 @@ function LobbyPostListOfBest(props) {
                 overflow={"hidden"}
                 textOverflow={"ellipsis"}
                 display={"-webkit-box"}
+                w={"100%"}
                 css={{
                   WebkitLineClamp: "2",
                   WebkitBoxOrient: "vertical",
