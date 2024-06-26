@@ -78,7 +78,7 @@ export function MemberLogin() {
           </Box>
           <Box>
             <FormControl>
-              <FormLabel>비밀번호</FormLabel>
+              <FormLabel mt={6}>비밀번호</FormLabel>
               <InputGroup>
                 <Input
                   style={inputStyles}
@@ -86,6 +86,7 @@ export function MemberLogin() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <InputRightElement
+                  h="48px"
                   cursor="pointer"
                   onClick={() => setShowAndPassword(!showAndPassword)}
                 >
@@ -96,7 +97,7 @@ export function MemberLogin() {
               </InputGroup>
             </FormControl>
           </Box>
-          <Box mb={6} style={{ textAlign: "right" }}>
+          <Box mb={6} mt={6} style={{ textAlign: "right" }}>
             <Link
               to="/findPassword"
               style={{ textDecoration: "underline", color: "dodgerblue" }}

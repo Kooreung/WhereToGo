@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   Avatar,
   Box,
-  Button,
+  Button, ButtonGroup, Card, CardBody, CardFooter, Center, Divider,
   Flex,
   FormControl,
-  FormLabel,
+  FormLabel, Heading,
   Input,
   Modal,
   ModalBody,
@@ -13,8 +13,9 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Spinner,
+  Spinner, Stack,
   Text,
+  Image,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -22,6 +23,15 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import Lobby from "../Lobby.jsx";
+import {
+  faCircleUser,
+  faCrown,
+  faHeart,
+  faLocationDot,
+  faPhone,
+  faSquareEnvelope
+} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 export function MemberInfo(props) {
   const [member, setMember] = useState({});
@@ -102,73 +112,93 @@ export function MemberInfo(props) {
   if (member === null) {
     return <Spinner />;
   }
+
   return (
-    <Flex alignContent="center" justifyContent="center" alignItems="center">
-      <Box mt="100">
-        <Avatar
-          name="defaultProfile"
-          src={file.src}
-          w="200px" // 원하는 너비 값으로 조정
-          h="200px" // 원하는 높이 값으로 조정
-        />
-        <Text mb="5" fontSize="25" ml="25%" mt={23}>
-          이름 : {member.name}
-        </Text>
-        <Text
-          mb="5"
-          fontSize="20"
-          ml="25%"
-          mt={23}
-          onClick={() => navigate("/postLike/list")}
-        >
-          내가 좋아요한 목록
-        </Text>
-      </Box>
-      <Box ml="100" fontSize="25" mt="100">
-        <Text mb="5">닉네임 : {member.nickName}</Text>
-        <Text mb="5">성별 : {member.gender}</Text>
-        <Text mb="5">이메일 : {member.email}</Text>
-        <Text mb="5">생일 : {member.birth}</Text>
-        <Text mb="5">주소 : {member.address}</Text>
-        <Text mb="5">휴대폰 번호 : {member.phoneNumber}</Text>
-        <Button colorScheme="teal" size="xs" ml="100%" onClick={onOpen}>
-          탈퇴
-        </Button>
-        <Button
-          colorScheme="teal"
-          size="xs"
-          ml="100%"
-          onClick={() => navigate(`/member/edit`)}
-        >
-          수정
-        </Button>
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>탈퇴 확인</ModalHeader>
-            <ModalBody>
-              <FormControl>
-                <FormLabel>비밀번호를 입력 해주세요</FormLabel>
-                <Input
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </FormControl>
-            </ModalBody>
-            <ModalFooter>
-              <Button
-                isLoading={isLoading}
-                colorScheme={"red"}
-                onClick={handleCLickDelete}
-              >
-                확인
-              </Button>
-              <Button onClick={onClose}>취소</Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </Box>
-    </Flex>
+    <Card maxW='md' mb={20} boxShadow={"2xl"}>
+      {account.isAdmin() && (
+        <Center>
+          <FontAwesomeIcon size={"2xl"} icon={faCrown} style={{color: "#FFD43B",}} />
+        </Center>
+      )}
+      {account.isAdmin() || (
+        <Center>
+          <FontAwesomeIcon size={"2xl"} icon={faCrown} style={{color: "#D8B7E5",}} />
+        </Center>
+      )}
+      <CardBody>
+        <label>
+          <Center>
+
+          <Avatar
+            _hover={{filter: "brightness(0.7)"}}
+            src={file.src}
+            w="250px"
+            h="250px"
+            cursor="pointer"
+          />
+          </Center>
+          <Button
+            style={{display: "none"}}
+            onClick={() => navigate(`/member/edit`)}
+          >
+          </Button>
+        </label>
+        <Stack mt='6' spacing='3'>
+          <Center>
+          <Heading size='md' mb={7}>{member.nickName}</Heading>
+          </Center>
+            <Box mb={2} ><FontAwesomeIcon icon={faSquareEnvelope} style={{color: "#D8B7E5",}} /> {member.email}</Box>
+          <Box mb={2} ><FontAwesomeIcon icon={faLocationDot} style={{color: "#D8B7E5",}} />  {member.address}</Box>
+          <Box mb={2} ><FontAwesomeIcon icon={faPhone} style={{color: "#D8B7E5",}} />  {member.phoneNumber}</Box>
+        </Stack>
+      </CardBody>
+      <Divider />
+      <CardFooter display="flex" justifyContent="space-between">
+        <Box style={{display: 'flex', alignItems: 'center'}}>
+          <FontAwesomeIcon
+            icon={faHeart}
+            onClick={() => navigate("/postLike/list")}
+            cursor="pointer"
+            size="lg"
+            style={{color: "#D8B7E5", marginRight: '8px'}}
+          />
+          Like
+        </Box>
+        <ButtonGroup spacing='2'>
+          <Button size={"sm"} variant='solid' colorScheme='blue' onClick={() => navigate(`/member/edit`)}>
+            수정
+          </Button>
+          <Button size={"sm"} variant='solid' colorScheme='red' ml="100%" onClick={onOpen}>
+            탈퇴
+          </Button>
+          <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay/>
+            <ModalContent>
+              <ModalHeader>탈퇴 확인</ModalHeader>
+              <ModalBody>
+                <FormControl>
+                  <FormLabel>비밀번호를 입력해 주세요.</FormLabel>
+                  <Input
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </FormControl>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  isLoading={isLoading}
+                  colorScheme={"red"}
+                  onClick={handleCLickDelete}
+                >
+                  확인
+                </Button>
+                <Button onClick={onClose}>취소</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        </ButtonGroup>
+      </CardFooter>
+    </Card>
   );
 }
 
