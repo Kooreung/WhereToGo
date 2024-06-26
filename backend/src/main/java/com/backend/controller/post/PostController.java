@@ -50,8 +50,9 @@ public class PostController {
     public Map<String, Object> postList(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(value = "type", required = false) String searchType,
-            @RequestParam(value = "keyword", defaultValue = "") String searchKeyword) {
-        return postService.list(page, searchType, searchKeyword);
+            @RequestParam(value = "keyword", defaultValue = "") String searchKeyword,
+            @RequestParam(value = "keyword2", defaultValue = "") String searchKeyword2) {
+        return postService.list(page, searchType, searchKeyword, searchKeyword2);
     }
 
     // 게시글 MD추천 목록 Controller
@@ -136,7 +137,7 @@ public class PostController {
     @PostMapping("{postId}/push")
     public ResponseEntity postMdPickPush(@PathVariable Integer postId, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
         Integer mdPickCount = postService.mdPickCount();
-        if(mdPickCount < 3){
+        if (mdPickCount < 3) {
             postService.mdPickPush(postId, file);
             return ResponseEntity.ok().build();
         } else {

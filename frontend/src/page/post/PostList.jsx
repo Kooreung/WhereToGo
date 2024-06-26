@@ -39,6 +39,7 @@ function PostList() {
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchKeyword2, setSearchKeyword2] = useState("");
   const logoColor = useColorModeValue("red.500", "gray.200");
 
   useEffect(() => {
@@ -48,14 +49,20 @@ function PostList() {
     });
     setSearchType("all");
     setSearchKeyword("");
+    setSearchKeyword2("");
 
     const typeParam = searchParams.get("type");
     const keywordParam = searchParams.get("keyword");
+    const keywordParam2 = searchParams.get("keyword2");
+
     if (typeParam) {
       setSearchType(typeParam);
     }
     if (keywordParam) {
       setSearchKeyword(keywordParam);
+    }
+    if (keywordParam2) {
+      setSearchKeyword2(keywordParam2);
     }
   }, [searchParams]);
 
@@ -67,7 +74,9 @@ function PostList() {
 
   // 검색 클릭 시 URL
   function handleSearchClick() {
-    navigate(`/post/list?type=${searchType}&keyword=${searchKeyword}`);
+    navigate(
+      `/post/list?type=${searchType}&keyword=${searchKeyword}&keyword2=${searchKeyword2}`,
+    );
   }
 
   // 검색 창 Enter 시 URL
@@ -262,7 +271,9 @@ function PostList() {
             <Box>
               <Input
                 value={searchKeyword}
+                value={searchKeyword2}
                 onChange={(e) => setSearchKeyword(e.target.value)}
+                onChange={(e) => setSearchKeyword2(e.target.value)}
                 onKeyDown={handleSearchKeyDown}
                 placeholder={"검색어"}
               />

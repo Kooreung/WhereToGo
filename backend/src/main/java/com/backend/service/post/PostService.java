@@ -107,10 +107,10 @@ public class PostService {
     }
 
     // 게시글 목록 서비스
-    public Map<String, Object> list(Integer page, String searchType, String searchKeyword) {
+    public Map<String, Object> list(Integer page, String searchType, String searchKeyword, String searchKeyword2) {
         Map pageInfo = new HashMap();
 
-        Integer countAllPost = postMapper.countAllPost(searchType, searchKeyword);
+        Integer countAllPost = postMapper.countAllPost(searchType, searchKeyword, searchKeyword2);
         Integer offset = (page - 1) * 5;
         Integer lastPageNumber = (countAllPost - 1) / 5 + 1;
         Integer leftPageNumber = ((page - 1) / 10) * 10 + 1;
@@ -135,7 +135,7 @@ public class PostService {
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
 
-        return Map.of("pageInfo", pageInfo, "postList", postMapper.selectAllPost(offset, searchType, searchKeyword));
+        return Map.of("pageInfo", pageInfo, "postList", postMapper.selectAllPost(offset, searchType, searchKeyword, searchKeyword2));
     }
 
     // 게시글 Top 3 인기글 목록 서비스
