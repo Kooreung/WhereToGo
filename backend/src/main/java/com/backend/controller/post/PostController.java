@@ -50,9 +50,9 @@ public class PostController {
     public Map<String, Object> postList(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(value = "type", required = false) String searchType,
-            @RequestParam(value = "keyword", defaultValue = "") String searchKeyword,
-            @RequestParam(value = "keyword2", defaultValue = "") String searchKeyword2) {
-        return postService.list(page, searchType, searchKeyword, searchKeyword2);
+            @RequestParam(value = "keyword", defaultValue = "") String searchKeyword
+    ) {
+        return postService.list(page, searchType, searchKeyword);
     }
 
     // 게시글 MD추천 목록 Controller
