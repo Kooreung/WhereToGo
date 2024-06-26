@@ -60,7 +60,7 @@ public class MemberService {
 
         if (newProfile != null && !newProfile.isEmpty()) {
             // 이미지가 있는 경우 S3에 저장
-            String key = String.format("prj3/%s/%s", dbmember.getMemberId(), newProfile.getOriginalFilename());
+            String key = String.format("prj3/member/%s/%s", dbmember.getMemberId(), newProfile.getOriginalFilename());
             PutObjectRequest objectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(key)
@@ -79,7 +79,7 @@ public class MemberService {
 
             PutObjectRequest objectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
-                    .key(String.format("prj3/%s/defaultProfile.png", dbmember.getMemberId()))
+                    .key(String.format("prj3/member/%s/defaultProfile.png", dbmember.getMemberId()))
                     .acl(ObjectCannedACL.PUBLIC_READ)
                     .build();
             s3Client.putObject(objectRequest, RequestBody.fromInputStream(defaultProfileResponse, defaultProfileResponse.response().contentLength()));
@@ -127,7 +127,7 @@ public class MemberService {
 
         MemberProfile memberProfile = new MemberProfile();
         memberProfile.setName(mapper.getProfileByMemberId(memberId));
-        String src = STR."\{srcPrefix}/\{dbmember.getMemberId()}/\{memberProfile.getName()}";
+        String src = STR."\{srcPrefix}/member/\{dbmember.getMemberId()}/\{memberProfile.getName()}";
         memberProfile.setSrc(src);
         result.put("profile", memberProfile);
 
@@ -190,7 +190,7 @@ public class MemberService {
 
         if (newProfile != null && !newProfile.isEmpty()) {
             System.out.println(newProfile.getOriginalFilename());
-            String key = STR."prj3/\{member.getMemberId()}/\{newProfile.getOriginalFilename()}";
+            String key = STR."prj3/member/\{member.getMemberId()}/\{newProfile.getOriginalFilename()}";
             PutObjectRequest objectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(key)
@@ -199,7 +199,7 @@ public class MemberService {
             s3Client.putObject(objectRequest, RequestBody.fromInputStream(newProfile.getInputStream(), newProfile.getSize()));
 
             String prevProfileName = mapper.getProfileNameByMemberId(member.getMemberId());
-            String key2 = STR."prj3/\{member.getMemberId()}/\{prevProfileName}";
+            String key2 = STR."prj3/member/\{member.getMemberId()}/\{prevProfileName}";
             DeleteObjectRequest objectRequest2 = DeleteObjectRequest.builder()
                     .bucket(bucketName)
                     .key(key2)
@@ -225,7 +225,7 @@ public class MemberService {
     public void delete(Integer memberId) {
         String fileName = mapper.getProfileNameByMemberId(memberId);
         //탈퇴시 게시물 삭제 안할것이기 때문에 댓글,회원정보만 삭제
-        String key = STR."prj3/\{memberId}/\{fileName}";
+        String key = STR."prj3/member/\{memberId}/\{fileName}";
         DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)

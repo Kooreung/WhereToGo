@@ -421,4 +421,11 @@ public interface PostMapper {
             where bannerid = #{bannerId}
             """)
     Banner getBannerSrcById(Integer bannerId);
+
+
+    @Select("""
+            SELECT banner FROM post
+            where postid = #{postId}
+            """)
+    String getMdBannerName(Integer postId);
 }
