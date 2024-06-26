@@ -100,7 +100,6 @@ export function LobbyPlaceList() {
           border={"1px solid lightGray"}
           borderRadius={"12px"}
           py={"1rem"}
-          mx={"1rem"}
         >
           <Flex
             ref={dataRef}
