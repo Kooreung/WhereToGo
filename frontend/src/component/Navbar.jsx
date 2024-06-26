@@ -4,13 +4,14 @@ import {
   Button,
   Center,
   Flex,
-  Heading,
+  Image,
   useColorMode,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "./LoginProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import homeLogo from "../resource/img/logo.png";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -31,8 +32,13 @@ function Navbar() {
         boxSizing={"border-box"}
       >
         {/* 로고 */}
-        <Box onClick={() => navigate("/")} cursor={"pointer"}>
-          <Heading>어디가지</Heading>
+        <Box
+          onClick={() => navigate("/")}
+          cursor={"pointer"}
+          w={"160px"}
+          h={"160px"}
+        >
+          <Image src={homeLogo} />
         </Box>
 
         {/* 중간 메뉴 */}
