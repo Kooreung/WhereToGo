@@ -15,6 +15,7 @@ import {
   Stack,
   StackDivider,
   Text,
+  useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -27,10 +28,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { LoginContext } from "../../component/LoginProvider.jsx";
-import axios from "axios";
 import ContentParser from "../../component/ContentParser.jsx";
-import { faComment } from "@fortawesome/free-regular-svg-icons";
 import defaultImage from "../../resource/img/unknownImage.png";
+import { faComment } from "@fortawesome/free-regular-svg-icons";
+import axios from "axios";
 
 export function PostMdList(props) {
   const [mdPost, setMdPost] = useState([]);
@@ -41,7 +42,8 @@ export function PostMdList(props) {
   const navigate = useNavigate();
   const account = useContext(LoginContext);
   const [showFirstScreen, setShowFirstScreen] = useState(true);
-
+  // 화면 크기에 따라 항목 수 결정
+  const itemsPerRow = useBreakpointValue({ base: 1, md: 2, lg: 3 });
   useEffect(() => {
     axios.get(`/api/post/mdList?${searchParams}`).then((res) => {
       setMdPost(res.data.post);
@@ -62,137 +64,140 @@ export function PostMdList(props) {
   }, [searchParams]);
 
   function handleLoadMore() {
-    setVisiblePosts((prevVisiblePosts) => prevVisiblePosts + 2);
+    setVisiblePosts(
+      (prevVisiblePosts) => prevVisiblePosts + (itemsPerRow || 3),
+    );
   }
 
   function handleSearchClick() {
     navigate(`/post/mdList?type=${searchType}&keyword=${searchKeyword}`);
   }
   const handleListButtonClick = () => {
-    setShowFirstScreen(!showFirstScreen); // 화면전환
+    setShowFirstScreen(!showFirstScreen); // 화면 전환
   };
-  // 목록버튼 누르기전 화면
+
+  // 목록 버튼 누르기 전 화면
   const FirstScreen = () => (
     <Box align="center" justify="center" overflowX={"hidden"}>
       {mdPost.length === 0 && <Center>조회 결과가 없습니다.</Center>}
       {mdPost.length > 0 && (
         <>
-          {Array.from({ length: Math.ceil(visiblePosts / 3) }).map(
-            (_, rowIndex) => (
-              <Stack
-                key={rowIndex}
-                // border="5px solid #836091"
-                divider={<StackDivider borderColor={"blue"} />}
-                my={"2rem"}
-                spacing={"2rem"}
-                w={{ base: "720px", lg: "960px" }}
-              >
-                <Flex wrap="wrap" justify="flex-start" w="100%">
-                  {mdPost
-                    .slice(rowIndex * 3, rowIndex * 3 + 3)
-                    .map((post, index) => (
-                      <Box
-                        key={index}
-                        maxW="sm"
-                        borderWidth="1px"
-                        borderRadius="lg"
-                        overflow="hidden"
-                        border="1px solid lightGray"
-                        w="280px"
-                        h="380px"
-                        m="1rem"
-                        boxShadow={"md"}
-                        key={post.postId}
-                        onClick={() => navigate(`/post/${post.postId}`)}
-                        cursor="pointer"
-                        sx={{
-                          transition: "transform 0.3s ease",
-                          "&:hover": {
-                            transform: "scale(1.05)",
-                          },
-                        }}
-                      >
-                        <Box>
-                          <Image
-                            mt={3}
-                            boxSize="230px"
-                            boxShadow={"md"}
-                            src={post.picurl || defaultImage}
-                            alt="Green double couch with wooden legs"
-                            borderRadius="lg"
-                          />
-                        </Box>
-                        <Box
-                          colSpan={7}
-                          rowSpan={1}
-                          alignContent={"center"}
-                          overflow={"hidden"}
-                          textOverflow={"ellipsis"}
-                          whiteSpace={"nowrap"}
+          {Array.from({
+            length: Math.ceil(visiblePosts / (itemsPerRow || 3)),
+          }).map((_, rowIndex) => (
+            <Stack
+              key={rowIndex}
+              divider={<StackDivider borderColor={"blue"} />}
+              my={"2rem"}
+              spacing={"2rem"}
+              w={{ base: "720px", lg: "960px" }}
+            >
+              <Flex wrap="wrap" justify="flex-start" w="100%">
+                {mdPost
+                  .slice(
+                    rowIndex * (itemsPerRow || 3),
+                    rowIndex * (itemsPerRow || 3) + (itemsPerRow || 3),
+                  )
+                  .map((post, index) => (
+                    <Box
+                      key={index}
+                      maxW="sm"
+                      borderWidth="1px"
+                      borderRadius="lg"
+                      overflow="hidden"
+                      border="1px solid lightGray"
+                      w="280px"
+                      h="380px"
+                      m="1rem"
+                      boxShadow={"md"}
+                      onClick={() => navigate(`/post/${post.postId}`)}
+                      cursor="pointer"
+                      sx={{
+                        transition: "transform 0.3s ease",
+                        "&:hover": {
+                          transform: "scale(1.05)",
+                        },
+                      }}
+                    >
+                      <Box>
+                        <Image
                           mt={3}
-                        >
-                          <Stack
-                            ml="6"
-                            mr={"6"}
-                            spacing="3"
-                            textAlign={"start"}
-                            noOfLines={2}
-                          >
-                            <Heading color="#33664F" fontSize="2xl">
-                              {post.title}
-                            </Heading>
-                            <ContentParser
-                              content={post.content}
-                            ></ContentParser>
-                          </Stack>
-                        </Box>
-                        <Flex
-                          justifyContent={"space-between"}
+                          boxSize="230px"
+                          boxShadow={"md"}
+                          src={post.picurl || defaultImage}
+                          alt="Green double couch with wooden legs"
+                          borderRadius="lg"
+                        />
+                      </Box>
+                      <Box
+                        colSpan={7}
+                        rowSpan={1}
+                        alignContent={"center"}
+                        overflow={"hidden"}
+                        textOverflow={"ellipsis"}
+                        whiteSpace={"nowrap"}
+                        mt={3}
+                      >
+                        <Stack
                           ml="6"
                           mr={"6"}
-                          fontSize="xs"
+                          spacing="3"
+                          textAlign={"start"}
+                          noOfLines={2}
                         >
-                          <Box>{post.nickName}</Box>
-                          <Box>{post.createDate}</Box>
-                        </Flex>
-                        <Divider />
-                        <ButtonGroup spacing="4" mt={3}>
-                          <Box>
-                            <FontAwesomeIcon
-                              icon={faHeart}
-                              style={{ color: "#D8B7E5" }}
-                              size={"lg"}
-                            />{" "}
-                            {post.likeCount}
-                          </Box>
-                          <Box>
-                            <FontAwesomeIcon
-                              icon={faComment}
-                              style={{ color: "#33664F" }}
-                              size={"lg"}
-                            />
-                            {post.commentCount}
-                          </Box>
-                          <Box>
-                            <FontAwesomeIcon
-                              icon={faEye}
-                              size="lg"
-                              style={{ color: "#836091" }}
-                            />
-                            {""}
-                            {post.view}
-                          </Box>
-                        </ButtonGroup>
+                          <Heading color="#33664F" fontSize="2xl">
+                            {post.title}
+                          </Heading>
+                          <ContentParser content={post.content}></ContentParser>
+                        </Stack>
                       </Box>
-                    ))}
-                </Flex>
-              </Stack>
-            ),
-          )}
+                      <Flex
+                        justifyContent={"space-between"}
+                        ml="6"
+                        mr={"6"}
+                        fontSize="xs"
+                      >
+                        <Box>{post.nickName}</Box>
+                        <Box>{post.createDate}</Box>
+                      </Flex>
+                      <Divider />
+                      <ButtonGroup spacing="4" mt={3}>
+                        <Box>
+                          <FontAwesomeIcon
+                            icon={faHeart}
+                            style={{ color: "#D8B7E5" }}
+                            size={"lg"}
+                          />{" "}
+                          {post.likeCount}
+                        </Box>
+                        <Box>
+                          <FontAwesomeIcon
+                            icon={faComment}
+                            style={{ color: "#33664F" }}
+                            size={"lg"}
+                          />
+                          {post.commentCount}
+                        </Box>
+                        <Box>
+                          <FontAwesomeIcon
+                            icon={faEye}
+                            size="lg"
+                            style={{ color: "#836091" }}
+                          />
+                          {""}
+                          {post.view}
+                        </Box>
+                      </ButtonGroup>
+                    </Box>
+                  ))}
+              </Flex>
+            </Stack>
+          ))}
         </>
       )}
     </Box>
   );
+
   // 목록버튼 누른후 화면
   const SecondScreen = () => (
     <Box align="center" justify="center" overflowX={"hidden"}>
