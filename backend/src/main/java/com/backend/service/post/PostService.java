@@ -245,18 +245,26 @@ public class PostService {
     public void mdPickPush(Integer postId, MultipartFile banner) throws IOException {
         postMapper.mdPickPush(postId);
 
-        String key = String.format("prj3/banner%s/%s", postId, banner.getOriginalFilename());
+        String key = String.format("prj3/banner/mdPostBanner/%s/%s", postId, banner.getOriginalFilename());
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)
                 .acl(ObjectCannedACL.PUBLIC_READ)
                 .build();
         s3Client.putObject(objectRequest, RequestBody.fromInputStream(banner.getInputStream(), banner.getSize()));
-        postMapper.bannerUpdate(postId, key);
+        String bannerName = String.format("%s/%s", postId, banner.getOriginalFilename());
+        postMapper.bannerUpdate(postId, bannerName);
     }
 
     // mdPick 삭제(업데이트)
     public void mdPickPop(Integer postId) {
+
+        String key = String.format("prj3/banner/mdPostBanner/%s", postMapper.getMdBannerName(postId));
+        DeleteObjectRequest objectRequest2 = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .build();
+        s3Client.deleteObject(objectRequest2);
         postMapper.mdPickPop(postId);
     }
 
@@ -272,7 +280,7 @@ public class PostService {
 
     public void addBanner(String city, String link, MultipartFile file) throws IOException {
 
-        String key = String.format("prj3/banner%s/%s", city, file.getOriginalFilename());
+        String key = String.format("prj3/banner/localBanner/%s/%s", city, file.getOriginalFilename());
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)
@@ -280,13 +288,19 @@ public class PostService {
                 .build();
         s3Client.putObject(objectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
-        String src = String.format("%s/banner%s/%s", srcPrefix, city, file.getOriginalFilename());
+        String src = String.format("%s/%s", city, file.getOriginalFilename());
         postMapper.addBanner(city, link, src);
     }
 
 
     public List<Banner> getBannerList() {
-        return postMapper.gatBannerList();
+
+        List<Banner> bannerList = postMapper.gatBannerList();
+        for (Banner banner : bannerList) {
+            String src = String.format("%s/banner/localBanner/%s", srcPrefix, banner.getBannerSrc());
+            banner.setBannerSrc(src);
+        }
+        return bannerList;
     }
 
 
@@ -294,7 +308,7 @@ public class PostService {
 
         Banner banner = postMapper.getBannerSrcById(bannerId);
 
-        String key = banner.getBannerSrc();
+        String key = String.format("prj3/banner/localBanner/%s", banner.getBannerSrc());
         DeleteObjectRequest objectRequest2 = DeleteObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)
