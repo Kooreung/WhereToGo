@@ -4,9 +4,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import HeadingMedium from "../../css/Heading/HeadingMedium.jsx";
-import HeadingLarge from "../../css/Heading/HeadingLarge.jsx";
 import defaultImage from "../../resource/img/unknownImage.png";
+import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 
 function LobbyPostListOfBest(props) {
   const [postListOfBest, setPostListOfBest] = useState([]);
@@ -18,9 +17,9 @@ function LobbyPostListOfBest(props) {
   }, []);
   return (
     <Box>
-      <HeadingLarge mb={"1rem"} textAlign={"start"}>
+      <HeadingVariant variant={"large"} mb={"1rem"} textAlign={"start"}>
         회원 인기글
-      </HeadingLarge>
+      </HeadingVariant>
       {postListOfBest.map((post, index) => (
         <Card
           key={index}
@@ -55,7 +54,8 @@ function LobbyPostListOfBest(props) {
             ml={"1rem"}
           >
             <Flex>
-              <HeadingMedium
+              <HeadingVariant
+                variant={"medium"}
                 overflow={"hidden"}
                 textOverflow={"ellipsis"}
                 display={"-webkit-box"}
@@ -67,7 +67,7 @@ function LobbyPostListOfBest(props) {
                 }}
               >
                 {post.title}
-              </HeadingMedium>
+              </HeadingVariant>
             </Flex>
             <Spacer />
             <Flex justify={"space-between"} fontSize={"14px"}>
@@ -108,7 +108,8 @@ function LobbyPostListOfBest(props) {
         </Card>
       ))}
       <Center>
-        <HeadingMedium
+        <HeadingVariant
+          variant={"medium"}
           bg={"#836091"}
           p={"1.2rem"}
           color={"white"}
@@ -118,7 +119,7 @@ function LobbyPostListOfBest(props) {
           onClick={() => navigate("/post/list")}
         >
           다른 글 더 보기
-        </HeadingMedium>
+        </HeadingVariant>
       </Center>
     </Box>
   );

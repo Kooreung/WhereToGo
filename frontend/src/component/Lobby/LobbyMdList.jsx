@@ -8,7 +8,7 @@ import { LoginContext } from "../LoginProvider.jsx";
 import axios from "axios";
 import ContentParser from "../ContentParser.jsx";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
-import HeadingLarge from "../../css/Heading/HeadingLarge.jsx";
+import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 
 export function LobbyMdList() {
   const [mdPost, setMdPost] = useState([]);
@@ -41,13 +41,14 @@ export function LobbyMdList() {
 
   return (
     <Box align={"center"}>
-      <HeadingLarge
+      <HeadingVariant
+        variant={"large"}
         w={{ base: "960px", sm: "720px", lg: "960px" }}
         mb={"1rem"}
         textAlign={"start"}
       >
         MD 추천 Pick
-      </HeadingLarge>
+      </HeadingVariant>
       <Flex alignContent={"center"} alignItems={"center"} justify={"center"}>
         <Box
           w={"40px"}

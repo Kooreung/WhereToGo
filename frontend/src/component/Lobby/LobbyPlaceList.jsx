@@ -7,8 +7,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
-import HeadingLarge from "../../css/Heading/HeadingLarge.jsx";
 import defaultImage from "../../resource/img/unknownImage.png";
+import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 
 const places = [
   {
@@ -81,13 +81,14 @@ export function LobbyPlaceList() {
 
   return (
     <Box align="center">
-      <HeadingLarge
+      <HeadingVariant
+        variant={"large"}
         w={{ base: "640px", lg: "740px" }}
         mb={"1rem"}
         textAlign={"start"}
       >
         장소 선택
-      </HeadingLarge>
+      </HeadingVariant>
       <Flex alignItems={"center"} justifyContent={"center"}>
         <Box>
           <ButtonCircle onClick={handleMoveLeft}>
