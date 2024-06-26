@@ -278,6 +278,7 @@ export function MemberSignup() {
         <Center>
           <label style={{display: 'inline-block', width: '200px', height: '200px', cursor: 'pointer'}}>
             <Avatar
+              _hover={{filter: "brightness(0.7)"}}
               src={fileUrl}
               w="200px"
               h="200px"
@@ -499,7 +500,8 @@ export function MemberSignup() {
                     h={12}
                     mb={10}
                     maxLength="100"
-                    placeholder="주소를 검색하거나 직접 입력해 주세요."
+                    readOnly
+                    placeholder="주소를 검색하여 입력해 주세요."
                     value={address}
                     onChange={(e) => setAddress(e.target.value.trim())}
                   />
