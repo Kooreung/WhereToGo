@@ -31,6 +31,7 @@ export function LobbyMdList() {
       .get("/api/post/mdPickList")
       .then((res) => {
         setMdPost(res.data.post);
+        console.log(res.data);
       })
       .catch((err) => console.log(err))
       .finally(() => {});
@@ -138,9 +139,7 @@ export function LobbyMdList() {
 
                       <GridItem colSpan={1} rowSpan={3} alignContent={"center"}>
                         <Flex pl={3}>
-                          <Text display={{ base: "none", lg: "block" }} mr={1}>
-                            썸네일
-                          </Text>
+                          <Image src={post.banner} />
                         </Flex>
                       </GridItem>
                     </Grid>

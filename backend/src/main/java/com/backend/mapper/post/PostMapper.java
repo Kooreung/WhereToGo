@@ -355,6 +355,7 @@ public interface PostMapper {
                                            p.content,
                                            p.createdate,
                                            p.view,
+                                           p.banner,
                                            m.memberid,
                                            COUNT(DISTINCT c.commentid) commentCount,
                                            COUNT(DISTINCT l.memberid)  likeCount,
