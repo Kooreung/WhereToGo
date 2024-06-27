@@ -1,12 +1,5 @@
 // 회원 인기 게시글
-import {
-  Box,
-  ButtonGroup,
-  Divider,
-  Flex,
-  Heading,
-  Image,
-} from "@chakra-ui/react";
+import { Box, ButtonGroup, Divider, Flex, Image, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -30,7 +23,9 @@ export function PostListOfBest() {
   return (
     <Box w={{ base: "960px", sm: "720px", lg: "960px" }}>
       <Box mb={"2rem"}>
-        <Heading align={"center"}>회원 인기글</Heading>
+        <HeadingVariant variant={"xlarge"} align={"center"}>
+          회원 인기글
+        </HeadingVariant>
       </Box>
       <Flex justify={"center"} gap={3}>
         {/* 사이즈가 lg 이상일 때 */}
@@ -42,8 +37,8 @@ export function PostListOfBest() {
             borderRadius="lg"
             boxShadow={"md"}
             cursor="pointer"
-            w="300px"
-            h="400px"
+            w="280px"
+            h="390px"
             display={{ base: "block", lg: "block", sm: "none" }}
             sx={{
               transition: "transform 0.3s ease",
@@ -52,7 +47,7 @@ export function PostListOfBest() {
               },
             }}
           >
-            <Box w={"240px"} h={"330px"}>
+            <Box w={"240px"} h={"320px"}>
               <Box mt={"1rem"}>
                 <Image
                   w={"240px"}
@@ -73,36 +68,22 @@ export function PostListOfBest() {
               >
                 <HeadingVariant>{post.title}</HeadingVariant>
               </Box>
-              <Flex justifyContent={"space-between"} mt={"1.5rem"}>
+              <Flex justifyContent={"space-between"} mt={"1rem"}>
                 <Box>{post.nickName}</Box>
                 <Box>{post.createDate}</Box>
               </Flex>
             </Box>
             <Divider />
-            <ButtonGroup spacing="4" mt={"1rem"}>
+            <ButtonGroup spacing="4" mt={"1rem"} style={{ color: "#D8B7E5" }}>
               <Box>
-                <FontAwesomeIcon
-                  icon={faHeart}
-                  style={{ color: "#D8B7E5" }}
-                  size={"lg"}
-                />{" "}
-                {post.likeCount}
+                <FontAwesomeIcon icon={faHeart} size={"lg"} /> {post.likeCount}
               </Box>
               <Box>
-                <FontAwesomeIcon
-                  icon={faComment}
-                  style={{ color: "#33664F" }}
-                  size={"lg"}
-                />{" "}
+                <FontAwesomeIcon icon={faComment} size={"lg"} />{" "}
                 {post.commentCount}
               </Box>
               <Box>
-                <FontAwesomeIcon
-                  icon={faEye}
-                  size="lg"
-                  style={{ color: "#836091" }}
-                />{" "}
-                {post.view}
+                <FontAwesomeIcon icon={faEye} size="lg" /> {post.view}
               </Box>
             </ButtonGroup>
           </Box>
@@ -117,7 +98,7 @@ export function PostListOfBest() {
             boxShadow={"md"}
             cursor="pointer"
             w="220px"
-            h="320px"
+            h="310px"
             display={{ base: "none", lg: "none", sm: "block" }}
             sx={{
               transition: "transform 0.3s ease",
@@ -126,7 +107,7 @@ export function PostListOfBest() {
               },
             }}
           >
-            <Box w={"220px"} h={"240px"}>
+            <Box w={"220px"} h={"230px"}>
               <Box mt={"1rem"}>
                 <Image
                   w={"180px"}
@@ -151,40 +132,39 @@ export function PostListOfBest() {
             </Box>
             <Flex
               justifyContent={"space-between"}
-              ml="6"
-              mr={"6"}
+              mx={"1rem"}
               fontSize="xs"
+              mb={"8px"}
             >
               <Box>{post.nickName}</Box>
               <Box>{post.createDate}</Box>
             </Flex>
             <Divider />
-            <ButtonGroup spacing="4" mt={3}>
-              <Box>
-                <FontAwesomeIcon
-                  icon={faHeart}
-                  style={{ color: "#D8B7E5" }}
-                  size={"lg"}
-                />{" "}
-                {post.likeCount}
-              </Box>
-              <Box>
-                <FontAwesomeIcon
-                  icon={faComment}
-                  style={{ color: "#33664F" }}
-                  size={"lg"}
-                />{" "}
-                {post.commentCount}
-              </Box>
-              <Box>
-                <FontAwesomeIcon
-                  icon={faEye}
-                  size="lg"
-                  style={{ color: "#836091" }}
-                />{" "}
-                {post.view}
-              </Box>
-            </ButtonGroup>
+            <Flex
+              justify={"space-evenly"}
+              w={"65%"}
+              mt={"8px"}
+              style={{ color: "#D8B7E5" }}
+            >
+              <Flex>
+                <Text mr={"4px"}>
+                  <FontAwesomeIcon icon={faHeart} size="lg" />
+                </Text>
+                <Text>{post.likeCount}</Text>
+              </Flex>
+              <Flex>
+                <Text mr={"4px"}>
+                  <FontAwesomeIcon icon={faComment} size="lg" />
+                </Text>
+                <Text>{post.commentCount}</Text>
+              </Flex>
+              <Flex>
+                <Text mr={"4px"}>
+                  <FontAwesomeIcon icon={faEye} size="lg" />
+                </Text>
+                <Text>{post.view}</Text>
+              </Flex>
+            </Flex>
           </Box>
         ))}
       </Flex>

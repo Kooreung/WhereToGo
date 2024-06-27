@@ -2,10 +2,16 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   Avatar,
   Box,
-  Button, ButtonGroup, Card, CardBody, CardFooter, Center, Divider,
-  Flex,
+  Button,
+  ButtonGroup,
+  Card,
+  CardBody,
+  CardFooter,
+  Center,
+  Divider,
   FormControl,
-  FormLabel, Heading,
+  FormLabel,
+  Heading,
   Input,
   Modal,
   ModalBody,
@@ -13,9 +19,8 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Spinner, Stack,
-  Text,
-  Image,
+  Spinner,
+  Stack,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -24,14 +29,13 @@ import axios from "axios";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import Lobby from "../Lobby.jsx";
 import {
-  faCircleUser,
   faCrown,
   faHeart,
   faLocationDot,
   faPhone,
-  faSquareEnvelope
+  faSquareEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export function MemberInfo(props) {
   const [member, setMember] = useState({});
@@ -55,7 +59,7 @@ export function MemberInfo(props) {
         setMember(res.data.member);
         setFile(res.data.profile);
         setId(res.data.member.memberId);
-        console.log(res.data.profile.src);
+        console.log(res.data.profile);
       })
       .catch((err) => {
         if (err.response.status === 404) {
@@ -75,7 +79,6 @@ export function MemberInfo(props) {
         }
       });
   }, []);
-
 
   function handleCLickDelete() {
     console.log(id);
@@ -117,12 +120,12 @@ export function MemberInfo(props) {
     <Card w={420} mb={20} boxShadow={"2xl"}>
       {account.isAdmin() && (
         <Center mt={5}>
-          <FontAwesomeIcon size={"2xl"} icon={faCrown} style={{color: "#FFD43B",}}/>
+          <FontAwesomeIcon size={"2xl"} icon={faCrown} style={{color: "#FFD43B"}}/>
         </Center>
       )}
       {account.isAdmin() || (
         <Center mt={5}>
-          <FontAwesomeIcon size={"2xl"} icon={faCrown} style={{color: "#D8B7E5",}}/>
+          <FontAwesomeIcon size={"2xl"} icon={faCrown} style={{color: "#D8B7E5"}}/>
         </Center>
       )}
       <CardBody>
@@ -138,41 +141,45 @@ export function MemberInfo(props) {
             />
           </Center>
           <Button
-            style={{display: "none"}}
+            style={{ display: "none" }}
             onClick={() => navigate(`/member/edit`)}
-          >
-          </Button>
+          ></Button>
         </label>
-        <Stack mt='6' spacing='3'>
+        <Stack mt="6" spacing="3">
           <Center>
             <Heading size='md' mb={7}>{member.nickName}</Heading>
           </Center>
-          <Box mb={2}><FontAwesomeIcon icon={faSquareEnvelope} style={{color: "#D8B7E5",}}/> {member.email}</Box>
-          <Box mb={2}><FontAwesomeIcon icon={faLocationDot} style={{color: "#D8B7E5",}}/> {member.address}</Box>
-          <Box mb={2}><FontAwesomeIcon icon={faPhone} style={{color: "#D8B7E5",}}/> {member.phoneNumber}</Box>
+          <Box mb={2}><FontAwesomeIcon icon={faSquareEnvelope} style={{color: "#D8B7E5"}}/> {member.email}</Box>
+          <Box mb={2}><FontAwesomeIcon icon={faLocationDot} style={{color: "#D8B7E5"}}/> {member.address}</Box>
+          <Box mb={2}><FontAwesomeIcon icon={faPhone} style={{color: "#D8B7E5"}}/> {member.phoneNumber}</Box>
         </Stack>
       </CardBody>
       <Divider/>
       <CardFooter display="flex" justifyContent="space-between">
-        <Box style={{display: 'flex', alignItems: 'center'}}>
+        <Box style={{ display: "flex", alignItems: "center" }}>
           <FontAwesomeIcon
             icon={faHeart}
             onClick={() => navigate("/postLike/list")}
             cursor="pointer"
             size="lg"
-            style={{color: "#D8B7E5", marginRight: '8px'}}
+            style={{ color: "#D8B7E5", marginRight: "8px" }}
           />
           Like
         </Box>
-        <ButtonGroup spacing='2'>
-          <Button size={"sm"} variant='solid' colorScheme='blue' onClick={() => navigate(`/member/edit`)}>
+        <ButtonGroup spacing="2">
+          <Button
+            size={"sm"}
+            variant="solid"
+            colorScheme="blue"
+            onClick={() => navigate(`/member/edit`)}
+          >
             수정
           </Button>
           <Button size={"sm"} variant='solid' colorScheme='red' onClick={onOpen}>
             탈퇴
           </Button>
           <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay/>
+            <ModalOverlay />
             <ModalContent>
               <ModalHeader>탈퇴 확인</ModalHeader>
               <ModalBody>
