@@ -36,7 +36,6 @@ import {
 import { faHeart as fullHeart } from "@fortawesome/free-regular-svg-icons";
 import MapView from "../../component/Map/MapView.jsx";
 import defaultImage from "../../resource/img/unknownImage.png";
-import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 
 export function PostView() {
   const { postId } = useParams();
@@ -53,11 +52,13 @@ export function PostView() {
   const [positionX, setPositionX] = useState(0);
   const [authType, setAuthType] = useState("");
   const toast = useToast();
+
   const {
     isOpen: isModalOpenOfDelete,
     onOpen: onModalOpenOfDelete,
     onClose: onModalCloseOfDelete,
   } = useDisclosure();
+
 
   useEffect(() => {
     axios
@@ -147,7 +148,7 @@ export function PostView() {
   }
 
   return (
-    <Box>
+    <Box w={{ base: "720px", lg: "1080px" }}>
       <Heading pl={10}>{post.title}</Heading>
       <Divider />
     <Flex direction="column" align="center">
@@ -156,21 +157,21 @@ export function PostView() {
           w={{ base: "720px", lg: "1080px" }}
           h={"px"}
           my={"32px"}
-          templateColumns={"repeat(4,1fr)"}
+          templateColumns={"repeat(5,1fr)"}
           templateRows={"1fr 1fr"}
         >
+
+          <GridItem rowSpan={2} colSpan={1}>
+
+          </GridItem>
+
+          <GridItem colSpan={4}>
             <Flex pl={10}>
               <Text>{post.nickName}</Text>
             </Flex>
-          <GridItem
-            rowSpan={1}
-            colSpan={3}
-            alignContent={"center"}
-            overflow={"hidden"}
-            textOverflow={"ellipsis"}
-            whiteSpace={"nowrap"}
-          >
           </GridItem>
+
+          <GridItem colSpan={2}>
             <Flex pl={10}>
               <Text display={{ base: "none", lg: "block" }} mr={1}>
                 <FontAwesomeIcon
@@ -180,10 +181,7 @@ export function PostView() {
                 />
               </Text>
               <Text fontSize="sm">{like.count}</Text>
-            </Flex>
-
-            <Flex pl={3}>
-              <Text display={{ base: "none", lg: "block" }} mr={1}>
+              <Text display={{ base: "none", lg: "block" }} mr={1} ml={2}>
                 <FontAwesomeIcon
                   icon={faEye}
                   size="sm"
@@ -192,24 +190,9 @@ export function PostView() {
               </Text>
               <Text fontSize="sm">{post.view}</Text>
             </Flex>
-
-          <GridItem
-            rowSpan={1}
-            colSpan={1}
-            alignContent={"center"}
-            overflow={"hidden"}
-            textOverflow={"ellipsis"}
-            whiteSpace={"nowrap"}
-          >
           </GridItem>
-          <GridItem
-            rowSpan={1}
-            colSpan={1}
-            alignContent={"center"}
-            overflow={"hidden"}
-            textOverflow={"ellipsis"}
-            whiteSpace={"nowrap"}
-          >
+
+          <GridItem colSpan={2}>
             <Flex pl={3}>
               <Text display={{ base: "none", lg: "block" }} mr={1}>
                 작성일자 <FontAwesomeIcon icon={faCaretRight} />{" "}
@@ -217,6 +200,8 @@ export function PostView() {
               <Text>{post.createDate}</Text>
             </Flex>
           </GridItem>
+
+
         </Grid>
 
         <Box w={"576px"} h={"360px"} bg={"lightgray"} my={"32px"} mt={"100px"}>
