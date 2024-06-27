@@ -331,6 +331,12 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
     );
   }
 
+  function handleSearchKeyDown(e) {
+    if (e.key === "Enter") {
+      searchPlaces();
+    }
+  }
+
   return (
     <Box w={"720px"}>
       <Box>
@@ -340,6 +346,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="검색어를 입력하세요."
+            onKeyDown={handleSearchKeyDown}
           />
           <Button onClick={searchPlaces}>검색</Button>
         </Flex>

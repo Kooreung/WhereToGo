@@ -42,6 +42,14 @@ function CommentEdit({ comment, isTransition, setIsEditing, setIsTransition }) {
       });
   }
 
+  function handleSubmitKeyDown(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      e.stopPropagation();
+      onOpen();
+    }
+  }
+
   return (
     <Box>
       Comment수정
@@ -49,6 +57,7 @@ function CommentEdit({ comment, isTransition, setIsEditing, setIsTransition }) {
         <Textarea
           value={reWriteComment}
           onChange={(e) => setReWriteComment(e.target.value)}
+          onKeyDown={handleSubmitKeyDown}
         />
       </Box>
       <Box>

@@ -202,7 +202,7 @@ export function AdminPage() {
         [postId]: false, // 삭제된 포스트의 스위치 상태를 false로 설정합니다.
       }));
     } catch (error) {
-      console.error("Error deleting mdPick", error);
+      console.error("ㅎError deleting mdPick", error);
       // 오류 처리 로직을 추가합니다.
     }
   };
@@ -377,6 +377,12 @@ export function AdminPage() {
     );
   }
 
+  function handleSearchKeyDown(e) {
+    if (e.key === "Enter") {
+      navigate(`/memberList/?type=${searchType}&keyword=${searchKeyword}`);
+    }
+  }
+
   return (
     <Box>
       <Tabs variant="enclosed">
@@ -435,6 +441,7 @@ export function AdminPage() {
                   <Input
                     onChange={(e) => setSearchKeyword(e.target.value)}
                     placeholder="검색어"
+                    onKeyDown={handleSearchKeyDown}
                   />
                 </Box>
                 <Box>

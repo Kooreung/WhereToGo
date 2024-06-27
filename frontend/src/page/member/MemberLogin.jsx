@@ -17,8 +17,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import Lobby from "../Lobby.jsx";
-import { getInputStyles } from '/src/css/styles.js';
-
+import { getInputStyles } from "/src/css/styles.js";
 
 export function MemberLogin() {
   const [email, setEmail] = useState("");
@@ -63,6 +62,12 @@ export function MemberLogin() {
     );
   }
 
+  function handleSubmitKeyDown(e) {
+    if (e.key === "Enter") {
+      handleLogin();
+    }
+  }
+
   return (
     <Center>
       <Box w={500}>
@@ -73,13 +78,16 @@ export function MemberLogin() {
           <Box>
             <FormControl>
               <FormLabel>이메일</FormLabel>
-              <Input style={inputStyles} onChange={(e) => setEmail(e.target.value)} />
+              <Input
+                style={inputStyles}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </FormControl>
           </Box>
           <Box>
             <FormControl>
               <FormLabel mt={6}>비밀번호</FormLabel>
-              <InputGroup>
+              <InputGroup onKeyDown={handleSubmitKeyDown}>
                 <Input
                   style={inputStyles}
                   type={showAndPassword ? "text" : "password"}
