@@ -1,12 +1,5 @@
 // 회원 인기 게시글
-import {
-  Box,
-  ButtonGroup,
-  Divider,
-  Flex,
-  Heading,
-  Image,
-} from "@chakra-ui/react";
+import { Box, ButtonGroup, Divider, Flex, Image } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -30,7 +23,9 @@ export function PostListOfBest() {
   return (
     <Box w={{ base: "960px", sm: "720px", lg: "960px" }}>
       <Box mb={"2rem"}>
-        <Heading align={"center"}>회원 인기글</Heading>
+        <HeadingVariant variant={"xlarge"} align={"center"}>
+          회원 인기글
+        </HeadingVariant>
       </Box>
       <Flex justify={"center"} gap={3}>
         {/* 사이즈가 lg 이상일 때 */}

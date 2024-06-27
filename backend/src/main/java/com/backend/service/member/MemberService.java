@@ -43,7 +43,6 @@ public class MemberService {
     private final PostMapper postMapper;
     private final PostService postService;
     private final CommentMapper commentMapper;
-    private final NickNameCreator NickNameCreator;
     private final NickNameCreator nickNameCreator;
 
 

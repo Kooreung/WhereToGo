@@ -5,12 +5,10 @@ import {
   Center,
   Divider,
   Flex,
-  Grid,
-  GridItem,
-  IconButton,
   Image,
   Input,
   Select,
+  Spacer,
   StackDivider,
   Text,
   useColorModeValue,
@@ -23,14 +21,18 @@ import {
   faAngleRight,
   faAnglesLeft,
   faAnglesRight,
-  faCaretRight,
+  faEye,
+  faHeart,
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import { SearchIcon } from "@chakra-ui/icons";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import axios from "axios";
 import { PostListOfBest } from "./PostListOfBest.jsx";
-import ContentParser from "../../component/ContentParser.jsx";
 import defaultImage from "../../resource/img/unknownImage.png";
+import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
+import ContentParser from "../../component/ContentParser.jsx";
+import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
+import { faComment } from "@fortawesome/free-regular-svg-icons";
 
 function PostList() {
   const navigate = useNavigate();
@@ -90,150 +92,125 @@ function PostList() {
       <PostListOfBest />
       <Divider
         border={"1px solid lightGray"}
-        w={{ base: "720px", lg: "960px" }}
+        w={{ base: "960px", lg: "960px", sm: "660px" }}
         my={"2rem"}
       ></Divider>
+      <Flex mx={"1rem"}>
+        <HeadingVariant variant={"large"} align={"start"}>
+          회원 게시글
+        </HeadingVariant>
+        <Spacer />
+        {account.isLoggedIn() && (
+          <Button onClick={() => navigate(`/post/write`)}>글쓰기</Button>
+        )}
+      </Flex>
       {/* 회원 게시글 페이지 */}
       {postList.length === 0 && <Center>조회 결과가 없습니다.</Center>}
       {postList.length > 0 && (
         <VStack
-          divider={<StackDivider borderColor={"lightgray"} />}
+          divider={<StackDivider />}
           my={"2rem"}
-          spacing={"2rem"}
-          w={{ base: "720px", lg: "960px" }}
+          spacing={{ base: "2rem", lg: "2rem", sm: "1rem" }}
+          w={{ base: "720px", lg: "720px", sm: "660px" }}
         >
           {postList.map((post) => (
-            <Box
+            <Flex
               key={post.postId}
               onClick={() => navigate(`/post/${post.postId}`)}
+              w={{ base: "720px", lg: "720px", sm: "660px" }}
+              h={{ base: "240px", lg: "240px", sm: "200px" }}
               cursor={"pointer"}
-              w={"720px"}
+              py={"1rem"}
+              px={"1rem"}
+              sx={{
+                "&:hover": {
+                  backgroundColor: "beige",
+                },
+              }}
             >
-              <Box>
-                <Grid
-                  w={"720px"}
-                  h={"224px"}
-                  templateColumns={"repeat(9, 1fr)"}
-                  templateRows={"1fr 1fr 5fr"}
-                  cursor={"pointer"}
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: logoColor,
-                    },
+              <Flex
+                direction={"column"}
+                overflow={"hidden"}
+                textOverflow={"ellipsis"}
+                whiteSpace={"nowrap"}
+                w={"75%"}
+                h={"100%"}
+                pr={"1rem"}
+              >
+                <Flex mb={"8px"}>
+                  <HeadingVariant overflow={"hidden"} textOverflow={"ellipsis"}>
+                    {post.title}
+                  </HeadingVariant>
+                </Flex>
+                <Flex
+                  textAlign={"start"}
+                  overflow={"hidden"}
+                  textOverflow={"ellipsis"}
+                  display={"-webkit-box"}
+                  css={{
+                    WebkitLineClamp: "3",
+                    WebkitBoxOrient: "vertical",
+                    wordBreak: "break-word",
+                    whiteSpace: "pre-wrap",
                   }}
                 >
-                  <GridItem
-                    colSpan={9}
-                    rowSpan={1}
-                    alignContent={"center"}
-                    whiteSpace={"nowrap"}
-                    borderY={"1px solid lightgray"}
-                  >
-                    <Flex pl={3}>
-                      <Text
-                        display={{ base: "none", lg: "block" }}
-                        mr={1}
-                        fontSize={"xl"}
-                        fontWeight={"bold"}
-                      >
-                        제목 <FontAwesomeIcon icon={faCaretRight} />
-                      </Text>
-                      <Text
-                        overflow={"hidden"}
-                        textOverflow={"ellipsis"}
-                        fontSize={"xl"}
-                        fontWeight={"bold"}
-                      >
-                        {post.title}
-                      </Text>
-                    </Flex>
-                  </GridItem>
-                  <GridItem colSpan={3} rowSpan={1} alignContent={"center"}>
-                    <Flex pl={3}>
-                      <Text display={{ base: "none", lg: "block" }} mr={1}>
-                        작성자 <FontAwesomeIcon icon={faCaretRight} />
-                      </Text>
-                      <Text overflow={"hidden"} textOverflow={"ellipsis"}>
-                        {post.nickName}
-                      </Text>
-                    </Flex>
-                  </GridItem>
-                  <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
-                    <Flex pl={3}>
-                      <Text display={{ base: "none", lg: "block" }} mr={1}>
-                        조회수 <FontAwesomeIcon icon={faCaretRight} />
-                      </Text>
-                      <Text>{post.view}</Text>
-                    </Flex>
-                  </GridItem>
-                  <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
-                    <Flex pl={3}>
-                      <Text display={{ base: "none", lg: "block" }} mr={1}>
-                        좋아요 <FontAwesomeIcon icon={faCaretRight} />
-                      </Text>
-                      <Text>{post.likeCount}</Text>
-                    </Flex>
-                  </GridItem>
-                  <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
-                    <Flex pl={3}>
-                      <Text display={{ base: "none", lg: "block" }} mr={1}>
-                        댓글 <FontAwesomeIcon icon={faCaretRight} />
-                      </Text>
-                      <Text>{post.commentCount}</Text>
-                    </Flex>
-                  </GridItem>
-                  <GridItem
-                    colSpan={2}
-                    rowSpan={1}
-                    alignContent={"center"}
-                    borderY={"1px solid lightgray"}
-                  >
-                    <Box w={"100%"} h={"100%"}>
-                      <Image
-                        src={post.picurl || defaultImage}
-                        objectFit={"cover"}
-                        w={"100%"}
-                        h={"100%"}
-                      />
-                    </Box>
-                  </GridItem>
-                  <GridItem
-                    colSpan={7}
-                    rowSpan={1}
-                    alignContent={"center"}
-                    overflow={"hidden"}
-                    textOverflow={"ellipsis"}
-                    whiteSpace={"nowrap"}
-                    borderY={"1px solid lightgray"}
-                  >
-                    <Box pl={3}>
-                      <Flex>
-                        <Text display={{ base: "none", lg: "block" }} mr={1}>
-                          내용 <FontAwesomeIcon icon={faCaretRight} />{" "}
-                        </Text>
-                        <Box
-                          textAlign={"start"}
-                          overflow={"hidden"}
-                          textOverflow={"ellipsis"}
-                          display={"-webkit-box"}
-                          css={{
-                            WebkitLineClamp: "4",
-                            WebkitBoxOrient: "vertical",
-                            wordBreak: "break-word",
-                            whiteSpace: "pre-wrap",
-                          }}
-                        >
-                          <ContentParser content={post.content} />
-                        </Box>
-                      </Flex>
-                      <Text textAlign={"left"} mt={"1rem"} color={"lightgray"}>
-                        {post.createDate}
-                      </Text>
-                    </Box>
-                  </GridItem>
-                </Grid>
-              </Box>
-            </Box>
+                  <ContentParser content={post.content} />
+                </Flex>
+                <Spacer />
+                <Flex>
+                  <Flex>
+                    <Image src={post.profileName} />
+                    <Text overflow={"hidden"} textOverflow={"ellipsis"}>
+                      {post.nickName}
+                    </Text>
+                  </Flex>
+                  <Flex pl={"1rem"} color={"lightgray"}>
+                    <Text display={{ base: "none", lg: "block" }} mr={1}>
+                      조회
+                    </Text>
+                    <Text display={{ base: "block", lg: "none" }} mr={1}>
+                      <FontAwesomeIcon icon={faEye} size={"lg"} />
+                    </Text>
+                    <Text>{post.view}</Text>
+                  </Flex>
+                  <Flex pl={"1rem"} color={"lightgray"}>
+                    <Text display={{ base: "none", lg: "block" }} mr={1}>
+                      좋아요
+                    </Text>
+                    <Text display={{ base: "block", lg: "none" }} mr={1}>
+                      <FontAwesomeIcon icon={faHeart} size={"lg"} />
+                    </Text>
+                    <Text>{post.likeCount}</Text>
+                  </Flex>
+                  <Flex pl={"1rem"} color={"lightgray"}>
+                    <Text display={{ base: "none", lg: "block" }} mr={1}>
+                      댓글
+                    </Text>
+                    <Text display={{ base: "block", lg: "none" }} mr={1}>
+                      <FontAwesomeIcon icon={faComment} size={"lg"} />
+                    </Text>
+                    <Text>{post.commentCount}</Text>
+                  </Flex>
+                  <Flex pl={"1rem"} color={"lightgray"}>
+                    {post.createDate}
+                  </Flex>
+                </Flex>
+              </Flex>
+              <Spacer />
+              <Flex
+                w={{ base: "200px", lg: "200px", sm: "160px" }}
+                h={"100%"}
+                align={"center"}
+              >
+                <Image
+                  src={post.picurl || defaultImage}
+                  w={{ base: "200px", lg: "200px", sm: "160px" }}
+                  h={{ base: "200px", lg: "200px", sm: "160px" }}
+                  objectFit={"cover"}
+                  borderRadius={"1rem"}
+                />
+              </Flex>
+            </Flex>
           ))}
         </VStack>
       )}
@@ -245,7 +222,6 @@ function PostList() {
       {/* 게시글 검색 */}
       <Box my={"2rem"}>
         <Flex align={"center"} justify={"center"} gap={10}>
-          <Box w={"80px"}></Box>
           <Center>
             <Box>
               <Select
@@ -272,18 +248,11 @@ function PostList() {
               />
             </Box>
             <Box>
-              <IconButton
-                onClick={handleSearchClick}
-                icon={<SearchIcon />}
-                aria-label={"Search database"}
-              />
+              <ButtonCircle onClick={handleSearchClick}>
+                <FontAwesomeIcon icon={faMagnifyingGlass} fontSize="small" />
+              </ButtonCircle>
             </Box>
           </Center>
-          {account.isLoggedIn() ? (
-            <Button onClick={() => navigate(`/post/write`)}>글쓰기</Button>
-          ) : (
-            <Box w={"80px"}></Box>
-          )}
         </Flex>
       </Box>
 

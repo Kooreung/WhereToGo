@@ -32,6 +32,7 @@ import ContentParser from "../../component/ContentParser.jsx";
 import defaultImage from "../../resource/img/unknownImage.png";
 import { faComment } from "@fortawesome/free-regular-svg-icons";
 import axios from "axios";
+import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 
 export function PostMdList(props) {
@@ -356,52 +357,52 @@ export function PostMdList(props) {
   return (
     <Box align="center" justify="center">
       <Box mb={"2rem"}>
-        <Heading align={"center"}>
+        <HeadingVariant variant={"xlarge"} align={"center"} mb={"1rem"}>
           MD'S PICK
-          <Center>
-            <Box>
-              <Select
-                value={searchType}
-                onChange={(e) => {
-                  setSearchType(e.target.value);
-                }}
+        </HeadingVariant>
+        <Center>
+          <Box>
+            <Select
+              value={searchType}
+              onChange={(e) => {
+                setSearchType(e.target.value);
+              }}
+            >
+              <option value={"all"}>전체</option>
+              <option value={"titleAndContent"}>제목+내용</option>
+              <option value={"nickName"}>닉네임</option>
+              <option value={"placeName"}>장소명</option>
+              <option value={"address"}>지역명</option>
+            </Select>
+          </Box>
+          <Box ml={1}>
+            <Input
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              placeholder="검색어"
+            />
+          </Box>
+          <Box ml={2}>
+            <ButtonCircle onClick={handleSearchClick}>
+              <FontAwesomeIcon icon={faMagnifyingGlass} fontSize="small" />
+            </ButtonCircle>
+          </Box>
+          <Box ml={1}>
+            {account.isAdmin() && (
+              <ButtonCircle
+                onClick={() => navigate(`/post/write`)}
+                fontSize="small"
               >
-                <option value={"all"}>전체</option>
-                <option value={"titleAndContent"}>제목+내용</option>
-                <option value={"nickName"}>닉네임</option>
-                <option value={"placeName"}>장소명</option>
-                <option value={"address"}>지역명</option>
-              </Select>
-            </Box>
-            <Box ml={1}>
-              <Input
-                value={searchKeyword}
-                onChange={(e) => setSearchKeyword(e.target.value)}
-                placeholder="검색어"
-              />
-            </Box>
-            <Box ml={2}>
-              <ButtonCircle onClick={handleSearchClick}>
-                <FontAwesomeIcon icon={faMagnifyingGlass} fontSize="small" />
+                작성
               </ButtonCircle>
-            </Box>
-            <Box ml={1}>
-              {account.isAdmin() && (
-                <ButtonCircle
-                  onClick={() => navigate(`/post/write`)}
-                  fontSize="small"
-                >
-                  작성
-                </ButtonCircle>
-              )}
-            </Box>
-            <Box ml={1}>
-              <ButtonCircle onClick={handleListButtonClick}>
-                <FontAwesomeIcon icon={faBars} fontSize="small" />
-              </ButtonCircle>
-            </Box>
-          </Center>
-        </Heading>
+            )}
+          </Box>
+          <Box ml={1}>
+            <ButtonCircle onClick={handleListButtonClick}>
+              <FontAwesomeIcon icon={faBars} fontSize="small" />
+            </ButtonCircle>
+          </Box>
+        </Center>
       </Box>
       {/*검색기능 */}
       <Divider
