@@ -17,8 +17,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import Lobby from "../Lobby.jsx";
-import { getInputStyles } from '/src/css/styles.js';
-
+import { getInputStyles } from "/src/css/styles.js";
+import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 
 export function MemberLogin() {
   const [email, setEmail] = useState("");
@@ -67,13 +67,16 @@ export function MemberLogin() {
     <Center>
       <Box w={500}>
         <Center mb={10}>
-            <Heading>어디가지</Heading>
+          <HeadingVariant variant={"large"}>로그인</HeadingVariant>
         </Center>
         <Box>
           <Box>
             <FormControl>
               <FormLabel>이메일</FormLabel>
-              <Input style={inputStyles} onChange={(e) => setEmail(e.target.value)} />
+              <Input
+                style={inputStyles}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </FormControl>
           </Box>
           <Box>

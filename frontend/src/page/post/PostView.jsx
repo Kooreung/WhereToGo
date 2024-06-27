@@ -50,6 +50,7 @@ export function PostView() {
   const navigate = useNavigate();
   const dataRef = useRef(null);
   const [positionX, setPositionX] = useState(0);
+  const [authType, setAuthType] = useState("");
   const toast = useToast();
   const {
     isOpen: isModalOpenOfDelete,
@@ -64,6 +65,7 @@ export function PostView() {
         setPost(res.data.post);
         setLike(res.data.like);
         setComment({ count: res.data.commentCount });
+        setAuthType(res.data.author);
       })
       .catch((err) => {
         navigate("/post/list");
@@ -384,12 +386,21 @@ export function PostView() {
         )}
 
         {/* 목록 */}
-        <Button onClick={() => navigate("/post/list")}>
-          <FontAwesomeIcon icon={faList} />
-          <Text display={{ base: "none", lg: "block" }} ml={1}>
-            목록
-          </Text>
-        </Button>
+        {authType === "user" ? (
+          <Button onClick={() => navigate("/post/list")}>
+            <FontAwesomeIcon icon={faList} />
+            <Text display={{ base: "none", lg: "block" }} ml={1}>
+              목록
+            </Text>
+          </Button>
+        ) : authType === "admin" ? (
+          <Button onClick={() => navigate("/post/mdList")}>
+            <FontAwesomeIcon icon={faList} />
+            <Text display={{ base: "none", lg: "block" }} ml={1}>
+              목록
+            </Text>
+          </Button>
+        ) : null}
       </Flex>
       {/*댓글*/}
       <CommentComponent

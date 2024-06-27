@@ -20,5 +20,5 @@ public class Post {
 
     private String mdpick;
     private String picurl;
-    private String postType;
+    private String banner;
 }
