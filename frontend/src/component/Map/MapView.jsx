@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Badge, Box, Text, UnorderedList } from "@chakra-ui/react";
+import { Box, Text, UnorderedList } from "@chakra-ui/react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { renderToString } from "react-dom/server";
@@ -121,7 +121,7 @@ const KakaoMapSearch = () => {
           map: map,
           path: path,
           strokeWeight: 3,
-          strokeColor: "#FF0000",
+          strokeColor: "#E6B143",
           strokeOpacity: 1,
           strokeStyle: "shortdash",
         });
@@ -199,10 +199,11 @@ const KakaoMapSearch = () => {
       >
         <UnorderedList>
           <Box>
-            <Text as="span" style={{ fontWeight: "bold" }}>
-              거리:{" "}
-            </Text>
-            <Badge style={{ color: "orange" }}>{distance}</Badge> m
+            <Text as="span">거리: </Text>
+            <Text as="span" style={{ color: "#836091", fontWeight: "bold" }}>
+              {distance}
+            </Text>{" "}
+            <Text as="span">m </Text>
           </Box>
         </UnorderedList>
       </Box>
@@ -218,7 +219,7 @@ const KakaoMapSearch = () => {
           backgroundColor: "white",
           paddingLeft: "8px",
           paddingRight: "8px",
-          boxShadow: "0 0 0 4px white, 0 0 0 8px orange",
+          boxShadow: "0 0 0 4px #836091, 0 0 0 8px #D8B7E5",
         }}
       >
         {index + 1}
@@ -250,24 +251,47 @@ const KakaoMapSearch = () => {
       >
         <UnorderedList>
           <Box>
-            <Text as="span" style={{ fontWeight: "bold" }}>
-              총거리:{" "}
+            <Text as="span">총거리: </Text>
+            <Text as="span" style={{ color: "#836091", fontWeight: "bold" }}>
+              {distance}
             </Text>
-            <Badge style={{ color: "orange" }}>{distance}</Badge> m
+            <Text as="span"> m</Text>
           </Box>
           <Box>
-            <Text as="span" style={{ fontWeight: "bold" }}>
-              도보:{" "}
+            <Text as="span">도보: </Text>
+            {walkHour > 0 && (
+              <>
+                <Text
+                  as="span"
+                  style={{ color: "#836091", fontWeight: "bold" }}
+                >
+                  {walkHour}
+                </Text>
+                <Text as="span"> 시간 </Text>
+              </>
+            )}
+            <Text as="span" style={{ color: "#836091", fontWeight: "bold" }}>
+              {walkMin}
             </Text>
-            {walkHour > 0 && <Badge>{walkHour}시간 </Badge>}
-            <Badge style={{ color: "orange" }}>{walkMin}</Badge> 분
+            <Text as="span"> 분</Text>
           </Box>
           <Box>
-            <Text as="span" style={{ fontWeight: "bold" }}>
-              자전거:{" "}
+            <Text as="span">자전거: </Text>
+            {bicycleHour > 0 && (
+              <>
+                <Text
+                  as="span"
+                  style={{ color: "#836091", fontWeight: "bold" }}
+                >
+                  {bicycleHour}
+                </Text>
+                <Text as="span"> 시간 </Text>
+              </>
+            )}
+            <Text as="span" style={{ color: "#836091", fontWeight: "bold" }}>
+              {bicycleMin}
             </Text>
-            {bicycleHour > 0 && <Badge>{bicycleHour}시간 </Badge>}
-            <Badge style={{ color: "orange" }}>{bicycleMin}</Badge> 분
+            <Text as="span"> 분</Text>
           </Box>
         </UnorderedList>
       </Box>

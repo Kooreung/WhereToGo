@@ -157,8 +157,8 @@ function PostList() {
                   <ContentParser content={post.content} />
                 </Flex>
                 <Spacer />
-                <Flex align={"center"}>
-                  <Flex align={"center"}>
+                <Flex h={"32px"} gap={"1rem"} alignItems={"center"}>
+                  <Flex>
                     <Box
                       w={"24px"}
                       h={"24px"}
@@ -168,11 +168,11 @@ function PostList() {
                     >
                       <Image src={post.profileName} borderRadius={"100%"} />
                     </Box>
-                    <Text overflow={"hidden"} textOverflow={"ellipsis"}>
+                    <Box overflow={"hidden"} textOverflow={"ellipsis"}>
                       {post.nickName}
-                    </Text>
+                    </Box>
                   </Flex>
-                  <Flex pl={"1rem"} color={"lightgray"}>
+                  <Flex color={"lightgray"}>
                     <Text display={{ base: "none", lg: "block" }} mr={1}>
                       조회
                     </Text>
@@ -181,7 +181,7 @@ function PostList() {
                     </Text>
                     <Text>{post.view}</Text>
                   </Flex>
-                  <Flex pl={"1rem"} color={"lightgray"}>
+                  <Flex color={"lightgray"}>
                     <Text display={{ base: "none", lg: "block" }} mr={1}>
                       좋아요
                     </Text>
@@ -190,7 +190,7 @@ function PostList() {
                     </Text>
                     <Text>{post.likeCount}</Text>
                   </Flex>
-                  <Flex pl={"1rem"} color={"lightgray"}>
+                  <Flex color={"lightgray"}>
                     <Text display={{ base: "none", lg: "block" }} mr={1}>
                       댓글
                     </Text>
@@ -199,9 +199,7 @@ function PostList() {
                     </Text>
                     <Text>{post.commentCount}</Text>
                   </Flex>
-                  <Flex pl={"1rem"} color={"lightgray"}>
-                    {post.createDate}
-                  </Flex>
+                  <Flex color={"lightgray"}>{post.createDate}</Flex>
                 </Flex>
               </Flex>
               <Spacer />
