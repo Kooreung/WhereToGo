@@ -14,7 +14,7 @@ public interface CommentMapper {
     void insert(Comment comment);
 
     @Select("""
-            SELECT c.commentid,c.comment,m.memberid,m.nickName
+            SELECT c.commentid,c.comment,m.memberid,m.nickName,c.createdate
             FROM comment c JOIN member m ON c.memberid = m.memberid
             WHERE postid = #{postId}
             """)

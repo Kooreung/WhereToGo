@@ -19,7 +19,7 @@ export const customTheme = extendTheme({
         fontFamily: "Pretendard-Regular, sans-serif",
         fontWeight: 400,
         _dark: {
-          textColor: "pink",
+          textColor: "#D8B7E5",
         },
       },
     },
@@ -27,11 +27,11 @@ export const customTheme = extendTheme({
   components: {
     Heading: {
       baseStyle: {
-        color: "blackAlpha.900",
+        color: "#33664F",
         fontFamily: "Pretendard-Bold, sans-serif",
         fontWeight: 800,
         _dark: {
-          color: "pink",
+          color: "#D8B7E5",
         },
       },
     },
