@@ -73,6 +73,13 @@ export function PostMdList(props) {
   function handleSearchClick() {
     navigate(`/post/mdList?type=${searchType}&keyword=${searchKeyword}`);
   }
+
+  function handleSearchKeyDown(e) {
+    if (e.key === "Enter") {
+      navigate(`/post/mdList?type=${searchType}&keyword=${searchKeyword}`);
+    }
+  }
+
   const handleListButtonClick = () => {
     setShowFirstScreen(!showFirstScreen); // 화면 전환
   };
@@ -378,6 +385,7 @@ export function PostMdList(props) {
                 value={searchKeyword}
                 onChange={(e) => setSearchKeyword(e.target.value)}
                 placeholder="검색어"
+                onKeyDown={handleSearchKeyDown}
               />
             </Box>
             <Box ml={2}>
