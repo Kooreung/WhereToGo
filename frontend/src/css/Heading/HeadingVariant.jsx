@@ -70,7 +70,12 @@ function HeadingVariant({ variant = "medium", ...props }) {
 
   // 해당 컴포넌트의 설정 값
   return (
-    <Heading fontFamily={fontFamily} fontSize={fontSize} {...props}></Heading>
+    <Heading
+      fontFamily={fontFamily}
+      fontSize={fontSize}
+      color={"#33664F"}
+      {...props}
+    ></Heading>
   );
 }
 

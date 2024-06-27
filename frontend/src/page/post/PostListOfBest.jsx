@@ -1,19 +1,21 @@
 // 회원 인기 게시글
 import {
   Box,
-  Card,
+  ButtonGroup,
+  Divider,
   Flex,
   Heading,
   Image,
-  Spacer,
-  Text,
+  Stack,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleRight, faCaretRight } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import defaultImage from "../../resource/img/unknownImage.png";
+import ContentParser from "../../component/ContentParser.jsx";
+import { faComment } from "@fortawesome/free-regular-svg-icons";
 
 export function PostListOfBest() {
   const [postListOfBest, setPostListOfBest] = useState([]);
@@ -27,180 +29,198 @@ export function PostListOfBest() {
   }, []);
 
   return (
-    <Box w={{ base: "960px", sm: "720px", lg: "1080px" }}>
+    <Box w={{ base: "960px", sm: "720px", lg: "960px" }}>
       <Box mb={"2rem"}>
         <Heading align={"center"}>회원 인기글</Heading>
       </Box>
       <Flex justify={"center"} gap={3}>
         {/* 사이즈가 lg 이상일 때 */}
         {postListOfBest.map((post, index) => (
-          <Card
+          <Box
             key={index}
+            maxW="sm"
+            borderWidth="1px"
+            borderRadius="lg"
+            overflow="hidden"
+            w="280px"
+            h="380px"
+            m="1rem"
+            boxShadow={"md"}
+            direction={"row"}
             onClick={() => navigate(`/post/${post.postId}`)}
-            display={{ base: "none", lg: "block" }}
-            variant="outline"
             cursor="pointer"
-            p={"1rem"}
+            display={{ base: "block", lg: "block", sm: "none" }}
             sx={{
+              transition: "transform 0.3s ease",
               "&:hover": {
-                backgroundColor: "RGBA(0, 0, 0, 0.02)",
+                transform: "scale(1.05)",
               },
             }}
           >
-            <Flex w={"300px"} h={"160px"}>
-              <Box>
-                <Image
-                  src={post.picurl || defaultImage}
-                  objectFit={"cover"}
-                  w={"160px"}
-                  h={"160px"}
-                />
-              </Box>
-              <Flex direction={"column"} ml={"4px"}>
-                <Flex>
-                  <Text ml={1}>
-                    조회수 <FontAwesomeIcon icon={faAngleRight} />
-                  </Text>
-                  <Text ml={1}>{post.view}</Text>
-                </Flex>
-                <Flex>
-                  <Text ml={1}>
-                    좋아요 <FontAwesomeIcon icon={faAngleRight} />
-                  </Text>
-                  <Text ml={1}>{post.likeCount}</Text>
-                </Flex>
-                <Flex>
-                  <Text ml={1}>
-                    댓글 <FontAwesomeIcon icon={faAngleRight} />
-                  </Text>
-                  <Text ml={1}>{post.commentCount}</Text>
-                </Flex>
-                <Spacer />
-                <Flex color={"gray"}>
-                  <Box>
-                    <FontAwesomeIcon icon={faCaretRight} />
-                  </Box>
-                  <Text ml={1}>{post.createDate}</Text>
-                </Flex>
-              </Flex>
-            </Flex>
-            <Flex
-              textAlign={"start"}
+            <Box>
+              <Image
+                mt={3}
+                boxSize="230px"
+                objectFit={"cover"}
+                boxShadow={"md"}
+                src={post.picurl || defaultImage}
+                alt="Green double couch with wooden legs"
+                borderRadius="lg"
+              />
+            </Box>
+            <Box
+              colSpan={7}
+              rowSpan={1}
               alignContent={"center"}
-              direction={"column"}
-              w={"300px"}
-              h={"80px"}
-              fontSize={"14px"}
+              overflow={"hidden"}
+              textOverflow={"ellipsis"}
+              whiteSpace={"nowrap"}
+              mt={3}
             >
-              <Flex>
-                <Text
-                  fontSize={"16px"}
-                  overflow={"hidden"}
-                  textOverflow={"ellipsis"}
-                  display={"-webkit-box"}
-                  css={{
-                    WebkitLineClamp: "2",
-                    WebkitBoxOrient: "vertical",
-                    wordBreak: "break-word",
-                    whiteSpace: "pre-wrap",
-                  }}
-                >
+              <Stack
+                ml="6"
+                mr={"6"}
+                spacing="3"
+                textAlign={"start"}
+                noOfLines={2}
+              >
+                <Heading color="#33664F" fontSize="2xl">
                   {post.title}
-                </Text>
-              </Flex>
-              <Spacer />
-              <Flex justify={"space-between"}></Flex>
-              <Flex justify={"space-between"}>
-                <Flex>
-                  <Text ml={1}>
-                    작성자 <FontAwesomeIcon icon={faCaretRight} />
-                  </Text>
-                  <Text ml={1}>{post.nickName}</Text>
-                </Flex>
-              </Flex>
+                </Heading>
+                <ContentParser content={post.content}></ContentParser>
+              </Stack>
+            </Box>
+            <Flex
+              justifyContent={"space-between"}
+              ml="6"
+              mr={"6"}
+              fontSize="xs"
+            >
+              <Box>{post.nickName}</Box>
+              <Box>{post.createDate}</Box>
             </Flex>
-          </Card>
+            <Divider />
+            <ButtonGroup spacing="4" mt={3}>
+              <Box>
+                <FontAwesomeIcon
+                  icon={faHeart}
+                  style={{ color: "#D8B7E5" }}
+                  size={"lg"}
+                />{" "}
+                {post.likeCount}
+              </Box>
+              <Box>
+                <FontAwesomeIcon
+                  icon={faComment}
+                  style={{ color: "#33664F" }}
+                  size={"lg"}
+                />
+                {post.commentCount}
+              </Box>
+              <Box>
+                <FontAwesomeIcon
+                  icon={faEye}
+                  size="lg"
+                  style={{ color: "#836091" }}
+                />
+                {""}
+                {post.view}
+              </Box>
+            </ButtonGroup>
+          </Box>
         ))}
         {/* 사이즈가 lg 이하일 때 */}
         {postListOfBest.map((post, index) => (
-          <Flex
+          <Box
             key={index}
+            maxW="sm"
+            borderWidth="1px"
+            borderRadius="lg"
+            overflow="hidden"
+            w="280px"
+            h="380px"
+            m="1rem"
+            boxShadow={"md"}
             onClick={() => navigate(`/post/${post.postId}`)}
-            display={{ base: "flex", lg: "none" }}
-            w={"240px"}
-            h={"176px"}
-            flexWrap={"wrap"}
-            boxSizing={"content-box"}
-            cursor={"pointer"}
+            cursor="pointer"
+            display={{ base: "none", lg: "none", sm: "block" }}
             sx={{
+              transition: "transform 0.3s ease",
               "&:hover": {
-                backgroundColor: "gray.50",
+                transform: "scale(1.05)",
               },
             }}
           >
-            <Box alignContent={"center"} w={"120px"} h={"120px"}>
+            <Box>
               <Image
-                src={post.picurl || defaultImage}
+                mt={3}
+                boxSize="230px"
                 objectFit={"cover"}
-                w={"100%"}
-                h={"100%"}
+                boxShadow={"md"}
+                src={post.picurl || defaultImage}
+                alt="Green double couch with wooden legs"
+                borderRadius="lg"
               />
-              ,
             </Box>
             <Box
-              w={"120px"}
-              h={"120px"}
+              colSpan={7}
+              rowSpan={1}
               alignContent={"center"}
-              textAlign={"start"}
-              fontSize={"13px"}
+              overflow={"hidden"}
+              textOverflow={"ellipsis"}
+              whiteSpace={"nowrap"}
+              mt={3}
             >
-              <Flex>
-                <Text ml={1}>
-                  조회 <FontAwesomeIcon icon={faCaretRight} />
-                </Text>
-                <Text ml={1}>{post.view}</Text>
-              </Flex>
-              <Flex>
-                <Text ml={1}>
-                  좋아요 <FontAwesomeIcon icon={faCaretRight} />
-                </Text>
-                <Text ml={1}>{post.likeCount}</Text>
-              </Flex>
-              <Flex>
-                <Text ml={1}>
-                  댓글 <FontAwesomeIcon icon={faCaretRight} />
-                </Text>
-                <Text ml={1}>{post.commentCount}</Text>
-              </Flex>
-              <Flex>
-                <Text ml={1}>
-                  <FontAwesomeIcon icon={faCaretRight} />
-                </Text>
-                <Text ml={1}>{post.nickName}</Text>
-              </Flex>
-              <Flex color={"lightgray"}>
-                <Text ml={1}>
-                  <FontAwesomeIcon icon={faCaretRight} />
-                </Text>
-                <Text ml={1}>{post.createDate}</Text>
-              </Flex>
-            </Box>
-            <Flex>
-              <Text
-                overflow={"hidden"}
-                textOverflow={"ellipsis"}
-                display={"-webkit-box"}
-                css={{
-                  WebkitLineClamp: "2",
-                  WebkitBoxOrient: "vertical",
-                  wordBreak: "break-word",
-                  whiteSpace: "pre-wrap",
-                }}
+              <Stack
+                ml="6"
+                mr={"6"}
+                spacing="3"
+                textAlign={"start"}
+                noOfLines={2}
               >
-                {post.title}
-              </Text>
+                <Heading color="#33664F" fontSize="2xl">
+                  {post.title}
+                </Heading>
+              </Stack>
+            </Box>
+            <Flex
+              justifyContent={"space-between"}
+              ml="6"
+              mr={"6"}
+              fontSize="xs"
+            >
+              <Box>{post.nickName}</Box>
+              <Box>{post.createDate}</Box>
             </Flex>
-          </Flex>
+            <Divider />
+            <ButtonGroup spacing="4" mt={3}>
+              <Box>
+                <FontAwesomeIcon
+                  icon={faHeart}
+                  style={{ color: "#D8B7E5" }}
+                  size={"lg"}
+                />{" "}
+                {post.likeCount}
+              </Box>
+              <Box>
+                <FontAwesomeIcon
+                  icon={faComment}
+                  style={{ color: "#33664F" }}
+                  size={"lg"}
+                />
+                {post.commentCount}
+              </Box>
+              <Box>
+                <FontAwesomeIcon
+                  icon={faEye}
+                  size="lg"
+                  style={{ color: "#836091" }}
+                />
+                {""}
+                {post.view}
+              </Box>
+            </ButtonGroup>
+          </Box>
         ))}
       </Flex>
     </Box>

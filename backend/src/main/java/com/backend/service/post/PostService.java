@@ -235,6 +235,11 @@ public class PostService {
     public Map<String, Object> mdPickList() {
         List<Post> posts = postMapper.selectMdPickPostList();
 
+        for (Post post : posts) {
+            String url = String.format("%s/banner/mdPostBanner/%s", srcPrefix, post.getBanner());
+            post.setBanner(url);
+        }
+
         Map<String, Object> result = new HashMap<>();
         result.put("post", posts);
 

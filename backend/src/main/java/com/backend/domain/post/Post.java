@@ -14,12 +14,11 @@ public class Post {
     private Integer view;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate createDate;
-    private String banner;
     private Integer memberId;
     private Integer likeCount;
     private Integer commentCount;
 
     private String mdpick;
     private String picurl;
-    private String postType;
+    private String banner;
 }
