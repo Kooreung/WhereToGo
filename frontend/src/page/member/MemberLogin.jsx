@@ -67,7 +67,7 @@ export function MemberLogin() {
     <Center>
       <Box w={500}>
         <Center mb={10}>
-          <Heading>어디가지</Heading>
+            <Heading>어디가지</Heading>
         </Center>
         <Box>
           <Box>
