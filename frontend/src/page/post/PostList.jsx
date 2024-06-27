@@ -11,7 +11,6 @@ import {
   Spacer,
   StackDivider,
   Text,
-  useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -33,6 +32,7 @@ import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 import ContentParser from "../../component/ContentParser.jsx";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 import { faComment } from "@fortawesome/free-regular-svg-icons";
+import ButtonNumber from "../../css/Button/ButtonNumber.jsx";
 
 function PostList() {
   const navigate = useNavigate();
@@ -42,12 +42,12 @@ function PostList() {
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
-  const logoColor = useColorModeValue("red.500", "gray.200");
 
   useEffect(() => {
     axios.get(`/api/post/list?${searchParams}`).then((res) => {
       setPostList(res.data.postList);
       setPageInfo(res.data.pageInfo);
+      console.log(res.data.postList);
     });
     setSearchType("all");
     setSearchKeyword("");
@@ -157,9 +157,17 @@ function PostList() {
                   <ContentParser content={post.content} />
                 </Flex>
                 <Spacer />
-                <Flex>
-                  <Flex>
-                    <Image src={post.profileName} />
+                <Flex align={"center"}>
+                  <Flex align={"center"}>
+                    <Box
+                      w={"24px"}
+                      h={"24px"}
+                      mr={1}
+                      borderRadius={"100%"}
+                      boxShadow={"base"}
+                    >
+                      <Image src={post.profileName} borderRadius={"100%"} />
+                    </Box>
                     <Text overflow={"hidden"} textOverflow={"ellipsis"}>
                       {post.nickName}
                     </Text>
@@ -261,38 +269,38 @@ function PostList() {
         <Center>
           {pageInfo.prevPageNumber && (
             <>
-              <Button onClick={() => handlePageButtonClick(1)}>
+              <ButtonNumber onClick={() => handlePageButtonClick(1)}>
                 <FontAwesomeIcon icon={faAnglesLeft} />
-              </Button>
-              <Button
+              </ButtonNumber>
+              <ButtonNumber
                 onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
               >
                 <FontAwesomeIcon icon={faAngleLeft} />
-              </Button>
+              </ButtonNumber>
             </>
           )}
 
           {pageNumbers.map((pageNumber) => (
-            <Button
+            <ButtonNumber
               key={pageNumber}
               onClick={() => handlePageButtonClick(pageNumber)}
             >
               {pageNumber}
-            </Button>
+            </ButtonNumber>
           ))}
 
           {pageInfo.nextPageNumber && (
             <>
-              <Button
+              <ButtonNumber
                 onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
               >
                 <FontAwesomeIcon icon={faAngleRight} />
-              </Button>
-              <Button
+              </ButtonNumber>
+              <ButtonNumber
                 onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
               >
                 <FontAwesomeIcon icon={faAnglesRight} />
-              </Button>
+              </ButtonNumber>
             </>
           )}
         </Center>

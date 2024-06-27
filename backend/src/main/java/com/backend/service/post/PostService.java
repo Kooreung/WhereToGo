@@ -139,7 +139,14 @@ public class PostService {
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
 
-        return Map.of("pageInfo", pageInfo, "postList", postMapper.selectAllPost(offset, searchType, searchKeyword));
+        List<Post> posts = postMapper.selectAllPost(offset, searchType, searchKeyword);
+
+        for (Post post : posts) {
+            String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), post.getProfileName());
+            post.setProfileName(key);
+        }
+
+        return Map.of("pageInfo", pageInfo, "postList", posts);
     }
 
     // 게시글 Top 3 인기글 목록 서비스
