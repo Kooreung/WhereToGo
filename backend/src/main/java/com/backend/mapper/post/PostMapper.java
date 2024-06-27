@@ -431,4 +431,12 @@ public interface PostMapper {
             where postid = #{postId}
             """)
     String getMdBannerName(Integer postId);
+
+
+    @Select("""
+            SELECT a.authtype
+            from authority a join post p on p.memberid = a.memberid
+            where p.postid = #{postId}
+            """)
+    String getAuthByPostId(Integer postId);
 }
