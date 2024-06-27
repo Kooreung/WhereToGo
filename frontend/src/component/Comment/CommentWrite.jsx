@@ -52,7 +52,16 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       e.stopPropagation();
-      onOpen();
+      if (!account.isLoggedIn() || comment.length === 0) {
+        toast({
+          status: "error",
+          position: "bottom",
+          description: "댓글을 입력하세요",
+          isClosable: true,
+        });
+      } else {
+        onOpen();
+      }
     }
   }
 
