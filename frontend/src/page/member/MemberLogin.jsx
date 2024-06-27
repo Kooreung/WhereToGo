@@ -4,6 +4,7 @@ import {
   Center,
   FormControl,
   FormLabel,
+  Heading,
   Input,
   InputGroup,
   InputRightElement,
@@ -62,6 +63,12 @@ export function MemberLogin() {
     );
   }
 
+  function handleSubmitKeyDown(e) {
+    if (e.key === "Enter") {
+      handleLogin();
+    }
+  }
+
   return (
     <Center>
       <Box w={500}>
@@ -81,7 +88,7 @@ export function MemberLogin() {
           <Box>
             <FormControl>
               <FormLabel mt={6}>비밀번호</FormLabel>
-              <InputGroup>
+              <InputGroup onKeyDown={handleSubmitKeyDown}>
                 <Input
                   style={inputStyles}
                   type={showAndPassword ? "text" : "password"}

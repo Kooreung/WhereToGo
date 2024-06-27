@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   Avatar,
   Box,
-  Button,
+  Button, ButtonGroup,
   Card,
-  CardBody,
-  CardHeader,
+  CardBody, CardFooter,
+  CardHeader, Center, Divider,
   Flex,
   FormControl,
   FormHelperText,
@@ -22,7 +22,6 @@ import {
   ModalOverlay,
   Spinner,
   Stack,
-  StackDivider,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -30,6 +29,9 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import { passwordPattern } from "../../Regex.jsx";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCrown} from "@fortawesome/free-solid-svg-icons";
+import { getInputStyles } from '/src/css/styles.js';
 
 function MemberEdit(props) {
   const [member, setMember] = useState(null);
@@ -47,6 +49,7 @@ function MemberEdit(props) {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [isDisableSaveButton, setIsDisableSaveButton] = useState(true);
+  const inputStyles = getInputStyles();
 
   const isValidPassword = (password) => passwordPattern.test(password);
 
@@ -105,6 +108,7 @@ function MemberEdit(props) {
           ...member,
           oldPassword,
           file,
+          passwordCheck
         },
         {
           headers: {
@@ -154,6 +158,7 @@ function MemberEdit(props) {
     }
   }
 
+
   function handleCheckNickName() {
     axios
       .get(`/api/member/check?nickName=${member.nickName}`)
@@ -178,34 +183,56 @@ function MemberEdit(props) {
   }
 
   return (
-    <Flex justify="center" h="100vh">
-      <Box>
-        <Box>
-          <Avatar
-            name="defaultProfile"
-            src={profile.src}
-            w="200px"
-            h="200px"
-            mb={30}
-          />
-          <Box mb={7}>
-            <FormControl>
-              <FormLabel>프로필 사진 선택</FormLabel>
-              <Input
-                multiple
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
+    <Box>
+      <Center mb={30}>
+        <HeadingLarge>프로필 수정</HeadingLarge>
+      </Center>
+      <Card w={420} mb={20} boxShadow={"2xl"}>
+        {account.isAdmin() && (
+          <Center mt={5}>
+            <FontAwesomeIcon size={"2xl"} icon={faCrown} style={{color: "#FFD43B",}} />
+          </Center>
+        )}
+        {account.isAdmin() || (
+          <Center mt={5}>
+            <FontAwesomeIcon size={"2xl"} icon={faCrown} style={{color: "#D8B7E5",}} />
+          </Center>
+        )}
+        <CardBody>
+          <label>
+            <Center>
+              <Avatar
+                _hover={{filter: "brightness(0.7)"}}
+                cursor={"pointer"}
+                name="defaultProfile"
+                src={profile.src}
+                w="250px"
+                h="250px"
+                mb={3}
               />
-              <FormHelperText>
-                총 용량은 10MB, 한 파일은 1MB를 초과할 수 없습니다.
-              </FormHelperText>
-            </FormControl>
-          </Box>
-          <Box>
-            <FormControl>별명</FormControl>
+            </Center>
+            <Input
+              display={"none"}
+              multiple
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+            />
+          </label>
+
+          <Stack mt='6' spacing='3'>
+            <Center>
+              <Heading size='md' mb={7}>{member.nickName}</Heading>
+            </Center>
+            <HeadingMedium>닉네임 변경</HeadingMedium>
+            <Box>
+              <FormControl mt={3}>
+                닉네임
+              </FormControl>
+            </Box>
             <InputGroup>
               <Input
+                style={inputStyles}
                 onChange={(e) => {
                   const newNickName = e.target.value.trim();
                   setMember({ ...member, nickName: newNickName });
@@ -215,87 +242,93 @@ function MemberEdit(props) {
               />
               <InputRightElement w={"75px"} mr={1}>
                 <Button
+                    mt={2}
                   isDisabled={
                     isCheckedNickName || member.nickName === oldNickName
                   }
-                  size={"sm"}
                   onClick={handleCheckNickName}
                 >
                   중복확인
                 </Button>
               </InputRightElement>
             </InputGroup>
-            <FormControl>
-              <Card mt={10}>
-                <CardHeader>
-                  <Heading size="md">비밀번호 변경</Heading>
-                </CardHeader>
-                <CardBody>
-                  <Stack divider={<StackDivider />} spacing="4">
-                    <Box>
-                      <Heading size="xs" textTransform="uppercase" mb="2">
-                        기존 비밀번호
-                      </Heading>
-                      <Input onChange={(e) => setOldPassword(e.target.value)} />
-                    </Box>
-                    <Box>
-                      <Heading size="xs" textTransform="uppercase" mb="2">
-                        새로운 비밀번호
-                      </Heading>
-                      <Input
-                        onChange={(e) => {
-                          const newPassword = e.target.value;
-                          setMember({ ...member, password: newPassword });
-                          setIsPasswordValid(isValidPassword(newPassword));
-                        }}
-                        placeholder={"암호를 변경하려면 입력하세요"}
-                      />
-                      <Heading
-                        size="xs"
-                        textTransform="uppercase"
-                        mb="2"
-                        mt="3"
-                      >
-                        새로운 비밀번호 확인
-                      </Heading>
-                      <Input
-                        onChange={(e) => setPasswordCheck(e.target.value)}
-                      />
-                      {member.password === passwordCheck || (
-                        <FormHelperText>
-                          암호가 일치하지 않습니다.
-                        </FormHelperText>
-                      )}
-                    </Box>
-                    <Box></Box>
-                  </Stack>
-                </CardBody>
-              </Card>
+            <FormControl mt={6}>
+              <HeadingMedium>비밀번호 변경</HeadingMedium>
+              <Box>
+                <FormControl mt={6} mb={3}>
+                  기존 비밀번호
+                </FormControl>
+                <Input style={inputStyles} onChange={(e) => setOldPassword(e.target.value)}
+                       placeholder={"암호를 변경하려면 입력하세요"} />
+              </Box>
+              <Box>
+                <FormControl mt={6} mb={3}>
+                  새로운 비밀번호
+                </FormControl>
+                <Input
+                  style={inputStyles}
+                  onChange={(e) => {
+                    const newPassword = e.target.value;
+                    setMember({ ...member, password: newPassword });
+                    setIsPasswordValid(isValidPassword(newPassword));
+                  }}
+                />
+                {!isPasswordValid && (
+                  <FormHelperText>
+                    비밀번호는 8-20자 사이의 영문자와 숫자를 포함해야 합니다.
+                  </FormHelperText>
+                )}
+                <FormControl mt={6} mb={3}>
+                  새로운 비밀번호 확인
+                </FormControl>
+                <Input
+                  style={inputStyles}
+                  onChange={(e) => setPasswordCheck(e.target.value)}
+                />
+                {member.password === passwordCheck || (
+                  <FormHelperText>
+                    암호가 일치하지 않습니다.
+                  </FormHelperText>
+                )}
+              </Box>
             </FormControl>
-          </Box>
-        </Box>
-      </Box>
-      <Button
-        isDisabled={isDisableSaveButton}
-        onClick={onOpen}
-        colorScheme={"blue"}
-      >
-        저장
-      </Button>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>기존 암호 확인</ModalHeader>
-          <ModalBody>수정하시겠습니까</ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" onClick={handleClickSave}>
-              확인
+          </Stack>
+
+        </CardBody>
+        <CardFooter display="flex" justifyContent="flex-end">
+          <ButtonGroup spacing='2'>
+          <Button
+            isDisabled={isDisableSaveButton}
+            onClick={onOpen}
+            colorScheme={"blue"}
+            size={"sm"}
+          >
+            저장
+          </Button>
+            <Button
+              colorScheme={"blue"}
+              size={"sm"}
+              onClick={() => navigate("/memberinfo")}
+            >
+              취소
             </Button>
-            <Button onClick={onClose}>취소</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </Flex>
+          </ButtonGroup>
+        </CardFooter>
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>프로필 수정</ModalHeader>
+            <ModalBody>확인을 누르시면 수정이 완료됩니다.</ModalBody>
+            <ModalFooter>
+              <Button colorScheme="blue" onClick={handleClickSave}>
+                확인
+              </Button>
+              <Button onClick={onClose}>취소</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </Card>
+    </Box>
   );
 }
 

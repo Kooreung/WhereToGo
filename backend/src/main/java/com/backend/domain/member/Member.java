@@ -11,6 +11,7 @@ public class Member {
     private String email;
     private String password;
     private String oldPassword;
+    private String passwordCheck;
     private String nickName;
     private String name;
     private String gender;
