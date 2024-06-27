@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
-  ButtonGroup,
   Center,
   Divider,
   Flex,
@@ -168,33 +167,31 @@ export function PostMdList(props) {
                         <Box>{post.createDate}</Box>
                       </Flex>
                       <Divider />
-                      <ButtonGroup spacing="4" mt={3}>
-                        <Box>
-                          <FontAwesomeIcon
-                            icon={faHeart}
-                            style={{ color: "#D8B7E5" }}
-                            size={"lg"}
-                          />{" "}
-                          {post.likeCount}
-                        </Box>
-                        <Box>
-                          <FontAwesomeIcon
-                            icon={faComment}
-                            style={{ color: "#33664F" }}
-                            size={"lg"}
-                          />
-                          {post.commentCount}
-                        </Box>
-                        <Box>
-                          <FontAwesomeIcon
-                            icon={faEye}
-                            size="lg"
-                            style={{ color: "#836091" }}
-                          />
-                          {""}
-                          {post.view}
-                        </Box>
-                      </ButtonGroup>
+                      <Flex
+                        justify={"space-evenly"}
+                        w={"65%"}
+                        mt={"1rem"}
+                        style={{ color: "#D8B7E5" }}
+                      >
+                        <Flex>
+                          <Text mr={"4px"}>
+                            <FontAwesomeIcon icon={faHeart} size="lg" />
+                          </Text>
+                          <Text>{post.likeCount}</Text>
+                        </Flex>
+                        <Flex>
+                          <Text mr={"4px"}>
+                            <FontAwesomeIcon icon={faComment} size="lg" />
+                          </Text>
+                          <Text>{post.commentCount}</Text>
+                        </Flex>
+                        <Flex>
+                          <Text mr={"4px"}>
+                            <FontAwesomeIcon icon={faEye} size="lg" />
+                          </Text>
+                          <Text>{post.view}</Text>
+                        </Flex>
+                      </Flex>
                     </Box>
                   ))}
               </Flex>
