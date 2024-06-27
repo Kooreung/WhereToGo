@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Avatar, Box, Center, Flex, Stack, WrapItem } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Stack, WrapItem } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import {
   faChevronLeft,
@@ -7,8 +7,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
-import HeadingLarge from "../../css/Heading/HeadingLarge.jsx";
 import defaultImage from "../../resource/img/unknownImage.png";
+import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 
 const places = [
   {
@@ -80,64 +80,71 @@ export function LobbyPlaceList() {
   }
 
   return (
-    <Box align="center">
-      <HeadingLarge
-        w={{ base: "640px", lg: "740px" }}
-        mb={"1rem"}
+    <Box>
+      <HeadingVariant
+        variant={"large"}
+        mb={{ lg: "16px", sm: "8px" }}
+        ml={{ lg: "40px", sm: "50px" }}
         textAlign={"start"}
       >
         장소 선택
-      </HeadingLarge>
-      <Flex alignItems={"center"} justifyContent={"center"}>
-        <Box>
+      </HeadingVariant>
+      <Flex
+        w={"100%"}
+        h={"100%"}
+        alignItems={"center"}
+        justifyContent={"center"}
+      >
+        <Box mr={"1rem"}>
           <ButtonCircle onClick={handleMoveLeft}>
             <FontAwesomeIcon icon={faChevronLeft} size={"xl"} />
           </ButtonCircle>
         </Box>
-        <Box
-          overflow={"hidden"}
-          border={"1px solid lightGray"}
-          borderRadius={"12px"}
-          py={"1rem"}
-          mx={"1rem"}
-        >
-          <Flex
-            ref={dataRef}
-            sx={{
-              transform: `translateX(${positionX}px)`,
-              transition: "transform 0.5s ease",
-            }}
-            cursor="pointer"
+        <Box w={{ base: "720px", lg: "720px", sm: "480px" }}>
+          <Box
+            h={{ base: "160px", lg: "160px", sm: "140px" }}
+            overflow={"hidden"}
+            borderRadius={"12px"}
+            py={"1rem"}
           >
-            {places.map((place, index) => (
-              <WrapItem key={index}>
-                <Box w={"120px"}>
-                  <Stack
-                    align="center"
-                    onClick={() =>
-                      navigate(`/post/list?type=all&keyword=${place.keyword}`)
-                    }
+            <Flex
+              ref={dataRef}
+              sx={{
+                transform: `translateX(${positionX}px)`,
+                transition: "transform 0.5s ease",
+              }}
+              cursor="pointer"
+              align={"center"}
+            >
+              {places.map((place, index) => (
+                <WrapItem key={index}>
+                  <Box
+                    w={{ base: "120px", lg: "120px", sm: "96px" }}
+                    h={{ base: "120px", lg: "120px", sm: "96px" }}
                   >
-                    <Avatar
-                      size="xl"
-                      boxShadow={"md"}
-                      name={place.src}
-                      src={place.src || defaultImage}
-                      sx={{
-                        transition: "transform 0.3s ease",
-                        "&:hover": {
-                          transform: "scale(1.05)",
-                        },
-                      }}
-                    />
-                    <Box textAlign="center">{place.name}</Box>
-                  </Stack>
-                </Box>
-              </WrapItem>
-            ))}
-          </Flex>
+                    <Stack
+                      align="center"
+                      onClick={() =>
+                        navigate(`/post/list?type=all&keyword=${place.keyword}`)
+                      }
+                    >
+                      <Avatar
+                        w={{ base: "96px", lg: "96px", sm: "80px" }}
+                        h={{ base: "96px", lg: "96px", sm: "80px" }}
+                        boxShadow={"md"}
+                        name={place.src}
+                        src={place.src || defaultImage}
+                      />
+                      <Box textAlign="center">{place.name}</Box>
+                    </Stack>
+                  </Box>
+                </WrapItem>
+              ))}
+            </Flex>
+          </Box>
         </Box>
-        <Center>
+
+        <Box ml={"1rem"}>
           <ButtonCircle
             onClick={handleMoveRight}
             cursor={"pointer"}
@@ -149,7 +156,7 @@ export function LobbyPlaceList() {
           >
             <FontAwesomeIcon icon={faChevronRight} size={"xl"} />
           </ButtonCircle>
-        </Center>
+        </Box>
       </Flex>
     </Box>
   );

@@ -206,3 +206,9 @@ WHERE a.authtype = 'admin'
   AND p.mdpick = 'o'
 GROUP BY p.postid, p.title, p.content, p.createdate, p.view, m.memberid
 ORDER BY p.postid DESC;
+
+
+SELECT a.authtype
+from authority a
+         join post p on p.memberid = a.memberid
+where p.postid = 1240;

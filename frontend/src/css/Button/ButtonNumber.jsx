@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, useBreakpointValue } from "@chakra-ui/react";
+import { Button, useBreakpointValue } from "@chakra-ui/react";
 
 // 사이즈 별 분류 , 반응에 따른 사이즈
 const presets = {
@@ -40,12 +40,12 @@ function ButtonCircle({ variant = "medium", ...props }) {
 
   // 해당 컴포넌트의 설정 값
   return (
-    <Flex
+    <Button
       w={buttonSize}
       h={buttonSize}
-      boxShadow="md"
-      borderRadius="100%"
+      variant={"outline"}
       color={"#836091"}
+      colorScheme={"#836091"}
       cursor={"pointer"}
       align={"center"}
       justifyContent="center"

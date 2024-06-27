@@ -69,6 +69,8 @@ public class PostService {
             session.setAttribute("lastViewTime_" + postId, Instant.now());
         }
         Post post = postMapper.selectById(postId);
+        String auth = postMapper.getAuthByPostId(postId);
+
 
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> like = new HashMap<>();
@@ -85,7 +87,7 @@ public class PostService {
         like.put("count", postMapper.selectCountLikeByBoardId(postId));
         result.put("like", like);
         result.put("post", post);
-
+        result.put("author", auth);
         // 게시물 조회 시 댓글 수 카운트 전송
         int commentCount = postMapper.selectCountCommentByBoardId(postId);
         result.put("commentCount", commentCount);
@@ -137,7 +139,14 @@ public class PostService {
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
 
-        return Map.of("pageInfo", pageInfo, "postList", postMapper.selectAllPost(offset, searchType, searchKeyword));
+        List<Post> posts = postMapper.selectAllPost(offset, searchType, searchKeyword);
+
+        for (Post post : posts) {
+            String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), post.getProfileName());
+            post.setProfileName(key);
+        }
+
+        return Map.of("pageInfo", pageInfo, "postList", posts);
     }
 
     // 게시글 Top 3 인기글 목록 서비스
@@ -234,6 +243,11 @@ public class PostService {
 
     public Map<String, Object> mdPickList() {
         List<Post> posts = postMapper.selectMdPickPostList();
+
+        for (Post post : posts) {
+            String url = String.format("%s/banner/mdPostBanner/%s", srcPrefix, post.getBanner());
+            post.setBanner(url);
+        }
 
         Map<String, Object> result = new HashMap<>();
         result.put("post", posts);

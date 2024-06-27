@@ -21,14 +21,8 @@ public interface PostMapper {
 
     // 게시글 조회 매퍼
     @Select("""
-            SELECT p.postid,
-                   p.title,
-                   p.content,
-                   p.createdate,
-                   p.view,
-                   p.memberid,
+            SELECT p.postid,p.title,p.content,p.createdate,p.view,p.memberid,p.mdpick,
                    m.nickname,
-                   p.mdpick,
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l.memberid)  likeCount
             FROM post p
@@ -43,8 +37,9 @@ public interface PostMapper {
     @Select("""
             <script>
             SELECT p.postid, p.title, p.content, p.createdate, p.view,
-                   m.nickname,
+                   m.nickname, m.memberid,
                    plpic.picurl,
+                   pro.profilename,
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l.memberid) likeCount
             FROM post p JOIN member m ON p.memberid = m.memberid
@@ -53,6 +48,7 @@ public interface PostMapper {
                         LEFT JOIN likes l ON p.postid = l.postid
                         LEFT JOIN place pl ON p.postid = pl.postid
                         LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
+                        LEFT JOIN profile pro ON pro.memberid = m.memberid
              <where>
             a.authtype != 'admin'
                     <if test="searchType != null">
@@ -355,6 +351,7 @@ public interface PostMapper {
                                            p.content,
                                            p.createdate,
                                            p.view,
+                                           p.banner,
                                            m.memberid,
                                            COUNT(DISTINCT c.commentid) commentCount,
                                            COUNT(DISTINCT l.memberid)  likeCount,
@@ -434,4 +431,12 @@ public interface PostMapper {
             where postid = #{postId}
             """)
     String getMdBannerName(Integer postId);
+
+
+    @Select("""
+            SELECT a.authtype
+            from authority a join post p on p.memberid = a.memberid
+            where p.postid = #{postId}
+            """)
+    String getAuthByPostId(Integer postId);
 }

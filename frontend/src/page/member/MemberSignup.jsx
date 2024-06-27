@@ -409,7 +409,7 @@ export function MemberSignup() {
                 </FormHelperText>
               )}
               {!isNickNameDuplicate && isCheckNickName && (
-                <FormHelperText color="green">
+                <FormHelperText color="dodgerblue">
                   사용 가능한 닉네임입니다.
                 </FormHelperText>
               )}

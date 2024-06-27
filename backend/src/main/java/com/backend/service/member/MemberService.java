@@ -43,7 +43,6 @@ public class MemberService {
     private final PostMapper postMapper;
     private final PostService postService;
     private final CommentMapper commentMapper;
-    private final NickNameCreator NickNameCreator;
     private final NickNameCreator nickNameCreator;
 
 
@@ -172,9 +171,14 @@ public class MemberService {
         if (dbMember == null) {
             return false;
         }
-//        if (!passwordEncoder.matches(member.getOldPassword(), dbMember.getPassword())) {
-//            return false;
-//        }
+        if (member.getOldPassword().isEmpty() && !member.getPasswordCheck().isEmpty()) {
+            return false;
+        }
+        if (!member.getOldPassword().isEmpty()) {
+            if (!passwordEncoder.matches(member.getOldPassword(), dbMember.getPassword())) {
+                return false;
+            }
+        }
         return true;
     }
 

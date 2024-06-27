@@ -21,6 +21,9 @@ import {
 } from "@chakra-ui/react";
 import Lobby from "../Lobby.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faXmark} from "@fortawesome/free-solid-svg-icons";
+import { getInputStyles } from '/src/css/styles.js';
 
 export function MemberFindPassword() {
   const [email, setEmail] = useState("");
@@ -30,6 +33,7 @@ export function MemberFindPassword() {
   const toast = useToast();
   const { onClose, onOpen, isOpen } = useDisclosure();
   const account = useContext(LoginContext);
+  const inputStyles = getInputStyles();
 
   function handleFindPassword() {
     axios
@@ -40,6 +44,7 @@ export function MemberFindPassword() {
           description: "임시 비밀번호가 발급되었습니다.",
           position: "bottom",
         });
+        onClose();
       })
       .catch(() => {
         toast({
@@ -116,34 +121,31 @@ export function MemberFindPassword() {
     <Center>
       <Box w={500}>
         <Box>
-          <Box>
+          <Box mb={10}>
             <Heading>비밀번호 찾기</Heading>
           </Box>
           <Box>
             <FormControl>
               <FormLabel>이메일</FormLabel>
-              <Input
-                onChange={(e) => setEmail(e.target.value)}
-                onKeyDown={handleSubmitKeyDown}
-              />
+              <Input style={inputStyles} onChange={(e) => setEmail(e.target.value)}  onKeyDown={handleSubmitKeyDown}/>
             </FormControl>
           </Box>
-          <Button onClick={handleCode}>인증코드 보내기</Button>
+          <Button mt={4} onClick={handleCode}>인증코드 보내기</Button>
           <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-              <ModalHeader>
+              <ModalHeader style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 인증하기
-                <Button onClick={onClose}>✖</Button>
+                <Button style={{ backgroundColor: 'white' }} onClick={onClose}><FontAwesomeIcon icon={faXmark} size="lg"/></Button>
               </ModalHeader>
               <ModalBody>
                 <InputGroup>
                   <Input
-                    value={inputCode}
-                    onChange={(e) => setInputCode(e.target.value)}
+                    value={inputCode} style={inputStyles}
+                    onChange={(e) => setInputCode(e.target.value.trim())}
                   />
                   <InputRightElement w={"75px"} mr={1}>
-                    <Button onClick={handleVerifyCode}>인증</Button>
+                    <Button mt={2} onClick={handleVerifyCode}>인증</Button>
                   </InputRightElement>
                 </InputGroup>
               </ModalBody>
