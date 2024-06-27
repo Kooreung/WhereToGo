@@ -71,48 +71,7 @@ export function AdminPage() {
     onOpen: onModalOpenOfAdd,
     onClose: onModalCloseOfAdd,
   } = useDisclosure();
-
   const [selectedPosts, setSelectedPosts] = useState([]);
-
-  const {
-    isOpen: isDeleteAccountModalOpen,
-    onOpen: onDeleteAccountModalOpen,
-    onClose: onDeleteAccountModalClose,
-  } = useDisclosure();
-  const [selectedMemberId, setSelectedMemberId] = useState(null);
-
-  // 삭제하려는 사용자의 ID를 설정하고 모달을 열기 위한 함수
-  const openDeleteModal = (memberId) => {
-    setSelectedMemberId(memberId); // 선택된 사용자의 ID를 상태에 저장
-    onDeleteAccountModalOpen(); // 모달을 엽니다.
-  };
-
-  function handleDeleteUser() {
-    axios
-      .delete(`/api/member/delete`, {
-        data: { memberId: selectedMemberId, password: "admin" },
-      })
-      .then(() => {
-        toast({
-          status: "success",
-          description: "회원이 탈퇴 되었습니다.",
-          position: "bottom",
-        });
-        setMemberList((prevMemberList) =>
-          prevMemberList.filter(
-            (member) => member.memberId !== selectedMemberId,
-          ),
-        );
-        onDeleteAccountModalClose();
-      })
-      .catch(() => {
-        toast({
-          status: "error",
-          description: "탈퇴중 문제가 생겼습니다.",
-          position: "bottom",
-        });
-      });
-  }
 
   const handleMdSwitchChange = (postId) => {
     setToggleState((prevToggleState) => ({
@@ -243,7 +202,7 @@ export function AdminPage() {
         [postId]: false, // 삭제된 포스트의 스위치 상태를 false로 설정합니다.
       }));
     } catch (error) {
-      console.error("ㅎError deleting mdPick", error);
+      console.error("Error deleting mdPick", error);
       // 오류 처리 로직을 추가합니다.
     }
   };
@@ -254,7 +213,6 @@ export function AdminPage() {
     //
     //   resolve();
     // });
-    setPreviewUrls({});
     setSelectedPosts([]);
     setToggleState({});
     // 상태 업데이트가 완료된 후에 필요한 작업을 수행합니다.
@@ -265,68 +223,39 @@ export function AdminPage() {
     // 성공적으로 전송된 postId를 추적하기 위한 배열입니다.
     const successfullySentPostIds = [];
 
-    if (selectedPosts.length > 0) {
-      for (const postId of selectedPosts) {
-        // 스위치가 켜져 있지만 파일이 선택되지 않은 경우 경고를 표시합니다.
-        if (!!toggleState[postId] && !selectedFiles[postId]) {
-          toast({
-            title: "사진을 등록해주세요",
-            description: "선택된 게시물에 대한 사진을 등록해야 합니다.",
-            status: "warning",
-            duration: 5000,
-            isClosable: true,
+    for (const postId of selectedPosts) {
+      const file = selectedFiles[postId];
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("postId", postId);
+
+        try {
+          const response = await axios.post("/api/post/push", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
           });
-          continue; // 다음 postId로 넘어갑니다.
-        }
-
-        const file = selectedFiles[postId];
-        if (file) {
-          const formData = new FormData();
-          formData.append("file", file);
-          formData.append("postId", postId);
-
-          try {
-            const response = await axios.post("/api/post/push", formData, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            });
-            console.log(
-              `MdPick with postId ${postId} successfully sent`,
-              response.data,
-            );
-            // 성공적으로 전송된 postId를 배열에 추가합니다.
-            successfullySentPostIds.push(postId);
-          } catch (error) {
-            console.error(`Error sending MdPick with postId ${postId}`, error);
-          }
+          console.log(
+            `MdPick with postId ${postId} successfully sent`,
+            response.data,
+          );
+          // 성공적으로 전송된 postId를 배열에 추가합니다.
+          successfullySentPostIds.push(postId);
+        } catch (error) {
+          console.error(`Error sending MdPick with postId ${postId}`, error);
         }
       }
-
-      // 모달 닫는 함수를 호출합니다.
-      onModalCloseOfAdd();
-      // mdPick 리스트를 불러오는 함수를 호출합니다.
-      await fetchMdPicks();
-
-      // 모든 요청이 완료된 후, 성공적으로 전송된 postId를 기반으로 selectedPosts 상태를 업데이트합니다.
-      setSelectedPosts((prevSelectedPosts) =>
-        prevSelectedPosts.filter(
-          (postId) => !successfullySentPostIds.includes(postId),
-        ),
-      );
-    } else {
-      // 선택된 게시물이 없으면 모달을 닫고 상태를 초기화합니다.
-      setPreviewUrls({});
-      setSelectedFiles({});
-      setToggleState({});
-      setSelectedPosts([]);
+      onModalCloseOfAdd(); // 모달 닫는 함수를 호출합니다.
+      await fetchMdPicks(); // mdPick 리스트를 불러오는 함수를 호출합니다.
     }
 
-    // 스위치 상태와 관련된 상태들을 초기화합니다.
-    setPreviewUrls({});
-    setSelectedFiles({});
-    setToggleState({});
-    setSelectedPosts([]);
+    // 모든 요청이 완료된 후, 성공적으로 전송된 postId를 기반으로 selectedPosts 상태를 업데이트합니다.
+    setSelectedPosts((prevSelectedPosts) =>
+      prevSelectedPosts.filter(
+        (postId) => !successfullySentPostIds.includes(postId),
+      ),
+    );
   };
 
   // mdPick 리스트를 불러오는 함수입니다.
@@ -448,12 +377,6 @@ export function AdminPage() {
     );
   }
 
-  function handleSearchKeyDown(e) {
-    if (e.key === "Enter") {
-      navigate(`/memberList/?type=${searchType}&keyword=${searchKeyword}`);
-    }
-  }
-
   return (
     <Box>
       <Tabs variant="enclosed">
@@ -476,7 +399,6 @@ export function AdminPage() {
                       <Th>이메일</Th>
                       <Th w={"150px"}>별명</Th>
                       <Th w={96}>가입일시</Th>
-                      <Th w={96}>관리</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -488,23 +410,12 @@ export function AdminPage() {
                             backgroundColor: "RGBA(0, 0, 0, 0.06)",
                           },
                         }}
+                        onClick={() => navigate(`/member/${member.memberId}`)}
                         key={member.memberId}
                       >
                         <Td>{member.memberId}</Td>
                         <Td>{member.email}</Td>
-                        <Td
-                          onClick={() => navigate(`/member/${member.memberId}`)}
-                        >
-                          {member.nickName}
-                        </Td>
-                        <Td>그런거 없다</Td>
-                        <Td>
-                          <Button
-                            onClick={() => openDeleteModal(member.memberId)}
-                          >
-                            삭제
-                          </Button>
-                        </Td>
+                        <Td>{member.nickName}</Td>
                       </Tr>
                     ))}
                   </Tbody>
@@ -524,7 +435,6 @@ export function AdminPage() {
                   <Input
                     onChange={(e) => setSearchKeyword(e.target.value)}
                     placeholder="검색어"
-                    onKeyDown={handleSearchKeyDown}
                   />
                 </Box>
                 <Box>
@@ -588,11 +498,7 @@ export function AdminPage() {
           <TabPanel>
             <Wrap spacing={4}>
               <WrapItem>
-                <Button
-                  colorScheme="orange"
-                  onClick={onModalOpenOfAdd}
-                  onClick={handleAddClick}
-                >
+                <Button colorScheme="orange" onClick={handleAddClick}>
                   MDpost선택
                 </Button>
               </WrapItem>
@@ -769,25 +675,6 @@ export function AdminPage() {
               추가
             </Button>
             <Button variant="ghost" onClick={onClose}>
-              취소
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-      <Modal
-        isOpen={isDeleteAccountModalOpen}
-        onClose={onDeleteAccountModalClose}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>회원 탈퇴확인</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>정말 탈퇴 시키겠습니까?</ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleDeleteUser}>
-              확인
-            </Button>
-            <Button variant="ghost" onClick={onDeleteAccountModalClose}>
               취소
             </Button>
           </ModalFooter>

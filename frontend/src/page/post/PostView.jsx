@@ -5,7 +5,7 @@ import {
   Divider,
   Flex,
   Grid,
-  GridItem,
+  GridItem, Heading,
   Image,
   Link,
   Modal,
@@ -27,7 +27,7 @@ import { LoginContext } from "../../component/LoginProvider.jsx";
 import CommentComponent from "../../component/Comment/CommentComponent.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCaretRight,
+  faCaretRight, faEye, faHeart,
   faHeart as emptyHeart,
   faList,
   faPenToSquare,
@@ -36,6 +36,7 @@ import {
 import { faHeart as fullHeart } from "@fortawesome/free-regular-svg-icons";
 import MapView from "../../component/Map/MapView.jsx";
 import defaultImage from "../../resource/img/unknownImage.png";
+import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 
 export function PostView() {
   const { postId } = useParams();
@@ -146,30 +147,21 @@ export function PostView() {
   }
 
   return (
+    <Box>
+      <Heading pl={10}>{post.title}</Heading>
+      <Divider />
     <Flex direction="column" align="center">
       <Flex direction="column" align="center">
         <Grid
           w={{ base: "720px", lg: "1080px" }}
-          h={"80px"}
+          h={"px"}
           my={"32px"}
           templateColumns={"repeat(4,1fr)"}
           templateRows={"1fr 1fr"}
         >
-          <GridItem
-            rowSpan={1}
-            colSpan={1}
-            alignContent={"center"}
-            overflow={"hidden"}
-            textOverflow={"ellipsis"}
-            whiteSpace={"nowrap"}
-          >
-            <Flex pl={3}>
-              <Text display={{ base: "none", lg: "block" }} mr={1}>
-                작성자 <FontAwesomeIcon icon={faCaretRight} />
-              </Text>
+            <Flex pl={10}>
               <Text>{post.nickName}</Text>
             </Flex>
-          </GridItem>
           <GridItem
             rowSpan={1}
             colSpan={3}
@@ -178,15 +170,28 @@ export function PostView() {
             textOverflow={"ellipsis"}
             whiteSpace={"nowrap"}
           >
+          </GridItem>
+            <Flex pl={10}>
+              <Text display={{ base: "none", lg: "block" }} mr={1}>
+                <FontAwesomeIcon
+                  icon={faHeart}
+                  style={{ color: "#D8B7E5" }}
+                  size="sm"
+                />
+              </Text>
+              <Text fontSize="sm">{like.count}</Text>
+            </Flex>
+
             <Flex pl={3}>
               <Text display={{ base: "none", lg: "block" }} mr={1}>
-                제목 <FontAwesomeIcon icon={faCaretRight} />
+                <FontAwesomeIcon
+                  icon={faEye}
+                  size="sm"
+                  style={{ color: "#836091" }}
+                />
               </Text>
-              <Text overflow={"hidden"} textOverflow={"ellipsis"}>
-                {post.title}
-              </Text>
+              <Text fontSize="sm">{post.view}</Text>
             </Flex>
-          </GridItem>
 
           <GridItem
             rowSpan={1}
@@ -196,42 +201,6 @@ export function PostView() {
             textOverflow={"ellipsis"}
             whiteSpace={"nowrap"}
           >
-            <Flex pl={3}>
-              <Text display={{ base: "none", lg: "block" }} mr={1}>
-                조회수 <FontAwesomeIcon icon={faCaretRight} />
-              </Text>
-              <Text>{post.view}</Text>
-            </Flex>
-          </GridItem>
-          <GridItem
-            rowSpan={1}
-            colSpan={1}
-            alignContent={"center"}
-            overflow={"hidden"}
-            textOverflow={"ellipsis"}
-            whiteSpace={"nowrap"}
-          >
-            <Flex pl={3}>
-              <Text display={{ base: "none", lg: "block" }} mr={1}>
-                좋아요 <FontAwesomeIcon icon={faCaretRight} />
-              </Text>
-              <Text>{like.count}</Text>
-            </Flex>
-          </GridItem>
-          <GridItem
-            rowSpan={1}
-            colSpan={1}
-            alignContent={"center"}
-            overflow={"hidden"}
-            textOverflow={"ellipsis"}
-            whiteSpace={"nowrap"}
-          >
-            <Flex pl={3}>
-              <Text display={{ base: "none", lg: "block" }} mr={1}>
-                댓글 <FontAwesomeIcon icon={faCaretRight} />
-              </Text>
-              <Text>{comment.count}</Text>
-            </Flex>
           </GridItem>
           <GridItem
             rowSpan={1}
@@ -250,7 +219,7 @@ export function PostView() {
           </GridItem>
         </Grid>
 
-        <Box w={"576px"} h={"360px"} bg={"lightgray"} my={"32px"}>
+        <Box w={"576px"} h={"360px"} bg={"lightgray"} my={"32px"} mt={"100px"}>
           <MapView />
         </Box>
 
@@ -421,5 +390,6 @@ export function PostView() {
         </ModalContent>
       </Modal>
     </Flex>
+    </Box>
   );
 }

@@ -72,7 +72,7 @@ export function LobbyMdList() {
             align={"center"}
           >
 
-            {nextPosts >= 1 && nextPosts <= 3 && (
+            {nextPosts >= 1 && nextPosts <= mdPost.length && (
               <Box w={"100%"} h={"100%"}>
                 {mdPost.slice(prevPosts, nextPosts).map((post) => (
                   <Box
@@ -149,7 +149,7 @@ export function LobbyMdList() {
               </Box>
             )}
 
-            {nextPosts === 4 && banner.length > 0 && (
+            {nextPosts === mdPost.length + 1 && banner.length > 0 && (
               <Box
                 key={banner[0].id}
                 display={"flex"}
@@ -161,7 +161,7 @@ export function LobbyMdList() {
                 <Image src={banner[0].bannerSrc} />
               </Box>
             )}
-            {nextPosts === 5 && banner.length > 1 && (
+            {nextPosts === mdPost.length + 2 && banner.length > 1 && (
               <Box
                 key={banner[1].id}
                 display={"flex"}
@@ -192,8 +192,8 @@ export function LobbyMdList() {
                   setPrevPosts(prevPosts - 1);
                 }
                 if (nextPosts === 1) {
-                  setNextPosts(5);
-                  setPrevPosts(4);
+                  setNextPosts(mdPost.length + 2);
+                  setPrevPosts(mdPost.length + 1);
                 }
               }}
             >
@@ -209,11 +209,11 @@ export function LobbyMdList() {
           >
             <ButtonCircle
               onClick={() => {
-                if (nextPosts < 5) {
+                if (nextPosts < mdPost.length + 2) {
                   setNextPosts(nextPosts + 1);
                   setPrevPosts(prevPosts + 1);
                 }
-                if (nextPosts === 5) {
+                if (nextPosts === mdPost.length + 2) {
                   setNextPosts(1);
                   setPrevPosts(0);
                 }
