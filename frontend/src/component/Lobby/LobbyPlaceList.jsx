@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Avatar, Box, Center, Flex, Stack, WrapItem } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Stack, WrapItem } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import {
   faChevronLeft,
@@ -7,7 +7,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
-import HeadingLarge from "../../css/Heading/HeadingLarge.jsx";
 import defaultImage from "../../resource/img/unknownImage.png";
 import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 

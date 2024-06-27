@@ -71,6 +71,7 @@ export function LobbyMdList() {
             justifyContent="center"
             align={"center"}
           >
+
             {nextPosts >= 1 && nextPosts <= 3 && (
               <Box w={"100%"} h={"100%"}>
                 {mdPost.slice(prevPosts, nextPosts).map((post) => (

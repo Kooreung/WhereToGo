@@ -22,7 +22,6 @@ import {
   ModalOverlay,
   Spinner,
   Stack,
-  StackDivider,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -31,9 +30,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import { passwordPattern } from "../../Regex.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCrown, faHeart, faLocationDot, faPhone, faSquareEnvelope} from "@fortawesome/free-solid-svg-icons";
-import HeadingMedium from "../../css/Heading/HeadingMedium.jsx";
-import HeadingLarge from "../../css/Heading/HeadingLarge.jsx";
+import {faCrown} from "@fortawesome/free-solid-svg-icons";
 import { getInputStyles } from '/src/css/styles.js';
 
 function MemberEdit(props) {
