@@ -32,7 +32,7 @@ import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 import ContentParser from "../../component/ContentParser.jsx";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 import { faComment } from "@fortawesome/free-regular-svg-icons";
-import ButtonNumber from "../../css/Button/ButtonNumber.jsx";
+import ButtonNumber from "../../css/Button/ButtonOutline.jsx";
 
 function PostList() {
   const navigate = useNavigate();
