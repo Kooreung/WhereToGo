@@ -11,10 +11,12 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import defaultImage from "../../resource/img/unknownImage.png";
 import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
+import ContentParser from "../ContentParser.jsx";
+import { faComment } from "@fortawesome/free-regular-svg-icons";
 
 function LobbyPostListOfBest(props) {
   const [postListOfBest, setPostListOfBest] = useState([]);
@@ -40,83 +42,109 @@ function LobbyPostListOfBest(props) {
           direction={"row"}
           variant="outline"
           cursor="pointer"
-          p={"1rem"}
           my={"1rem"}
+          w={{ base: "720px", lg: "720px", sm: "540px" }}
           sx={{
             "&:hover": {
               backgroundColor: "RGBA(0, 0, 0, 0.02)",
             },
           }}
         >
-          <Flex>
-            <Box w={"160px"} h={"160px"}>
-              <Image
-                src={post.picurl || defaultImage}
-                objectFit={"cover"}
-                w={"100%"}
-                h={"100%"}
-              />
-            </Box>
-          </Flex>
           <Flex
-            textAlign={"start"}
-            alignContent={"center"}
-            direction={"column"}
-            w={"560px"}
-            h={"160px"}
-            ml={"1rem"}
+            key={post.postId}
+            onClick={() => navigate(`/post/${post.postId}`)}
+            w={{ base: "720px", lg: "720px", sm: "540px" }}
+            h={{ base: "200px", lg: "200px", sm: "160px" }}
+            cursor={"pointer"}
+            py={"1rem"}
+            px={"1rem"}
+            sx={{
+              "&:hover": {
+                backgroundColor: "beige",
+              },
+            }}
           >
-            <Flex>
-              <HeadingVariant
-                variant={"medium"}
+            <Flex
+              direction={"column"}
+              overflow={"hidden"}
+              textOverflow={"ellipsis"}
+              whiteSpace={"nowrap"}
+              w={"70%"}
+              h={"100%"}
+              pr={"1rem"}
+            >
+              <Flex mb={"8px"}>
+                <HeadingVariant overflow={"hidden"} textOverflow={"ellipsis"}>
+                  {post.title}
+                </HeadingVariant>
+              </Flex>
+              <Flex
+                textAlign={"start"}
                 overflow={"hidden"}
                 textOverflow={"ellipsis"}
                 display={"-webkit-box"}
-                w={"100%"}
                 css={{
-                  WebkitLineClamp: "2",
+                  WebkitLineClamp: "3",
                   WebkitBoxOrient: "vertical",
                   wordBreak: "break-word",
                   whiteSpace: "pre-wrap",
                 }}
               >
-                {post.title}
-              </HeadingVariant>
+                <ContentParser content={post.content} />
+              </Flex>
+              <Spacer />
+              <Flex fontSize={{ base: "16px", lg: "16px", sm: "14px" }}>
+                <Flex>
+                  <Image src={post.profileName} />
+                  <Text overflow={"hidden"} textOverflow={"ellipsis"}>
+                    {post.nickName}
+                  </Text>
+                </Flex>
+                <Flex pl={"1rem"} color={"lightgray"}>
+                  <Text display={{ base: "none", lg: "block" }} mr={1}>
+                    조회
+                  </Text>
+                  <Text display={{ base: "block", lg: "none" }} mr={1}>
+                    <FontAwesomeIcon icon={faEye} size={"lg"} />
+                  </Text>
+                  <Text>{post.view}</Text>
+                </Flex>
+                <Flex pl={"1rem"} color={"lightgray"}>
+                  <Text display={{ base: "none", lg: "block" }} mr={1}>
+                    좋아요
+                  </Text>
+                  <Text display={{ base: "block", lg: "none" }} mr={1}>
+                    <FontAwesomeIcon icon={faHeart} size={"lg"} />
+                  </Text>
+                  <Text>{post.likeCount}</Text>
+                </Flex>
+                <Flex pl={"1rem"} color={"lightgray"}>
+                  <Text display={{ base: "none", lg: "block" }} mr={1}>
+                    댓글
+                  </Text>
+                  <Text display={{ base: "block", lg: "none" }} mr={1}>
+                    <FontAwesomeIcon icon={faComment} size={"lg"} />
+                  </Text>
+                  <Text>{post.commentCount}</Text>
+                </Flex>
+                <Flex pl={"1rem"} color={"lightgray"}>
+                  {post.createDate}
+                </Flex>
+              </Flex>
             </Flex>
             <Spacer />
-            <Flex justify={"space-between"} fontSize={"14px"}>
-              <Flex>
-                <Text>
-                  조회수 <FontAwesomeIcon icon={faCaretRight} />
-                </Text>
-                <Text ml={1}>{post.view}</Text>
-              </Flex>
-              <Flex>
-                <Text>
-                  좋아요 <FontAwesomeIcon icon={faCaretRight} />
-                </Text>
-                <Text ml={1}>{post.likeCount}</Text>
-              </Flex>
-              <Flex>
-                <Text>
-                  댓글 <FontAwesomeIcon icon={faCaretRight} />
-                </Text>
-                <Text ml={1}>{post.commentCount}</Text>
-              </Flex>
-            </Flex>
-            <Flex justify={"space-between"} fontSize={"14px"}>
-              <Flex>
-                <Text>
-                  작성자 <FontAwesomeIcon icon={faCaretRight} />
-                </Text>
-                <Text ml={1}>{post.nickName}</Text>
-              </Flex>
-              <Flex color={"lightgray"}>
-                <Text>
-                  작성일자 <FontAwesomeIcon icon={faCaretRight} />
-                </Text>
-                <Text ml={1}>{post.createDate}</Text>
-              </Flex>
+            <Flex
+              w={{ base: "160px", lg: "160px", sm: "140px" }}
+              h={"100%"}
+              align={"center"}
+            >
+              <Image
+                src={post.picurl || defaultImage}
+                w={{ base: "160px", lg: "160px", sm: "140px" }}
+                h={{ base: "160px", lg: "160px", sm: "140px" }}
+                objectFit={"cover"}
+                borderRadius={"1rem"}
+              />
             </Flex>
           </Flex>
         </Card>

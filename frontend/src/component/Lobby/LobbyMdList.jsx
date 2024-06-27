@@ -182,7 +182,7 @@ export function LobbyMdList() {
             cursor={"pointer"}
             zIndex={"1"}
             position={"relative"}
-            top={"-100px"}
+            top={{ base: "-100px", lg: "-120px" }}
             left={{ base: "-320px", lg: "-430px" }}
           >
             <ButtonCircle
@@ -204,7 +204,7 @@ export function LobbyMdList() {
             cursor={"pointer"}
             zIndex={"1"}
             position={"relative"}
-            top={"-100px"}
+            top={{ base: "-100px", lg: "-120px" }}
             left={{ base: "320px", lg: "430px" }}
           >
             <ButtonCircle
