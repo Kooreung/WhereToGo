@@ -158,6 +158,7 @@ function PostWrite() {
             <Input
               placeholder={"제목을 작성해주세요."}
               onChange={(e) => setTitle(e.target.value)}
+              maxLength={70}
             />
           </Box>
         </Box>
