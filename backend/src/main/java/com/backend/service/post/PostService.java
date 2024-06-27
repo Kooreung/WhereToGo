@@ -69,6 +69,8 @@ public class PostService {
             session.setAttribute("lastViewTime_" + postId, Instant.now());
         }
         Post post = postMapper.selectById(postId);
+        String auth = postMapper.getAuthByPostId(postId);
+
 
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> like = new HashMap<>();
@@ -85,7 +87,7 @@ public class PostService {
         like.put("count", postMapper.selectCountLikeByBoardId(postId));
         result.put("like", like);
         result.put("post", post);
-
+        result.put("author", auth);
         // 게시물 조회 시 댓글 수 카운트 전송
         int commentCount = postMapper.selectCountCommentByBoardId(postId);
         result.put("commentCount", commentCount);
@@ -234,6 +236,11 @@ public class PostService {
 
     public Map<String, Object> mdPickList() {
         List<Post> posts = postMapper.selectMdPickPostList();
+
+        for (Post post : posts) {
+            String url = String.format("%s/banner/mdPostBanner/%s", srcPrefix, post.getBanner());
+            post.setBanner(url);
+        }
 
         Map<String, Object> result = new HashMap<>();
         result.put("post", posts);

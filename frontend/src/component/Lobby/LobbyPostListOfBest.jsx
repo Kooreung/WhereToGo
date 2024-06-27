@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Box, Card, Center, Flex, Image, Spacer, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Card,
+  Center,
+  Flex,
+  Image,
+  Spacer,
+  Text,
+} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import HeadingMedium from "../../css/Heading/HeadingMedium.jsx";
-import HeadingLarge from "../../css/Heading/HeadingLarge.jsx";
 import defaultImage from "../../resource/img/unknownImage.png";
+import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 
 function LobbyPostListOfBest(props) {
   const [postListOfBest, setPostListOfBest] = useState([]);
@@ -18,9 +26,13 @@ function LobbyPostListOfBest(props) {
   }, []);
   return (
     <Box>
-      <HeadingLarge mb={"1rem"} textAlign={"start"}>
+      <HeadingVariant
+        variant={"large"}
+        mb={{ lg: "16px", sm: "8px" }}
+        textAlign={"start"}
+      >
         회원 인기글
-      </HeadingLarge>
+      </HeadingVariant>
       {postListOfBest.map((post, index) => (
         <Card
           key={index}
@@ -55,10 +67,12 @@ function LobbyPostListOfBest(props) {
             ml={"1rem"}
           >
             <Flex>
-              <HeadingMedium
+              <HeadingVariant
+                variant={"medium"}
                 overflow={"hidden"}
                 textOverflow={"ellipsis"}
                 display={"-webkit-box"}
+                w={"100%"}
                 css={{
                   WebkitLineClamp: "2",
                   WebkitBoxOrient: "vertical",
@@ -67,7 +81,7 @@ function LobbyPostListOfBest(props) {
                 }}
               >
                 {post.title}
-              </HeadingMedium>
+              </HeadingVariant>
             </Flex>
             <Spacer />
             <Flex justify={"space-between"} fontSize={"14px"}>
@@ -108,17 +122,7 @@ function LobbyPostListOfBest(props) {
         </Card>
       ))}
       <Center>
-        <HeadingMedium
-          bg={"#836091"}
-          p={"1.2rem"}
-          color={"white"}
-          fontSize={"14px"}
-          borderRadius={"5rem"}
-          cursor={"pointer"}
-          onClick={() => navigate("/post/list")}
-        >
-          다른 글 더 보기
-        </HeadingMedium>
+        <Button onClick={() => navigate("/post/list")}>다른 글 더 보기</Button>
       </Center>
     </Box>
   );

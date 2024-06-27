@@ -7,26 +7,27 @@ import LobbyPostListOfBest from "../component/Lobby/LobbyPostListOfBest.jsx";
 function Lobby() {
   return (
     <Flex
-      w={{ base: "720px", sm: "630px", lg: "990px" }}
+      w={{ base: "720px", lg: "960px", sm: "720px" }}
       direction={"column"}
       alignItems={"center"}
       justify={"center"}
     >
       <Box
-        py={{ base: "2rem", sm: "1rem", lg: "2rem" }}
-        w={{ base: "720px", sm: "750px", lg: "870px" }}
+        w={{ base: "720px", lg: "800px", sm: "580px" }}
+        h={{ base: "240px", lg: "240px", sm: "200px" }}
       >
         <LobbyPlaceList />
       </Box>
 
-      <Box py={{ base: "2rem", sm: "1rem", lg: "2rem" }}>
+      <Box
+        w={{ base: "720px", lg: "960px", sm: "720px" }}
+        h={{ base: "240px", lg: "280px", sm: "240px" }}
+        my={{ base: "32px", lg: "32px", sm: "24px" }}
+      >
         <LobbyMdList />
       </Box>
 
-      <Box
-        py={{ base: "2rem", sm: "1rem", lg: "2rem" }}
-        w={{ base: "720px", sm: "720px", lg: "720px" }}
-      >
+      <Box w={{ base: "720px", lg: "720px", sm: "540px" }}>
         <LobbyPostListOfBest />
       </Box>
     </Flex>

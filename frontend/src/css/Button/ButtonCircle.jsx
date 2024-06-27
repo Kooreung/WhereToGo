@@ -1,28 +1,51 @@
 import React from "react";
-import { Flex } from "@chakra-ui/react";
+import { Flex, useBreakpointValue } from "@chakra-ui/react";
 
+// 사이즈 별 분류 , 반응에 따른 사이즈
 const presets = {
   small: {
-    size: "20px",
+    lg: {
+      size: "20px",
+    },
+    sm: {
+      size: "12px",
+    },
   },
   medium: {
-    size: "40px",
+    lg: {
+      size: "40px",
+    },
+    sm: {
+      size: "32px",
+    },
   },
   large: {
-    size: "60px",
+    lg: {
+      size: "60px",
+    },
+    sm: {
+      size: "52px",
+    },
   },
 };
 
 function ButtonCircle({ variant = "medium", ...props }) {
+  // 기본 프리셋 값 medium
   const preset = presets[variant] || presets["medium"];
 
+  const buttonSize = useBreakpointValue({
+    lg: preset.lg.size,
+    sm: preset.sm.size,
+  });
+
+  // 해당 컴포넌트의 설정 값
   return (
     <Flex
+      w={buttonSize}
+      h={buttonSize}
       boxShadow="md"
       borderRadius="100%"
       color={"#836091"}
-      w={preset.size}
-      h={preset.size}
       cursor={"pointer"}
       align={"center"}
       justifyContent="center"
