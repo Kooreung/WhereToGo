@@ -123,6 +123,12 @@ export function LobbyPlaceList() {
                       boxShadow={"md"}
                       name={place.src}
                       src={place.src || defaultImage}
+                      sx={{
+                        transition: "transform 0.3s ease",
+                        "&:hover": {
+                          transform: "scale(1.05)",
+                        },
+                      }}
                     />
                     <Box textAlign="center">{place.name}</Box>
                   </Stack>

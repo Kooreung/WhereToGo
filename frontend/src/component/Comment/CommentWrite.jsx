@@ -16,15 +16,17 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { LoginContext } from "../LoginProvider.jsx";
+import { useNavigate } from "react-router-dom";
 
 function CommentWrite({ postId, isTransition, setIsTransition }) {
   const [comment, setComment] = useState("");
   const toast = useToast();
   const account = useContext(LoginContext);
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const navigate = useNavigate();
 
   function handleSubmitComment() {
-    if (!account.isLoggedIn()) {
+    if (!account.isLoggedIn() || isTransition) {
       return;
     }
     setIsTransition(true);
@@ -46,6 +48,14 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
       });
   }
 
+  function handleSubmitKeyDown(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      e.stopPropagation();
+      onOpen();
+    }
+  }
+
   return (
     <Box w={"720px"} my={"16px"} mt={3}>
       <Box>
@@ -53,6 +63,7 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
           onChange={(e) => setComment(e.target.value)}
           value={comment}
           placeholder={"댓글을 입력하세요"}
+          onKeyDown={handleSubmitKeyDown}
         />
       </Box>
       <Flex justify={"end"} mt={3}>
