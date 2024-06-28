@@ -345,11 +345,18 @@ FROM post p
                 """)
     int mdPickPush(Integer postId);
 
-
+// 내가 작성한 글 가져오기 (작성한 글마다 좋아요 개수까지)
     @Select("""
-            SELECT *
-            FROM post
-            WHERE memberid = #{memberId}
+            SELECT p.postid,
+                   p.title,
+                   p.content,
+                   p.createdate,
+                   p.view,
+                   COUNT(l.postid) AS likeCount
+            FROM post p
+                     LEFT JOIN likes l ON p.postid = l.postid
+            WHERE p.memberid = #{memberId}
+            GROUP BY p.postid, p.title, p.content, p.createdate, p.view
             """)
     List<Post> getMyList(Integer memberId);
 

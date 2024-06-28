@@ -40,7 +40,8 @@ public interface MemberMapper {
                    gender, 
                    birth, 
                    address, 
-                   phoneNumber
+                   phoneNumber,
+                   inserted
             FROM member
             where memberId = #{memberId};
             """)

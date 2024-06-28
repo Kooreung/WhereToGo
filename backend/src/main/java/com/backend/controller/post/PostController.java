@@ -83,15 +83,17 @@ public class PostController {
     }
 
     // 내가 좋아요한 게시글 목록 Controller
-    @GetMapping("likeList")
+    @GetMapping("likeList/{memberId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Map<String, Object>> getLikeList(Authentication authentication, @RequestParam(defaultValue = "1") Integer page, @RequestParam(value = "type", required = false) String searchType,
+    public ResponseEntity<Map<String, Object>> getLikeList(
+            @PathVariable Integer memberId,
+            @RequestParam(defaultValue = "1") Integer page, @RequestParam(value = "type", required = false) String searchType,
                                                            @RequestParam(value = "keyword", defaultValue = "") String searchKeyword) {
-        Integer memberId = Integer.valueOf(authentication.getName());
         System.out.println("searchKeyword = " + searchKeyword);
         Map<String, Object> likedPosts = postService.getLikeAllList(memberId, page, searchType, searchKeyword);
         return ResponseEntity.ok(likedPosts);
     }
+
 
     // 게시글 삭제 Controller
     @DeleteMapping("{postId}")

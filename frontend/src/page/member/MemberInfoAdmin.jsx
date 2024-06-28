@@ -24,8 +24,10 @@ import Lobby from "../Lobby.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faHeart,
   faLocationDot,
   faPhone,
+  faReceipt,
   faSquareEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -34,8 +36,11 @@ export function MemberInfoAdmin() {
   const [member, setMember] = useState(null);
   const [post, setPost] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [postLikeList, setPostLikeList] = useState([]);
   const navigate = useNavigate();
   const account = useContext(LoginContext);
+
+  let likeCountAll = 0;
 
   useEffect(() => {
     axios
@@ -54,12 +59,22 @@ export function MemberInfoAdmin() {
         setPost(res.data.post);
       })
       .catch();
-    axios.get(`/api/post/myLikeList?memberId=${memberId}`);
+
+    axios
+      .get(`/api/post/likeList/${memberId}`)
+      .then((res) => {
+        setPostLikeList(res.data.postList);
+      })
+      .catch();
   }, []);
 
   if (member === null) {
     return <Spinner />;
   }
+
+  post.forEach((p) => {
+    likeCountAll += p.likeCount;
+  });
 
   return (
     <Box w={720}>
@@ -70,18 +85,36 @@ export function MemberInfoAdmin() {
               <Avatar
                 name="defaultProfile"
                 src={profile.src}
-                w="100px"
-                h="100px"
+                w="75px"
+                h="75px"
               />
             </Flex>
             <Flex
-              pl={"2rem"}
+              pl={"1.5rem"}
               w={"100%"}
               flexDirection="column"
               justifyContent="center"
             >
-              <Text fontSize="25px">{member.nickName}</Text>
-              <Text>여기다가는 무엇을 넣어야 할까?</Text>
+              <Flex alignItems={"center"}>
+                <Text fontSize="25px" mr={3}>
+                  {member.nickName}{" "}
+                </Text>
+                <Text mr={2}>
+                  <FontAwesomeIcon
+                    icon={faReceipt}
+                    style={{ color: "#D8B7E5" }}
+                  />{" "}
+                  {post.length}
+                </Text>
+                <Text>
+                  <FontAwesomeIcon
+                    icon={faHeart}
+                    style={{ color: "#D8B7E5" }}
+                  />{" "}
+                  {likeCountAll}
+                </Text>
+              </Flex>
+              <Text>{member.inserted}</Text>
             </Flex>
           </Flex>
         </CardBody>
@@ -89,7 +122,7 @@ export function MemberInfoAdmin() {
           <Divider />
         </Box>
         <CardFooter>
-          <Tabs w="100%" variant="soft-rounded" colorScheme="green">
+          <Tabs w="100%" variant="soft-rounded" colorScheme="purple">
             <TabList mb={5}>
               <Tab>게시물</Tab>
               <Tab>좋아요</Tab>
@@ -119,7 +152,30 @@ export function MemberInfoAdmin() {
                   </Box>
                 ))}
               </TabPanel>
-              <TabPanel>2</TabPanel>
+              <TabPanel>
+                {postLikeList.map((post) => (
+                  <Box key={post.postId} mb={9}>
+                    <Flex w={"100%"} justify={"space-between"}>
+                      <Flex
+                        fontWeight={"bolder"}
+                        onClick={() => navigate(`/post/${post.postId}`)}
+                        cursor={"pointer"}
+                        style={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {post.title.length > 35
+                          ? `${post.title.slice(0, 35)}...`
+                          : post.title}
+                      </Flex>
+                      <Flex>{post.createDate}</Flex>
+                    </Flex>
+                    <Divider />
+                  </Box>
+                ))}
+              </TabPanel>
             </TabPanels>
           </Tabs>
         </CardFooter>

@@ -184,12 +184,11 @@ export function MemberInfo(props) {
       <CardFooter display="flex" justifyContent="space-between">
         <Box
           cursor={"pointer"}
-          onClick={() => navigate("/postLike/list")}
+          onClick={() => navigate(`/postLike/list/${member.memberId}`)}
           style={{ display: "flex", alignItems: "center" }}
         >
           <FontAwesomeIcon
             icon={faHeart}
-            onClick={() => navigate("/postLike/list")}
             size="lg"
             style={{ color: "#D8B7E5", marginRight: "8px" }}
           />
