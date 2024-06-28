@@ -52,7 +52,6 @@ function PostList() {
     });
     setSearchType("all");
     setSearchKeyword("");
-    setCurrentPage(currentPage);
 
     const typeParam = searchParams.get("type");
     const keywordParam = searchParams.get("keyword");
@@ -87,7 +86,6 @@ function PostList() {
   function handlePageButtonClick(pageNumber) {
     searchParams.set("page", pageNumber);
     navigate(`/post/list?${searchParams}`);
-    setCurrentPage(pageNumber);
   }
 
   return (
@@ -287,13 +285,13 @@ function PostList() {
             <ButtonNumber
               key={pageNumber}
               onClick={() => handlePageButtonClick(pageNumber)}
-              bg={pageNumber === currentPage ? "#836091" : "white"}
-              color={pageNumber === currentPage ? "white" : "#836091"}
+              colorScheme={
+                pageNumber === pageInfo.currentPageNumber ? "purple" : "gray"
+              }
             >
               {pageNumber}
             </ButtonNumber>
           ))}
-
           {pageInfo.nextPageNumber && (
             <>
               <ButtonNumber
