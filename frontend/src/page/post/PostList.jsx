@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  Avatar,
   Box,
   Button,
   Center,
@@ -159,14 +160,8 @@ function PostList() {
                 <Spacer />
                 <Flex align={"center"}>
                   <Flex align={"center"}>
-                    <Box
-                      w={"24px"}
-                      h={"24px"}
-                      mr={1}
-                      borderRadius={"100%"}
-                      boxShadow={"base"}
-                    >
-                      <Image src={post.profileName} borderRadius={"100%"} />
+                    <Box mr={1}>
+                      <Avatar src={post.profileName} w="25px" h="25px" />
                     </Box>
                     <Text overflow={"hidden"} textOverflow={"ellipsis"}>
                       {post.nickName}
