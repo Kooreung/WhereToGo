@@ -32,7 +32,7 @@ import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 import ContentParser from "../../component/ContentParser.jsx";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 import { faComment } from "@fortawesome/free-regular-svg-icons";
-import ButtonNumber from "../../css/Button/ButtonOutline.jsx";
+import ButtonOutline from "../../css/Button/ButtonOutline.jsx";
 
 function PostList() {
   const navigate = useNavigate();
@@ -267,38 +267,38 @@ function PostList() {
         <Center>
           {pageInfo.prevPageNumber && (
             <>
-              <ButtonNumber onClick={() => handlePageButtonClick(1)}>
+              <ButtonOutline onClick={() => handlePageButtonClick(1)}>
                 <FontAwesomeIcon icon={faAnglesLeft} />
-              </ButtonNumber>
-              <ButtonNumber
+              </ButtonOutline>
+              <ButtonOutline
                 onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
               >
                 <FontAwesomeIcon icon={faAngleLeft} />
-              </ButtonNumber>
+              </ButtonOutline>
             </>
           )}
 
           {pageNumbers.map((pageNumber) => (
-            <ButtonNumber
+            <ButtonOutline
               key={pageNumber}
               onClick={() => handlePageButtonClick(pageNumber)}
             >
               {pageNumber}
-            </ButtonNumber>
+            </ButtonOutline>
           ))}
 
           {pageInfo.nextPageNumber && (
             <>
-              <ButtonNumber
+              <ButtonOutline
                 onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
               >
                 <FontAwesomeIcon icon={faAngleRight} />
-              </ButtonNumber>
-              <ButtonNumber
+              </ButtonOutline>
+              <ButtonOutline
                 onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
               >
                 <FontAwesomeIcon icon={faAnglesRight} />
-              </ButtonNumber>
+              </ButtonOutline>
             </>
           )}
         </Center>
