@@ -432,6 +432,7 @@ export function AdminPage() {
                         <Td>{member.memberId}</Td>
                         <Td>{member.email}</Td>
                         <Td>{member.nickName}</Td>
+                        <Td>{member.inserted}</Td>
                       </Tr>
                     ))}
                   </Tbody>

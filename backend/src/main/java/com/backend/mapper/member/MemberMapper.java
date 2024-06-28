@@ -145,7 +145,7 @@ public interface MemberMapper {
     // 회원 리스트 admin 권한 안나오면서 조회 및 검색
     @Select("""
         <script>
-        SELECT m.memberId, m.email, m.nickname
+        SELECT m.memberId, m.email, m.nickname, m.inserted
         FROM member m JOIN authority a
         ON m.memberId = a.memberId
         <trim prefix="WHERE" prefixOverrides="OR">
