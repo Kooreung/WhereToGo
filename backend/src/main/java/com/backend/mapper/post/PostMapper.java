@@ -38,7 +38,7 @@ FROM post p
     @Select("""
             <script>
             SELECT p.postid, p.title, p.content, p.createdate, p.view,
-                   m.nickname,
+                   m.nickname, m.memberid,
                    plpic.picurl,
                    pro.profilename,
                    COUNT(DISTINCT c.commentid) commentCount,

@@ -17,18 +17,38 @@ const places = [
     src: "",
   },
   {
+    name: "영등포구",
+    keyword: "영등포구",
+    src: "",
+  },
+  {
+    name: "용산구",
+    keyword: "용산구",
+    src: "",
+  },
+  {
     name: "강서구",
     keyword: "강서구",
     src: "",
   },
   {
-    name: "강북구",
-    keyword: "강북구",
+    name: "마포구",
+    keyword: "마포구",
     src: "",
   },
   {
-    name: "강동구",
-    keyword: "강동구",
+    name: "강남구",
+    keyword: "강남구",
+    src: "",
+  },
+  {
+    name: "서대문구",
+    keyword: "서대문구",
+    src: "",
+  },
+  {
+    name: "성동구",
+    keyword: "성동구",
     src: "",
   },
   {
@@ -37,8 +57,48 @@ const places = [
     src: "",
   },
   {
-    name: "마포구",
-    keyword: "마포구",
+    name: "강북구",
+    keyword: "강북구",
+    src: "",
+  },
+  {
+    name: "성북구",
+    keyword: "성북구",
+    src: "",
+  },
+  {
+    name: "동대문구",
+    keyword: "동대문구",
+    src: "",
+  },
+  {
+    name: "강동구",
+    keyword: "강동구",
+    src: "",
+  },
+  {
+    name: "은평구",
+    keyword: "은평구",
+    src: "",
+  },
+  {
+    name: "구로구",
+    keyword: "구로구",
+    src: "",
+  },
+  {
+    name: "동작구",
+    keyword: "동작구",
+    src: "",
+  },
+  {
+    name: "중구",
+    keyword: "중구",
+    src: "",
+  },
+  {
+    name: "광진구",
+    keyword: "광진구",
     src: "",
   },
   {
@@ -57,8 +117,23 @@ const places = [
     src: "",
   },
   {
+    name: "금천구",
+    keyword: "금천구",
+    src: "",
+  },
+  {
     name: "도봉구",
     keyword: "도봉구",
+    src: "",
+  },
+  {
+    name: "관악구",
+    keyword: "관악구",
+    src: "",
+  },
+  {
+    name: "노원구",
+    keyword: "노원구",
     src: "",
   },
   // 필요한 만큼 장소 추가
@@ -72,11 +147,11 @@ export function LobbyPlaceList() {
   function handleMoveRight() {
     const flexWidth = dataRef.current.scrollWidth;
     const containerWidth = dataRef.current.parentElement.offsetWidth;
-    setPositionX((prev) => Math.max(prev - 250, containerWidth - flexWidth));
+    setPositionX((prev) => Math.max(prev - 350, containerWidth - flexWidth));
   }
 
   function handleMoveLeft() {
-    setPositionX((prev) => Math.min(prev + 250, 0));
+    setPositionX((prev) => Math.min(prev + 350, 0));
   }
 
   return (

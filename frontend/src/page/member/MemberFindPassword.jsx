@@ -111,6 +111,12 @@ export function MemberFindPassword() {
     );
   }
 
+  function handleSubmitKeyDown(e) {
+    if (e.key === "Enter") {
+      handleFindPassword();
+    }
+  }
+
   return (
     <Center>
       <Box w={500}>
@@ -121,7 +127,7 @@ export function MemberFindPassword() {
           <Box>
             <FormControl>
               <FormLabel>이메일</FormLabel>
-              <Input style={inputStyles} onChange={(e) => setEmail(e.target.value)} />
+              <Input style={inputStyles} onChange={(e) => setEmail(e.target.value)}  onKeyDown={handleSubmitKeyDown}/>
             </FormControl>
           </Box>
           <Button mt={4} onClick={handleCode}>인증코드 보내기</Button>

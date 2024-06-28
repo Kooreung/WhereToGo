@@ -40,10 +40,19 @@ import {
   WrapItem,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBackwardFast,
+  faBackwardStep,
+  faForwardFast,
+  faForwardStep,
+  faMagnifyingGlass,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import Lobby from "../Lobby.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import ContentParser from "../../component/ContentParser.jsx";
+import ButtonNumber from "../../css/Button/ButtonNumber.jsx";
+import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 
 export function AdminPage() {
   const [memberList, setMemberList] = useState([]);
@@ -377,6 +386,13 @@ export function AdminPage() {
     );
   }
 
+  const tdCellStyle = {
+    maxWidth: "300px",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  };
+
   return (
     <Box>
       <Tabs variant="enclosed">
@@ -384,7 +400,7 @@ export function AdminPage() {
           <Tab>회원관리</Tab>
           <Tab onClick={handleBanner}>배너 등록</Tab>
         </TabList>
-        <TabPanels>
+        <TabPanels w={{ base: "720px", lg: "960px" }}>
           <TabPanel>
             <Box mb={10}>
               <Heading>회원 목록</Heading>
@@ -431,38 +447,38 @@ export function AdminPage() {
                     <option value="nickName">작성자</option>
                   </Select>
                 </Box>
-                <Box>
+                <Box ml={2}>
                   <Input
                     onChange={(e) => setSearchKeyword(e.target.value)}
                     placeholder="검색어"
                   />
                 </Box>
-                <Box>
-                  <Button onClick={handleSearchClick}>
+                <Box ml={2}>
+                  <ButtonCircle onClick={handleSearchClick}>
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
-                  </Button>
+                  </ButtonCircle>
                 </Box>
               </Flex>
             </Center>
 
-            <Center>
+            <Center mt={4}>
               <Box>
                 {pageInfo.prevPageNumber && (
                   <>
-                    <Button onClick={() => handlePageButtonClick(1)}>
-                      처음
-                    </Button>
-                    <Button
+                    <ButtonNumber onClick={() => handlePageButtonClick(1)}>
+                      <FontAwesomeIcon icon={faBackwardFast} />
+                    </ButtonNumber>
+                    <ButtonNumber
                       onClick={() =>
                         handlePageButtonClick(pageInfo.prevPageNumber)
                       }
                     >
-                      이전
-                    </Button>
+                      <FontAwesomeIcon icon={faBackwardStep} />
+                    </ButtonNumber>
                   </>
                 )}
                 {pageNumbers.map((pageNumber) => (
-                  <Button
+                  <ButtonNumber
                     onClick={() => handlePageButtonClick(pageNumber)}
                     key={pageNumber}
                     colorScheme={
@@ -472,31 +488,31 @@ export function AdminPage() {
                     }
                   >
                     {pageNumber}
-                  </Button>
+                  </ButtonNumber>
                 ))}
                 {pageInfo.nextPageNumber && (
                   <>
-                    <Button
+                    <ButtonNumber
                       onClick={() =>
                         handlePageButtonClick(pageInfo.nextPageNumber)
                       }
                     >
-                      다음
-                    </Button>
-                    <Button
+                      <FontAwesomeIcon icon={faForwardStep} />
+                    </ButtonNumber>
+                    <ButtonNumber
                       onClick={() =>
                         handlePageButtonClick(pageInfo.lastPageNumber)
                       }
                     >
-                      맨끝
-                    </Button>
+                      <FontAwesomeIcon icon={faForwardFast} />
+                    </ButtonNumber>
                   </>
                 )}
               </Box>
             </Center>
           </TabPanel>
-          <TabPanel>
-            <Wrap spacing={4}>
+          <TabPanel w={{ base: "720px", lg: "960px" }}>
+            <Wrap spacing={4} mb={6}>
               <WrapItem>
                 <Button colorScheme="orange" onClick={handleAddClick}>
                   MDpost선택
@@ -508,14 +524,14 @@ export function AdminPage() {
                 </Button>
               </WrapItem>
             </Wrap>
-            <Card>
+            <Card w={{ base: "720px", lg: "960px" }}>
               <CardBody>
                 <Table>
                   <Thead>
                     <Tr>
-                      <Th>게시물 아이디</Th>
-                      <Th w={"150px"}>제목</Th>
-                      <Th w={96}>내용</Th>
+                      <Th width={"150px"}>게시물 아이디</Th>
+                      <Th width={"200px"}>제목</Th>
+                      <Th width={"500px"}>내용</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -529,15 +545,17 @@ export function AdminPage() {
                         }}
                         key={mdpick.postId}
                       >
-                        <Td>{mdpick.postId}</Td>
-                        <Td>{mdpick.title}</Td>
-                        <Td>
+                        <Td sx={tdCellStyle}>{mdpick.postId}</Td>
+                        <Td sx={tdCellStyle}>{mdpick.title}</Td>
+                        <Td sx={tdCellStyle}>
                           <ContentParser content={mdpick.content} />{" "}
                         </Td>
                         <Td>
-                          <Button onClick={() => handleDelete(mdpick.postId)}>
-                            삭제
-                          </Button>
+                          <ButtonCircle
+                            onClick={() => handleDelete(mdpick.postId)}
+                          >
+                            <FontAwesomeIcon icon={faTrash} />
+                          </ButtonCircle>
                         </Td>
                       </Tr>
                     ))}
@@ -545,14 +563,15 @@ export function AdminPage() {
                 </Table>
               </CardBody>
             </Card>
-            <Card mt={10}>
+            {/*여기*/}
+            <Card mt={10} w={{ base: "720px", lg: "960px" }}>
               <CardBody>
                 <Table>
                   <Thead>
                     <Tr>
-                      <Th>배너 아이디</Th>
-                      <Th w={"150px"}>지역이름</Th>
-                      <Th w={96}>링크</Th>
+                      <Th width={"150px"}>배너 아이디</Th>
+                      <Th width={"200px"}>지역이름</Th>
+                      <Th width={"500px"}>링크</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -566,15 +585,15 @@ export function AdminPage() {
                         }}
                         key={banner.bannerId}
                       >
-                        <Td>{banner.bannerId}</Td>
-                        <Td>{banner.city}</Td>
-                        <Td>{banner.link}</Td>
+                        <Td sx={tdCellStyle}>{banner.bannerId}</Td>
+                        <Td sx={tdCellStyle}>{banner.city}</Td>
+                        <Td sx={tdCellStyle}>{banner.link}</Td>
                         <Td>
-                          <Button
+                          <ButtonCircle
                             onClick={() => handleBannerDelete(banner.bannerId)}
                           >
-                            삭제
-                          </Button>
+                            <FontAwesomeIcon icon={faTrash} />
+                          </ButtonCircle>
                         </Td>
                       </Tr>
                     ))}
@@ -588,11 +607,11 @@ export function AdminPage() {
       <Modal isOpen={isModalOpenOfAdd} onClose={onModalCloseOfAdd}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>MD 리스트</ModalHeader>ㅇ
-          <ModalBody>배너에 등록할 게시글을 선택 해주세요.</ModalBody>
+          <ModalHeader>MD 리스트</ModalHeader>
+          <ModalBody>ㅇ 배너에 등록할 게시글을 선택 해주세요.</ModalBody>
           {postsToShow.map((mdPost) => (
-            <Box key={mdPost.postId}>
-              <Card border="1px" mb="3px">
+            <Center key={mdPost.postId} mb={4}>
+              <Card border="1px ligtgray" mb="3px" width={"400px"}>
                 <CardHeader>
                   <Heading size="md">{mdPost.title}</Heading>
                 </CardHeader>
@@ -628,6 +647,7 @@ export function AdminPage() {
                         <FormControl>
                           <FormLabel>배너사진 선택</FormLabel>
                           <Input
+                            alignContent={"center"}
                             multiple
                             type="file"
                             accept="image/*"
@@ -644,10 +664,12 @@ export function AdminPage() {
                   )}
                 </CardBody>
               </Card>
-            </Box>
+            </Center>
           ))}
           <ModalFooter>
-            <Button onClick={handleSendMdPicks}>추가</Button>
+            <Button mr={3} onClick={handleSendMdPicks}>
+              추가
+            </Button>
             <Button onClick={handleModalClose}>취소</Button>
           </ModalFooter>
         </ModalContent>
@@ -659,24 +681,29 @@ export function AdminPage() {
           <ModalCloseButton />
           <ModalBody>
             <Input
+              mt={2}
               type="text"
               placeholder="지역 이름을 적어주세요"
               onChange={(e) => setCity(e.target.value)}
             />
             <Input
+              mt={2}
               placeholder="링크를 입력하세요"
               value={bannerLink}
               onChange={handleLinkChange}
             />
-            <Input type="file" onChange={handleBannerFileChange} />
+            <Input
+              mt={2}
+              type="file"
+              onChange={handleBannerFileChange}
+              alignContent={"center"}
+            />
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
               추가
             </Button>
-            <Button variant="ghost" onClick={onClose}>
-              취소
-            </Button>
+            <Button onClick={onClose}>취소</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

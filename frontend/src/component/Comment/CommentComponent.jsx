@@ -6,7 +6,7 @@ import CommentList from "./CommentList.jsx";
 export function CommentComponent({ postId, isTransition, setIsTransition }) {
   return (
     <Box>
-      <Box fontSize={"lg"}>댓글</Box>
+      <Box fontSize={"lg"} alignContent={"center"}></Box>
       <CommentWrite
         postId={postId}
         isTransition={isTransition}

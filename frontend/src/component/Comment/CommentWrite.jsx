@@ -66,7 +66,7 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
   }
 
   return (
-    <Box w={"720px"} my={"16px"} mt={3}>
+    <Box w={"720px"} my={"16px"} align={"center"} ml={"1rem"}>
       <Box>
         <Textarea
           onChange={(e) => setComment(e.target.value)}
