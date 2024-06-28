@@ -52,13 +52,19 @@ public class MemberService {
     @Value("${image.src.prefix}")
     String srcPrefix;
 
-    public void add(Member member, MultipartFile newProfile) throws IOException {
+    //유저 가입
+    public void addMember(Member member, MultipartFile newProfile) throws IOException {
+        //입력한 패스워드 암호화후 저장
         member.setPassword(passwordEncoder.encode(member.getPassword()));
-        mapper.insert(member);
+        //데이터베이스에 추가
+        mapper.insertMember(member);
+
         Member dbmember = getByEmail(member.getEmail());
 
+        //가입시 입력한 사진파일이 있는지 확인
         if (newProfile != null && !newProfile.isEmpty()) {
             // 이미지가 있는 경우 S3에 저장
+
             String key = String.format("prj3/member/%s/%s", dbmember.getMemberId(), newProfile.getOriginalFilename());
             PutObjectRequest objectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
@@ -66,9 +72,11 @@ public class MemberService {
                     .acl(ObjectCannedACL.PUBLIC_READ)
                     .build();
             s3Client.putObject(objectRequest, RequestBody.fromInputStream(newProfile.getInputStream(), newProfile.getSize()));
-            mapper.profileAdd(dbmember.getMemberId(), newProfile.getOriginalFilename());
+            //member 데이터베이스에 사진이름 저장
+            mapper.updateProfileName(dbmember.getMemberId(), newProfile.getOriginalFilename());
         } else {
-            // 프로필 이미지가 없는 경우 기본 프로필 이미지 사용
+            // 선택한 프로필 이미지가 없는 경우 기본 프로필 이미지 사용
+            //이미 s3에 저장돼있는 기본사진 가져오는 코드
             String defaultProfileKey = "prj3/defaultProfile.png";
             GetObjectRequest defaultProfileRequest = GetObjectRequest.builder()
                     .bucket(bucketName)
@@ -76,6 +84,7 @@ public class MemberService {
                     .build();
             ResponseInputStream<GetObjectResponse> defaultProfileResponse = s3Client.getObject(defaultProfileRequest);
 
+            //가져온 기본사진을 prj3/member/멤버아이디/defaultProfile.png 경로에 저장
             PutObjectRequest objectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(String.format("prj3/member/%s/defaultProfile.png", dbmember.getMemberId()))
@@ -83,17 +92,21 @@ public class MemberService {
                     .build();
             s3Client.putObject(objectRequest, RequestBody.fromInputStream(defaultProfileResponse, defaultProfileResponse.response().contentLength()));
 
-            mapper.profileAdd(dbmember.getMemberId(), "defaultProfile.png");
+            //기본사진 이름으로 저장
+            mapper.updateProfileName(dbmember.getMemberId(), "defaultProfile.png");
         }
     }
 
+    //이메일 있는지 확인
     public Member getByEmail(String email) {
         return mapper.selectByEmail(email);
     }
 
+    //닉네임 있는지 확인
     public Member getByNickName(String nickName) {
         return mapper.selectByNickName(nickName);
     }
+
 
     public boolean hasAccess(Integer id, Authentication authentication) {
         boolean self = authentication.getName().equals(id.toString());
@@ -110,7 +123,7 @@ public class MemberService {
             return false;
         }
 
-        Member dbMember = mapper.selectById(member.getMemberId());
+        Member dbMember = mapper.selectMemberBymemberId(member.getMemberId());
 
         if (dbMember == null) {
             return false;
@@ -119,9 +132,10 @@ public class MemberService {
         return passwordEncoder.matches(member.getPassword(), dbMember.getPassword());
     }
 
-    public Map<String, Object> getById(Integer memberId) {
+    //어드민이 유저관리 페이지에서 해당 멤버의 개인정보를 볼때 사용
+    public Map<String, Object> getMemberInfoByMemberId(Integer memberId) {
         Map<String, Object> result = new HashMap<>();
-        Member dbmember = mapper.selectById(memberId);
+        Member dbmember = mapper.selectMemberBymemberId(memberId);
         result.put("member", dbmember);
 
         MemberProfile memberProfile = new MemberProfile();
@@ -133,7 +147,7 @@ public class MemberService {
         return result;
     }
 
-    public Map<String, Object> memberList(Integer page, String searchType, String keyword) {
+    public Map<String, Object> getMemberList(Integer page, String searchType, String keyword) {
         Map pageInfo = new HashMap();
         Integer countAll = mapper.countAllWithSearch(searchType, keyword);
 
@@ -163,11 +177,13 @@ public class MemberService {
                 "memberList", mapper.selectMemberAllPaging(offset, searchType, keyword));
     }
 
+
+    //개인정보 수정할때 쓰는 권한확인 코드
     public boolean hasAccessModify(Member member, Authentication authentication) {
         if (!authentication.getName().equals(member.getMemberId().toString())) {
             return false;
         }
-        Member dbMember = mapper.selectById(member.getMemberId());
+        Member dbMember = mapper.selectMemberBymemberId(member.getMemberId());
         if (dbMember == null) {
             return false;
         }
@@ -182,18 +198,20 @@ public class MemberService {
         return true;
     }
 
-    public Map<String, Object> modify(Member member, Authentication authentication, MultipartFile newProfile) throws IOException {
+    //개인정보 수정코드
+    public Map<String, Object> modifyMemberInfo(Member member, Authentication authentication, MultipartFile newProfile) throws IOException {
         if (member.getPassword() != null && member.getPassword().length() > 0) {
             // 패스워드가 입력되었으니 바꾸기
             member.setPassword(passwordEncoder.encode(member.getPassword()));
         } else {
             // 입력 안됐으니 기존 값으로 유지
-            Member dbMember = mapper.selectById(member.getMemberId());
+            Member dbMember = mapper.selectMemberBymemberId(member.getMemberId());
             member.setPassword(dbMember.getPassword());
         }
 
+
         if (newProfile != null && !newProfile.isEmpty()) {
-            System.out.println(newProfile.getOriginalFilename());
+            //사진 입력됐으니 기존 s3경로에 새로운 사진 입력
             String key = STR."prj3/member/\{member.getMemberId()}/\{newProfile.getOriginalFilename()}";
             PutObjectRequest objectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
@@ -202,6 +220,7 @@ public class MemberService {
                     .build();
             s3Client.putObject(objectRequest, RequestBody.fromInputStream(newProfile.getInputStream(), newProfile.getSize()));
 
+            //기존의 사진은 삭제
             String prevProfileName = mapper.getProfileNameByMemberId(member.getMemberId());
             String key2 = STR."prj3/member/\{member.getMemberId()}/\{prevProfileName}";
             DeleteObjectRequest objectRequest2 = DeleteObjectRequest.builder()
@@ -209,8 +228,10 @@ public class MemberService {
                     .key(key2)
                     .build();
             s3Client.deleteObject(objectRequest2);
+            //새로운 이미지 이름으로 데이터베이스 업데이트
             mapper.profileUpdate(member.getMemberId(), newProfile.getOriginalFilename());
         }
+        //변경사항 업데이트
         mapper.update(member);
 
         String token = "";
@@ -226,9 +247,11 @@ public class MemberService {
         return Map.of("token", token);
     }
 
-    public void delete(Integer memberId) {
+    public void deleteMember(Integer memberId) {
         String fileName = mapper.getProfileNameByMemberId(memberId);
-        //탈퇴시 게시물 삭제 안할것이기 때문에 댓글,회원정보만 삭제
+        //탈퇴시 게시물 삭제 안할것이기 때문에 댓글,회원정보만 삭제(정확히는 개인정보를 기본 정보로 업데이트)
+
+        //s3에서 유저사진 삭제
         String key = STR."prj3/member/\{memberId}/\{fileName}";
         DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
                 .bucket(bucketName)
@@ -237,6 +260,7 @@ public class MemberService {
 
         s3Client.deleteObject(objectRequest);
 
+        //탈퇴한 유저의 닉네임을 램덤으로 생성해서 저장
         String randomNickName = nickNameCreator.generateUniqueNicknameAndSave();
 //        List<Post> postList = postMapper.selectAllPost(memberId);
 
