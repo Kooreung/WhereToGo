@@ -39,7 +39,6 @@ function LobbyPostListOfBest(props) {
         <Card
           key={index}
           onClick={() => navigate(`/post/${post.postId}`)}
-          direction={"row"}
           variant="outline"
           cursor="pointer"
           my={"1rem"}

@@ -4,7 +4,6 @@ import {
   Button,
   Center,
   Flex,
-  Image,
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -12,9 +11,8 @@ import { useNavigate } from "react-router-dom";
 import { LoginContext } from "./LoginProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
-import homeLogo from "../resource/img/logo.png";
 
-function Navbar() {
+function Footer() {
   const navigate = useNavigate();
   const account = useContext(LoginContext);
   const { colorMode, toggleColorMode } = useColorMode();
@@ -24,24 +22,14 @@ function Navbar() {
       w={"100%"}
       h={"100px"}
       px={"1rem"}
-      mb={"4rem"}
+      mt={"4rem"}
       align={"center"}
       justify={"space-between"}
       boxShadow={"md"}
-      roundedBottom={"1rem"}
+      roundedTop={"1rem"}
       boxSizing={"border-box"}
       bg={navColor}
     >
-      {/* 로고 */}
-      <Box
-        onClick={() => navigate("/")}
-        cursor={"pointer"}
-        w={"100px"}
-        h={"100px"}
-      >
-        <Image src={homeLogo} />
-      </Box>
-
       {/* 중간 메뉴 */}
       <Flex gap={12}>
         <Box onClick={() => navigate("/post/mdList")} cursor={"pointer"}>
@@ -98,4 +86,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default Footer;

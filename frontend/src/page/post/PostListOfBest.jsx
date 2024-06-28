@@ -1,4 +1,3 @@
-// 회원 인기 게시글
 import { Box, ButtonGroup, Divider, Flex, Image, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
