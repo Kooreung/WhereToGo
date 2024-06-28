@@ -2,10 +2,14 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   Avatar,
   Box,
-  Button, ButtonGroup,
+  Button,
+  ButtonGroup,
   Card,
-  CardBody, CardFooter,
-  CardHeader, Center, Divider,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Center,
+  Divider,
   Flex,
   FormControl,
   FormHelperText,
@@ -29,9 +33,10 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import { passwordPattern } from "../../Regex.jsx";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCrown} from "@fortawesome/free-solid-svg-icons";
-import { getInputStyles } from '/src/css/styles.js';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCrown } from "@fortawesome/free-solid-svg-icons";
+import { getInputStyles } from "/src/css/styles.js";
+import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 
 function MemberEdit(props) {
   const [member, setMember] = useState(null);
@@ -108,7 +113,7 @@ function MemberEdit(props) {
           ...member,
           oldPassword,
           file,
-          passwordCheck
+          passwordCheck,
         },
         {
           headers: {
@@ -158,7 +163,6 @@ function MemberEdit(props) {
     }
   }
 
-
   function handleCheckNickName() {
     axios
       .get(`/api/member/check?nickName=${member.nickName}`)
@@ -185,24 +189,34 @@ function MemberEdit(props) {
   return (
     <Box>
       <Center mb={30}>
-        <HeadingLarge>프로필 수정</HeadingLarge>
+        <HeadingVariant variant={"large"} align={"start"}>
+          프로필 수정
+        </HeadingVariant>
       </Center>
       <Card w={420} mb={20} boxShadow={"2xl"}>
         {account.isAdmin() && (
           <Center mt={5}>
-            <FontAwesomeIcon size={"2xl"} icon={faCrown} style={{color: "#FFD43B",}} />
+            <FontAwesomeIcon
+              size={"2xl"}
+              icon={faCrown}
+              style={{ color: "#FFD43B" }}
+            />
           </Center>
         )}
         {account.isAdmin() || (
           <Center mt={5}>
-            <FontAwesomeIcon size={"2xl"} icon={faCrown} style={{color: "#D8B7E5",}} />
+            <FontAwesomeIcon
+              size={"2xl"}
+              icon={faCrown}
+              style={{ color: "#D8B7E5" }}
+            />
           </Center>
         )}
         <CardBody>
           <label>
             <Center>
               <Avatar
-                _hover={{filter: "brightness(0.7)"}}
+                _hover={{ filter: "brightness(0.7)" }}
                 cursor={"pointer"}
                 name="defaultProfile"
                 src={profile.src}
@@ -220,15 +234,15 @@ function MemberEdit(props) {
             />
           </label>
 
-          <Stack mt='6' spacing='3'>
+          <Stack mt="6" spacing="3">
             <Center>
-              <Heading size='md' mb={7}>{member.nickName}</Heading>
+              <Heading size="md" mb={7}>
+                {member.nickName}
+              </Heading>
             </Center>
-            <HeadingMedium>닉네임 변경</HeadingMedium>
+            <HeadingVariant>닉네임 변경</HeadingVariant>
             <Box>
-              <FormControl mt={3}>
-                닉네임
-              </FormControl>
+              <FormControl mt={3}>닉네임</FormControl>
             </Box>
             <InputGroup>
               <Input
@@ -242,7 +256,7 @@ function MemberEdit(props) {
               />
               <InputRightElement w={"75px"} mr={1}>
                 <Button
-                    mt={2}
+                  mt={2}
                   isDisabled={
                     isCheckedNickName || member.nickName === oldNickName
                   }
@@ -253,13 +267,16 @@ function MemberEdit(props) {
               </InputRightElement>
             </InputGroup>
             <FormControl mt={6}>
-              <HeadingMedium>비밀번호 변경</HeadingMedium>
+              <HeadingVariant>비밀번호 변경</HeadingVariant>
               <Box>
                 <FormControl mt={6} mb={3}>
                   기존 비밀번호
                 </FormControl>
-                <Input style={inputStyles} onChange={(e) => setOldPassword(e.target.value)}
-                       placeholder={"암호를 변경하려면 입력하세요"} />
+                <Input
+                  style={inputStyles}
+                  onChange={(e) => setOldPassword(e.target.value)}
+                  placeholder={"암호를 변경하려면 입력하세요"}
+                />
               </Box>
               <Box>
                 <FormControl mt={6} mb={3}>
@@ -286,25 +303,22 @@ function MemberEdit(props) {
                   onChange={(e) => setPasswordCheck(e.target.value)}
                 />
                 {member.password === passwordCheck || (
-                  <FormHelperText>
-                    암호가 일치하지 않습니다.
-                  </FormHelperText>
+                  <FormHelperText>암호가 일치하지 않습니다.</FormHelperText>
                 )}
               </Box>
             </FormControl>
           </Stack>
-
         </CardBody>
         <CardFooter display="flex" justifyContent="flex-end">
-          <ButtonGroup spacing='2'>
-          <Button
-            isDisabled={isDisableSaveButton}
-            onClick={onOpen}
-            colorScheme={"blue"}
-            size={"sm"}
-          >
-            저장
-          </Button>
+          <ButtonGroup spacing="2">
+            <Button
+              isDisabled={isDisableSaveButton}
+              onClick={onOpen}
+              colorScheme={"blue"}
+              size={"sm"}
+            >
+              저장
+            </Button>
             <Button
               colorScheme={"blue"}
               size={"sm"}
