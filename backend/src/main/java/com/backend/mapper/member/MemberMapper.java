@@ -3,6 +3,7 @@ package com.backend.mapper.member;
 import com.backend.domain.member.Member;
 import org.apache.ibatis.annotations.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Mapper

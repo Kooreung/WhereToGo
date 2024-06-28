@@ -21,14 +21,15 @@ public interface PostMapper {
 
     // 게시글 조회 매퍼
     @Select("""
-            SELECT p.postid,p.title,p.content,p.createdate,p.view,p.memberid,p.mdpick,
-                   m.nickname,
-                   COUNT(DISTINCT c.commentid) commentCount,
-                   COUNT(DISTINCT l.memberid)  likeCount
-            FROM post p
-                     JOIN member m ON p.memberid = m.memberid
-                     LEFT JOIN comment c ON p.postid = c.postid
-                     LEFT JOIN likes l ON p.postid = l.postid
+SELECT p.postid,p.title,p.content,p.createdate,p.view,p.memberid,p.mdpick, pro.profilename,
+       m.nickname,
+       COUNT(DISTINCT c.commentid) commentCount,
+       COUNT(DISTINCT l.memberid)  likeCount
+FROM post p
+         JOIN member m ON p.memberid = m.memberid
+        JOIN profile pro ON pro.memberid = p.memberid
+         LEFT JOIN comment c ON p.postid = c.postid
+         LEFT JOIN likes l ON p.postid = l.postid
             WHERE p.postid = #{postId}
             """)
     Post selectById(Integer postId);
@@ -346,6 +347,13 @@ public interface PostMapper {
 
 
     @Select("""
+            SELECT *
+            FROM post
+            WHERE memberid = #{memberId}
+            """)
+    List<Post> getMyList(Integer memberId);
+
+    @Select("""
                         SELECT p.postid,
                                            p.title,
                                            p.content,
@@ -439,4 +447,5 @@ public interface PostMapper {
             where p.postid = #{postId}
             """)
     String getAuthByPostId(Integer postId);
+
 }

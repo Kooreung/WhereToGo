@@ -71,6 +71,9 @@ public class PostService {
         Post post = postMapper.selectById(postId);
         String auth = postMapper.getAuthByPostId(postId);
 
+        String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), post.getProfileName());
+
+        post.setProfileName(key);
 
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> like = new HashMap<>();
@@ -241,6 +244,13 @@ public class PostService {
     }
 
 
+    public Map<String, Object> myList(Integer memberId) {
+        List<Post> post = postMapper.getMyList(memberId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("post", post);
+        return result;
+    }
+
     public Map<String, Object> mdPickList() {
         List<Post> posts = postMapper.selectMdPickPostList();
 
@@ -330,4 +340,5 @@ public class PostService {
         s3Client.deleteObject(objectRequest2);
         return postMapper.deleteBannerById(bannerId);
     }
+
 }

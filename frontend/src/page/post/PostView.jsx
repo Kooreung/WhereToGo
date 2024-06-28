@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import {
+  Avatar,
   Box,
   Button,
   Divider,
   Flex,
   Grid,
-  GridItem, Heading,
+  GridItem,
+  Heading,
   Image,
   Link,
   Modal,
@@ -27,7 +29,9 @@ import { LoginContext } from "../../component/LoginProvider.jsx";
 import CommentComponent from "../../component/Comment/CommentComponent.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCaretRight, faEye, faHeart,
+  faCaretRight,
+  faEye,
+  faHeart,
   faHeart as emptyHeart,
   faList,
   faPenToSquare,
@@ -36,7 +40,6 @@ import {
 import { faHeart as fullHeart } from "@fortawesome/free-regular-svg-icons";
 import MapView from "../../component/Map/MapView.jsx";
 import defaultImage from "../../resource/img/unknownImage.png";
-import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 
 export function PostView() {
   const { postId } = useParams();
@@ -53,6 +56,7 @@ export function PostView() {
   const [positionX, setPositionX] = useState(0);
   const [authType, setAuthType] = useState("");
   const toast = useToast();
+
   const {
     isOpen: isModalOpenOfDelete,
     onOpen: onModalOpenOfDelete,
@@ -131,6 +135,7 @@ export function PostView() {
         onModalCloseOfDelete();
       });
   }
+
   function handleMoveLeft() {
     setPositionX((prev) => Math.min(prev + 400, 0));
   }
@@ -147,249 +152,229 @@ export function PostView() {
   }
 
   return (
-    <Box>
-      <Heading pl={10}>{post.title}</Heading>
-      <Divider />
-    <Flex direction="column" align="center">
+    <Box w={{ base: "720px", lg: "960px" }}>
+      <Heading>{post.title}</Heading>
+      <Divider mb={10} />
       <Flex direction="column" align="center">
-        <Grid
-          w={{ base: "720px", lg: "1080px" }}
-          h={"px"}
+        <Flex direction="column" align="center">
+          <Flex w={{ base: "720px", lg: "960px" }}>
+            <Flex>
+              <Avatar
+                src={post.profileName}
+                onClick={() => navigate(`/member/${post.memberId}`)}
+                cursor="pointer"
+              />
+            </Flex>
+            <Flex direction={"column"} w={"100%"}>
+              <Flex pl={"1rem"}>
+                <Text
+                  onClick={() => navigate(`/member/${post.memberId}`)}
+                  cursor="pointer"
+                >
+                  {post.nickName}
+                </Text>
+              </Flex>
+              <Flex pl={"1rem"} w={"100%"} justify={"space-between"}>
+                <Flex>
+                  <Text display={{ base: "none", lg: "block" }} mr={1}>
+                    <FontAwesomeIcon
+                      icon={faHeart}
+                      style={{ color: "#D8B7E5" }}
+                      size="sm"
+                    />
+                  </Text>
+                  <Text fontSize="sm">{like.count}</Text>
+                  <Text display={{ base: "none", lg: "block" }} mr={1} ml={2}>
+                    <FontAwesomeIcon
+                      icon={faEye}
+                      size="sm"
+                      style={{ color: "#D8B7E5" }}
+                    />
+                  </Text>
+                  <Text fontSize="sm">{post.view}</Text>
+                </Flex>
+                <Flex>
+                  <Text display={{ base: "none", lg: "block" }} mr={1}>
+                    작성일자
+                  </Text>
+                  <Text>{post.createDate}</Text>
+                </Flex>
+              </Flex>
+            </Flex>
+          </Flex>
+
+          <Box
+            w={"576px"}
+            h={"360px"}
+            bg={"lightgray"}
+            my={"32px"}
+            mt={"100px"}
+          >
+            <MapView />
+          </Box>
+
+          <Flex
+            w={"540px"}
+            h={"160px"}
+            alignItems={"center"}
+            justify={"space-evenly"}
+            bg={"lightgray"}
+          >
+            <Button onClick={handleMoveLeft}>옆</Button>
+            <Box w={"400px"} overflow={"hidden"} alignItems={"center"}>
+              <Flex
+                ref={dataRef}
+                sx={{
+                  transform: `translateX(${positionX}px)`,
+                  transition: "transform 0.5s ease",
+                }}
+              >
+                {place.map((place, index) => (
+                  <Box
+                    key={index}
+                    onMouseEnter={() => handleSelectInfo(place, index)}
+                  >
+                    <Link
+                      href={place.placeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Flex w={"400px"} justifyContent={"center"}>
+                        <Box
+                          w={"120px"}
+                          h={"120px"}
+                          border={"1px dotted red"}
+                          alignContent={"center"}
+                        >
+                          <Image
+                            src={place.picurl || defaultImage}
+                            objectFit={"cover"}
+                            w={"100%"}
+                            h={"100%"}
+                          />
+                        </Box>
+                        <Box w={"260px"} h={"120px"} p={3}>
+                          <Box
+                            overflow={"hidden"}
+                            textOverflow={"ellipsis"}
+                            whiteSpace={"nowrap"}
+                          >
+                            {index + 1}번 장소
+                          </Box>
+                          <Box
+                            overflow={"hidden"}
+                            textOverflow={"ellipsis"}
+                            whiteSpace={"nowrap"}
+                          >
+                            {place.placeName}
+                          </Box>
+                          <Box
+                            overflow={"hidden"}
+                            textOverflow={"ellipsis"}
+                            whiteSpace={"nowrap"}
+                          >
+                            {place.address}
+                          </Box>
+                          <Box>게시글 등록 횟수 : {place.countPlace} 건</Box>
+                        </Box>
+                      </Flex>
+                    </Link>
+                  </Box>
+                ))}
+              </Flex>
+            </Box>
+            <Button onClick={handleMoveRight}>옆</Button>
+          </Flex>
+        </Flex>
+        <Box
+          w={"720px"}
+          bg={"lightgray"}
           my={"32px"}
-          templateColumns={"repeat(4,1fr)"}
-          templateRows={"1fr 1fr"}
+          p={"1rem"}
+          whiteSpace={"pre-wrap"}
         >
-            <Flex pl={10}>
-              <Text>{post.nickName}</Text>
-            </Flex>
-          <GridItem
-            rowSpan={1}
-            colSpan={3}
-            alignContent={"center"}
-            overflow={"hidden"}
-            textOverflow={"ellipsis"}
-            whiteSpace={"nowrap"}
-          >
-          </GridItem>
-            <Flex pl={10}>
-              <Text display={{ base: "none", lg: "block" }} mr={1}>
-                <FontAwesomeIcon
-                  icon={faHeart}
-                  style={{ color: "#D8B7E5" }}
-                  size="sm"
-                />
-              </Text>
-              <Text fontSize="sm">{like.count}</Text>
-            </Flex>
-
-            <Flex pl={3}>
-              <Text display={{ base: "none", lg: "block" }} mr={1}>
-                <FontAwesomeIcon
-                  icon={faEye}
-                  size="sm"
-                  style={{ color: "#836091" }}
-                />
-              </Text>
-              <Text fontSize="sm">{post.view}</Text>
-            </Flex>
-
-          <GridItem
-            rowSpan={1}
-            colSpan={1}
-            alignContent={"center"}
-            overflow={"hidden"}
-            textOverflow={"ellipsis"}
-            whiteSpace={"nowrap"}
-          >
-          </GridItem>
-          <GridItem
-            rowSpan={1}
-            colSpan={1}
-            alignContent={"center"}
-            overflow={"hidden"}
-            textOverflow={"ellipsis"}
-            whiteSpace={"nowrap"}
-          >
-            <Flex pl={3}>
-              <Text display={{ base: "none", lg: "block" }} mr={1}>
-                작성일자 <FontAwesomeIcon icon={faCaretRight} />{" "}
-              </Text>
-              <Text>{post.createDate}</Text>
-            </Flex>
-          </GridItem>
-        </Grid>
-
-        <Box w={"576px"} h={"360px"} bg={"lightgray"} my={"32px"} mt={"100px"}>
-          <MapView />
+          <div dangerouslySetInnerHTML={{ __html: post.content }} />
         </Box>
 
-        <Flex
-          w={"540px"}
-          h={"160px"}
-          alignItems={"center"}
-          justify={"space-evenly"}
-          bg={"lightgray"}
-        >
-          <Button onClick={handleMoveLeft}>옆</Button>
-          <Box w={"400px"} overflow={"hidden"} alignItems={"center"}>
-            <Flex
-              ref={dataRef}
-              sx={{
-                transform: `translateX(${positionX}px)`,
-                transition: "transform 0.5s ease",
-              }}
-            >
-              {place.map((place, index) => (
-                <Box
-                  key={index}
-                  onMouseEnter={() => handleSelectInfo(place, index)}
-                >
-                  <Link
-                    href={place.placeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Flex w={"400px"} justifyContent={"center"}>
-                      <Box
-                        w={"120px"}
-                        h={"120px"}
-                        border={"1px dotted red"}
-                        alignContent={"center"}
-                      >
-                        <Image
-                          src={place.picurl || defaultImage}
-                          objectFit={"cover"}
-                          w={"100%"}
-                          h={"100%"}
-                        />
-                      </Box>
-                      <Box
-                        w={"260px"}
-                        h={"120px"}
-                        border={"1px dotted red"}
-                        p={3}
-                      >
-                        <Box
-                          overflow={"hidden"}
-                          textOverflow={"ellipsis"}
-                          whiteSpace={"nowrap"}
-                        >
-                          {index + 1}번 장소
-                        </Box>
-                        <Box
-                          overflow={"hidden"}
-                          textOverflow={"ellipsis"}
-                          whiteSpace={"nowrap"}
-                        >
-                          {place.placeName}
-                        </Box>
-                        <Box
-                          overflow={"hidden"}
-                          textOverflow={"ellipsis"}
-                          whiteSpace={"nowrap"}
-                        >
-                          {place.address}
-                        </Box>
-                        <Box>게시글 등록 횟수 : {place.countPlace} 건</Box>
-                      </Box>
-                    </Flex>
-                  </Link>
-                </Box>
-              ))}
-            </Flex>
-          </Box>
-          <Button onClick={handleMoveRight}>옆</Button>
-        </Flex>
-      </Flex>
-      <Box
-        w={"720px"}
-        bg={"lightgray"}
-        my={"32px"}
-        p={"1rem"}
-        whiteSpace={"pre-wrap"}
-      >
-        <div dangerouslySetInnerHTML={{ __html: post.content }} />
-      </Box>
-
-      <Divider border={"1px solid lightGray"} w={"720px"} />
-      {/* 좋아요 & 수정/삭제/목록 버튼 */}
-      <Flex w={"720px"} h={"64px"} my={"16px"} align={"center"}>
-        {/* 좋아요 */}
-        <Tooltip
-          isDisabled={account.isLoggedIn()}
-          hasArrow
-          label={"로그인 해주세요"}
-        >
-          <Button onClick={handleLikeCount}>
-            <Flex align={"center"} gap={1}>
-              <Text fontSize={"xl"}>
-                {like.like && <FontAwesomeIcon icon={emptyHeart} />}
-                {like.like || <FontAwesomeIcon icon={fullHeart} />}
-              </Text>
-              <Text fontSize={"xl"} display={{ base: "none", lg: "block" }}>
-                좋아요
-              </Text>
-              <Text fontSize={"xl"}>{like.count}</Text>
-            </Flex>
-          </Button>
-        </Tooltip>
-        <Spacer />
-        {/* 수정 및 삭제 버튼 */}
-        {(account.hasAccessMemberId(post.memberId) || account.isAdmin()) && (
-          <Box>
-            <Box align={"left"} my={10}>
-              <Button onClick={() => navigate(`/post/${postId}/edit`)}>
-                <FontAwesomeIcon icon={faPenToSquare} />
-                <Text display={{ base: "none", lg: "block" }} ml={1}>
-                  수정
+        <Divider border={"1px solid lightGray"} w={"720px"} />
+        {/* 좋아요 & 수정/삭제/목록 버튼 */}
+        <Flex w={"720px"} h={"64px"} my={"16px"} align={"center"}>
+          {/* 좋아요 */}
+          <Tooltip
+            isDisabled={account.isLoggedIn()}
+            hasArrow
+            label={"로그인 해주세요"}
+          >
+            <Button onClick={handleLikeCount}>
+              <Flex align={"center"} gap={1}>
+                <Text fontSize={"xl"}>
+                  {like.like && <FontAwesomeIcon icon={emptyHeart} />}
+                  {like.like || <FontAwesomeIcon icon={fullHeart} />}
                 </Text>
-              </Button>
-              <Button onClick={onModalOpenOfDelete}>
-                <FontAwesomeIcon icon={faTrash} />
-                <Text display={{ base: "none", lg: "block" }} ml={1}>
-                  삭제
+                <Text fontSize={"xl"} display={{ base: "none", lg: "block" }}>
+                  좋아요
                 </Text>
-              </Button>
+                <Text fontSize={"xl"}>{like.count}</Text>
+              </Flex>
+            </Button>
+          </Tooltip>
+          <Spacer />
+          {/* 수정 및 삭제 버튼 */}
+          {(account.hasAccessMemberId(post.memberId) || account.isAdmin()) && (
+            <Box>
+              <Box align={"left"} my={10}>
+                <Button onClick={() => navigate(`/post/${postId}/edit`)}>
+                  <FontAwesomeIcon icon={faPenToSquare} />
+                  <Text display={{ base: "none", lg: "block" }} ml={1}>
+                    수정
+                  </Text>
+                </Button>
+                <Button onClick={onModalOpenOfDelete}>
+                  <FontAwesomeIcon icon={faTrash} />
+                  <Text display={{ base: "none", lg: "block" }} ml={1}>
+                    삭제
+                  </Text>
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        )}
+          )}
 
-        {/* 목록 */}
-        {authType === "user" ? (
-          <Button onClick={() => navigate("/post/list")}>
-            <FontAwesomeIcon icon={faList} />
-            <Text display={{ base: "none", lg: "block" }} ml={1}>
-              목록
-            </Text>
-          </Button>
-        ) : authType === "admin" ? (
-          <Button onClick={() => navigate("/post/mdList")}>
-            <FontAwesomeIcon icon={faList} />
-            <Text display={{ base: "none", lg: "block" }} ml={1}>
-              목록
-            </Text>
-          </Button>
-        ) : null}
+          {/* 목록 */}
+          {authType === "user" ? (
+            <Button onClick={() => navigate("/post/list")}>
+              <FontAwesomeIcon icon={faList} />
+              <Text display={{ base: "none", lg: "block" }} ml={1}>
+                목록
+              </Text>
+            </Button>
+          ) : authType === "admin" ? (
+            <Button onClick={() => navigate("/post/mdList")}>
+              <FontAwesomeIcon icon={faList} />
+              <Text display={{ base: "none", lg: "block" }} ml={1}>
+                목록
+              </Text>
+            </Button>
+          ) : null}
+        </Flex>
+        {/*댓글*/}
+        <CommentComponent
+          postId={post.postId}
+          isTransition={isTransition}
+          setIsTransition={setIsTransition}
+        />
+
+        <Modal isOpen={isModalOpenOfDelete} onClose={onModalCloseOfDelete}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>게시글 삭제</ModalHeader>
+            <ModalBody>게시글을 삭제하시겠습니까?</ModalBody>
+            <ModalFooter>
+              <Button onClick={handleClickDelete}>삭제</Button>
+              <Button onClick={onModalCloseOfDelete}>취소</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Flex>
-      {/*댓글*/}
-      <CommentComponent
-        postId={post.postId}
-        isTransition={isTransition}
-        setIsTransition={setIsTransition}
-      />
-
-      <Modal isOpen={isModalOpenOfDelete} onClose={onModalCloseOfDelete}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>게시글 삭제</ModalHeader>
-          <ModalBody>게시글을 삭제하시겠습니까?</ModalBody>
-          <ModalFooter>
-            <Button onClick={handleClickDelete}>삭제</Button>
-            <Button onClick={onModalCloseOfDelete}>취소</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </Flex>
     </Box>
   );
 }

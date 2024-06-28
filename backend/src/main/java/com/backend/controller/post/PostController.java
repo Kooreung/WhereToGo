@@ -55,6 +55,7 @@ public class PostController {
         return postService.list(page, searchType, searchKeyword);
     }
 
+
     // 게시글 MD추천 목록 Controller
     @GetMapping("mdList")
     public Map<String, Object> postListMd(Map<String, Object> post,
@@ -125,6 +126,12 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     public Map<String, Object> postLike(@RequestBody Map<String, Object> like, Authentication authentication) {
         return postService.postLike(like, authentication);
+    }
+
+    // 내 게시물 목록 Controller
+    @GetMapping("myList")
+    public Map<String, Object> myList(@RequestParam Integer memberId) {
+        return postService.myList(memberId);
     }
 
     // home mdpick list
