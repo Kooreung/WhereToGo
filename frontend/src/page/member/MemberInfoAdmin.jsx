@@ -54,6 +54,7 @@ export function MemberInfoAdmin() {
         setPost(res.data.post);
       })
       .catch();
+    axios.get(`/api/post/myLikeList?memberId=${memberId}`);
   }, []);
 
   if (member === null) {
@@ -80,7 +81,7 @@ export function MemberInfoAdmin() {
               justifyContent="center"
             >
               <Text fontSize="25px">{member.nickName}</Text>
-              <Text>123</Text>
+              <Text>여기다가는 무엇을 넣어야 할까?</Text>
             </Flex>
           </Flex>
         </CardBody>
@@ -102,8 +103,15 @@ export function MemberInfoAdmin() {
                         fontWeight={"bolder"}
                         onClick={() => navigate(`/post/${post.postId}`)}
                         cursor={"pointer"}
+                        style={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
                       >
-                        {post.title}
+                        {post.title.length > 35
+                          ? `${post.title.slice(0, 35)}...`
+                          : post.title}
                       </Flex>
                       <Flex>{post.createDate}</Flex>
                     </Flex>

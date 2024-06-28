@@ -21,6 +21,7 @@ import {
   ModalOverlay,
   Spinner,
   Stack,
+  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -45,7 +46,7 @@ export function MemberInfo(props) {
   const account = useContext(LoginContext);
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
-  const {isOpen, onClose, onOpen} = useDisclosure();
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -84,7 +85,7 @@ export function MemberInfo(props) {
     console.log(id);
     axios
       .delete(`/api/member/delete`, {
-        data: {memberId: id, password},
+        data: { memberId: id, password },
       })
       .then(() => {
         toast({
@@ -107,32 +108,40 @@ export function MemberInfo(props) {
   if (!account.isLoggedIn()) {
     return (
       <Box>
-        <Lobby/>;
+        <Lobby />;
       </Box>
     );
   }
 
   if (member === null) {
-    return <Spinner/>;
+    return <Spinner />;
   }
 
   return (
     <Card w={420} mb={20} boxShadow={"2xl"}>
       {account.isAdmin() && (
         <Center mt={5}>
-          <FontAwesomeIcon size={"2xl"} icon={faCrown} style={{color: "#FFD43B"}}/>
+          <FontAwesomeIcon
+            size={"2xl"}
+            icon={faCrown}
+            style={{ color: "#FFD43B" }}
+          />
         </Center>
       )}
       {account.isAdmin() || (
         <Center mt={5}>
-          <FontAwesomeIcon size={"2xl"} icon={faCrown} style={{color: "#D8B7E5"}}/>
+          <FontAwesomeIcon
+            size={"2xl"}
+            icon={faCrown}
+            style={{ color: "#D8B7E5" }}
+          />
         </Center>
       )}
       <CardBody>
         <label>
           <Center>
             <Avatar
-              _hover={{filter: "brightness(0.7)"}}
+              _hover={{ filter: "brightness(0.7)" }}
               src={file.src}
               w="250px"
               h="250px"
@@ -147,24 +156,44 @@ export function MemberInfo(props) {
         </label>
         <Stack mt="6" spacing="3">
           <Center>
-            <Heading size='md' mb={7}>{member.nickName}</Heading>
+            <Heading size="md" mb={7}>
+              {member.nickName}
+            </Heading>
           </Center>
-          <Box mb={2}><FontAwesomeIcon icon={faSquareEnvelope} style={{color: "#D8B7E5"}}/> {member.email}</Box>
-          <Box mb={2}><FontAwesomeIcon icon={faLocationDot} style={{color: "#D8B7E5"}}/> {member.address}</Box>
-          <Box mb={2}><FontAwesomeIcon icon={faPhone} style={{color: "#D8B7E5"}}/> {member.phoneNumber}</Box>
+          <Box mb={2}>
+            <FontAwesomeIcon
+              icon={faSquareEnvelope}
+              style={{ color: "#D8B7E5" }}
+            />{" "}
+            {member.email}
+          </Box>
+          <Box mb={2}>
+            <FontAwesomeIcon
+              icon={faLocationDot}
+              style={{ color: "#D8B7E5" }}
+            />{" "}
+            {member.address}
+          </Box>
+          <Box mb={2}>
+            <FontAwesomeIcon icon={faPhone} style={{ color: "#D8B7E5" }} />{" "}
+            {member.phoneNumber}
+          </Box>
         </Stack>
       </CardBody>
-      <Divider/>
+      <Divider />
       <CardFooter display="flex" justifyContent="space-between">
-        <Box style={{ display: "flex", alignItems: "center" }}>
+        <Box
+          cursor={"pointer"}
+          onClick={() => navigate("/postLike/list")}
+          style={{ display: "flex", alignItems: "center" }}
+        >
           <FontAwesomeIcon
             icon={faHeart}
             onClick={() => navigate("/postLike/list")}
-            cursor="pointer"
             size="lg"
             style={{ color: "#D8B7E5", marginRight: "8px" }}
           />
-          Like
+          <Text>Like</Text>
         </Box>
         <ButtonGroup spacing="2">
           <Button
@@ -175,7 +204,12 @@ export function MemberInfo(props) {
           >
             수정
           </Button>
-          <Button size={"sm"} variant='solid' colorScheme='red' onClick={onOpen}>
+          <Button
+            size={"sm"}
+            variant="solid"
+            colorScheme="red"
+            onClick={onOpen}
+          >
             탈퇴
           </Button>
           <Modal isOpen={isOpen} onClose={onClose}>

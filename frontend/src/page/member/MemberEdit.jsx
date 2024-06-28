@@ -246,6 +246,7 @@ function MemberEdit(props) {
             </Box>
             <InputGroup>
               <Input
+                maxLength="20"
                 style={inputStyles}
                 onChange={(e) => {
                   const newNickName = e.target.value.trim();
