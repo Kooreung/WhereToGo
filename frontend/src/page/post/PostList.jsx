@@ -42,6 +42,7 @@ function PostList() {
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     axios.get(`/api/post/list?${searchParams}`).then((res) => {
@@ -51,6 +52,7 @@ function PostList() {
     });
     setSearchType("all");
     setSearchKeyword("");
+    setCurrentPage(currentPage);
 
     const typeParam = searchParams.get("type");
     const keywordParam = searchParams.get("keyword");
@@ -61,7 +63,7 @@ function PostList() {
     if (keywordParam) {
       setSearchKeyword(keywordParam);
     }
-  }, [searchParams]);
+  }, [searchParams, setCurrentPage]);
 
   // 페이지 수
   const pageNumbers = [];
@@ -85,6 +87,7 @@ function PostList() {
   function handlePageButtonClick(pageNumber) {
     searchParams.set("page", pageNumber);
     navigate(`/post/list?${searchParams}`);
+    setCurrentPage(pageNumber);
   }
 
   return (
@@ -284,6 +287,8 @@ function PostList() {
             <ButtonNumber
               key={pageNumber}
               onClick={() => handlePageButtonClick(pageNumber)}
+              bg={pageNumber === currentPage ? "#836091" : "white"}
+              color={pageNumber === currentPage ? "white" : "#836091"}
             >
               {pageNumber}
             </ButtonNumber>
