@@ -6,6 +6,7 @@ import {
   Flex,
   Image,
   useColorMode,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "./LoginProvider.jsx";
@@ -17,6 +18,7 @@ function Navbar() {
   const navigate = useNavigate();
   const account = useContext(LoginContext);
   const { colorMode, toggleColorMode } = useColorMode();
+  const navColor = useColorModeValue("#D8B7E5", "#836091");
   return (
     <Flex
       w={"100%"}
@@ -27,7 +29,8 @@ function Navbar() {
       justify={"space-between"}
       boxShadow={"md"}
       roundedBottom={"1rem"}
-      bg={"#D8B7E5"}
+      boxSizing={"border-box"}
+      bg={navColor}
     >
       {/* 로고 */}
       <Box
