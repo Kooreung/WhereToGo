@@ -268,16 +268,19 @@ public interface PostMapper {
     @Select("""
             <script>
             SELECT p.postid, p.title, p.content, p.createdate, p.view,
-                                      m.nickname,
-                                      COUNT(DISTINCT c.commentid) commentCount,
-                                      COUNT(DISTINCT l2.memberid) likeCount
-                               FROM post p
-                               JOIN member m ON p.memberid = m.memberid
-                               LEFT JOIN comment c ON p.postid = c.postid
-                               LEFT JOIN likes l2 ON p.postid = l2.postid
-                               JOIN likes l ON p.postid = l.postid
-                                  LEFT JOIN  place pl ON p.postid = pl.postid
-                       <where>
+                   m.nickname, m.memberid,
+                   plpic.picurl,
+                   pro.profilename,
+                   COUNT(DISTINCT c.commentid) commentCount,
+                   COUNT(DISTINCT l2.memberid) likeCount
+            FROM post p JOIN member m ON p.memberid = m.memberid
+                        JOIN likes l ON p.postid = l.postid
+                        LEFT JOIN comment c ON p.postid = c.postid
+                        LEFT JOIN likes l2 ON p.postid = l2.postid
+                        LEFT JOIN place pl ON p.postid = pl.postid
+                        LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
+                        LEFT JOIN profile pro ON pro.memberid = m.memberid
+            <where>
                l.memberid = #{memberId}
                <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
@@ -297,7 +300,7 @@ public interface PostMapper {
                         AND (pl.address LIKE #{pattern} OR pl.address LIKE #{pattern})
                     </if>
                 </if>
-                       </where>
+            </where>
             GROUP BY p.postid
             ORDER BY p.postid DESC
             LIMIT #{offset}, 5

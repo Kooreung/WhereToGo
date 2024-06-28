@@ -226,9 +226,14 @@ public class PostService {
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
 
-        System.out.println(countAllPost);
-        return Map.of("pageInfo", pageInfo, "postList", postMapper.selectLikeList(memberId, offset, searchType, searchKeyword));
+        List<Post> posts = postMapper.selectLikeList(memberId, offset, searchType, searchKeyword);
 
+        for (Post post : posts) {
+            String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), post.getProfileName());
+            post.setProfileName(key);
+        }
+        
+        return Map.of("pageInfo", pageInfo, "postList", posts);
     }
 
     //md 게시물 목록 서비스
