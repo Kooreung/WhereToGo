@@ -111,13 +111,10 @@ public interface PostMapper {
 
     // 게시글 Top 3 인기글 목록 매퍼
     @Select("""
-            SELECT p.postid,
-                   p.title,
-                   p.content,
-                   p.view,
-                   p.createDate,
+            SELECT p.postid,p.title,p.content,p.view,p.createDate,
                    m.nickName,
                    plpic.picurl,
+                   pro.profilename,
                    COUNT(DISTINCT c.commentid)                                                 commentCount,
                    COUNT(DISTINCT l.memberid)                                                  likeCount,
                    ROW_NUMBER() OVER (ORDER BY likeCount DESC, p.view DESC, commentCount DESC) postOfBest
@@ -127,6 +124,7 @@ public interface PostMapper {
                      LEFT JOIN likes l ON p.postid = l.postid
                      LEFT JOIN place pl ON p.postid = pl.postid
                      LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
+                     LEFT JOIN profile pro ON pro.memberid = m.memberid
             GROUP BY p.postid, p.title, p.view, m.nickName, p.content
             LIMIT 3
             """)

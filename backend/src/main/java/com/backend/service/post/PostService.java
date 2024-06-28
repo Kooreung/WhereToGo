@@ -232,7 +232,7 @@ public class PostService {
             String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), post.getProfileName());
             post.setProfileName(key);
         }
-        
+
         return Map.of("pageInfo", pageInfo, "postList", posts);
     }
 

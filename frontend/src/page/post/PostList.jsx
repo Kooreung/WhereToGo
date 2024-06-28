@@ -120,6 +120,8 @@ function PostList() {
               w={{ base: "720px", lg: "720px", sm: "660px" }}
               h={{ base: "240px", lg: "240px", sm: "200px" }}
               cursor={"pointer"}
+              boxShadow={"base"}
+              borderRadius={"12px"}
               py={"1rem"}
               px={"1rem"}
               sx={{
@@ -157,8 +159,8 @@ function PostList() {
                   <ContentParser content={post.content} />
                 </Flex>
                 <Spacer />
-                <Flex h={"32px"} gap={"1rem"} alignItems={"center"}>
-                  <Flex>
+                <Flex w={"100%"} h={"32px"} alignItems={"center"}>
+                  <Flex w={"45%"}>
                     <Box
                       w={"24px"}
                       h={"24px"}
@@ -168,38 +170,52 @@ function PostList() {
                     >
                       <Image src={post.profileName} borderRadius={"100%"} />
                     </Box>
-                    <Box overflow={"hidden"} textOverflow={"ellipsis"}>
+                    <Box
+                      w={"100%"}
+                      textAlign={"start"}
+                      overflow={"hidden"}
+                      textOverflow={"ellipsis"}
+                    >
                       {post.nickName}
                     </Box>
                   </Flex>
-                  <Flex color={"lightgray"}>
-                    <Text display={{ base: "none", lg: "block" }} mr={1}>
-                      조회
-                    </Text>
-                    <Text display={{ base: "block", lg: "none" }} mr={1}>
-                      <FontAwesomeIcon icon={faEye} size={"lg"} />
-                    </Text>
-                    <Text>{post.view}</Text>
+                  <Spacer />
+                  <Flex
+                    gap={"10px"}
+                    w={"50%"}
+                    color={"lightgray"}
+                    fontSize={"12px"}
+                    justify={"end"}
+                  >
+                    <Flex>
+                      <Text display={{ base: "none", lg: "block" }} mr={1}>
+                        조회
+                      </Text>
+                      <Text display={{ base: "block", lg: "none" }} mr={1}>
+                        <FontAwesomeIcon icon={faEye} size={"lg"} />
+                      </Text>
+                      <Text>{post.view}</Text>
+                    </Flex>
+                    <Flex>
+                      <Text display={{ base: "none", lg: "block" }} mr={1}>
+                        좋아요
+                      </Text>
+                      <Text display={{ base: "block", lg: "none" }} mr={1}>
+                        <FontAwesomeIcon icon={faHeart} size={"lg"} />
+                      </Text>
+                      <Text>{post.likeCount}</Text>
+                    </Flex>
+                    <Flex>
+                      <Text display={{ base: "none", lg: "block" }} mr={1}>
+                        댓글
+                      </Text>
+                      <Text display={{ base: "block", lg: "none" }} mr={1}>
+                        <FontAwesomeIcon icon={faComment} size={"lg"} />
+                      </Text>
+                      <Text>{post.commentCount}</Text>
+                    </Flex>
+                    <Flex>{post.createDate}</Flex>
                   </Flex>
-                  <Flex color={"lightgray"}>
-                    <Text display={{ base: "none", lg: "block" }} mr={1}>
-                      좋아요
-                    </Text>
-                    <Text display={{ base: "block", lg: "none" }} mr={1}>
-                      <FontAwesomeIcon icon={faHeart} size={"lg"} />
-                    </Text>
-                    <Text>{post.likeCount}</Text>
-                  </Flex>
-                  <Flex color={"lightgray"}>
-                    <Text display={{ base: "none", lg: "block" }} mr={1}>
-                      댓글
-                    </Text>
-                    <Text display={{ base: "block", lg: "none" }} mr={1}>
-                      <FontAwesomeIcon icon={faComment} size={"lg"} />
-                    </Text>
-                    <Text>{post.commentCount}</Text>
-                  </Flex>
-                  <Flex color={"lightgray"}>{post.createDate}</Flex>
                 </Flex>
               </Flex>
               <Spacer />
