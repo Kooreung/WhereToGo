@@ -40,7 +40,14 @@ import {
   WrapItem,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBackwardFast,
+  faBackwardStep,
+  faForwardFast,
+  faForwardStep,
+  faMagnifyingGlass,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import Lobby from "../Lobby.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import ContentParser from "../../component/ContentParser.jsx";
@@ -459,14 +466,14 @@ export function AdminPage() {
                 {pageInfo.prevPageNumber && (
                   <>
                     <ButtonNumber onClick={() => handlePageButtonClick(1)}>
-                      &lt;&lt;
+                      <FontAwesomeIcon icon={faBackwardFast} />
                     </ButtonNumber>
                     <ButtonNumber
                       onClick={() =>
                         handlePageButtonClick(pageInfo.prevPageNumber)
                       }
                     >
-                      &lt;
+                      <FontAwesomeIcon icon={faBackwardStep} />
                     </ButtonNumber>
                   </>
                 )}
@@ -490,14 +497,14 @@ export function AdminPage() {
                         handlePageButtonClick(pageInfo.nextPageNumber)
                       }
                     >
-                      &gt;
+                      <FontAwesomeIcon icon={faForwardStep} />
                     </ButtonNumber>
                     <ButtonNumber
                       onClick={() =>
                         handlePageButtonClick(pageInfo.lastPageNumber)
                       }
                     >
-                      &gt;&gt;
+                      <FontAwesomeIcon icon={faForwardFast} />
                     </ButtonNumber>
                   </>
                 )}
@@ -660,7 +667,9 @@ export function AdminPage() {
             </Center>
           ))}
           <ModalFooter>
-            <Button onClick={handleSendMdPicks}>추가</Button>
+            <Button mr={3} onClick={handleSendMdPicks}>
+              추가
+            </Button>
             <Button onClick={handleModalClose}>취소</Button>
           </ModalFooter>
         </ModalContent>
