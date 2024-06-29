@@ -21,7 +21,7 @@ import {
   faHeart,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import Lobby from "../Lobby.jsx";
@@ -36,13 +36,14 @@ export function PostLikeList() {
   const [postLikeList, setPostLikeList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   const navigate = useNavigate();
+  const { memberId } = useParams();
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
   const account = useContext(LoginContext);
 
   useEffect(() => {
-    axios.get(`/api/post/likeList?${searchParams}`).then((res) => {
+    axios.get(`/api/post/likeList/${memberId}?${searchParams}`).then((res) => {
       setPostLikeList(res.data.postList);
       setPageInfo(res.data.pageInfo);
       console.log(res.data.postList);

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import {
+  Avatar,
   Box,
   Button,
   Divider,
@@ -56,6 +57,7 @@ export function PostView() {
   const [positionX, setPositionX] = useState(0);
   const [authType, setAuthType] = useState("");
   const toast = useToast();
+
   const {
     isOpen: isModalOpenOfDelete,
     onOpen: onModalOpenOfDelete,
@@ -134,6 +136,7 @@ export function PostView() {
         onModalCloseOfDelete();
       });
   }
+
   function handleMoveLeft() {
     setPositionX((prev) => Math.min(prev + 400, 0));
   }
@@ -150,75 +153,56 @@ export function PostView() {
   }
 
   return (
-    <Box>
-      <Heading pl={10}>{post.title}</Heading>
-      <Divider />
+    <Box w={{ base: "720px", lg: "960px" }}>
+      <Heading>{post.title}</Heading>
+      <Divider mb={10} />
       <Flex direction="column" align="center">
         <Flex direction="column" align="center">
-          <Grid
-            w={{ base: "720px", lg: "1080px" }}
-            h={"px"}
-            my={"32px"}
-            templateColumns={"repeat(4,1fr)"}
-            templateRows={"1fr 1fr"}
-          >
-            <Flex pl={10}>
-              <Text>{post.nickName}</Text>
+          <Flex w={{ base: "720px", lg: "960px" }}>
+            <Flex>
+              <Avatar
+                src={post.profileName}
+                onClick={() => navigate(`/member/${post.memberId}`)}
+                cursor="pointer"
+              />
             </Flex>
-            <GridItem
-              rowSpan={1}
-              colSpan={3}
-              alignContent={"center"}
-              overflow={"hidden"}
-              textOverflow={"ellipsis"}
-              whiteSpace={"nowrap"}
-            ></GridItem>
-            <Flex pl={10}>
-              <Text display={{ base: "none", lg: "block" }} mr={1}>
-                <FontAwesomeIcon
-                  icon={faHeart}
-                  style={{ color: "#D8B7E5" }}
-                  size="sm"
-                />
-              </Text>
-              <Text fontSize="sm">{like.count}</Text>
-            </Flex>
-
-            <Flex pl={3}>
-              <Text display={{ base: "none", lg: "block" }} mr={1}>
-                <FontAwesomeIcon
-                  icon={faEye}
-                  size="sm"
-                  style={{ color: "#836091" }}
-                />
-              </Text>
-              <Text fontSize="sm">{post.view}</Text>
-            </Flex>
-
-            <GridItem
-              rowSpan={1}
-              colSpan={1}
-              alignContent={"center"}
-              overflow={"hidden"}
-              textOverflow={"ellipsis"}
-              whiteSpace={"nowrap"}
-            ></GridItem>
-            <GridItem
-              rowSpan={1}
-              colSpan={1}
-              alignContent={"center"}
-              overflow={"hidden"}
-              textOverflow={"ellipsis"}
-              whiteSpace={"nowrap"}
-            >
-              <Flex pl={3}>
-                <Text display={{ base: "none", lg: "block" }} mr={1}>
-                  작성일자 <FontAwesomeIcon icon={faCaretRight} />{" "}
+            <Flex direction={"column"} w={"100%"}>
+              <Flex pl={"1rem"}>
+                <Text
+                  onClick={() => navigate(`/member/${post.memberId}`)}
+                  cursor="pointer"
+                >
+                  {post.nickName}
                 </Text>
-                <Text>{post.createDate}</Text>
               </Flex>
-            </GridItem>
-          </Grid>
+              <Flex pl={"1rem"} w={"100%"} justify={"space-between"}>
+                <Flex>
+                  <Text display={{ base: "none", lg: "block" }} mr={1}>
+                    <FontAwesomeIcon
+                      icon={faHeart}
+                      style={{ color: "#D8B7E5" }}
+                      size="sm"
+                    />
+                  </Text>
+                  <Text fontSize="sm">{like.count}</Text>
+                  <Text display={{ base: "none", lg: "block" }} mr={1} ml={2}>
+                    <FontAwesomeIcon
+                      icon={faEye}
+                      size="sm"
+                      style={{ color: "#D8B7E5" }}
+                    />
+                  </Text>
+                  <Text fontSize="sm">{post.view}</Text>
+                </Flex>
+                <Flex>
+                  <Text display={{ base: "none", lg: "block" }} mr={1}>
+                    작성일자
+                  </Text>
+                  <Text>{post.createDate}</Text>
+                </Flex>
+              </Flex>
+            </Flex>
+          </Flex>
 
           <Box
             w={"576px"}

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
+  Card,
   Center,
   Divider,
   Flex,
@@ -112,10 +113,10 @@ export function PostMdList(props) {
                     rowIndex * (itemsPerRow || 3) + (itemsPerRow || 3),
                   )
                   .map((post, index) => (
-                    <Box
+                    <Card
                       key={index}
                       maxW="sm"
-                      borderWidth="1px"
+                      borderWidth="1px lightgray"
                       borderRadius="lg"
                       overflow="hidden"
                       w="280px"
@@ -173,7 +174,7 @@ export function PostMdList(props) {
                         <Box>{post.nickName}</Box>
                         <Box>{post.createDate}</Box>
                       </Flex>
-                      <Divider />
+                      <Divider color="lightgray" />
                       <Flex
                         justify={"space-evenly"}
                         w={"65%"}
@@ -199,7 +200,7 @@ export function PostMdList(props) {
                           <Text>{post.view}</Text>
                         </Flex>
                       </Flex>
-                    </Box>
+                    </Card>
                   ))}
               </Flex>
             </Stack>
@@ -398,7 +399,7 @@ export function PostMdList(props) {
                 onClick={() => navigate(`/post/write`)}
                 fontSize="small"
               >
-                작성
+                글쓰기
               </ButtonCircle>
             )}
           </Box>

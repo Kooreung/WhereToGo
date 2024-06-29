@@ -7,7 +7,10 @@ import {
   Card,
   CardBody,
   CardFooter,
+  CardHeader,
   Center,
+  Divider,
+  Flex,
   FormControl,
   FormHelperText,
   Heading,
@@ -185,7 +188,9 @@ function MemberEdit(props) {
   return (
     <Box>
       <Center mb={30}>
-        <HeadingVariant variant={"large"}>프로필 수정</HeadingVariant>
+        <HeadingVariant variant={"large"} align={"start"}>
+          프로필 수정
+        </HeadingVariant>
       </Center>
       <Card w={420} mb={20} boxShadow={"2xl"}>
         {account.isAdmin() && (
@@ -240,6 +245,7 @@ function MemberEdit(props) {
             </Box>
             <InputGroup>
               <Input
+                maxLength="20"
                 style={inputStyles}
                 onChange={(e) => {
                   const newNickName = e.target.value.trim();

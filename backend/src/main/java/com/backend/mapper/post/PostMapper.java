@@ -21,14 +21,15 @@ public interface PostMapper {
 
     // 게시글 조회 매퍼
     @Select("""
-            SELECT p.postid,p.title,p.content,p.createdate,p.view,p.memberid,p.mdpick,
-                   m.nickname,
-                   COUNT(DISTINCT c.commentid) commentCount,
-                   COUNT(DISTINCT l.memberid)  likeCount
-            FROM post p
-                     JOIN member m ON p.memberid = m.memberid
-                     LEFT JOIN comment c ON p.postid = c.postid
-                     LEFT JOIN likes l ON p.postid = l.postid
+SELECT p.postid,p.title,p.content,p.createdate,p.view,p.memberid,p.mdpick, pro.profilename,
+       m.nickname,
+       COUNT(DISTINCT c.commentid) commentCount,
+       COUNT(DISTINCT l.memberid)  likeCount
+FROM post p
+         JOIN member m ON p.memberid = m.memberid
+        JOIN profile pro ON pro.memberid = p.memberid
+         LEFT JOIN comment c ON p.postid = c.postid
+         LEFT JOIN likes l ON p.postid = l.postid
             WHERE p.postid = #{postId}
             """)
     Post selectByPostId(Integer postId);
@@ -345,6 +346,20 @@ public interface PostMapper {
                 """)
     int updateMdPickPush(Integer postId);
 
+// 내가 작성한 글 가져오기 (작성한 글마다 좋아요 개수까지)
+    @Select("""
+            SELECT p.postid,
+                   p.title,
+                   p.content,
+                   p.createdate,
+                   p.view,
+                   COUNT(l.postid) AS likeCount
+            FROM post p
+                     LEFT JOIN likes l ON p.postid = l.postid
+            WHERE p.memberid = #{memberId}
+            GROUP BY p.postid, p.title, p.content, p.createdate, p.view
+            """)
+    List<Post> getMyList(Integer memberId);
 
     @Select("""
                         SELECT p.postid,

@@ -19,7 +19,7 @@ export const customTheme = extendTheme({
         fontFamily: "Pretendard-Regular, sans-serif",
         fontWeight: 400,
         _dark: {
-          textColor: "#D8B7E5",
+          textColor: "whiteAlpha.900",
         },
       },
     },

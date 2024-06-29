@@ -71,6 +71,9 @@ public class PostService {
         Post post = postMapper.selectByPostId(postId);
         String auth = postMapper.selcetAuthByPostId(postId);
 
+        String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), post.getProfileName());
+
+        post.setProfileName(key);
 
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> like = new HashMap<>();
@@ -245,6 +248,12 @@ public class PostService {
         return result;
     }
 
+    public Map<String, Object> myList(Integer memberId) {
+        List<Post> post = postMapper.getMyList(memberId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("post", post);
+        return result;
+    }
 
     public Map<String, Object> getMdPickList() {
         List<Post> posts = postMapper.selectMdPickPostList();

@@ -1,15 +1,46 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-import { Avatar, Box, Flex, Spinner, Text } from "@chakra-ui/react";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  Avatar,
+  Box,
+  Card,
+  CardBody,
+  CardFooter,
+  Center,
+  Divider,
+  Flex,
+  Heading,
+  Spinner,
+  Stack,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+} from "@chakra-ui/react";
 import Lobby from "../Lobby.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faHeart,
+  faLocationDot,
+  faPhone,
+  faReceipt,
+  faSquareEnvelope,
+} from "@fortawesome/free-solid-svg-icons";
 
 export function MemberInfoAdmin() {
   const { memberId } = useParams();
   const [member, setMember] = useState(null);
+  const [post, setPost] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [postLikeList, setPostLikeList] = useState([]);
+  const navigate = useNavigate();
   const account = useContext(LoginContext);
+
+  let likeCountAll = 0;
 
   useEffect(() => {
     axios
@@ -21,42 +52,135 @@ export function MemberInfoAdmin() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
 
-  if (!account.isAdmin()) {
-    return (
-      <Box>
-        <Lobby />;
-      </Box>
-    );
-  }
+    axios
+      .get(`/api/post/myList?memberId=${memberId}`)
+      .then((res) => {
+        setPost(res.data.post);
+      })
+      .catch();
+
+    axios
+      .get(`/api/post/likeList/${memberId}`)
+      .then((res) => {
+        setPostLikeList(res.data.postList);
+      })
+      .catch();
+  }, []);
 
   if (member === null) {
     return <Spinner />;
   }
 
+  post.forEach((p) => {
+    likeCountAll += p.likeCount;
+  });
+
   return (
-    <Flex alignContent="center" justifyContent="center" alignItems="center">
-      <Box mt="100">
-        <Avatar
-          name="defaultProfile"
-          src={profile.src}
-          w="200px" // 원하는 너비 값으로 조정
-          h="200px" // 원하는 높이 값으로 조정
-        />
-        <Text mb="5" fontSize="25" ml="25%" mt={23}>
-          이름 : {member.name}
-        </Text>
-      </Box>
-      <Box ml="100" fontSize="25" mt="100">
-        <Text mb="5">닉네임 : {member.nickName}</Text>
-        <Text mb="5">성별 : {member.gender}</Text>
-        <Text mb="5">이메일 : {member.email}</Text>
-        <Text mb="5">생일 : {member.birth}</Text>
-        <Text mb="5">주소 : {member.address}</Text>
-        <Text mb="5">휴대폰 번호 : {member.phoneNumber}</Text>
-      </Box>
-    </Flex>
+    <Box w={720}>
+      <Card w={720} mb={20} boxShadow={"2xl"}>
+        <CardBody>
+          <Flex>
+            <Flex>
+              <Avatar
+                name="defaultProfile"
+                src={profile.src}
+                w="75px"
+                h="75px"
+              />
+            </Flex>
+            <Flex
+              pl={"1.5rem"}
+              w={"100%"}
+              flexDirection="column"
+              justifyContent="center"
+            >
+              <Flex alignItems={"center"}>
+                <Text fontSize="25px" mr={3}>
+                  {member.nickName}{" "}
+                </Text>
+                <Text mr={2}>
+                  <FontAwesomeIcon
+                    icon={faReceipt}
+                    style={{ color: "#D8B7E5" }}
+                  />{" "}
+                  {post.length}
+                </Text>
+                <Text>
+                  <FontAwesomeIcon
+                    icon={faHeart}
+                    style={{ color: "#D8B7E5" }}
+                  />{" "}
+                  {likeCountAll}
+                </Text>
+              </Flex>
+              <Text>{member.inserted}</Text>
+            </Flex>
+          </Flex>
+        </CardBody>
+        <Box>
+          <Divider />
+        </Box>
+        <CardFooter>
+          <Tabs w="100%" variant="soft-rounded" colorScheme="purple">
+            <TabList mb={5}>
+              <Tab>게시물</Tab>
+              <Tab>좋아요</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                {post.map((post) => (
+                  <Box key={post.postId} mb={9}>
+                    <Flex w={"100%"} justify={"space-between"}>
+                      <Flex
+                        fontWeight={"bolder"}
+                        onClick={() => navigate(`/post/${post.postId}`)}
+                        cursor={"pointer"}
+                        style={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {post.title.length > 35
+                          ? `${post.title.slice(0, 35)}...`
+                          : post.title}
+                      </Flex>
+                      <Flex>{post.createDate}</Flex>
+                    </Flex>
+                    <Divider />
+                  </Box>
+                ))}
+              </TabPanel>
+              <TabPanel>
+                {postLikeList.map((post) => (
+                  <Box key={post.postId} mb={9}>
+                    <Flex w={"100%"} justify={"space-between"}>
+                      <Flex
+                        fontWeight={"bolder"}
+                        onClick={() => navigate(`/post/${post.postId}`)}
+                        cursor={"pointer"}
+                        style={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {post.title.length > 35
+                          ? `${post.title.slice(0, 35)}...`
+                          : post.title}
+                      </Flex>
+                      <Flex>{post.createDate}</Flex>
+                    </Flex>
+                    <Divider />
+                  </Box>
+                ))}
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </CardFooter>
+      </Card>
+    </Box>
   );
 }
 

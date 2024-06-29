@@ -57,7 +57,7 @@ const router = createBrowserRouter([
       // MD 게시글 페이지
       { path: "post/mdList", element: <PostMdList /> },
       // 좋아요한 게시글 목록 페이지
-      { path: "postLike/list", element: <PostLikeList /> },
+      { path: "postLike/list/:memberId", element: <PostLikeList /> },
       // 댓글 페이지
       { path: "comment", element: <CommentComponent /> },
     ],

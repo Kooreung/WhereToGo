@@ -3,6 +3,7 @@ package com.backend.service.member;
 import com.backend.NicknameGenerator.NickNameCreator;
 import com.backend.domain.member.Member;
 import com.backend.domain.member.MemberProfile;
+import com.backend.domain.post.Post;
 import com.backend.mapper.comment.CommentMapper;
 import com.backend.mapper.member.MemberMapper;
 import com.backend.mapper.post.PostMapper;
