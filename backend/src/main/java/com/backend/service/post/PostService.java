@@ -43,9 +43,9 @@ public class PostService {
     String srcPrefix;
 
     // 게시글 추가 | 작성 서비스
-    public Integer add(Post post, Authentication authentication) {
+    public Integer savePost(Post post, Authentication authentication) {
         post.setMemberId(Integer.valueOf(authentication.getName()));
-        postMapper.insert(post);
+        postMapper.insertPost(post);
         return post.getPostId();
     }
 
@@ -61,16 +61,19 @@ public class PostService {
     }
 
     // 게시글 조회 서비스
-    public Map<String, Object> get(Integer postId, Authentication authentication) {
+    public Map<String, Object> getPostInfo(Integer postId, Authentication authentication) {
         // 조회수 증가
         if (canIncrementView(postId)) {
             postMapper.incrementViewCount(postId);
             HttpSession session = request.getSession();
             session.setAttribute("lastViewTime_" + postId, Instant.now());
         }
-        Post post = postMapper.selectById(postId);
-        String auth = postMapper.getAuthByPostId(postId);
+        Post post = postMapper.selectByPostId(postId);
+        String auth = postMapper.selcetAuthByPostId(postId);
 
+        String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), post.getProfileName());
+
+        post.setProfileName(key);
 
         Map<String, Object> result = new HashMap<>();
         Map<String, Object> like = new HashMap<>();
@@ -84,7 +87,7 @@ public class PostService {
         }
 
         // 게시물 조회 시 좋아요 카운트 전송
-        like.put("count", postMapper.selectCountLikeByBoardId(postId));
+        like.put("count", postMapper.countLikeByBoardId(postId));
         result.put("like", like);
         result.put("post", post);
         result.put("author", auth);
@@ -111,10 +114,10 @@ public class PostService {
     }
 
     // 게시글 목록 서비스
-    public Map<String, Object> list(Integer page, String searchType, String searchKeyword) {
+    public Map<String, Object> getPostList(Integer page, String searchType, String searchKeyword) {
         Map pageInfo = new HashMap();
 
-        Integer countAllPost = postMapper.countAllPost(searchType, searchKeyword);
+        Integer countAllPost = postMapper.countAllpost(searchType, searchKeyword);
         Integer offset = (page - 1) * 5;
         Integer lastPageNumber = (countAllPost - 1) / 5 + 1;
         Integer leftPageNumber = ((page - 1) / 10) * 10 + 1;
@@ -139,37 +142,44 @@ public class PostService {
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
 
-        return Map.of("pageInfo", pageInfo, "postList", postMapper.selectAllPost(offset, searchType, searchKeyword));
+        List<Post> posts = postMapper.selectAllPost(offset, searchType, searchKeyword);
+
+        for (Post post : posts) {
+            String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), post.getProfileName());
+            post.setProfileName(key);
+        }
+
+        return Map.of("pageInfo", pageInfo, "postList", posts);
     }
 
     // 게시글 Top 3 인기글 목록 서비스
-    public List<Post> postListOfBest() {
+    public List<Post> getPostListOfBest() {
         return postMapper.selectPostOfBest();
     }
 
     // 게시글에서 선택한 장소 목록 서비스
-    public List<Place> placeList(Integer postId) {
-        return postMapper.getPlaceList(postId);
+    public List<Place> getPlaceList(Integer postId) {
+        return postMapper.selectPlaceList(postId);
     }
 
-    public List<Place> placeListData(String selectPlaces) {
-        return postMapper.getPlaceListData(selectPlaces);
+    public List<Place> getPlaceListData(String selectPlaces) {
+        return postMapper.selectPlaceListData(selectPlaces);
     }
 
     // 게시글 수정 서비스
-    public void edit(Post post) {
-        postMapper.update(post);
+    public void postEdit(Post post) {
+        postMapper.updatePost(post);
     }
 
     // 게시글 수정 시 권한 체크 서비스
     public boolean hasMemberIdAccess(Integer postId, Authentication authentication) {
         boolean scopeAdmin = authentication.getAuthorities().stream().map(a -> a.toString()).anyMatch(a -> a.equals("SCOPE_admin"));
-        Post post = postMapper.selectById(postId);
+        Post post = postMapper.selectByPostId(postId);
         return post.getMemberId().equals(Integer.valueOf(authentication.getName())) || scopeAdmin;
     }
 
     // 게시글 삭제 서비스
-    public void remove(Integer postId) {
+    public void postRemove(Integer postId) {
         postMapper.deleteById(postId);
     }
 
@@ -184,7 +194,7 @@ public class PostService {
         if (count == 0) {
             postMapper.insertLike(postId, memberId);
         }
-        result.put("count", postMapper.selectCountLikeByBoardId(postId));
+        result.put("count", postMapper.countLikeByBoardId(postId));
         return result;
     }
 
@@ -219,13 +229,18 @@ public class PostService {
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
 
-        System.out.println(countAllPost);
-        return Map.of("pageInfo", pageInfo, "postList", postMapper.selectLikeList(memberId, offset, searchType, searchKeyword));
+        List<Post> posts = postMapper.selectLikeList(memberId, offset, searchType, searchKeyword);
 
+        for (Post post : posts) {
+            String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), post.getProfileName());
+            post.setProfileName(key);
+        }
+
+        return Map.of("pageInfo", pageInfo, "postList", posts);
     }
 
     //md 게시물 목록 서비스
-    public Map<String, Object> mdlist(Map<String, Object> post, String searchType, String searchKeyword) {
+    public Map<String, Object> getMdList(Map<String, Object> post, String searchType, String searchKeyword) {
         List<Post> posts = postMapper.selectMdPostList(post, searchType, searchKeyword);
 
         Map<String, Object> result = new HashMap<>();
@@ -233,8 +248,14 @@ public class PostService {
         return result;
     }
 
+    public Map<String, Object> myList(Integer memberId) {
+        List<Post> post = postMapper.getMyList(memberId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("post", post);
+        return result;
+    }
 
-    public Map<String, Object> mdPickList() {
+    public Map<String, Object> getMdPickList() {
         List<Post> posts = postMapper.selectMdPickPostList();
 
         for (Post post : posts) {
@@ -250,7 +271,7 @@ public class PostService {
 
     // mdPick 추가(업데이트)
     public void mdPickPush(Integer postId, MultipartFile banner) throws IOException {
-        postMapper.mdPickPush(postId);
+        postMapper.updateMdPickPush(postId);
 
         String key = String.format("prj3/banner/mdPostBanner/%s/%s", postId, banner.getOriginalFilename());
         PutObjectRequest objectRequest = PutObjectRequest.builder()
@@ -260,13 +281,13 @@ public class PostService {
                 .build();
         s3Client.putObject(objectRequest, RequestBody.fromInputStream(banner.getInputStream(), banner.getSize()));
         String bannerName = String.format("%s/%s", postId, banner.getOriginalFilename());
-        postMapper.bannerUpdate(postId, bannerName);
+        postMapper.updateBannerByPostId(postId, bannerName);
     }
 
     // mdPick 삭제(업데이트)
     public void mdPickPop(Integer postId) {
 
-        String key = String.format("prj3/banner/mdPostBanner/%s", postMapper.getMdBannerName(postId));
+        String key = String.format("prj3/banner/mdPostBanner/%s", postMapper.getMdBannerNameByPostId(postId));
         DeleteObjectRequest objectRequest2 = DeleteObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)
@@ -276,16 +297,16 @@ public class PostService {
     }
 
     public String getMdPick(Integer postId) {
-        return postMapper.getMdPick(postId);
+        return postMapper.selectMdPickByPostId(postId);
     }
 
     // mdPick 한 게시물 개수
-    public Integer mdPickCount() {
-        return postMapper.getMdPickCount();
+    public Integer getMdPickCount() {
+        return postMapper.countMdPick();
     }
 
 
-    public void addBanner(String city, String link, MultipartFile file) throws IOException {
+    public void bannerAdd(String city, String link, MultipartFile file) throws IOException {
 
         String key = String.format("prj3/banner/localBanner/%s/%s", city, file.getOriginalFilename());
         PutObjectRequest objectRequest = PutObjectRequest.builder()
@@ -296,13 +317,13 @@ public class PostService {
         s3Client.putObject(objectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
 
         String src = String.format("%s/%s", city, file.getOriginalFilename());
-        postMapper.addBanner(city, link, src);
+        postMapper.insertBanner(city, link, src);
     }
 
 
     public List<Banner> getBannerList() {
 
-        List<Banner> bannerList = postMapper.gatBannerList();
+        List<Banner> bannerList = postMapper.selectBannerList();
         for (Banner banner : bannerList) {
             String src = String.format("%s/banner/localBanner/%s", srcPrefix, banner.getBannerSrc());
             banner.setBannerSrc(src);
@@ -313,7 +334,7 @@ public class PostService {
 
     public int removeBanner(Integer bannerId) {
 
-        Banner banner = postMapper.getBannerSrcById(bannerId);
+        Banner banner = postMapper.selectBannerSrcById(bannerId);
 
         String key = String.format("prj3/banner/localBanner/%s", banner.getBannerSrc());
         DeleteObjectRequest objectRequest2 = DeleteObjectRequest.builder()

@@ -1,15 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
-  Button,
   Center,
-  Divider,
   Flex,
-  Grid,
-  GridItem,
-  IconButton,
+  Image,
   Input,
   Select,
+  Spacer,
   StackDivider,
   Text,
   VStack,
@@ -20,27 +17,36 @@ import {
   faAngleRight,
   faAnglesLeft,
   faAnglesRight,
-  faCaretRight,
+  faEye,
+  faHeart,
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import { SearchIcon } from "@chakra-ui/icons";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import Lobby from "../Lobby.jsx";
+import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
+import ContentParser from "../../component/ContentParser.jsx";
+import { faComment } from "@fortawesome/free-regular-svg-icons";
+import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
+import ButtonOutline from "../../css/Button/ButtonOutline.jsx";
+import defaultImage from "../../resource/img/unknownImage.png";
 
 export function PostLikeList() {
   const [postLikeList, setPostLikeList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
   const navigate = useNavigate();
+  const { memberId } = useParams();
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
   const account = useContext(LoginContext);
 
   useEffect(() => {
-    axios.get(`/api/post/likeList?${searchParams}`).then((res) => {
+    axios.get(`/api/post/likeList/${memberId}?${searchParams}`).then((res) => {
       setPostLikeList(res.data.postList);
       setPageInfo(res.data.pageInfo);
+      console.log(res.data.postList);
     });
     setSearchType("all");
     setSearchKeyword("");
@@ -88,167 +94,141 @@ export function PostLikeList() {
 
   return (
     <Box align="center" justify="center">
-      <Divider
-        border="3px solid #836091" // 경계선 정의
-        borderRadius="10px"
-        w={{ base: "720px", lg: "960px" }}
-        my={"2rem"}
-      ></Divider>
       {postLikeList.length === 0 && <Center>조회 결과가 없습니다.</Center>}
       {postLikeList.length > 0 && (
         <VStack
-          divider={
-            <StackDivider
-              border="1px solid #836091" // 경계선 정의
-              borderRadius="10px"
-            />
-          }
+          divider={<StackDivider />}
           my={"2rem"}
-          spacing={"2rem"}
-          w={{ base: "720px", lg: "960px" }}
+          spacing={{ base: "2rem", lg: "2rem", sm: "1rem" }}
+          w={{ base: "720px", lg: "720px", sm: "660px" }}
         >
           {postLikeList.map((post) => (
-            <Box
+            <Flex
               key={post.postId}
               onClick={() => navigate(`/post/${post.postId}`)}
-              w={"720px"}
+              w={{ base: "720px", lg: "720px", sm: "660px" }}
+              h={{ base: "240px", lg: "240px", sm: "200px" }}
+              cursor={"pointer"}
+              boxShadow={"base"}
+              borderRadius={"12px"}
+              py={"1rem"}
+              px={"1rem"}
+              sx={{
+                "&:hover": {
+                  backgroundColor: "beige",
+                },
+              }}
             >
-              <Box>
-                <Grid
-                  w={"720px"}
-                  h={"224px"}
-                  templateColumns={"repeat(9, 1fr)"}
-                  templateRows={"1fr 1fr 5fr"}
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: "RGBA(0, 0, 0, 0.06)",
-                    },
+              <Flex
+                direction={"column"}
+                overflow={"hidden"}
+                textOverflow={"ellipsis"}
+                whiteSpace={"nowrap"}
+                w={"75%"}
+                h={"100%"}
+                pr={"1rem"}
+              >
+                <Flex mb={"8px"}>
+                  <HeadingVariant overflow={"hidden"} textOverflow={"ellipsis"}>
+                    {post.title}
+                  </HeadingVariant>
+                </Flex>
+                <Flex
+                  textAlign={"start"}
+                  overflow={"hidden"}
+                  textOverflow={"ellipsis"}
+                  display={"-webkit-box"}
+                  css={{
+                    WebkitLineClamp: "3",
+                    WebkitBoxOrient: "vertical",
+                    wordBreak: "break-word",
+                    whiteSpace: "pre-wrap",
                   }}
-                  cursor={"pointer"}
                 >
-                  <GridItem
-                    colSpan={9}
-                    rowSpan={1}
-                    alignContent={"center"}
-                    whiteSpace={"nowrap"}
-                    borderY={"1px solid lightgray"}
+                  <ContentParser content={post.content} />
+                </Flex>
+                <Spacer />
+                <Flex w={"100%"} h={"32px"} alignItems={"center"}>
+                  <Flex w={"45%"}>
+                    <Box
+                      w={"24px"}
+                      h={"24px"}
+                      mr={1}
+                      borderRadius={"100%"}
+                      boxShadow={"base"}
+                    >
+                      <Image src={post.profileName} borderRadius={"100%"} />
+                    </Box>
+                    <Box
+                      w={"100%"}
+                      textAlign={"start"}
+                      overflow={"hidden"}
+                      textOverflow={"ellipsis"}
+                    >
+                      {post.nickName}
+                    </Box>
+                  </Flex>
+                  <Spacer />
+                  <Flex
+                    gap={"10px"}
+                    w={"50%"}
+                    color={"lightgray"}
+                    fontSize={"12px"}
+                    justify={"end"}
                   >
-                    <Flex pl={3}>
-                      <Text
-                        display={{ base: "none", lg: "block" }}
-                        mr={1}
-                        fontSize={"xl"}
-                        fontWeight={"bold"}
-                      >
-                        제목 <FontAwesomeIcon icon={faCaretRight} />
-                      </Text>
-                      <Text
-                        overflow={"hidden"}
-                        textOverflow={"ellipsis"}
-                        fontSize={"xl"}
-                        fontWeight={"bold"}
-                      >
-                        {post.title}
-                      </Text>
-                    </Flex>
-                  </GridItem>
-                  <GridItem colSpan={3} rowSpan={1} alignContent={"center"}>
-                    <Flex pl={3}>
+                    <Flex>
                       <Text display={{ base: "none", lg: "block" }} mr={1}>
-                        작성자 <FontAwesomeIcon icon={faCaretRight} />
+                        조회
                       </Text>
-                      <Text overflow={"hidden"} textOverflow={"ellipsis"}>
-                        {post.nickName}
-                      </Text>
-                    </Flex>
-                  </GridItem>
-                  <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
-                    <Flex pl={3}>
-                      <Text display={{ base: "none", lg: "block" }} mr={1}>
-                        조회수 <FontAwesomeIcon icon={faCaretRight} />
+                      <Text display={{ base: "block", lg: "none" }} mr={1}>
+                        <FontAwesomeIcon icon={faEye} size={"lg"} />
                       </Text>
                       <Text>{post.view}</Text>
                     </Flex>
-                  </GridItem>
-                  <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
-                    <Flex pl={3}>
+                    <Flex>
                       <Text display={{ base: "none", lg: "block" }} mr={1}>
-                        좋아요 <FontAwesomeIcon icon={faCaretRight} />
+                        좋아요
+                      </Text>
+                      <Text display={{ base: "block", lg: "none" }} mr={1}>
+                        <FontAwesomeIcon icon={faHeart} size={"lg"} />
                       </Text>
                       <Text>{post.likeCount}</Text>
                     </Flex>
-                  </GridItem>
-                  <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
-                    <Flex pl={3}>
+                    <Flex>
                       <Text display={{ base: "none", lg: "block" }} mr={1}>
-                        댓글 <FontAwesomeIcon icon={faCaretRight} />
+                        댓글
+                      </Text>
+                      <Text display={{ base: "block", lg: "none" }} mr={1}>
+                        <FontAwesomeIcon icon={faComment} size={"lg"} />
                       </Text>
                       <Text>{post.commentCount}</Text>
                     </Flex>
-                  </GridItem>
-                  <GridItem
-                    colSpan={2}
-                    rowSpan={1}
-                    alignContent={"center"}
-                    borderY={"1px solid lightgray"}
-                  >
-                    <Flex pl={3}>
-                      <Text display={{ base: "none", lg: "block" }} mr={1}>
-                        썸네일
-                      </Text>
-                    </Flex>
-                  </GridItem>
-                  <GridItem
-                    colSpan={7}
-                    rowSpan={1}
-                    alignContent={"center"}
-                    overflow={"hidden"}
-                    textOverflow={"ellipsis"}
-                    whiteSpace={"nowrap"}
-                    borderY={"1px solid lightgray"}
-                  >
-                    <Box pl={3}>
-                      <Flex>
-                        <Text display={{ base: "none", lg: "block" }} mr={1}>
-                          내용 <FontAwesomeIcon icon={faCaretRight} />{" "}
-                        </Text>
-                        <Box
-                          maxW={"560px"}
-                          textAlign={"start"}
-                          overflow={"hidden"}
-                          textOverflow={"ellipsis"}
-                          display={"-webkit-box"}
-                          css={{
-                            "-webkit-line-clamp": "4",
-                            "-webkit-box-orient": "vertical",
-                            wordBreak: "break-word",
-                            whiteSpace: "pre-wrap",
-                          }}
-                        >
-                          {post.content}
-                        </Box>
-                      </Flex>
-                      <Text textAlign={"left"} mt={"1rem"} color={"lightgray"}>
-                        {post.createDate}
-                      </Text>
-                    </Box>
-                  </GridItem>
-                </Grid>
-              </Box>
-            </Box>
+                    <Flex>{post.createDate}</Flex>
+                  </Flex>
+                </Flex>
+              </Flex>
+              <Spacer />
+              <Flex
+                w={{ base: "200px", lg: "200px", sm: "160px" }}
+                h={"100%"}
+                align={"center"}
+              >
+                <Image
+                  src={post.picurl || defaultImage}
+                  w={{ base: "200px", lg: "200px", sm: "160px" }}
+                  h={{ base: "200px", lg: "200px", sm: "160px" }}
+                  objectFit={"cover"}
+                  borderRadius={"1rem"}
+                />
+              </Flex>
+            </Flex>
           ))}
         </VStack>
       )}
-      <Divider
-        border="3px solid #836091" // 경계선 정의
-        borderRadius="10px"
-        w={{ base: "720px", lg: "960px" }}
-        my={"2rem"}
-      ></Divider>
+
       {/* 게시글 검색 */}
       <Box my={"2rem"}>
         <Flex align={"center"} justify={"center"} gap={10}>
-          <Box w={"80px"}></Box>
           <Center>
             <Box>
               <Select
@@ -267,57 +247,59 @@ export function PostLikeList() {
             <Box>
               <Input
                 value={searchKeyword}
-                onChange={(e) => setSearchKeyword(e.target.value)}
+                onChange={(e) => {
+                  setSearchKeyword(e.target.value);
+                }}
                 onKeyDown={handleSearchKeyDown}
                 placeholder={"검색어"}
               />
             </Box>
             <Box>
-              <IconButton
-                onClick={handleSearchClick}
-                icon={<SearchIcon />}
-                aria-label={"Search database"}
-              />
+              <ButtonCircle onClick={handleSearchClick}>
+                <FontAwesomeIcon icon={faMagnifyingGlass} fontSize="small" />
+              </ButtonCircle>
             </Box>
           </Center>
         </Flex>
       </Box>
+
+      {/* 페이징 */}
       <Box>
         <Center>
           {pageInfo.prevPageNumber && (
             <>
-              <Button onClick={() => handlePageButtonClick(1)}>
+              <ButtonOutline onClick={() => handlePageButtonClick(1)}>
                 <FontAwesomeIcon icon={faAnglesLeft} />
-              </Button>
-              <Button
+              </ButtonOutline>
+              <ButtonOutline
                 onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
               >
                 <FontAwesomeIcon icon={faAngleLeft} />
-              </Button>
+              </ButtonOutline>
             </>
           )}
 
           {pageNumbers.map((pageNumber) => (
-            <Button
+            <ButtonOutline
               key={pageNumber}
               onClick={() => handlePageButtonClick(pageNumber)}
             >
               {pageNumber}
-            </Button>
+            </ButtonOutline>
           ))}
 
           {pageInfo.nextPageNumber && (
             <>
-              <Button
+              <ButtonOutline
                 onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
               >
                 <FontAwesomeIcon icon={faAngleRight} />
-              </Button>
-              <Button
+              </ButtonOutline>
+              <ButtonOutline
                 onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
               >
                 <FontAwesomeIcon icon={faAnglesRight} />
-              </Button>
+              </ButtonOutline>
             </>
           )}
         </Center>

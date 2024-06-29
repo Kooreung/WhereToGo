@@ -2,12 +2,12 @@ package com.backend.Crawler;
 
 import com.backend.domain.place.Place;
 import com.backend.mapper.place.PlaceMapper;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class WebCrawlerService {
 
     private final PlaceMapper placeMapper;
 
-    public Map<String, Map<String, String>> crawler(List<Place> places) throws InterruptedException {
+    public Map<String, Map<String, String>> imageCrawling(List<Place> places) throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(10);
         Map<String, Map<String, String>> map = new ConcurrentHashMap<>();
 
@@ -40,8 +40,11 @@ public class WebCrawlerService {
                 String picUrl = "";
                 System.out.println(url);
 
-                WebDriverManager.chromedriver().setup();
-                WebDriver driver = new ChromeDriver();
+
+                ChromeOptions options = new ChromeOptions();
+                options.addArguments("headless"); // 머리 없는 모드 활성화
+//                WebDriverManager.chromedriver().setup();
+                WebDriver driver = new ChromeDriver(options);
                 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 
                 try {

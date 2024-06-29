@@ -17,6 +17,8 @@ public class Member {
     private String gender;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birth;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate inserted;
     private String address;
     private String phoneNumber;
 }

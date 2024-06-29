@@ -17,7 +17,7 @@ function CommentList({ postId, isTransition, setIsTransition }) {
   }
   return (
     <Box>
-      <Box>
+      <Box p={3}>
         {commentList.map((comment) => (
           <CommentItem
             comment={comment}

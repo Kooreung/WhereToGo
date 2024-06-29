@@ -39,7 +39,6 @@ function LobbyPostListOfBest(props) {
         <Card
           key={index}
           onClick={() => navigate(`/post/${post.postId}`)}
-          direction={"row"}
           variant="outline"
           cursor="pointer"
           my={"1rem"}
@@ -69,9 +68,8 @@ function LobbyPostListOfBest(props) {
               overflow={"hidden"}
               textOverflow={"ellipsis"}
               whiteSpace={"nowrap"}
-              w={"70%"}
+              w={{ base: "75%", lg: "75%", sm: "70%" }}
               h={"100%"}
-              pr={"1rem"}
             >
               <Flex mb={"8px"}>
                 <HeadingVariant overflow={"hidden"} textOverflow={"ellipsis"}>
@@ -93,42 +91,62 @@ function LobbyPostListOfBest(props) {
                 <ContentParser content={post.content} />
               </Flex>
               <Spacer />
-              <Flex fontSize={{ base: "16px", lg: "16px", sm: "14px" }}>
-                <Flex>
-                  <Image src={post.profileName} />
-                  <Text overflow={"hidden"} textOverflow={"ellipsis"}>
+              <Flex w={"100%"} h={"28px"} alignItems={"center"}>
+                <Flex w={"45%"}>
+                  <Box
+                    w={"24px"}
+                    h={"24px"}
+                    mr={1}
+                    borderRadius={"100%"}
+                    boxShadow={"base"}
+                  >
+                    <Image src={post.profileName} borderRadius={"100%"} />
+                  </Box>
+                  <Box
+                    w={"100%"}
+                    textAlign={"start"}
+                    overflow={"hidden"}
+                    textOverflow={"ellipsis"}
+                  >
                     {post.nickName}
-                  </Text>
+                  </Box>
                 </Flex>
-                <Flex pl={"1rem"} color={"lightgray"}>
-                  <Text display={{ base: "none", lg: "block" }} mr={1}>
-                    조회
-                  </Text>
-                  <Text display={{ base: "block", lg: "none" }} mr={1}>
-                    <FontAwesomeIcon icon={faEye} size={"lg"} />
-                  </Text>
-                  <Text>{post.view}</Text>
-                </Flex>
-                <Flex pl={"1rem"} color={"lightgray"}>
-                  <Text display={{ base: "none", lg: "block" }} mr={1}>
-                    좋아요
-                  </Text>
-                  <Text display={{ base: "block", lg: "none" }} mr={1}>
-                    <FontAwesomeIcon icon={faHeart} size={"lg"} />
-                  </Text>
-                  <Text>{post.likeCount}</Text>
-                </Flex>
-                <Flex pl={"1rem"} color={"lightgray"}>
-                  <Text display={{ base: "none", lg: "block" }} mr={1}>
-                    댓글
-                  </Text>
-                  <Text display={{ base: "block", lg: "none" }} mr={1}>
-                    <FontAwesomeIcon icon={faComment} size={"lg"} />
-                  </Text>
-                  <Text>{post.commentCount}</Text>
-                </Flex>
-                <Flex pl={"1rem"} color={"lightgray"}>
-                  {post.createDate}
+                <Spacer />
+                <Flex
+                  gap={"10px"}
+                  w={"50%"}
+                  color={"lightgray"}
+                  fontSize={"12px"}
+                  justify={"end"}
+                >
+                  <Flex>
+                    <Text display={{ base: "none", lg: "block" }} mr={1}>
+                      조회
+                    </Text>
+                    <Text display={{ base: "block", lg: "none" }} mr={1}>
+                      <FontAwesomeIcon icon={faEye} size={"lg"} />
+                    </Text>
+                    <Text>{post.view}</Text>
+                  </Flex>
+                  <Flex>
+                    <Text display={{ base: "none", lg: "block" }} mr={1}>
+                      좋아요
+                    </Text>
+                    <Text display={{ base: "block", lg: "none" }} mr={1}>
+                      <FontAwesomeIcon icon={faHeart} size={"lg"} />
+                    </Text>
+                    <Text>{post.likeCount}</Text>
+                  </Flex>
+                  <Flex>
+                    <Text display={{ base: "none", lg: "block" }} mr={1}>
+                      댓글
+                    </Text>
+                    <Text display={{ base: "block", lg: "none" }} mr={1}>
+                      <FontAwesomeIcon icon={faComment} size={"lg"} />
+                    </Text>
+                    <Text>{post.commentCount}</Text>
+                  </Flex>
+                  <Flex>{post.createDate}</Flex>
                 </Flex>
               </Flex>
             </Flex>

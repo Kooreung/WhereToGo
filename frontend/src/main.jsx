@@ -8,7 +8,7 @@ import "../src/css/style.css";
 ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode>
   <ChakraProvider theme={customTheme}>
-    <App />,
+    <App />
   </ChakraProvider>,
   // </React.StrictMode>,
 );

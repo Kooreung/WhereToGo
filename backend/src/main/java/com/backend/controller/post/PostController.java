@@ -28,7 +28,7 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Integer> postAdd(Post post, Authentication authentication) {
         if (postService.validate(post)) {
-            Integer result = postService.add(post, authentication);
+            Integer result = postService.savePost(post, authentication);
             return ResponseEntity.ok().body(result);
         } else {
 
@@ -39,7 +39,7 @@ public class PostController {
     // 게시글 조회 Controller
     @GetMapping("{postId}")
     public ResponseEntity postRead(@PathVariable Integer postId, Authentication authentication) {
-        Map<String, Object> result = postService.get(postId, authentication);
+        Map<String, Object> result = postService.getPostInfo(postId, authentication);
         if (result.get("post") == null) {
             return ResponseEntity.notFound().build();
         }
@@ -52,52 +52,56 @@ public class PostController {
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(value = "type", required = false) String searchType,
             @RequestParam(value = "keyword", defaultValue = "") String searchKeyword) {
-        return postService.list(page, searchType, searchKeyword);
+        return postService.getPostList(page, searchType, searchKeyword);
     }
+
 
     // 게시글 MD추천 목록 Controller
     @GetMapping("mdList")
-    public Map<String, Object> postListMd(Map<String, Object> post,
+    public Map<String, Object> postMdList(Map<String, Object> post,
                                           @RequestParam(value = "type", required = false) String searchType,
                                           @RequestParam(value = "keyword", defaultValue = "") String searchKeyword) {
-        return postService.mdlist(post, searchType, searchKeyword);
+        System.out.println("눌렸냐고");
+        return postService.getMdList(post, searchType, searchKeyword);
     }
 
 
     // 게시글 Top 3 인기글 목록 Controller
     @GetMapping("list/postListOfBest")
     public List<Post> postListOfBest() {
-        return postService.postListOfBest();
+        return postService.getPostListOfBest();
     }
 
     // 게시글에서 선택한 장소 목록 Controller
     @GetMapping("{postId}/place")
     public List<Place> postPlace(@PathVariable Integer postId) {
-        return postService.placeList(postId);
+        return postService.getPlaceList(postId);
     }
 
     @GetMapping("place/{selectPlaces}")
     public List<Place> postPlaceData(@PathVariable String selectPlaces) {
-        return postService.placeListData(selectPlaces);
+        return postService.getPlaceListData(selectPlaces);
     }
 
     // 내가 좋아요한 게시글 목록 Controller
-    @GetMapping("likeList")
+    @GetMapping("likeList/{memberId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Map<String, Object>> getLikeList(Authentication authentication, @RequestParam(defaultValue = "1") Integer page, @RequestParam(value = "type", required = false) String searchType,
+    public ResponseEntity<Map<String, Object>> getLikeList(
+            @PathVariable Integer memberId,
+            @RequestParam(defaultValue = "1") Integer page, @RequestParam(value = "type", required = false) String searchType,
                                                            @RequestParam(value = "keyword", defaultValue = "") String searchKeyword) {
-        Integer memberId = Integer.valueOf(authentication.getName());
         System.out.println("searchKeyword = " + searchKeyword);
         Map<String, Object> likedPosts = postService.getLikeAllList(memberId, page, searchType, searchKeyword);
         return ResponseEntity.ok(likedPosts);
     }
+
 
     // 게시글 삭제 Controller
     @DeleteMapping("{postId}")
     @PreAuthorize("isAuthenticated()||hasAuthority('SCOPE_admin')")
     public ResponseEntity postDelete(@PathVariable Integer postId, Authentication authentication) {
         if (postService.hasMemberIdAccess(postId, authentication)) {
-            postService.remove(postId);
+            postService.postRemove(postId);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -113,7 +117,7 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         if (postService.validate(post)) {
-            postService.edit(post);
+            postService.postEdit(post);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();
@@ -127,16 +131,22 @@ public class PostController {
         return postService.postLike(like, authentication);
     }
 
+    // 내 게시물 목록 Controller
+    @GetMapping("myList")
+    public Map<String, Object> myList(@RequestParam Integer memberId) {
+        return postService.myList(memberId);
+    }
+
     // home mdpick list
     @GetMapping("mdPickList")
     public Map<String, Object> postMdPickList() {
-        return postService.mdPickList();
+        return postService.getMdPickList();
     }
 
     // mdPick push Controller
     @PostMapping("push")
     public ResponseEntity postMdPickPush(Integer postId, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
-        Integer mdPickCount = postService.mdPickCount();
+        Integer mdPickCount = postService.getMdPickCount();
         if (mdPickCount < 3) {
 
             for (int i = 0; i < 3; i++) {
@@ -169,7 +179,7 @@ public class PostController {
 
     @PostMapping("banner/add")
     public ResponseEntity addBanner(String city, String link, @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
-        postService.addBanner(city, link, file);
+        postService.bannerAdd(city, link, file);
         return ResponseEntity.ok().build();
     }
 

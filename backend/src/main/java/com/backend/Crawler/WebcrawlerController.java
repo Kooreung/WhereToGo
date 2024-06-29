@@ -20,9 +20,6 @@ public class WebcrawlerController {
 
     @PostMapping("crawling")
     public Map<String, Map<String, String>> getCrawler(@RequestBody List<Place> places) throws InterruptedException {
-        for (Place place : places) {
-            System.out.println(place.getPlaceName());
-        }
-        return webCrawlerService.crawler(places);
+        return webCrawlerService.imageCrawling(places);
     }
 }

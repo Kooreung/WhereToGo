@@ -40,10 +40,19 @@ import {
   WrapItem,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBackwardFast,
+  faBackwardStep,
+  faForwardFast,
+  faForwardStep,
+  faMagnifyingGlass,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import Lobby from "../Lobby.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import ContentParser from "../../component/ContentParser.jsx";
+import ButtonNumber from "../../css/Button/ButtonOutline.jsx";
+import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 
 export function AdminPage() {
   const [memberList, setMemberList] = useState([]);
@@ -71,7 +80,48 @@ export function AdminPage() {
     onOpen: onModalOpenOfAdd,
     onClose: onModalCloseOfAdd,
   } = useDisclosure();
+
   const [selectedPosts, setSelectedPosts] = useState([]);
+
+  const {
+    isOpen: isDeleteAccountModalOpen,
+    onOpen: onDeleteAccountModalOpen,
+    onClose: onDeleteAccountModalClose,
+  } = useDisclosure();
+  const [selectedMemberId, setSelectedMemberId] = useState(null);
+
+  // 삭제하려는 사용자의 ID를 설정하고 모달을 열기 위한 함수
+  const openDeleteModal = (memberId) => {
+    setSelectedMemberId(memberId); // 선택된 사용자의 ID를 상태에 저장
+    onDeleteAccountModalOpen(); // 모달을 엽니다.
+  };
+
+  function handleDeleteUser() {
+    axios
+      .delete(`/api/member/delete`, {
+        data: { memberId: selectedMemberId, password: "admin" },
+      })
+      .then(() => {
+        toast({
+          status: "success",
+          description: "회원이 탈퇴 되었습니다.",
+          position: "bottom",
+        });
+        setMemberList((prevMemberList) =>
+          prevMemberList.filter(
+            (member) => member.memberId !== selectedMemberId,
+          ),
+        );
+        onDeleteAccountModalClose();
+      })
+      .catch(() => {
+        toast({
+          status: "error",
+          description: "탈퇴중 문제가 생겼습니다.",
+          position: "bottom",
+        });
+      });
+  }
 
   const handleMdSwitchChange = (postId) => {
     setToggleState((prevToggleState) => ({
@@ -89,6 +139,9 @@ export function AdminPage() {
   };
 
   const handleAddClick = () => {
+    console.log("눌렸냐고");
+    console.log(mdPosts);
+    onModalOpenOfAdd();
     if (selectedPosts.length >= 3) {
       // 이미 3개의 포스트가 선택되었을 때 토스트 알림을 표시합니다.
       toast({
@@ -152,7 +205,10 @@ export function AdminPage() {
       setSelectedPosts(res.data.post);
     });
     axios.get("/api/post/bannerList").then((res) => setBannerList(res.data));
-
+    axios.get("/api/post/mdList").then((res) => {
+      setMdPosts(res.data.post);
+      console.log(res.data.post);
+    });
     setSearchType("all");
     setSearchKeyword("");
 
@@ -213,6 +269,7 @@ export function AdminPage() {
     //
     //   resolve();
     // });
+    setPreviewUrls({});
     setSelectedPosts([]);
     setToggleState({});
     // 상태 업데이트가 완료된 후에 필요한 작업을 수행합니다.
@@ -223,39 +280,68 @@ export function AdminPage() {
     // 성공적으로 전송된 postId를 추적하기 위한 배열입니다.
     const successfullySentPostIds = [];
 
-    for (const postId of selectedPosts) {
-      const file = selectedFiles[postId];
-      if (file) {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("postId", postId);
-
-        try {
-          const response = await axios.post("/api/post/push", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
+    if (selectedPosts.length > 0) {
+      for (const postId of selectedPosts) {
+        // 스위치가 켜져 있지만 파일이 선택되지 않은 경우 경고를 표시합니다.
+        if (!!toggleState[postId] && !selectedFiles[postId]) {
+          toast({
+            title: "사진을 등록해주세요",
+            description: "선택된 게시물에 대한 사진을 등록해야 합니다.",
+            status: "warning",
+            duration: 5000,
+            isClosable: true,
           });
-          console.log(
-            `MdPick with postId ${postId} successfully sent`,
-            response.data,
-          );
-          // 성공적으로 전송된 postId를 배열에 추가합니다.
-          successfullySentPostIds.push(postId);
-        } catch (error) {
-          console.error(`Error sending MdPick with postId ${postId}`, error);
+          continue; // 다음 postId로 넘어갑니다.
+        }
+
+        const file = selectedFiles[postId];
+        if (file) {
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("postId", postId);
+
+          try {
+            const response = await axios.post("/api/post/push", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            });
+            console.log(
+              `MdPick with postId ${postId} successfully sent`,
+              response.data,
+            );
+            // 성공적으로 전송된 postId를 배열에 추가합니다.
+            successfullySentPostIds.push(postId);
+          } catch (error) {
+            console.error(`Error sending MdPick with postId ${postId}`, error);
+          }
         }
       }
-      onModalCloseOfAdd(); // 모달 닫는 함수를 호출합니다.
-      await fetchMdPicks(); // mdPick 리스트를 불러오는 함수를 호출합니다.
+
+      // 모달 닫는 함수를 호출합니다.
+      onModalCloseOfAdd();
+      // mdPick 리스트를 불러오는 함수를 호출합니다.
+      await fetchMdPicks();
+
+      // 모든 요청이 완료된 후, 성공적으로 전송된 postId를 기반으로 selectedPosts 상태를 업데이트합니다.
+      setSelectedPosts((prevSelectedPosts) =>
+        prevSelectedPosts.filter(
+          (postId) => !successfullySentPostIds.includes(postId),
+        ),
+      );
+    } else {
+      // 선택된 게시물이 없으면 모달을 닫고 상태를 초기화합니다.
+      setPreviewUrls({});
+      setSelectedFiles({});
+      setToggleState({});
+      setSelectedPosts([]);
     }
 
-    // 모든 요청이 완료된 후, 성공적으로 전송된 postId를 기반으로 selectedPosts 상태를 업데이트합니다.
-    setSelectedPosts((prevSelectedPosts) =>
-      prevSelectedPosts.filter(
-        (postId) => !successfullySentPostIds.includes(postId),
-      ),
-    );
+    // 스위치 상태와 관련된 상태들을 초기화합니다.
+    setPreviewUrls({});
+    setSelectedFiles({});
+    setToggleState({});
+    setSelectedPosts([]);
   };
 
   // mdPick 리스트를 불러오는 함수입니다.
@@ -332,6 +418,16 @@ export function AdminPage() {
   };
 
   const handleSubmit = async () => {
+    if (city.length <= 0 || bannerLink.length <= 0) {
+      toast({
+        title: "알림",
+        description: "제목과 링크를 꼭 입력 해주세요.",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
     // 새 배너 객체를 생성합니다.
     const formData = new FormData();
     formData.append("city", city);
@@ -377,14 +473,27 @@ export function AdminPage() {
     );
   }
 
+  function handleSearchKeyDown(e) {
+    if (e.key === "Enter") {
+      navigate(`/memberList/?type=${searchType}&keyword=${searchKeyword}`);
+    }
+  }
+
+  const tdCellStyle = {
+    maxWidth: "300px",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+  };
+
   return (
     <Box>
       <Tabs variant="enclosed">
         <TabList>
           <Tab>회원관리</Tab>
-          <Tab onClick={handleBanner}>배너 등록</Tab>
+          <Tab>배너 등록</Tab>
         </TabList>
-        <TabPanels>
+        <TabPanels w={{ base: "720px", lg: "960px" }}>
           <TabPanel>
             <Box mb={10}>
               <Heading>회원 목록</Heading>
@@ -399,6 +508,7 @@ export function AdminPage() {
                       <Th>이메일</Th>
                       <Th w={"150px"}>별명</Th>
                       <Th w={96}>가입일시</Th>
+                      <Th w={96}>관리</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -410,12 +520,24 @@ export function AdminPage() {
                             backgroundColor: "RGBA(0, 0, 0, 0.06)",
                           },
                         }}
-                        onClick={() => navigate(`/member/${member.memberId}`)}
                         key={member.memberId}
                       >
                         <Td>{member.memberId}</Td>
                         <Td>{member.email}</Td>
-                        <Td>{member.nickName}</Td>
+                        <Td
+                          onClick={() => navigate(`/member/${member.memberId}`)}
+                        >
+                          {member.nickName}
+                        </Td>
+                        <Td>{member.inserted}</Td>
+
+                        <Td>
+                          <Button
+                            onClick={() => openDeleteModal(member.memberId)}
+                          >
+                            삭제
+                          </Button>
+                        </Td>
                       </Tr>
                     ))}
                   </Tbody>
@@ -431,38 +553,39 @@ export function AdminPage() {
                     <option value="nickName">작성자</option>
                   </Select>
                 </Box>
-                <Box>
+                <Box ml={2}>
                   <Input
                     onChange={(e) => setSearchKeyword(e.target.value)}
                     placeholder="검색어"
+                    onKeyDown={handleSearchKeyDown}
                   />
                 </Box>
-                <Box>
-                  <Button onClick={handleSearchClick}>
+                <Box ml={2}>
+                  <ButtonCircle onClick={handleSearchClick}>
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
-                  </Button>
+                  </ButtonCircle>
                 </Box>
               </Flex>
             </Center>
 
-            <Center>
+            <Center mt={4}>
               <Box>
                 {pageInfo.prevPageNumber && (
                   <>
-                    <Button onClick={() => handlePageButtonClick(1)}>
-                      처음
-                    </Button>
-                    <Button
+                    <ButtonNumber onClick={() => handlePageButtonClick(1)}>
+                      <FontAwesomeIcon icon={faBackwardFast} />
+                    </ButtonNumber>
+                    <ButtonNumber
                       onClick={() =>
                         handlePageButtonClick(pageInfo.prevPageNumber)
                       }
                     >
-                      이전
-                    </Button>
+                      <FontAwesomeIcon icon={faBackwardStep} />
+                    </ButtonNumber>
                   </>
                 )}
                 {pageNumbers.map((pageNumber) => (
-                  <Button
+                  <ButtonNumber
                     onClick={() => handlePageButtonClick(pageNumber)}
                     key={pageNumber}
                     colorScheme={
@@ -472,31 +595,31 @@ export function AdminPage() {
                     }
                   >
                     {pageNumber}
-                  </Button>
+                  </ButtonNumber>
                 ))}
                 {pageInfo.nextPageNumber && (
                   <>
-                    <Button
+                    <ButtonNumber
                       onClick={() =>
                         handlePageButtonClick(pageInfo.nextPageNumber)
                       }
                     >
-                      다음
-                    </Button>
-                    <Button
+                      <FontAwesomeIcon icon={faForwardStep} />
+                    </ButtonNumber>
+                    <ButtonNumber
                       onClick={() =>
                         handlePageButtonClick(pageInfo.lastPageNumber)
                       }
                     >
-                      맨끝
-                    </Button>
+                      <FontAwesomeIcon icon={faForwardFast} />
+                    </ButtonNumber>
                   </>
                 )}
               </Box>
             </Center>
           </TabPanel>
-          <TabPanel>
-            <Wrap spacing={4}>
+          <TabPanel w={{ base: "720px", lg: "960px" }}>
+            <Wrap spacing={4} mb={6}>
               <WrapItem>
                 <Button colorScheme="orange" onClick={handleAddClick}>
                   MDpost선택
@@ -508,14 +631,14 @@ export function AdminPage() {
                 </Button>
               </WrapItem>
             </Wrap>
-            <Card>
+            <Card w={{ base: "720px", lg: "960px" }}>
               <CardBody>
                 <Table>
                   <Thead>
                     <Tr>
-                      <Th>게시물 아이디</Th>
-                      <Th w={"150px"}>제목</Th>
-                      <Th w={96}>내용</Th>
+                      <Th width={"150px"}>게시물 아이디</Th>
+                      <Th width={"200px"}>제목</Th>
+                      <Th width={"500px"}>내용</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -529,15 +652,17 @@ export function AdminPage() {
                         }}
                         key={mdpick.postId}
                       >
-                        <Td>{mdpick.postId}</Td>
-                        <Td>{mdpick.title}</Td>
-                        <Td>
+                        <Td sx={tdCellStyle}>{mdpick.postId}</Td>
+                        <Td sx={tdCellStyle}>{mdpick.title}</Td>
+                        <Td sx={tdCellStyle}>
                           <ContentParser content={mdpick.content} />{" "}
                         </Td>
                         <Td>
-                          <Button onClick={() => handleDelete(mdpick.postId)}>
-                            삭제
-                          </Button>
+                          <ButtonCircle
+                            onClick={() => handleDelete(mdpick.postId)}
+                          >
+                            <FontAwesomeIcon icon={faTrash} />
+                          </ButtonCircle>
                         </Td>
                       </Tr>
                     ))}
@@ -545,14 +670,15 @@ export function AdminPage() {
                 </Table>
               </CardBody>
             </Card>
-            <Card mt={10}>
+            {/*여기*/}
+            <Card mt={10} w={{ base: "720px", lg: "960px" }}>
               <CardBody>
                 <Table>
                   <Thead>
                     <Tr>
-                      <Th>배너 아이디</Th>
-                      <Th w={"150px"}>지역이름</Th>
-                      <Th w={96}>링크</Th>
+                      <Th width={"150px"}>배너 아이디</Th>
+                      <Th width={"200px"}>지역이름</Th>
+                      <Th width={"500px"}>링크</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -566,15 +692,15 @@ export function AdminPage() {
                         }}
                         key={banner.bannerId}
                       >
-                        <Td>{banner.bannerId}</Td>
-                        <Td>{banner.city}</Td>
-                        <Td>{banner.link}</Td>
+                        <Td sx={tdCellStyle}>{banner.bannerId}</Td>
+                        <Td sx={tdCellStyle}>{banner.city}</Td>
+                        <Td sx={tdCellStyle}>{banner.link}</Td>
                         <Td>
-                          <Button
+                          <ButtonCircle
                             onClick={() => handleBannerDelete(banner.bannerId)}
                           >
-                            삭제
-                          </Button>
+                            <FontAwesomeIcon icon={faTrash} />
+                          </ButtonCircle>
                         </Td>
                       </Tr>
                     ))}
@@ -588,11 +714,11 @@ export function AdminPage() {
       <Modal isOpen={isModalOpenOfAdd} onClose={onModalCloseOfAdd}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>MD 리스트</ModalHeader>ㅇ
+          <ModalHeader>MD 리스트</ModalHeader>
           <ModalBody>배너에 등록할 게시글을 선택 해주세요.</ModalBody>
           {postsToShow.map((mdPost) => (
-            <Box key={mdPost.postId}>
-              <Card border="1px" mb="3px">
+            <Center key={mdPost.postId} mb={4}>
+              <Card border="1px ligtgray" mb="3px" width={"400px"}>
                 <CardHeader>
                   <Heading size="md">{mdPost.title}</Heading>
                 </CardHeader>
@@ -628,6 +754,7 @@ export function AdminPage() {
                         <FormControl>
                           <FormLabel>배너사진 선택</FormLabel>
                           <Input
+                            alignContent={"center"}
                             multiple
                             type="file"
                             accept="image/*"
@@ -644,10 +771,12 @@ export function AdminPage() {
                   )}
                 </CardBody>
               </Card>
-            </Box>
+            </Center>
           ))}
           <ModalFooter>
-            <Button onClick={handleSendMdPicks}>추가</Button>
+            <Button mr={3} onClick={handleSendMdPicks}>
+              추가
+            </Button>
             <Button onClick={handleModalClose}>취소</Button>
           </ModalFooter>
         </ModalContent>
@@ -659,22 +788,46 @@ export function AdminPage() {
           <ModalCloseButton />
           <ModalBody>
             <Input
+              mt={2}
               type="text"
               placeholder="지역 이름을 적어주세요"
               onChange={(e) => setCity(e.target.value)}
             />
             <Input
+              mt={2}
               placeholder="링크를 입력하세요"
               value={bannerLink}
               onChange={handleLinkChange}
             />
-            <Input type="file" onChange={handleBannerFileChange} />
+            <Input
+              mt={2}
+              type="file"
+              onChange={handleBannerFileChange}
+              alignContent={"center"}
+            />
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
               추가
             </Button>
-            <Button variant="ghost" onClick={onClose}>
+            <Button onClick={onClose}>취소</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal
+        isOpen={isDeleteAccountModalOpen}
+        onClose={onDeleteAccountModalClose}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>회원 탈퇴확인</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>정말 탈퇴 시키겠습니까?</ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={handleDeleteUser}>
+              확인
+            </Button>
+            <Button variant="ghost" onClick={onDeleteAccountModalClose}>
               취소
             </Button>
           </ModalFooter>

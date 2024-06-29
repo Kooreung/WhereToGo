@@ -11,10 +11,10 @@ public interface CommentMapper {
             INSERT INTO comment(comment, postid,memberid)
             VALUES (#{comment},#{postId},#{memberId})
             """)
-    void insert(Comment comment);
+    void insertComment(Comment comment);
 
     @Select("""
-            SELECT c.commentid,c.comment,m.memberid,m.nickName
+            SELECT c.commentid,c.comment,m.memberid,m.nickName,c.createdate
             FROM comment c JOIN member m ON c.memberid = m.memberid
             WHERE postid = #{postId}
             """)
@@ -35,5 +35,5 @@ public interface CommentMapper {
             FROM comment
             WHERE commentid = #{commentId}
             """)
-    Comment selectById(Integer commentId);
+    Comment selectByCommentId(Integer commentId);
 }

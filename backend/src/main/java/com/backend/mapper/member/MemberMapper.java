@@ -3,6 +3,7 @@ package com.backend.mapper.member;
 import com.backend.domain.member.Member;
 import org.apache.ibatis.annotations.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Mapper
@@ -12,7 +13,7 @@ public interface MemberMapper {
             INSERT INTO member (email, password, nickname, name, gender, birth, address, phonenumber)
             VALUES (#{email}, #{password}, #{nickName}, #{name}, #{gender}, #{birth}, #{address}, #{phoneNumber})
             """)
-    int insert(Member member);
+    int insertMember(Member member);
 
     // 이메일 중복 체크
     @Select("""
@@ -39,11 +40,12 @@ public interface MemberMapper {
                    gender, 
                    birth, 
                    address, 
-                   phoneNumber
+                   phoneNumber,
+                   inserted
             FROM member
             where memberId = #{memberId};
             """)
-    Member selectById(int memberId);
+    Member selectMemberBymemberId(int memberId);
 
     @Update("""
             UPDATE member 
@@ -71,7 +73,7 @@ public interface MemberMapper {
             insert into profile(memberid, profilename)
             values(#{memberId},#{profileName})
             """)
-    int profileAdd(Integer memberId, String profileName);
+    int updateProfileName(Integer memberId, String profileName);
 
     @Select("""
             SELECT profilename
@@ -143,7 +145,7 @@ public interface MemberMapper {
     // 회원 리스트 admin 권한 안나오면서 조회 및 검색
     @Select("""
         <script>
-        SELECT m.memberId, m.email, m.nickname
+        SELECT m.memberId, m.email, m.nickname, m.inserted
         FROM member m JOIN authority a
         ON m.memberId = a.memberId
         <trim prefix="WHERE" prefixOverrides="OR">
@@ -166,32 +168,32 @@ public interface MemberMapper {
     List<Member> selectMemberAllPaging(Integer offset, String searchType, String keyword);
 
     @Select("""
-    SELECT COUNT(*) 
-    FROM member m JOIN authority a
-    ON m.memberId = a.memberId
-    WHERE authtype <> 'admin'
-    """)
+            SELECT COUNT(*) 
+            FROM member m JOIN authority a
+            ON m.memberId = a.memberId
+            WHERE authtype <> 'admin'
+            """)
     Integer countAll();
 
     @Select("""
-<script>
-SELECT COUNT(m.memberId)
-FROM member m JOIN authority a
-ON m.memberId = a.memberId
-    <trim prefix="WHERE" prefixOverrides="OR">
-        <if test="searchType != null">
-            <bind name="pattern" value="'%' + keyword + '%'" />
-            <if test="searchType == 'all' || searchType == 'email'">
-                OR m.email LIKE #{pattern}
-                AND a.authtype &lt;&gt; 'admin'
-            </if>
-            <if test="searchType == 'all' || searchType == 'nickName'">
-                OR m.nickname LIKE #{pattern}
-                AND a.authtype &lt;&gt; 'admin'
-            </if>
-        </if>
-    </trim>
-</script>
-""")
+            <script>
+            SELECT COUNT(m.memberId)
+            FROM member m JOIN authority a
+            ON m.memberId = a.memberId
+                <trim prefix="WHERE" prefixOverrides="OR">
+                    <if test="searchType != null">
+                        <bind name="pattern" value="'%' + keyword + '%'" />
+                        <if test="searchType == 'all' || searchType == 'email'">
+                            OR m.email LIKE #{pattern}
+                            AND a.authtype &lt;&gt; 'admin'
+                        </if>
+                        <if test="searchType == 'all' || searchType == 'nickName'">
+                            OR m.nickname LIKE #{pattern}
+                            AND a.authtype &lt;&gt; 'admin'
+                        </if>
+                    </if>
+                </trim>
+            </script>
+            """)
     Integer countAllWithSearch(String searchType, String keyword);
 }

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  Avatar,
   Box,
   Button,
   Center,
@@ -11,7 +12,6 @@ import {
   Spacer,
   StackDivider,
   Text,
-  useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -33,6 +33,7 @@ import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 import ContentParser from "../../component/ContentParser.jsx";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 import { faComment } from "@fortawesome/free-regular-svg-icons";
+import ButtonOutline from "../../css/Button/ButtonOutline.jsx";
 
 function PostList() {
   const navigate = useNavigate();
@@ -42,12 +43,13 @@ function PostList() {
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
-  const logoColor = useColorModeValue("red.500", "gray.200");
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     axios.get(`/api/post/list?${searchParams}`).then((res) => {
       setPostList(res.data.postList);
       setPageInfo(res.data.pageInfo);
+      console.log(res.data.postList);
     });
     setSearchType("all");
     setSearchKeyword("");
@@ -61,7 +63,7 @@ function PostList() {
     if (keywordParam) {
       setSearchKeyword(keywordParam);
     }
-  }, [searchParams]);
+  }, [searchParams, setCurrentPage]);
 
   // 페이지 수
   const pageNumbers = [];
@@ -120,6 +122,8 @@ function PostList() {
               w={{ base: "720px", lg: "720px", sm: "660px" }}
               h={{ base: "240px", lg: "240px", sm: "200px" }}
               cursor={"pointer"}
+              boxShadow={"base"}
+              borderRadius={"12px"}
               py={"1rem"}
               px={"1rem"}
               sx={{
@@ -157,42 +161,61 @@ function PostList() {
                   <ContentParser content={post.content} />
                 </Flex>
                 <Spacer />
-                <Flex>
-                  <Flex>
-                    <Image src={post.profileName} />
-                    <Text overflow={"hidden"} textOverflow={"ellipsis"}>
-                      {post.nickName}
-                    </Text>
+                <Flex w={"100%"} h={"32px"} alignItems={"center"}>
+                  <Flex w={"50%"}>
+                    <Flex overflow={"hidden"} textOverflow={"ellipsis"}>
+                      <Avatar
+                        w={"28px"}
+                        h={"28px"}
+                        src={post.profileName}
+                        borderRadius={"100%"}
+                      />
+                      <Box
+                        ml={1}
+                        textAlign={"start"}
+                        overflow={"hidden"}
+                        textOverflow={"ellipsis"}
+                      >
+                        {post.nickName}
+                      </Box>
+                    </Flex>
                   </Flex>
-                  <Flex pl={"1rem"} color={"lightgray"}>
-                    <Text display={{ base: "none", lg: "block" }} mr={1}>
-                      조회
-                    </Text>
-                    <Text display={{ base: "block", lg: "none" }} mr={1}>
-                      <FontAwesomeIcon icon={faEye} size={"lg"} />
-                    </Text>
-                    <Text>{post.view}</Text>
-                  </Flex>
-                  <Flex pl={"1rem"} color={"lightgray"}>
-                    <Text display={{ base: "none", lg: "block" }} mr={1}>
-                      좋아요
-                    </Text>
-                    <Text display={{ base: "block", lg: "none" }} mr={1}>
-                      <FontAwesomeIcon icon={faHeart} size={"lg"} />
-                    </Text>
-                    <Text>{post.likeCount}</Text>
-                  </Flex>
-                  <Flex pl={"1rem"} color={"lightgray"}>
-                    <Text display={{ base: "none", lg: "block" }} mr={1}>
-                      댓글
-                    </Text>
-                    <Text display={{ base: "block", lg: "none" }} mr={1}>
-                      <FontAwesomeIcon icon={faComment} size={"lg"} />
-                    </Text>
-                    <Text>{post.commentCount}</Text>
-                  </Flex>
-                  <Flex pl={"1rem"} color={"lightgray"}>
-                    {post.createDate}
+                  <Spacer />
+                  <Flex
+                    gap={"10px"}
+                    w={"50%"}
+                    color={"lightgray"}
+                    fontSize={"12px"}
+                    justify={"end"}
+                  >
+                    <Flex>
+                      <Text display={{ base: "none", lg: "block" }} mr={1}>
+                        조회
+                      </Text>
+                      <Text display={{ base: "block", lg: "none" }} mr={1}>
+                        <FontAwesomeIcon icon={faEye} size={"lg"} />
+                      </Text>
+                      <Text>{post.view}</Text>
+                    </Flex>
+                    <Flex>
+                      <Text display={{ base: "none", lg: "block" }} mr={1}>
+                        좋아요
+                      </Text>
+                      <Text display={{ base: "block", lg: "none" }} mr={1}>
+                        <FontAwesomeIcon icon={faHeart} size={"lg"} />
+                      </Text>
+                      <Text>{post.likeCount}</Text>
+                    </Flex>
+                    <Flex>
+                      <Text display={{ base: "none", lg: "block" }} mr={1}>
+                        댓글
+                      </Text>
+                      <Text display={{ base: "block", lg: "none" }} mr={1}>
+                        <FontAwesomeIcon icon={faComment} size={"lg"} />
+                      </Text>
+                      <Text>{post.commentCount}</Text>
+                    </Flex>
+                    <Flex>{post.createDate}</Flex>
                   </Flex>
                 </Flex>
               </Flex>
@@ -261,38 +284,40 @@ function PostList() {
         <Center>
           {pageInfo.prevPageNumber && (
             <>
-              <Button onClick={() => handlePageButtonClick(1)}>
+              <ButtonOutline onClick={() => handlePageButtonClick(1)}>
                 <FontAwesomeIcon icon={faAnglesLeft} />
-              </Button>
-              <Button
+              </ButtonOutline>
+              <ButtonOutline
                 onClick={() => handlePageButtonClick(pageInfo.prevPageNumber)}
               >
                 <FontAwesomeIcon icon={faAngleLeft} />
-              </Button>
+              </ButtonOutline>
             </>
           )}
 
           {pageNumbers.map((pageNumber) => (
-            <Button
+            <ButtonOutline
               key={pageNumber}
               onClick={() => handlePageButtonClick(pageNumber)}
+              colorScheme={
+                pageNumber === pageInfo.currentPageNumber ? "purple" : "gray"
+              }
             >
               {pageNumber}
-            </Button>
+            </ButtonOutline>
           ))}
-
           {pageInfo.nextPageNumber && (
             <>
-              <Button
+              <ButtonOutline
                 onClick={() => handlePageButtonClick(pageInfo.nextPageNumber)}
               >
                 <FontAwesomeIcon icon={faAngleRight} />
-              </Button>
-              <Button
+              </ButtonOutline>
+              <ButtonOutline
                 onClick={() => handlePageButtonClick(pageInfo.lastPageNumber)}
               >
                 <FontAwesomeIcon icon={faAnglesRight} />
-              </Button>
+              </ButtonOutline>
             </>
           )}
         </Center>

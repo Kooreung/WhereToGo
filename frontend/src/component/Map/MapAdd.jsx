@@ -178,7 +178,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
               ),
             ],
             strokeWeight: 3,
-            strokeColor: "#FF0000",
+            strokeColor: "#E6B143",
             strokeOpacity: 1,
             strokeStyle: "shortdash",
           });
@@ -304,7 +304,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
           backgroundColor: "white",
           paddingLeft: "8px",
           paddingRight: "8px",
-          boxShadow: "0 0 0 4px white, 0 0 0 8px orange",
+          boxShadow: "0 0 0 4px #836091, 0 0 0 8px #D8B7E5",
         }}
       >
         {index + 1}
@@ -322,7 +322,9 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
           whiteSpace: "nowrap",
           paddingLeft: "8px",
           paddingRight: "8px",
-          boxShadow: "0 0 0 2px white, 0 0 0 4px orange",
+          borderRadius: "12px",
+          bgColor: "white",
+          boxShadow: "0 0 0 2px #836091, 0 0 0 4px #D8B7E5",
         }}
       >
         <Box>{place.place_name}</Box>
