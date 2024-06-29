@@ -130,6 +130,9 @@ export function AdminPage() {
   };
 
   const handleAddClick = () => {
+    console.log("눌렸냐고");
+    console.log(mdPosts);
+    onModalOpenOfAdd();
     if (selectedPosts.length >= 3) {
       // 이미 3개의 포스트가 선택되었을 때 토스트 알림을 표시합니다.
       toast({
@@ -193,7 +196,10 @@ export function AdminPage() {
       setSelectedPosts(res.data.post);
     });
     axios.get("/api/post/bannerList").then((res) => setBannerList(res.data));
-
+    axios.get("/api/post/mdList").then((res) => {
+      setMdPosts(res.data.post);
+      console.log(res.data.post);
+    });
     setSearchType("all");
     setSearchKeyword("");
 
@@ -211,13 +217,6 @@ export function AdminPage() {
   const pageNumbers = [];
   for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {
     pageNumbers.push(i);
-  }
-
-  function handleBanner() {
-    axios.get("/api/post/mdList").then((res) => {
-      setMdPosts(res.data.post);
-      console.log(res.data.post);
-    });
   }
 
   function handleSearchClick() {
@@ -469,7 +468,7 @@ export function AdminPage() {
       <Tabs variant="enclosed">
         <TabList>
           <Tab>회원관리</Tab>
-          <Tab onClick={handleBanner}>배너 등록</Tab>
+          <Tab>배너 등록</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -598,11 +597,7 @@ export function AdminPage() {
           <TabPanel>
             <Wrap spacing={4}>
               <WrapItem>
-                <Button
-                  colorScheme="orange"
-                  onClick={onModalOpenOfAdd}
-                  onClick={handleAddClick}
-                >
+                <Button colorScheme="orange" onClick={handleAddClick}>
                   MDpost선택
                 </Button>
               </WrapItem>
@@ -692,7 +687,7 @@ export function AdminPage() {
       <Modal isOpen={isModalOpenOfAdd} onClose={onModalCloseOfAdd}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>MD 리스트</ModalHeader>ㅇ
+          <ModalHeader>MD 리스트</ModalHeader>
           <ModalBody>배너에 등록할 게시글을 선택 해주세요.</ModalBody>
           {postsToShow.map((mdPost) => (
             <Box key={mdPost.postId}>

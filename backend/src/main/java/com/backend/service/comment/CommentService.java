@@ -15,25 +15,25 @@ import java.util.List;
 public class CommentService {
     final CommentMapper mapper;
 
-    public void add(Comment comment, Authentication authentication) {
+    public void saveComment(Comment comment, Authentication authentication) {
         comment.setMemberId(Integer.valueOf(authentication.getName()));
-        mapper.insert(comment);
+        mapper.insertComment(comment);
     }
 
-    public List<Comment> list(Integer postId) {
+    public List<Comment> commentList(Integer postId) {
         return mapper.selectByPostId(postId);
     }
 
-    public void edit(Comment comment) {
+    public void commentEdit(Comment comment) {
         mapper.update(comment);
     }
 
-    public void delete(Comment comment, Authentication authentication) {
+    public void commentDelete(Comment comment, Authentication authentication) {
         mapper.delete(comment);
     }
 
     public boolean hasMemberIdAccess(Comment comment, Authentication authentication) {
-        Comment db = mapper.selectById(comment.getCommentId());
+        Comment db = mapper.selectByCommentId(comment.getCommentId());
         if (db == null) {
             return false;
         }

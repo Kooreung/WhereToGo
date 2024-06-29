@@ -17,7 +17,7 @@ public interface PostMapper {
             VALUES (#{title}, #{content}, #{memberId})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "postId")
-    int insert(Post post);
+    int insertPost(Post post);
 
     // 게시글 조회 매퍼
     @Select("""
@@ -31,7 +31,7 @@ public interface PostMapper {
                      LEFT JOIN likes l ON p.postid = l.postid
             WHERE p.postid = #{postId}
             """)
-    Post selectById(Integer postId);
+    Post selectByPostId(Integer postId);
 
     // 게시글 목록 매퍼
     @Select("""
@@ -107,7 +107,7 @@ public interface PostMapper {
                    </where>
             </script>
             """)
-    Integer countAllPost(String searchType, String searchKeyword);
+    Integer countAllpost(String searchType, String searchKeyword);
 
     // 게시글 Top 3 인기글 목록 매퍼
     @Select("""
@@ -147,7 +147,7 @@ public interface PostMapper {
                      LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
             WHERE p.postid = #{postId}
             """)
-    List<Place> getPlaceList(Integer postId);
+    List<Place> selectPlaceList(Integer postId);
 
     // 게시글 작성 시 선택한 장소 카운트 매퍼
     @Select("""
@@ -158,7 +158,7 @@ public interface PostMapper {
             FROM post p
                      JOIN place pl ON p.postid = pl.postid
             """)
-    List<Place> getPlaceListData(String selectPlaces);
+    List<Place> selectPlaceListData(String selectPlaces);
 
     // 게시글 삭제 매퍼
     @Delete("""
@@ -173,7 +173,7 @@ public interface PostMapper {
             SET title=#{title}, content=#{content}
             WHERE postid=#{postId}
             """)
-    void update(Post post);
+    void updatePost(Post post);
 
     // 좋아요 추가 매퍼
     @Insert("""
@@ -195,7 +195,7 @@ public interface PostMapper {
             FROM likes
             WHERE postid=#{postId}
             """)
-    Object selectCountLikeByBoardId(Integer postId);
+    Object countLikeByBoardId(Integer postId);
 
     // 회원 별 좋아요 개수 카운트 매퍼
     @Select("""
@@ -343,7 +343,7 @@ public interface PostMapper {
             SET mdpick = 'o'
             WHERE postid = #{postId}
                 """)
-    int mdPickPush(Integer postId);
+    int updateMdPickPush(Integer postId);
 
 
     @Select("""
@@ -374,7 +374,7 @@ public interface PostMapper {
             FROM post
             WHERE postid = #{postId}
                     """)
-    String getMdPick(Integer postId);
+    String selectMdPickByPostId(Integer postId);
 
     @Update("""
             UPDATE post
@@ -389,7 +389,7 @@ public interface PostMapper {
             FROM post
             WHERE mdpick = 'o';
             """)
-    int getMdPickCount();
+    int countMdPick();
 
 
     @Update("""
@@ -397,41 +397,41 @@ public interface PostMapper {
             set banner = #{key}
             where postid = #{postid}
             """)
-    int bannerUpdate(Integer postid, String key);
+    int updateBannerByPostId(Integer postid, String key);
 
 
     @Insert("""
-            INSERT INTO mdpostbanner (city,link, bannersrc)
+            INSERT INTO placebanner (city,link, bannersrc)
             values (#{city},#{link}, #{bannersrc})
             """)
-    void addBanner(String city, String link, String bannersrc);
+    void insertBanner(String city, String link, String bannersrc);
 
 
     @Select("""
-            SELECT * FROM mdpostbanner
+            SELECT * FROM placebanner
             """)
-    List<Banner> gatBannerList();
+    List<Banner> selectBannerList();
 
 
     @Delete("""
-            DELETE FROM mdpostbanner
+            DELETE FROM placebanner
             WHERE bannerid = #{bannerId}
             """)
     int deleteBannerById(Integer bannerId);
 
 
     @Select("""
-            SELECT * FROM mdpostbanner
+            SELECT * FROM placebanner
             where bannerid = #{bannerId}
             """)
-    Banner getBannerSrcById(Integer bannerId);
+    Banner selectBannerSrcById(Integer bannerId);
 
 
     @Select("""
             SELECT banner FROM post
             where postid = #{postId}
             """)
-    String getMdBannerName(Integer postId);
+    String getMdBannerNameByPostId(Integer postId);
 
 
     @Select("""
@@ -439,5 +439,5 @@ public interface PostMapper {
             from authority a join post p on p.memberid = a.memberid
             where p.postid = #{postId}
             """)
-    String getAuthByPostId(Integer postId);
+    String selcetAuthByPostId(Integer postId);
 }

@@ -21,7 +21,7 @@ public class CommentController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity getComment(@RequestBody Comment comment, Authentication authentication) {
         if (service.validate(comment)) {
-            service.add(comment, authentication);
+            service.saveComment(comment, authentication);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();
@@ -30,14 +30,14 @@ public class CommentController {
 
     @GetMapping("list/{postId}")
     public List<Comment> getCommentList(@PathVariable Integer postId) {
-        return service.list(postId);
+        return service.commentList(postId);
     }
 
     @PutMapping("edit")
     @PreAuthorize("isAuthenticated()")
     public void getCommentEdit(@RequestBody Comment comment, Authentication authentication) {
         if (service.hasMemberIdAccess(comment, authentication)) {
-            service.edit(comment);
+            service.commentEdit(comment);
         } else {
             throw new AccessDeniedException("Access denied");
         }
@@ -46,6 +46,6 @@ public class CommentController {
     @DeleteMapping("delete")
     @PreAuthorize("isAuthenticated()")
     public void deleteComment(@RequestBody Comment comment, Authentication authentication) {
-        service.delete(comment, authentication);
+        service.commentDelete(comment, authentication);
     }
 }
