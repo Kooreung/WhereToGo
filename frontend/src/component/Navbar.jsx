@@ -4,6 +4,8 @@ import {
   Button,
   Center,
   Flex,
+  Grid,
+  GridItem,
   Image,
   useColorMode,
   useColorModeValue,
@@ -25,76 +27,96 @@ function Navbar() {
       h={"100px"}
       px={"1rem"}
       mb={"4rem"}
-      fontSize={{ base: "1rem", lg: "1rem", sm: "14px" }}
       align={"center"}
-      justify={"space-between"}
-      boxShadow={"md"}
       roundedBottom={"1rem"}
+      boxShadow={"md"}
       boxSizing={"border-box"}
       bg={navColor}
     >
-      {/* 로고 */}
-      <Box
-        onClick={() => navigate("/")}
-        cursor={"pointer"}
-        w={"100px"}
-        h={"100px"}
+      <Grid
+        templateColumns={"1fr 1fr 1fr"}
+        w={"100%"}
+        border={"1px dotted red"}
       >
-        <Image src={homeLogo} />
-      </Box>
-
-      {/* 중간 메뉴 */}
-      <Flex gap={12}>
-        <Box onClick={() => navigate("/post/mdList")} cursor={"pointer"}>
-          MD Pick
-        </Box>
-        <Box onClick={() => navigate("/post/list")} cursor={"pointer"}>
-          회원 게시판
-        </Box>
-      </Flex>
-
-      {/* 회원 메뉴 */}
-      <Flex gap={3}>
-        {account.isAdmin() && (
-          <Center onClick={() => navigate("/memberList")} cursor={"pointer"}>
-            회원&배너 관리
-          </Center>
-        )}
-        {account.isLoggedIn() || (
-          <Center onClick={() => navigate("/signup")} cursor={"pointer"}>
-            회원가입
-          </Center>
-        )}
-        {account.isLoggedIn() || (
-          <Center onClick={() => navigate("/login")} cursor={"pointer"}>
-            로그인
-          </Center>
-        )}
-        {account.isLoggedIn() && (
-          <Center onClick={() => navigate("/memberinfo")} cursor={"pointer"}>
-            프로필
-          </Center>
-        )}
-        {account.isLoggedIn() && (
-          <Center
-            onClick={() => {
-              account.logout();
-              navigate("/");
-            }}
+        <GridItem border={"1px dotted red"}>
+          {/* 로고 */}
+          <Box
+            onClick={() => navigate("/")}
             cursor={"pointer"}
+            w={"100px"}
+            h={"100px"}
           >
-            로그아웃
-          </Center>
-        )}
-        <Button onClick={toggleColorMode}>
-          {" "}
-          {colorMode === "light" ? (
-            <FontAwesomeIcon icon={faMoon} />
-          ) : (
-            <FontAwesomeIcon icon={faSun} />
-          )}
-        </Button>
-      </Flex>
+            <Image src={homeLogo} />
+          </Box>
+        </GridItem>
+        <GridItem border={"1px dotted red"}>
+          {/* 중간 메뉴 */}
+          <Flex gap={12} align={"center"} justifyContent={"center"} h={"100%"}>
+            <Box onClick={() => navigate("/post/mdList")} cursor={"pointer"}>
+              MD Pick
+            </Box>
+            <Box onClick={() => navigate("/post/list")} cursor={"pointer"}>
+              회원 게시판
+            </Box>
+          </Flex>
+        </GridItem>
+        <GridItem border={"1px dotted red"}>
+          {/* 회원 메뉴 */}
+          <Flex
+            align={"center"}
+            w={"100%"}
+            h={"100%"}
+            justify={"end"}
+            gap={{ base: "1rem", lg: "1rem", sm: "8px" }}
+          >
+            {account.isAdmin() && (
+              <Center
+                onClick={() => navigate("/memberList")}
+                cursor={"pointer"}
+              >
+                회원&배너 관리
+              </Center>
+            )}
+            {account.isLoggedIn() || (
+              <Center onClick={() => navigate("/signup")} cursor={"pointer"}>
+                회원가입
+              </Center>
+            )}
+            {account.isLoggedIn() || (
+              <Center onClick={() => navigate("/login")} cursor={"pointer"}>
+                로그인
+              </Center>
+            )}
+            {account.isLoggedIn() && (
+              <Center
+                onClick={() => navigate("/memberinfo")}
+                cursor={"pointer"}
+              >
+                프로필
+              </Center>
+            )}
+            {account.isLoggedIn() && (
+              <Center
+                onClick={() => {
+                  account.logout();
+                  navigate("/");
+                }}
+                cursor={"pointer"}
+              >
+                로그아웃
+              </Center>
+            )}
+            <Button onClick={toggleColorMode}>
+              {" "}
+              {colorMode === "light" ? (
+                <FontAwesomeIcon icon={faMoon} />
+              ) : (
+                <FontAwesomeIcon icon={faSun} />
+              )}
+            </Button>
+          </Flex>
+        </GridItem>
+      </Grid>
     </Flex>
   );
 }

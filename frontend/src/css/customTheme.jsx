@@ -16,6 +16,7 @@ export const customTheme = extendTheme({
     global: {
       body: {
         textColor: "blackAlpha.900",
+        fontSize: ["16px", "14px"],
         fontFamily: "Pretendard-Regular, sans-serif",
         fontWeight: 400,
         _dark: {
