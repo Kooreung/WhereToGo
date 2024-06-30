@@ -33,12 +33,8 @@ function Navbar() {
       boxSizing={"border-box"}
       bg={navColor}
     >
-      <Grid
-        templateColumns={"1fr 1fr 1fr"}
-        w={"100%"}
-        border={"1px dotted red"}
-      >
-        <GridItem border={"1px dotted red"}>
+      <Grid templateColumns={"1fr 1fr 1fr"} w={"100%"}>
+        <GridItem>
           {/* 로고 */}
           <Box
             onClick={() => navigate("/")}
@@ -49,7 +45,7 @@ function Navbar() {
             <Image src={homeLogo} />
           </Box>
         </GridItem>
-        <GridItem border={"1px dotted red"}>
+        <GridItem>
           {/* 중간 메뉴 */}
           <Flex gap={12} align={"center"} justifyContent={"center"} h={"100%"}>
             <Box onClick={() => navigate("/post/mdList")} cursor={"pointer"}>
@@ -60,52 +56,48 @@ function Navbar() {
             </Box>
           </Flex>
         </GridItem>
-        <GridItem border={"1px dotted red"}>
+        <GridItem>
           {/* 회원 메뉴 */}
-          <Flex
-            align={"center"}
-            w={"100%"}
-            h={"100%"}
-            justify={"end"}
-            gap={{ base: "1rem", lg: "1rem", sm: "8px" }}
-          >
-            {account.isAdmin() && (
-              <Center
-                onClick={() => navigate("/memberList")}
-                cursor={"pointer"}
-              >
-                회원&배너 관리
-              </Center>
-            )}
-            {account.isLoggedIn() || (
-              <Center onClick={() => navigate("/signup")} cursor={"pointer"}>
-                회원가입
-              </Center>
-            )}
-            {account.isLoggedIn() || (
-              <Center onClick={() => navigate("/login")} cursor={"pointer"}>
-                로그인
-              </Center>
-            )}
-            {account.isLoggedIn() && (
-              <Center
-                onClick={() => navigate("/memberinfo")}
-                cursor={"pointer"}
-              >
-                프로필
-              </Center>
-            )}
-            {account.isLoggedIn() && (
-              <Center
-                onClick={() => {
-                  account.logout();
-                  navigate("/");
-                }}
-                cursor={"pointer"}
-              >
-                로그아웃
-              </Center>
-            )}
+          <Flex align={"center"} w={"100%"} h={"100%"} justify={"end"}>
+            <Flex gap={{ base: "1rem", lg: "1rem", sm: "8px" }}>
+              {account.isAdmin() && (
+                <Center
+                  onClick={() => navigate("/memberList")}
+                  cursor={"pointer"}
+                >
+                  회원&배너 관리
+                </Center>
+              )}
+              {account.isLoggedIn() || (
+                <Center onClick={() => navigate("/signup")} cursor={"pointer"}>
+                  회원가입
+                </Center>
+              )}
+              {account.isLoggedIn() || (
+                <Center onClick={() => navigate("/login")} cursor={"pointer"}>
+                  로그인
+                </Center>
+              )}
+              {account.isLoggedIn() && (
+                <Center
+                  onClick={() => navigate("/memberinfo")}
+                  cursor={"pointer"}
+                >
+                  프로필
+                </Center>
+              )}
+              {account.isLoggedIn() && (
+                <Center
+                  onClick={() => {
+                    account.logout();
+                    navigate("/");
+                  }}
+                  cursor={"pointer"}
+                >
+                  로그아웃
+                </Center>
+              )}
+            </Flex>
             <Button onClick={toggleColorMode}>
               {" "}
               {colorMode === "light" ? (

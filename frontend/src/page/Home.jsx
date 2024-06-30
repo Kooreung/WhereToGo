@@ -6,13 +6,7 @@ import Footer from "../component/Footer.jsx";
 
 function Home() {
   return (
-    <Flex
-      direction="column"
-      justify="start"
-      alignItems="center"
-      minH={"100vh"}
-      border={"1px dotted red"}
-    >
+    <Flex direction="column" justify="start" alignItems="center" minH={"100vh"}>
       <Navbar />
       <Outlet />
       <Spacer />

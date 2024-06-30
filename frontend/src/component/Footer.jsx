@@ -34,7 +34,11 @@ function Footer() {
               fontSize={"1rem"}
               fontWeight={"bold"}
               onClick={() => navigate("/memberList")}
-              cursor={"pointer"}
+              sx={{
+                "&:hover": {
+                  backgroundColor: "RGBA(0, 0, 0, 0.1)",
+                },
+              }}
             >
               회원 & 배너 관리
             </Box>
