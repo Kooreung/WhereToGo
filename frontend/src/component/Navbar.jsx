@@ -25,6 +25,7 @@ function Navbar() {
       h={"100px"}
       px={"1rem"}
       mb={"4rem"}
+      fontSize={{ base: "1rem", lg: "1rem", sm: "14px" }}
       align={"center"}
       justify={"space-between"}
       boxShadow={"md"}
@@ -56,7 +57,7 @@ function Navbar() {
       <Flex gap={3}>
         {account.isAdmin() && (
           <Center onClick={() => navigate("/memberList")} cursor={"pointer"}>
-            관리 페이지
+            회원&배너 관리
           </Center>
         )}
         {account.isLoggedIn() || (

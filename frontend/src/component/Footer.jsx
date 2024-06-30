@@ -30,8 +30,13 @@ function Footer() {
           <Box>주소 : 서울특별시 마포구 신촌로 176</Box>
           <Spacer />
           {account.isAdmin() && (
-            <Box onClick={() => navigate("/memberList")} cursor={"pointer"}>
-              회원 관리
+            <Box
+              fontSize={"1rem"}
+              fontWeight={"bold"}
+              onClick={() => navigate("/memberList")}
+              cursor={"pointer"}
+            >
+              회원 & 배너 관리
             </Box>
           )}
         </Flex>
