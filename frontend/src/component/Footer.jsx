@@ -1,86 +1,48 @@
 import React, { useContext } from "react";
-import {
-  Box,
-  Button,
-  Center,
-  Flex,
-  useColorMode,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Flex, Spacer, useColorModeValue } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "./LoginProvider.jsx";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import HeadingVariant from "../css/Heading/HeadingVariant.jsx";
 
 function Footer() {
   const navigate = useNavigate();
   const account = useContext(LoginContext);
-  const { colorMode, toggleColorMode } = useColorMode();
   const navColor = useColorModeValue("#D8B7E5", "#836091");
   return (
     <Flex
       w={"100%"}
-      h={"100px"}
-      px={"1rem"}
-      mt={"4rem"}
-      align={"center"}
-      justify={"space-between"}
-      boxShadow={"md"}
       roundedTop={"1rem"}
+      justify={"center"}
+      p={"2rem"}
+      mt={"4rem"}
       boxSizing={"border-box"}
       bg={navColor}
     >
-      {/* 중간 메뉴 */}
-      <Flex gap={12}>
-        <Box onClick={() => navigate("/post/mdList")} cursor={"pointer"}>
-          MD Pick
-        </Box>
-        <Box onClick={() => navigate("/post/list")} cursor={"pointer"}>
-          회원 게시판
-        </Box>
-      </Flex>
-
-      {/* 회원 메뉴 */}
-      <Flex gap={3}>
-        {account.isAdmin() && (
-          <Center onClick={() => navigate("/memberList")} cursor={"pointer"}>
-            관리 페이지
-          </Center>
-        )}
-        {account.isLoggedIn() || (
-          <Center onClick={() => navigate("/signup")} cursor={"pointer"}>
-            회원가입
-          </Center>
-        )}
-        {account.isLoggedIn() || (
-          <Center onClick={() => navigate("/login")} cursor={"pointer"}>
-            로그인
-          </Center>
-        )}
-        {account.isLoggedIn() && (
-          <Center onClick={() => navigate("/memberinfo")} cursor={"pointer"}>
-            프로필
-          </Center>
-        )}
-        {account.isLoggedIn() && (
-          <Center
-            onClick={() => {
-              account.logout();
-              navigate("/");
-            }}
-            cursor={"pointer"}
-          >
-            로그아웃
-          </Center>
-        )}
-        <Button onClick={toggleColorMode}>
-          {" "}
-          {colorMode === "light" ? (
-            <FontAwesomeIcon icon={faMoon} />
-          ) : (
-            <FontAwesomeIcon icon={faSun} />
+      <Flex
+        w={{ base: "720px", lg: "720px", sm: "540px" }}
+        fontSize={{ base: "1rem", lg: "1rem", sm: "14px" }}
+        justify={"space-between"}
+      >
+        <Flex direction={"column"} h={"100%"}>
+          <HeadingVariant variant={"small"}>회사정보</HeadingVariant>
+          <Box>상호 : 어디가지</Box>
+          <Box>대표 : 고현진</Box>
+          <Box>주소 : 서울특별시 마포구 신촌로 176</Box>
+          <Spacer />
+          {account.isAdmin() && (
+            <Box onClick={() => navigate("/memberList")} cursor={"pointer"}>
+              회원 관리
+            </Box>
           )}
-        </Button>
+        </Flex>
+        <Box>
+          <HeadingVariant variant={"small"}>고객센터</HeadingVariant>
+          <Box>전화 : 010-0000-0000</Box>
+          <Box>FAX : 02-0000-0000</Box>
+          <Box>이메일 : </Box>
+          <Box>카카오톡 ID : </Box>
+          <Box>운영시간 : 09:00 ~ 18:00</Box>
+        </Box>
       </Flex>
     </Flex>
   );
