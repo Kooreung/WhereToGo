@@ -68,20 +68,20 @@ export function PostLikeList() {
 
   // 검색 클릭 시 URL
   function handleSearchClick() {
-    navigate(`/postLike/list?type=${searchType}&keyword=${searchKeyword}`);
+    navigate(`/likeList?type=${searchType}&keyword=${searchKeyword}`);
   }
 
   // 검색 창 Enter 시 URL
   function handleSearchKeyDown(e) {
     if (e.key === "Enter") {
-      navigate(`/postLike/list?type=${searchType}&keyword=${searchKeyword}`);
+      navigate(`/likeList?type=${searchType}&keyword=${searchKeyword}`);
     }
   }
 
   // 페이지 버튼 클릭 시
   function handlePageButtonClick(pageNumber) {
     searchParams.set("page", pageNumber);
-    navigate(`/postLike/list?${searchParams}`);
+    navigate(`/likeList?${searchParams}`);
   }
 
   if (!account.isLoggedIn()) {

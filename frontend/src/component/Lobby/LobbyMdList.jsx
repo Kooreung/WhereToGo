@@ -71,7 +71,6 @@ export function LobbyMdList() {
             justifyContent="center"
             align={"center"}
           >
-
             {nextPosts >= 1 && nextPosts <= mdPost.length && (
               <Box w={"100%"} h={"100%"}>
                 {mdPost.slice(prevPosts, nextPosts).map((post) => (
@@ -158,7 +157,9 @@ export function LobbyMdList() {
                 w={"100%"}
                 h={"100%"}
               >
-                <Image src={banner[0].bannerSrc} />
+                <a href={banner[0].link}>
+                  <Image src={banner[0].bannerSrc} />
+                </a>
               </Box>
             )}
             {nextPosts === mdPost.length + 2 && banner.length > 1 && (
@@ -171,7 +172,9 @@ export function LobbyMdList() {
                 h={"100%"}
               >
                 <Box>
-                  <Image src={banner[1].bannerSrc} />
+                  <a href={banner[1].link}>
+                    <Image src={banner[1].bannerSrc} />
+                  </a>
                 </Box>
               </Box>
             )}
