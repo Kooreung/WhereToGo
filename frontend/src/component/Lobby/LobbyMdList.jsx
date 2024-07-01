@@ -44,7 +44,6 @@ export function LobbyMdList() {
       .get("/api/post/mdPickList")
       .then((res) => {
         setMdPost(res.data.post);
-        console.log(res.data);
       })
       .catch((err) => console.log(err))
       .finally(() => {});
@@ -152,12 +151,12 @@ export function LobbyMdList() {
           </Box>
         )}
       </Box>
-      <Center>
+      <Center h={"0px"}>
         <Box
           cursor={"pointer"}
           zIndex={"1"}
           position={"relative"}
-          top={{ base: "-115px", lg: "-150px" }}
+          top={{ base: "-90px", lg: "-125px" }}
           left={{ base: "-320px", lg: "-430px" }}
         >
           <ButtonCircle
@@ -171,6 +170,12 @@ export function LobbyMdList() {
                 setPrevPosts(mdPost.length + banner.length - 1);
               }
             }}
+            bgColor={"rgba(216, 183, 229, 0.25)"}
+            sx={{
+              "&:hover": {
+                backgroundColor: "rgba(216, 183, 229, 0.75)",
+              },
+            }}
           >
             <FontAwesomeIcon icon={faChevronLeft} fontSize="2rem" />
           </ButtonCircle>
@@ -179,7 +184,7 @@ export function LobbyMdList() {
           cursor={"pointer"}
           zIndex={"1"}
           position={"relative"}
-          top={{ base: "-115px", lg: "-150px" }}
+          top={{ base: "-90px", lg: "-125px" }}
           left={{ base: "320px", lg: "430px" }}
         >
           <ButtonCircle
@@ -193,13 +198,19 @@ export function LobbyMdList() {
                 setPrevPosts(0);
               }
             }}
+            bgColor={"rgba(216, 183, 229, 0.25)"}
+            sx={{
+              "&:hover": {
+                backgroundColor: "rgba(216, 183, 229, 0.75)",
+              },
+            }}
           >
             <FontAwesomeIcon icon={faChevronRight} fontSize="2rem" />
           </ButtonCircle>
         </Box>
       </Center>
-      <Center>
-        <Flex position={"relative"} top={"-70px"}>
+      <Center h={"0px"} w={"100%"}>
+        <Flex position={"relative"} top={"-25px"}>
           {[...Array(mdPost.length + banner.length)].map((_, index) => (
             <ButtonCircle
               variant={"small"}
