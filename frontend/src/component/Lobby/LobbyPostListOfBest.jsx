@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Avatar,
   Box,
   Button,
   Card,
@@ -93,7 +94,7 @@ function LobbyPostListOfBest(props) {
                 <ContentParser content={post.content} />
               </Flex>
               <Spacer />
-              <Flex w={"100%"} h={"28px"} alignItems={"center"}>
+              <Flex w={"100%"} h={"32px"} alignItems={"center"}>
                 <Flex w={"45%"}>
                   <Box
                     w={"24px"}
@@ -102,13 +103,14 @@ function LobbyPostListOfBest(props) {
                     borderRadius={"100%"}
                     boxShadow={"base"}
                   >
-                    <Image src={post.profileName} borderRadius={"100%"} />
+                    <Avatar w={"28px"} h={"28px"} src={post.profileName} />
                   </Box>
                   <Box
                     w={"100%"}
                     textAlign={"start"}
                     overflow={"hidden"}
                     textOverflow={"ellipsis"}
+                    ml={1}
                   >
                     {post.nickName}
                   </Box>
