@@ -62,7 +62,7 @@ function Navbar() {
             <Flex gap={{ base: "1rem", lg: "1rem", sm: "8px" }}>
               {account.isAdmin() && (
                 <Center
-                  onClick={() => navigate("/memberList")}
+                  onClick={() => navigate("/memberAdminPage")}
                   cursor={"pointer"}
                 >
                   회원&배너 관리

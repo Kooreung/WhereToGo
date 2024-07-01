@@ -33,7 +33,7 @@ function Footer() {
             <Box
               fontSize={"1rem"}
               fontWeight={"bold"}
-              onClick={() => navigate("/memberList")}
+              onClick={() => navigate("/memberAdminPage")}
               sx={{
                 "&:hover": {
                   backgroundColor: "RGBA(0, 0, 0, 0.1)",

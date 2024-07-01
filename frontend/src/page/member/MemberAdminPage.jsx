@@ -54,7 +54,7 @@ import ContentParser from "../../component/ContentParser.jsx";
 import ButtonNumber from "../../css/Button/ButtonOutline.jsx";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 
-export function AdminPage() {
+export function MemberAdminPage() {
   const [memberList, setMemberList] = useState([]);
   const [mdPicks, setMdPicks] = useState([]);
   const [mdPosts, setMdPosts] = useState([]);
@@ -236,12 +236,12 @@ export function AdminPage() {
   }
 
   function handleSearchClick() {
-    navigate(`/memberList/?type=${searchType}&keyword=${searchKeyword}`);
+    navigate(`/memberAdminPage/?type=${searchType}&keyword=${searchKeyword}`);
   }
 
   function handlePageButtonClick(pageNumber) {
     searchParams.set("page", pageNumber);
-    navigate(`/memberList/?${searchParams}`);
+    navigate(`/memberAdminPage/?${searchParams}`);
   }
 
   const handleDelete = async (postId) => {
@@ -475,7 +475,7 @@ export function AdminPage() {
 
   function handleSearchKeyDown(e) {
     if (e.key === "Enter") {
-      navigate(`/memberList/?type=${searchType}&keyword=${searchKeyword}`);
+      navigate(`/memberAdminPage/?type=${searchType}&keyword=${searchKeyword}`);
     }
   }
 
@@ -837,4 +837,4 @@ export function AdminPage() {
   );
 }
 
-export default AdminPage;
+export default MemberAdminPage;
