@@ -66,13 +66,8 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
   }
 
   return (
-    <Box
-      my={"16px"}
-      align={"center"}
-      ml={"1rem"}
-      w={{ base: "720px", sm: "540px", lg: "720px" }}
-    >
-      <Box>
+    <Flex align={"center"} justify={"center"} w={"100%"} my={"1rem"}>
+      <Box w={"100%"}>
         <Textarea
           onChange={(e) => setComment(e.target.value)}
           value={comment}
@@ -95,6 +90,7 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
           </Button>
         </Tooltip>
       </Flex>
+
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -106,7 +102,7 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </Box>
+    </Flex>
   );
 }
 
