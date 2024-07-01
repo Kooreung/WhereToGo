@@ -135,7 +135,9 @@ export function LobbyMdList() {
             h={{ base: "200px", sm: "200px", lg: "250px" }}
             overflow={"hidden"}
           >
-            <Image src={banner[0].bannerSrc} />
+            <a href={banner[0].link}>
+              <Image src={banner[0].bannerSrc} />
+            </a>
           </Box>
         )}
         {nextPosts === mdPost.length + 2 && banner.length > 1 && (
@@ -148,7 +150,9 @@ export function LobbyMdList() {
             h={{ base: "200px", sm: "200px", lg: "250px" }}
             overflow={"hidden"}
           >
-            <Image src={banner[1].bannerSrc} />
+            <a href={banner[1].link}>
+              <Image src={banner[1].bannerSrc} />
+            </a>
           </Box>
         )}
       </Box>
