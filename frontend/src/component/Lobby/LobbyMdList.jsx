@@ -157,8 +157,8 @@ export function LobbyMdList() {
                 setPrevPosts(prevPosts - 1);
               }
               if (nextPosts === 1) {
-                setNextPosts(mdPost.length + 2);
-                setPrevPosts(mdPost.length + 1);
+                setNextPosts(mdPost.length + banner.length);
+                setPrevPosts(mdPost.length + banner.length - 1);
               }
             }}
           >
@@ -178,7 +178,7 @@ export function LobbyMdList() {
                 setNextPosts(nextPosts + 1);
                 setPrevPosts(prevPosts + 1);
               }
-              if (nextPosts === mdPost.length + 2) {
+              if (nextPosts === mdPost.length + banner.length) {
                 setNextPosts(1);
                 setPrevPosts(0);
               }

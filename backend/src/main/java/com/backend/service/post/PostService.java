@@ -248,10 +248,14 @@ public class PostService {
         return result;
     }
 
-    public Map<String, Object> myList(Integer memberId) {
-        List<Post> post = postMapper.getMyList(memberId);
+    public Map<String, Object> myList(Integer memberId, Integer page) {
+        Integer offset = (page - 1) * 5;
+        List<Post> post = postMapper.getMyList(memberId, offset);
+
+        List<Post> count = postMapper.getMyListCount(memberId);
         Map<String, Object> result = new HashMap<>();
         result.put("post", post);
+        result.put("count", count);
         return result;
     }
 

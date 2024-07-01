@@ -358,8 +358,9 @@ FROM post p
                      LEFT JOIN likes l ON p.postid = l.postid
             WHERE p.memberid = #{memberId}
             GROUP BY p.postid, p.title, p.content, p.createdate, p.view
+            LIMIT #{offset}, 5
             """)
-    List<Post> getMyList(Integer memberId);
+    List<Post> getMyList(Integer memberId, Integer offset);
 
     @Select("""
                         SELECT p.postid,
@@ -455,4 +456,20 @@ FROM post p
             where p.postid = #{postId}
             """)
     String selcetAuthByPostId(Integer postId);
+
+
+    // 회원 정보 화면에 해당 회원의 게시물과 누른 좋아요 갯수를 위한 sql 문
+    @Select("""
+            SELECT p.postid,
+                   p.title,
+                   p.content,
+                   p.createdate,
+                   p.view,
+                   COUNT(l.postid) AS likeCount
+            FROM post p
+                     LEFT JOIN likes l ON p.postid = l.postid
+            WHERE p.memberid = #{memberId}
+            GROUP BY p.postid, p.title, p.content, p.createdate, p.view
+            """)
+    List<Post> getMyListCount(Integer memberId);
 }

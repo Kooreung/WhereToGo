@@ -61,7 +61,6 @@ public class PostController {
     public Map<String, Object> postMdList(Map<String, Object> post,
                                           @RequestParam(value = "type", required = false) String searchType,
                                           @RequestParam(value = "keyword", defaultValue = "") String searchKeyword) {
-        System.out.println("눌렸냐고");
         return postService.getMdList(post, searchType, searchKeyword);
     }
 
@@ -132,9 +131,10 @@ public class PostController {
     }
 
     // 내 게시물 목록 Controller
-    @GetMapping("myList")
-    public Map<String, Object> myList(@RequestParam Integer memberId) {
-        return postService.myList(memberId);
+    @GetMapping("myList/{memberId}")
+    public Map<String, Object> myList(@PathVariable Integer memberId, @RequestParam(defaultValue = "1") Integer page) {
+        System.out.println("페이지" + page);
+        return postService.myList(memberId, page);
     }
 
     // home mdpick list
