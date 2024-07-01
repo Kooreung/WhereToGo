@@ -8,6 +8,7 @@ import {
   Image,
   Spacer,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -21,6 +22,7 @@ import { faComment } from "@fortawesome/free-regular-svg-icons";
 function LobbyPostListOfBest(props) {
   const [postListOfBest, setPostListOfBest] = useState([]);
   const navigate = useNavigate();
+  const hColor = useColorModeValue("beige", "#2D3748");
   useEffect(() => {
     axios.get(`/api/post/list/postListOfBest`).then((res) => {
       setPostListOfBest(res.data);
@@ -59,7 +61,7 @@ function LobbyPostListOfBest(props) {
             px={"1rem"}
             sx={{
               "&:hover": {
-                backgroundColor: "beige",
+                backgroundColor: hColor,
               },
             }}
           >

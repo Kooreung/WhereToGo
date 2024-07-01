@@ -9,6 +9,7 @@ import {
   Spacer,
   StackDivider,
   Text,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -41,6 +42,7 @@ export function PostLikeList() {
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
   const account = useContext(LoginContext);
+  const hColor = useColorModeValue("beige", "#2D3748");
 
   useEffect(() => {
     axios.get(`/api/post/likeList/${memberId}?${searchParams}`).then((res) => {
@@ -115,7 +117,7 @@ export function PostLikeList() {
               px={"1rem"}
               sx={{
                 "&:hover": {
-                  backgroundColor: "beige",
+                  backgroundColor: hColor,
                 },
               }}
             >

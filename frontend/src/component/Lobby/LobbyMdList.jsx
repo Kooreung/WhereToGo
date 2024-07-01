@@ -6,6 +6,7 @@ import {
   GridItem,
   Image,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import React, { useContext, useEffect, useState } from "react";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
@@ -25,6 +26,7 @@ export function LobbyMdList() {
   const [nextPosts, setNextPosts] = useState(1);
   const navigate = useNavigate();
   const account = useContext(LoginContext);
+  const hColor = useColorModeValue("beige", "#2D3748");
 
   useEffect(() => {
     axios
@@ -71,7 +73,6 @@ export function LobbyMdList() {
             justifyContent="center"
             align={"center"}
           >
-
             {nextPosts >= 1 && nextPosts <= mdPost.length && (
               <Box w={"100%"} h={"100%"}>
                 {mdPost.slice(prevPosts, nextPosts).map((post) => (
@@ -86,7 +87,11 @@ export function LobbyMdList() {
                       h={"100%"}
                       templateColumns={"1fr 2fr"}
                       templateRows={"1fr 1fr"}
-                      _hover={{ bgColor: "beige" }}
+                      sx={{
+                        "&:hover": {
+                          backgroundColor: hColor,
+                        },
+                      }}
                       cursor={"pointer"}
                     >
                       <GridItem>
