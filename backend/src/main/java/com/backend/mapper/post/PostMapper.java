@@ -358,8 +358,9 @@ FROM post p
                      LEFT JOIN likes l ON p.postid = l.postid
             WHERE p.memberid = #{memberId}
             GROUP BY p.postid, p.title, p.content, p.createdate, p.view
+            LIMIT #{offset}, 5
             """)
-    List<Post> getMyList(Integer memberId);
+    List<Post> getMyList(Integer memberId, Integer offset);
 
     @Select("""
                         SELECT p.postid,
@@ -455,4 +456,19 @@ FROM post p
             where p.postid = #{postId}
             """)
     String selcetAuthByPostId(Integer postId);
+
+
+    @Select("""
+            SELECT p.postid,
+                   p.title,
+                   p.content,
+                   p.createdate,
+                   p.view,
+                   COUNT(l.postid) AS likeCount
+            FROM post p
+                     LEFT JOIN likes l ON p.postid = l.postid
+            WHERE p.memberid = #{memberId}
+            GROUP BY p.postid, p.title, p.content, p.createdate, p.view
+            """)
+    List<Post> getMyListCount(Integer memberId);
 }
