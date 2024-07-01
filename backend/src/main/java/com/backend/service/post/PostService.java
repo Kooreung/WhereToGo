@@ -249,7 +249,7 @@ public class PostService {
     }
 
     public Map<String, Object> myList(Integer memberId, Integer page) {
-        Integer offset = (page - 1) * 10;
+        Integer offset = (page - 1) * 5;
         List<Post> post = postMapper.getMyList(memberId, offset);
 
         List<Post> count = postMapper.getMyListCount(memberId);

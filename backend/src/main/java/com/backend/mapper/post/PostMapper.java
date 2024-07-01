@@ -458,6 +458,7 @@ FROM post p
     String selcetAuthByPostId(Integer postId);
 
 
+    // 회원 정보 화면에 해당 회원의 게시물과 누른 좋아요 갯수를 위한 sql 문
     @Select("""
             SELECT p.postid,
                    p.title,
