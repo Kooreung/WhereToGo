@@ -1,8 +1,4 @@
-import { Box, Center, Flex, Image, Grid,
-  GridItem,
-  Image,
-  Text,
-  useColorModeValue, } from "@chakra-ui/react";
+import { Box, Center, Flex, Image, useColorModeValue } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   faChevronLeft,
