@@ -8,6 +8,7 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { renderToString } from "react-dom/server";
+import ButtonOutline from "../../css/Button/ButtonOutline.jsx";
 
 const loadKakaoMapScript = (appKey, libraries = []) => {
   return new Promise((resolve, reject) => {
@@ -356,7 +357,9 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
             placeholder="검색어를 입력하세요."
             onKeyDown={handleSearchKeyDown}
           />
-          <Button onClick={searchPlaces}>검색</Button>
+          <ButtonOutline variant={"RecMedium"} onClick={searchPlaces}>
+            검색
+          </ButtonOutline>
         </Flex>
         <Box maxH={"200px"} overflowY={"auto"} my={3} px={"1rem"}>
           {places.map((place, index) => (

@@ -20,6 +20,7 @@ import MapAdd from "../../component/Map/MapAdd.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import DraftEditor from "../../component/TextEditor/DraftEditorWrite.jsx";
 import Lobby from "../Lobby.jsx";
+import ButtonOutline from "../../css/Button/ButtonOutline.jsx";
 
 function PostWrite() {
   const [title, setTitle] = useState("");
@@ -175,9 +176,7 @@ function PostWrite() {
           </Box>
           <Box>
             <Box w={{ base: "720px", sm: "540px", lg: "720px" }}>
-              <Box>
-                <DraftEditor setContent={setContent} />
-              </Box>
+              <DraftEditor setContent={setContent} />
             </Box>
             <Box my={"2rem"}>
               <Tooltip
@@ -193,15 +192,21 @@ function PostWrite() {
                         : ""
                 }
               >
-                <Button
+                <ButtonOutline
+                  variant={"RecMedium"}
                   onClick={onModalOpenOfSave}
                   isLoading={loading}
                   isDisabled={disableSaveButton !== "able"}
                 >
                   등록
-                </Button>
+                </ButtonOutline>
               </Tooltip>
-              <Button onClick={onModalOpenOfCancel}>취소</Button>
+              <ButtonOutline
+                variant={"RecMedium"}
+                onClick={onModalOpenOfCancel}
+              >
+                취소
+              </ButtonOutline>
             </Box>
           </Box>
         </Flex>

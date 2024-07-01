@@ -35,17 +35,19 @@ const Draft = ({ setContent }) => {
   return (
     <Box w={"100%"}>
       <Editor
-        placeholder="게시글을 작성해주세요"
+        placeholder="내용을 작성해주세요"
         editorState={editorState}
         onEditorStateChange={updateTextDescription}
         handlePastedFiles={handlePastedFiles}
         handleDroppedFiles={handleDroppedFiles}
         localization={{ locale: "ko" }}
         editorStyle={{
-          height: "400px",
           width: "100%",
-          border: "3px solid lightgray",
-          padding: "20px",
+          minHeight: "320px",
+          border: "1px solid #D8B7E5",
+          borderBottomLeftRadius: "1rem",
+          borderBottomRightRadius: "1rem",
+          padding: "1rem",
         }}
       />
     </Box>
