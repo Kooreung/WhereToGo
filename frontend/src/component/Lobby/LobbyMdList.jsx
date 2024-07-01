@@ -23,7 +23,7 @@ export function LobbyMdList() {
   useEffect(() => {
     intervalRef.current = setInterval(() => {
       setNextPosts((prev) => {
-        if (prev < mdPost.length + 2) {
+        if (prev < mdPost.length + banner.length) {
           setPrevPosts(prevPosts + 1);
           return prev + 1;
         } else {
@@ -189,13 +189,19 @@ export function LobbyMdList() {
         </Box>
       </Center>
       <Center>
-        <Flex position={"relative"} top={"-70px"} border={"1px dotted red"}>
-          {[...Array(mdPost.length + 2)].map((_, index) => (
+        <Flex position={"relative"} top={"-70px"}>
+          {[...Array(mdPost.length + banner.length)].map((_, index) => (
             <ButtonCircle
-              key={index}
               variant={"small"}
-              bgColor={index === nextPosts - 1 ? "red" : "gray"}
+              key={index}
               onClick={() => handleButtonClick(index + 1)}
+              boxShadow={"md"}
+              bgColor={index === nextPosts - 1 ? "#D8B7E5" : "gray"}
+              sx={{
+                "&:hover": {
+                  backgroundColor: "#836091",
+                },
+              }}
             />
           ))}
         </Flex>
