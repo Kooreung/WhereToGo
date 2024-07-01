@@ -3,7 +3,7 @@ import { Editor } from "react-draft-wysiwyg";
 import { convertToRaw, EditorState } from "draft-js";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftjsToHtml from "draftjs-to-html";
-import { Container } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 
 const Draft = ({ setContent }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
@@ -33,7 +33,7 @@ const Draft = ({ setContent }) => {
   };
 
   return (
-    <Container>
+    <Box w={"100%"}>
       <Editor
         placeholder="게시글을 작성해주세요"
         editorState={editorState}
@@ -48,7 +48,7 @@ const Draft = ({ setContent }) => {
           padding: "20px",
         }}
       />
-    </Container>
+    </Box>
   );
 };
 

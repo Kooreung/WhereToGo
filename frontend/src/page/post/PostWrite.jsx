@@ -151,86 +151,92 @@ function PostWrite() {
   }
 
   return (
-    <Flex direction={"column"} align={"center"}>
+    <Box
+      w={{ base: "720px", sm: "640px", lg: "960px" }}
+      p={"1rem"}
+      border={"1px solid #D8B7E5"}
+      borderRadius={"1rem"}
+    >
       <Flex direction={"column"} align={"center"}>
-        <Box w={"720px"} mt={"2rem"}>
-          <Box>
+        <Flex direction={"column"} align={"center"}>
+          <Box w={{ base: "720px", sm: "540px", lg: "720px" }} mt={"2rem"}>
             <Input
               placeholder={"제목을 작성해주세요."}
               onChange={(e) => setTitle(e.target.value)}
               maxLength={70}
             />
           </Box>
-        </Box>
-        <Box w={"720px"} my={"2rem"}>
-          <MapAdd
-            selectedPlaces={selectedPlaces}
-            setSelectedPlaces={setSelectedPlaces}
-          />
-        </Box>
-        <Box>
-          <Box w={"720px"}>
-            <Box>
-              <DraftEditor setContent={setContent} />
+
+          <Box w={{ base: "720px", sm: "540px", lg: "720px" }} my={"2rem"}>
+            <MapAdd
+              selectedPlaces={selectedPlaces}
+              setSelectedPlaces={setSelectedPlaces}
+            />
+          </Box>
+          <Box>
+            <Box w={{ base: "720px", sm: "540px", lg: "720px" }}>
+              <Box>
+                <DraftEditor setContent={setContent} />
+              </Box>
+            </Box>
+            <Box my={"2rem"}>
+              <Tooltip
+                hasArrow
+                isDisabled={disableSaveButton === "able"}
+                label={
+                  disableSaveButton === "disableToTitle"
+                    ? "제목을 확인해주세요."
+                    : disableSaveButton === "disableToContent"
+                      ? "내용을 확인해주세요."
+                      : disableSaveButton === "disableToPlace"
+                        ? "장소를 선택해주세요."
+                        : ""
+                }
+              >
+                <Button
+                  onClick={onModalOpenOfSave}
+                  isLoading={loading}
+                  isDisabled={disableSaveButton !== "able"}
+                >
+                  등록
+                </Button>
+              </Tooltip>
+              <Button onClick={onModalOpenOfCancel}>취소</Button>
             </Box>
           </Box>
-          <Box my={"2rem"}>
-            <Tooltip
-              hasArrow
-              isDisabled={disableSaveButton === "able"}
-              label={
-                disableSaveButton === "disableToTitle"
-                  ? "제목을 확인해주세요."
-                  : disableSaveButton === "disableToContent"
-                    ? "내용을 확인해주세요."
-                    : disableSaveButton === "disableToPlace"
-                      ? "장소를 선택해주세요."
-                      : ""
-              }
-            >
-              <Button
-                onClick={onModalOpenOfSave}
-                isLoading={loading}
-                isDisabled={disableSaveButton !== "able"}
-              >
-                등록
-              </Button>
-            </Tooltip>
-            <Button onClick={onModalOpenOfCancel}>취소</Button>
-          </Box>
-        </Box>
+        </Flex>
+
+        {/* 게시글 작성 저장 Modal */}
+        <Modal isOpen={isModalOpenOfSave} onClose={onModalCloseOfSave}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>게시글 저장</ModalHeader>
+            <ModalBody>게시글을 등록하시겠습니까?</ModalBody>
+            <ModalFooter>
+              <Flex>
+                <Button onClick={handleClickSave}>확인</Button>
+                <Button onClick={onModalCloseOfSave}>취소</Button>
+              </Flex>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
+        {/* 게시글 작성 취소 Modal */}
+        <Modal isOpen={isModalOpenOfCancel} onClose={onModalCloseOfCancel}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>게시글 작성 취소</ModalHeader>
+            <ModalBody>작성을 취소하시겠습니까?</ModalBody>
+            <ModalFooter>
+              <Flex>
+                <Button onClick={handleClickCancel}>확인</Button>
+                <Button onClick={onModalCloseOfCancel}>취소</Button>
+              </Flex>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </Flex>
-
-      {/* 게시글 작성 저장 Modal */}
-      <Modal isOpen={isModalOpenOfSave} onClose={onModalCloseOfSave}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>게시글 저장</ModalHeader>
-          <ModalBody>게시글을 등록하시겠습니까?</ModalBody>
-          <ModalFooter>
-            <Flex>
-              <Button onClick={handleClickSave}>확인</Button>
-              <Button onClick={onModalCloseOfSave}>취소</Button>
-            </Flex>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-
-      {/* 게시글 작성 취소 Modal */}
-      <Modal isOpen={isModalOpenOfCancel} onClose={onModalCloseOfCancel}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>게시글 작성 취소</ModalHeader>
-          <ModalBody>작성을 취소하시겠습니까?</ModalBody>
-          <ModalFooter>
-            <Flex>
-              <Button onClick={handleClickCancel}>확인</Button>
-              <Button onClick={onModalCloseOfCancel}>취소</Button>
-            </Flex>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </Flex>
+    </Box>
   );
 }
 

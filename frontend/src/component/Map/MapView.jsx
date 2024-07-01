@@ -305,10 +305,10 @@ const KakaoMapSearch = () => {
     <Box
       id="map"
       ref={mapRef}
-      w={"640px"}
-      h={"400px"}
+      w={{ base: "640px", sm: "540px", lg: "640px" }}
+      h={{ base: "400px", sm: "360px", lg: "400px" }}
       borderRadius={"1rem"}
-    ></Box>
+    />
   );
 };
 

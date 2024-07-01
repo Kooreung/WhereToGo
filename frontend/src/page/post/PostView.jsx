@@ -178,6 +178,7 @@ export function PostView() {
                 <Text
                   onClick={() => navigate(`/member/${post.memberId}`)}
                   cursor="pointer"
+                  fontWeight={"bold"}
                 >
                   {post.nickName}
                 </Text>
@@ -208,11 +209,16 @@ export function PostView() {
             </Flex>
           </Flex>
 
-          <Box w={"640px"} h={"400px"} my={"2rem"} borderRadius={"1rem"}>
+          <Box
+            w={{ base: "640px", sm: "540px", lg: "640px" }}
+            h={{ base: "400px", sm: "360px", lg: "400px" }}
+            my={"2rem"}
+            borderRadius={"1rem"}
+          >
             <MapView />
           </Box>
 
-          <Flex alignItems={"center"} border={"1px dotted red"} gap={"1rem"}>
+          <Flex alignItems={"center"} gap={"1rem"}>
             <ButtonOutline onClick={handleMoveLeft}>
               <FontAwesomeIcon icon={faChevronLeft} />
             </ButtonOutline>
@@ -259,7 +265,6 @@ export function PostView() {
                             h={"160px"}
                             direction={"column"}
                             p={3}
-                            border={"1px dotted red"}
                           >
                             <HeadingVariant
                               overflow={"hidden"}
