@@ -84,7 +84,6 @@ public class PostController {
 
     // 내가 좋아요한 게시글 목록 Controller
     @GetMapping("likeList/{memberId}")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Map<String, Object>> getLikeList(
             @PathVariable Integer memberId,
             @RequestParam(defaultValue = "1") Integer page, @RequestParam(value = "type", required = false) String searchType,
