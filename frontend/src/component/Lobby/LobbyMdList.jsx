@@ -32,7 +32,7 @@ export function LobbyMdList() {
           return 1;
         }
       });
-    }, 5000);
+    }, 3000);
 
     return () => {
       clearInterval(intervalRef.current);
