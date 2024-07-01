@@ -197,7 +197,7 @@ const KakaoMapSearch = () => {
           paddingRight: "8px",
         }}
       >
-        <UnorderedList>
+        <UnorderedList style={{ color: "black" }}>
           <Box>
             <Text as="span">거리: </Text>
             <Text as="span" style={{ color: "#836091", fontWeight: "bold" }}>
@@ -217,6 +217,7 @@ const KakaoMapSearch = () => {
         style={{
           borderRadius: "100%",
           backgroundColor: "white",
+          color: "black",
           paddingLeft: "8px",
           paddingRight: "8px",
           boxShadow: "0 0 0 4px #836091, 0 0 0 8px #D8B7E5",
@@ -249,9 +250,11 @@ const KakaoMapSearch = () => {
           paddingRight: "8px",
         }}
       >
-        <UnorderedList>
+        <UnorderedList style={{ color: "black" }}>
           <Box>
-            <Text as="span">총거리: </Text>
+            <Text as="span" color={"black"}>
+              총거리:{" "}
+            </Text>
             <Text as="span" style={{ color: "#836091", fontWeight: "bold" }}>
               {distance}
             </Text>
@@ -299,9 +302,13 @@ const KakaoMapSearch = () => {
   }
 
   return (
-    <Box>
-      <Box id="map" ref={mapRef} w={"640px"} h={"400px"}></Box>
-    </Box>
+    <Box
+      id="map"
+      ref={mapRef}
+      w={{ base: "640px", sm: "540px", lg: "640px" }}
+      h={{ base: "400px", sm: "360px", lg: "400px" }}
+      borderRadius={"1rem"}
+    />
   );
 };
 

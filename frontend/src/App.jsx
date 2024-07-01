@@ -14,7 +14,7 @@ import { LoginProvider } from "./component/LoginProvider.jsx";
 import { MemberFindPassword } from "./page/member/MemberFindPassword.jsx";
 import MemberEdit from "./page/member/MemberEdit.jsx";
 import axios from "axios";
-import AdminPage from "./page/member/AdminPage.jsx";
+import MemberAdminPage from "./page/member/MemberAdminPage.jsx";
 import MemberInfoAdmin from "./page/member/MemberInfoAdmin.jsx";
 import { PostLikeList } from "./page/post/PostLikeList.jsx";
 import { PostMdList } from "./page/post/PostMdList.jsx"; // axios interceptor 설정
@@ -47,7 +47,7 @@ const router = createBrowserRouter([
       { path: "findPassword", element: <MemberFindPassword /> },
       { path: "memberinfo", element: <MemberInfo /> },
       { path: "member/edit", element: <MemberEdit /> },
-      { path: "memberList", element: <AdminPage /> },
+      { path: "memberAdminPage", element: <MemberAdminPage /> },
       { path: "member/:memberId", element: <MemberInfoAdmin /> },
       // 게시글 페이지
       { path: "post/write", element: <PostWrite /> },
@@ -57,7 +57,7 @@ const router = createBrowserRouter([
       // MD 게시글 페이지
       { path: "post/mdList", element: <PostMdList /> },
       // 좋아요한 게시글 목록 페이지
-      { path: "postLike/list/:memberId", element: <PostLikeList /> },
+      { path: "post/likeList/:memberId", element: <PostLikeList /> },
       // 댓글 페이지
       { path: "comment", element: <CommentComponent /> },
     ],

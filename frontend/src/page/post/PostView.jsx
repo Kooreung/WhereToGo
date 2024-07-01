@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Button,
+  Center,
   Divider,
   Flex,
   Image,
@@ -17,6 +18,7 @@ import {
   Spinner,
   Text,
   Tooltip,
+  useColorModeValue,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -47,6 +49,7 @@ export function PostView() {
   const [place, setPlace] = useState([]);
   const [like, setLike] = useState({ like: false, count: 0 });
   const [comment, setComment] = useState({ count: 0 });
+  const navColor = useColorModeValue("#D8B7E5", "#836091");
 
   const [isLikeLoading, setIsLikeLoading] = useState(false);
   const [isTransition, setIsTransition] = useState(false);
@@ -137,13 +140,13 @@ export function PostView() {
   }
 
   function handleMoveLeft() {
-    setPositionX((prev) => Math.min(prev + 540, 0));
+    setPositionX((prev) => Math.min(prev + 520, 0));
   }
 
   function handleMoveRight() {
     const flexWidth = dataRef.current.scrollWidth;
     const containerWidth = dataRef.current.parentElement.offsetWidth;
-    setPositionX((prev) => Math.max(prev - 540, containerWidth - flexWidth));
+    setPositionX((prev) => Math.max(prev - 520, containerWidth - flexWidth));
   }
 
   function handleSelectInfo(place, index) {
@@ -175,13 +178,14 @@ export function PostView() {
                 <Text
                   onClick={() => navigate(`/member/${post.memberId}`)}
                   cursor="pointer"
+                  fontWeight={"bold"}
                 >
                   {post.nickName}
                 </Text>
               </Flex>
               <Flex pl={"1rem"} w={"100%"} justify={"space-between"}>
                 <Flex>
-                  <Text display={{ base: "none", lg: "block" }} mr={1}>
+                  <Text mr={1}>
                     <FontAwesomeIcon
                       icon={faHeart}
                       style={{ color: "#D8B7E5" }}
@@ -189,7 +193,7 @@ export function PostView() {
                     />
                   </Text>
                   <Text fontSize="sm">{like.count}</Text>
-                  <Text display={{ base: "none", lg: "block" }} mr={1} ml={2}>
+                  <Text mr={1} ml={2}>
                     <FontAwesomeIcon
                       icon={faEye}
                       size="sm"
@@ -199,103 +203,101 @@ export function PostView() {
                   <Text fontSize="sm">{post.view}</Text>
                 </Flex>
                 <Flex>
-                  <Text display={{ base: "none", lg: "block" }} mr={1}>
-                    작성일자
-                  </Text>
                   <Text>{post.createDate}</Text>
                 </Flex>
               </Flex>
             </Flex>
           </Flex>
 
-          <Box w={"640px"} h={"400px"} my={"2rem"}>
+          <Box
+            w={{ base: "640px", sm: "540px", lg: "640px" }}
+            h={{ base: "400px", sm: "360px", lg: "400px" }}
+            my={"2rem"}
+            borderRadius={"1rem"}
+          >
             <MapView />
           </Box>
 
-          <Flex
-            w={"640px"}
-            h={"240px"}
-            alignItems={"center"}
-            justify={"space-evenly"}
-          >
+          <Flex alignItems={"center"} gap={"1rem"}>
             <ButtonOutline onClick={handleMoveLeft}>
               <FontAwesomeIcon icon={faChevronLeft} />
             </ButtonOutline>
-            <Flex
-              w={"540px"}
-              h={"160px"}
-              overflow={"hidden"}
-              alignItems={"center"}
-              borderRadius={"1rem"}
-              border={"1px solid #D8B7E5"}
-            >
+            <Flex w={"520px"} h={"160px"}>
               <Flex
-                ref={dataRef}
-                sx={{
-                  transform: `translateX(${positionX}px)`,
-                  transition: "transform 0.5s ease",
-                }}
+                overflow={"hidden"}
+                alignItems={"center"}
+                borderRadius={"1rem"}
+                border={"1px solid #D8B7E5"}
               >
-                {place.map((place, index) => (
-                  <Box
-                    key={index}
-                    onMouseEnter={() => handleSelectInfo(place, index)}
-                  >
-                    <Link
-                      href={place.placeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                <Flex
+                  ref={dataRef}
+                  sx={{
+                    transform: `translateX(${positionX}px)`,
+                    transition: "transform 0.5s ease",
+                  }}
+                >
+                  {place.map((place, index) => (
+                    <Box
+                      w={"100%"}
+                      key={index}
+                      onMouseEnter={() => handleSelectInfo(place, index)}
                     >
-                      <Flex
-                        w={"540px"}
-                        justifyContent={"center"}
-                        align={"center"}
+                      <Link
+                        href={place.placeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
-                        <Box w={"160px"} h={"160px"} alignContent={"center"}>
-                          <Image
-                            src={place.picurl || defaultImage}
-                            objectFit={"cover"}
-                            w={"100%"}
-                            h={"100%"}
-                          />
-                        </Box>
                         <Flex
-                          w={"400px"}
-                          h={"160px"}
-                          direction={"column"}
-                          p={3}
+                          w={"520px"}
+                          justifyContent={"center"}
+                          align={"center"}
                         >
-                          <HeadingVariant
-                            overflow={"hidden"}
-                            textOverflow={"ellipsis"}
-                            whiteSpace={"nowrap"}
-                          >
-                            {index + 1}번 장소
-                          </HeadingVariant>
-                          <Box
-                            overflow={"hidden"}
-                            textOverflow={"ellipsis"}
-                            whiteSpace={"nowrap"}
-                            fontWeight={"bold"}
-                          >
-                            {place.placeName}
+                          <Box w={"160px"} h={"160px"} alignContent={"center"}>
+                            <Image
+                              src={place.picurl || defaultImage}
+                              objectFit={"cover"}
+                              w={"100%"}
+                              h={"100%"}
+                            />
                           </Box>
-                          <Box
-                            overflow={"hidden"}
-                            textOverflow={"ellipsis"}
-                            whiteSpace={"nowrap"}
+                          <Flex
+                            w={"360px"}
+                            h={"160px"}
+                            direction={"column"}
+                            p={3}
                           >
-                            {place.address}
-                          </Box>
-                          <Spacer />
-                          <Box>
-                            장소가 등록 된 게시글 수 : {place.countPlace} 개
-                          </Box>
+                            <HeadingVariant
+                              overflow={"hidden"}
+                              textOverflow={"ellipsis"}
+                              whiteSpace={"nowrap"}
+                            >
+                              {index + 1}번 장소
+                            </HeadingVariant>
+                            <Box
+                              overflow={"hidden"}
+                              textOverflow={"ellipsis"}
+                              whiteSpace={"nowrap"}
+                              fontWeight={"bold"}
+                            >
+                              {place.placeName}
+                            </Box>
+                            <Box
+                              overflow={"hidden"}
+                              textOverflow={"ellipsis"}
+                              whiteSpace={"nowrap"}
+                            >
+                              {place.address}
+                            </Box>
+                            <Spacer />
+                            <Box>
+                              장소가 등록 된 게시글 수 : {place.countPlace} 개
+                            </Box>
+                          </Flex>
                         </Flex>
-                      </Flex>
-                    </Link>
-                  </Box>
-                ))}
+                      </Link>
+                    </Box>
+                  ))}
+                </Flex>
               </Flex>
             </Flex>
             <ButtonOutline onClick={handleMoveRight}>
@@ -306,18 +308,23 @@ export function PostView() {
         <Box
           maxW={"720px"}
           w={"100%"}
-          my={"32px"}
           p={"1rem"}
           whiteSpace={"pre-wrap"}
           borderRadius={"1rem"}
-          bgColor={"#D8B7E5"}
+          bgColor={navColor}
+          mt={"2rem"}
         >
           <div dangerouslySetInnerHTML={{ __html: post.content }} />
         </Box>
 
-        <Divider border={"1px solid lightGray"} maxW={"720px"} w="100%" />
+        <Divider
+          border={"1px solid lightGray"}
+          maxW={"720px"}
+          w="100%"
+          my={"2rem"}
+        />
         {/* 좋아요 & 수정/삭제/목록 버튼 */}
-        <Flex maxW={"720px"} w={"100%"} h={"4rem"} my={"16px"} align={"center"}>
+        <Flex maxW={"720px"} w={"100%"} h={"4rem"} align={"center"}>
           {/* 좋아요 */}
           <Tooltip
             isDisabled={account.isLoggedIn()}
@@ -386,11 +393,13 @@ export function PostView() {
           ) : null}
         </Flex>
         {/*댓글*/}
-        <CommentComponent
-          postId={post.postId}
-          isTransition={isTransition}
-          setIsTransition={setIsTransition}
-        />
+        <Center w={"100%"}>
+          <CommentComponent
+            postId={post.postId}
+            isTransition={isTransition}
+            setIsTransition={setIsTransition}
+          />
+        </Center>
 
         <Modal isOpen={isModalOpenOfDelete} onClose={onModalCloseOfDelete}>
           <ModalOverlay />

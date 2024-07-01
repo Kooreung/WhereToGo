@@ -12,6 +12,7 @@ import {
   Spacer,
   StackDivider,
   Text,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -44,6 +45,7 @@ function PostList() {
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const hColor = useColorModeValue("beige", "#2D3748");
 
   useEffect(() => {
     axios.get(`/api/post/list?${searchParams}`).then((res) => {
@@ -128,7 +130,7 @@ function PostList() {
               px={"1rem"}
               sx={{
                 "&:hover": {
-                  backgroundColor: "beige",
+                  backgroundColor: hColor,
                 },
               }}
             >

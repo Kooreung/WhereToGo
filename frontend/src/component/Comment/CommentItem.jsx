@@ -55,11 +55,12 @@ function CommentItem({ comment, isTransition, setIsTransition }) {
       {isEditing || (
         <Box>
           <Flex
-            w={"720px"}
-            my={"16px"}
+            maxW={"720px"}
+            w={"100%"}
+            my={"1rem"}
             borderWidth="1px"
             borderRadius={"lg"}
-            p={2}
+            p={3}
           >
             <Box>
               <Text color={headColor} fontWeight={"bolder"} m1={1}>

@@ -8,6 +8,7 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { renderToString } from "react-dom/server";
+import ButtonOutline from "../../css/Button/ButtonOutline.jsx";
 
 const loadKakaoMapScript = (appKey, libraries = []) => {
   return new Promise((resolve, reject) => {
@@ -304,6 +305,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
           backgroundColor: "white",
           paddingLeft: "8px",
           paddingRight: "8px",
+          color: "black",
           boxShadow: "0 0 0 4px #836091, 0 0 0 8px #D8B7E5",
         }}
       >
@@ -324,6 +326,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
           paddingRight: "8px",
           borderRadius: "12px",
           bgColor: "white",
+          color: "black",
           boxShadow: "0 0 0 2px #836091, 0 0 0 4px #D8B7E5",
         }}
       >
@@ -340,8 +343,12 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   }
 
   return (
-    <Box w={"720px"}>
-      <Box>
+    <Flex
+      w={{ base: "720px", sm: "540px", lg: "720px" }}
+      direction={"column"}
+      align={"center"}
+    >
+      <Box w={{ base: "720px", sm: "540px", lg: "720px" }}>
         <Flex>
           <Input
             type="text"
@@ -350,9 +357,11 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
             placeholder="검색어를 입력하세요."
             onKeyDown={handleSearchKeyDown}
           />
-          <Button onClick={searchPlaces}>검색</Button>
+          <ButtonOutline variant={"RecMedium"} onClick={searchPlaces}>
+            검색
+          </ButtonOutline>
         </Flex>
-        <Box maxH={"200px"} overflowY={"auto"} my={3}>
+        <Box maxH={"200px"} overflowY={"auto"} my={3} px={"1rem"}>
           {places.map((place, index) => (
             <Flex key={index}>
               <Box>
@@ -373,13 +382,24 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
         </Box>
       </Box>
 
-      <Box id="map" ref={mapRef} w={"720px"} h={"360px"} />
+      <Box
+        id="map"
+        ref={mapRef}
+        w={{ base: "640px", sm: "540px", lg: "640px" }}
+        h={{ base: "400px", sm: "360px", lg: "400px" }}
+        borderRadius={"1rem"}
+      />
 
-      <Box>
+      <Box w={"100%"} px={"1rem"} my={"1rem"}>
         <Box>
           {selectedPlaces.map((place, index) => (
-            <Flex key={index} alignItems="center" justifyContent="center">
-              <Box border={"1px dotted red"}>
+            <Flex
+              key={index}
+              alignItems="center"
+              justifyContent="center"
+              p={"8px"}
+            >
+              <Box>
                 <Box>
                   <Link
                     href={place.place_url}
@@ -412,7 +432,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
           ))}
         </Box>
       </Box>
-    </Box>
+    </Flex>
   );
 };
 

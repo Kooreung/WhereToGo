@@ -184,7 +184,7 @@ export function MemberInfo(props) {
       <CardFooter display="flex" justifyContent="space-between">
         <Box
           cursor={"pointer"}
-          onClick={() => navigate(`/postLike/list/${member.memberId}`)}
+          onClick={() => navigate(`/post/likeList/${member.memberId}`)}
           style={{ display: "flex", alignItems: "center" }}
         >
           <FontAwesomeIcon

@@ -37,11 +37,6 @@ const places = [
     src: "",
   },
   {
-    name: "강남구",
-    keyword: "강남구",
-    src: "",
-  },
-  {
     name: "서대문구",
     keyword: "서대문구",
     src: "",
@@ -144,14 +139,29 @@ export function LobbyPlaceList() {
   const [positionX, setPositionX] = useState(0);
   const navigate = useNavigate();
 
+  function getScrollDistance() {
+    const screenWidth = window.innerWidth;
+    if (screenWidth >= 1024) {
+      return 600; // lg
+    } else if (screenWidth >= 768) {
+      return 385; // sm
+    } else {
+      return 600; // base
+    }
+  }
+
   function handleMoveRight() {
+    const scrollDistance = getScrollDistance();
     const flexWidth = dataRef.current.scrollWidth;
     const containerWidth = dataRef.current.parentElement.offsetWidth;
-    setPositionX((prev) => Math.max(prev - 350, containerWidth - flexWidth));
+    setPositionX((prev) =>
+      Math.max(prev - scrollDistance, containerWidth - flexWidth),
+    );
   }
 
   function handleMoveLeft() {
-    setPositionX((prev) => Math.min(prev + 350, 0));
+    const scrollDistance = getScrollDistance();
+    setPositionX((prev) => Math.min(prev + scrollDistance, 0));
   }
 
   return (

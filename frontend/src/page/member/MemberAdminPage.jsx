@@ -34,6 +34,7 @@ import {
   Th,
   Thead,
   Tr,
+  useColorModeValue,
   useDisclosure,
   useToast,
   Wrap,
@@ -54,7 +55,7 @@ import ContentParser from "../../component/ContentParser.jsx";
 import ButtonNumber from "../../css/Button/ButtonOutline.jsx";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 
-export function AdminPage() {
+export function MemberAdminPage() {
   const [memberList, setMemberList] = useState([]);
   const [mdPicks, setMdPicks] = useState([]);
   const [mdPosts, setMdPosts] = useState([]);
@@ -71,9 +72,10 @@ export function AdminPage() {
   //배너 변수
   const [bannerList, setBannerList] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [bannerLink, setBannerLink] = useState("");
+  const [bannerLink, setBannerLink] = useState(import.meta.env.VITE_KEY_WORD);
   const [bannerFile, setBannerFile] = useState([]);
   const [city, setCity] = useState("");
+  const hColor = useColorModeValue("beige", "#2D3748");
 
   const {
     isOpen: isModalOpenOfAdd,
@@ -135,12 +137,9 @@ export function AdminPage() {
           : [...prevSelectedPosts, postId],
       );
     }
-    console.log(selectedPosts);
   };
 
   const handleAddClick = () => {
-    console.log("눌렸냐고");
-    console.log(mdPosts);
     onModalOpenOfAdd();
     if (selectedPosts.length >= 3) {
       // 이미 3개의 포스트가 선택되었을 때 토스트 알림을 표시합니다.
@@ -157,6 +156,14 @@ export function AdminPage() {
       onModalOpenOfAdd();
     }
   };
+
+  // city 상태가 변경될 때마다 호출되는 useEffect 훅
+  useEffect(() => {
+    // city 값이 비어있지 않다면 bannerLink 업데이트
+    if (city) {
+      setBannerLink(import.meta.env.VITE_KEY_WORD + `${city}`);
+    }
+  }, [city]); // city 상태가 변경될 때만 이 효과를 재실행
 
   //-----------------------------------이미지 관련 변수
 
@@ -207,7 +214,6 @@ export function AdminPage() {
     axios.get("/api/post/bannerList").then((res) => setBannerList(res.data));
     axios.get("/api/post/mdList").then((res) => {
       setMdPosts(res.data.post);
-      console.log(res.data.post);
     });
     setSearchType("all");
     setSearchKeyword("");
@@ -228,20 +234,22 @@ export function AdminPage() {
     pageNumbers.push(i);
   }
 
-  function handleBanner() {
-    axios.get("/api/post/mdList").then((res) => {
-      setMdPosts(res.data.post);
-      console.log(res.data);
-    });
+  function handleMdpostSearchClick() {
+    axios
+      .get(`/api/post/mdList?type=${searchType}&keyword=${searchKeyword}`)
+      .then((res) => {
+        setMdPosts(res.data.post);
+        console.log("검색어", res.data.post);
+      });
   }
 
   function handleSearchClick() {
-    navigate(`/memberList/?type=${searchType}&keyword=${searchKeyword}`);
+    navigate(`/memberAdminPage/?type=${searchType}&keyword=${searchKeyword}`);
   }
 
   function handlePageButtonClick(pageNumber) {
     searchParams.set("page", pageNumber);
-    navigate(`/memberList/?${searchParams}`);
+    navigate(`/memberAdminPage/?${searchParams}`);
   }
 
   const handleDelete = async (postId) => {
@@ -475,12 +483,12 @@ export function AdminPage() {
 
   function handleSearchKeyDown(e) {
     if (e.key === "Enter") {
-      navigate(`/memberList/?type=${searchType}&keyword=${searchKeyword}`);
+      navigate(`/memberAdminPage/?type=${searchType}&keyword=${searchKeyword}`);
     }
   }
 
   const tdCellStyle = {
-    maxWidth: "300px",
+    maxWidth: "100px",
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
@@ -493,7 +501,7 @@ export function AdminPage() {
           <Tab>회원관리</Tab>
           <Tab>배너 등록</Tab>
         </TabList>
-        <TabPanels w={{ base: "720px", lg: "960px" }}>
+        <TabPanels>
           <TabPanel>
             <Box mb={10}>
               <Heading>회원 목록</Heading>
@@ -504,11 +512,11 @@ export function AdminPage() {
                 <Table>
                   <Thead>
                     <Tr>
-                      <Th w={20}>#</Th>
-                      <Th>이메일</Th>
-                      <Th w={"150px"}>별명</Th>
-                      <Th w={96}>가입일시</Th>
-                      <Th w={96}>관리</Th>
+                      <Th width="80px">#</Th>
+                      <Th width="70px">이메일</Th>
+                      <Th w={20}>별명</Th>
+                      <Th w={100}>가입일시</Th>
+                      <Th width="80px">관리</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -517,7 +525,7 @@ export function AdminPage() {
                         cursor={"pointer"}
                         sx={{
                           "&:hover": {
-                            backgroundColor: "RGBA(0, 0, 0, 0.06)",
+                            backgroundColor: hColor,
                           },
                         }}
                         key={member.memberId}
@@ -532,11 +540,11 @@ export function AdminPage() {
                         <Td>{member.inserted}</Td>
 
                         <Td>
-                          <Button
+                          <ButtonCircle
                             onClick={() => openDeleteModal(member.memberId)}
                           >
-                            삭제
-                          </Button>
+                            <FontAwesomeIcon icon={faTrash} />
+                          </ButtonCircle>
                         </Td>
                       </Tr>
                     ))}
@@ -618,7 +626,7 @@ export function AdminPage() {
               </Box>
             </Center>
           </TabPanel>
-          <TabPanel w={{ base: "720px", lg: "960px" }}>
+          <TabPanel width="90vw">
             <Wrap spacing={4} mb={6}>
               <WrapItem>
                 <Button colorScheme="orange" onClick={handleAddClick}>
@@ -647,7 +655,7 @@ export function AdminPage() {
                         cursor={"pointer"}
                         sx={{
                           "&:hover": {
-                            backgroundColor: "RGBA(0, 0, 0, 0.06)",
+                            backgroundColor: hColor,
                           },
                         }}
                         key={mdpick.postId}
@@ -687,7 +695,7 @@ export function AdminPage() {
                         cursor={"pointer"}
                         sx={{
                           "&:hover": {
-                            backgroundColor: "RGBA(0, 0, 0, 0.06)",
+                            backgroundColor: hColor,
                           },
                         }}
                         key={banner.bannerId}
@@ -716,6 +724,34 @@ export function AdminPage() {
         <ModalContent>
           <ModalHeader>MD 리스트</ModalHeader>
           <ModalBody>배너에 등록할 게시글을 선택 해주세요.</ModalBody>
+          <Center>
+            <Box>
+              <Select
+                value={searchType}
+                onChange={(e) => {
+                  setSearchType(e.target.value);
+                }}
+              >
+                <option value={"all"}>전체</option>
+                <option value={"titleAndContent"}>제목+내용</option>
+                <option value={"nickName"}>닉네임</option>
+                <option value={"placeName"}>장소명</option>
+                <option value={"address"}>지역명</option>
+              </Select>
+            </Box>
+            <Box ml={1}>
+              <Input
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+                placeholder="검색어"
+              />
+            </Box>
+            <Box ml={2}>
+              <ButtonCircle onClick={handleMdpostSearchClick}>
+                <FontAwesomeIcon icon={faMagnifyingGlass} fontSize="small" />
+              </ButtonCircle>
+            </Box>
+          </Center>
           {postsToShow.map((mdPost) => (
             <Center key={mdPost.postId} mb={4}>
               <Card border="1px ligtgray" mb="3px" width={"400px"}>
@@ -795,12 +831,6 @@ export function AdminPage() {
             />
             <Input
               mt={2}
-              placeholder="링크를 입력하세요"
-              value={bannerLink}
-              onChange={handleLinkChange}
-            />
-            <Input
-              mt={2}
               type="file"
               onChange={handleBannerFileChange}
               alignContent={"center"}
@@ -824,12 +854,10 @@ export function AdminPage() {
           <ModalCloseButton />
           <ModalBody>정말 탈퇴 시키겠습니까?</ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleDeleteUser}>
+            <Button mr={3} onClick={handleDeleteUser}>
               확인
             </Button>
-            <Button variant="ghost" onClick={onDeleteAccountModalClose}>
-              취소
-            </Button>
+            <Button onClick={onDeleteAccountModalClose}>취소</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -837,4 +865,4 @@ export function AdminPage() {
   );
 }
 
-export default AdminPage;
+export default MemberAdminPage;

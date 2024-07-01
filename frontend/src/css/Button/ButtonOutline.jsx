@@ -67,7 +67,7 @@ const presets = {
 
 function ButtonOutline({ variant = "SquaMedium", ...props }) {
   // 기본 프리셋 값 medium
-  const preset = presets[variant] || presets["RecMedium"];
+  const preset = presets[variant] || presets["SquaMedium"];
 
   const buttonWidth = useBreakpointValue({
     lg: preset.lg.w,

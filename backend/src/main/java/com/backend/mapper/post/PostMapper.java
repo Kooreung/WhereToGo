@@ -21,17 +21,17 @@ public interface PostMapper {
 
     // 게시글 조회 매퍼
     @Select("""
-SELECT p.postid,p.title,p.content,p.createdate,p.view,p.memberid,p.mdpick, pro.profilename,
-       m.nickname,
-       COUNT(DISTINCT c.commentid) commentCount,
-       COUNT(DISTINCT l.memberid)  likeCount
-FROM post p
-         JOIN member m ON p.memberid = m.memberid
-        JOIN profile pro ON pro.memberid = p.memberid
-         LEFT JOIN comment c ON p.postid = c.postid
-         LEFT JOIN likes l ON p.postid = l.postid
-            WHERE p.postid = #{postId}
-            """)
+            SELECT p.postid,p.title,p.content,p.createdate,p.view,p.memberid,p.mdpick, pro.profilename,
+                   m.nickname,
+                   COUNT(DISTINCT c.commentid) commentCount,
+                   COUNT(DISTINCT l.memberid)  likeCount
+            FROM post p
+                     JOIN member m ON p.memberid = m.memberid
+                    JOIN profile pro ON pro.memberid = p.memberid
+                     LEFT JOIN comment c ON p.postid = c.postid
+                     LEFT JOIN likes l ON p.postid = l.postid
+                        WHERE p.postid = #{postId}
+                        """)
     Post selectByPostId(Integer postId);
 
     // 게시글 목록 매퍼
@@ -115,6 +115,7 @@ FROM post p
             SELECT p.postid,p.title,p.content,p.view,p.createDate,
                    m.nickName,
                    plpic.picurl,
+                   m.memberId,
                    pro.profilename,
                    COUNT(DISTINCT c.commentid)                                                 commentCount,
                    COUNT(DISTINCT l.memberid)                                                  likeCount,
@@ -346,7 +347,7 @@ FROM post p
                 """)
     int updateMdPickPush(Integer postId);
 
-// 내가 작성한 글 가져오기 (작성한 글마다 좋아요 개수까지)
+    // 내가 작성한 글 가져오기 (작성한 글마다 좋아요 개수까지)
     @Select("""
             SELECT p.postid,
                    p.title,
@@ -358,8 +359,9 @@ FROM post p
                      LEFT JOIN likes l ON p.postid = l.postid
             WHERE p.memberid = #{memberId}
             GROUP BY p.postid, p.title, p.content, p.createdate, p.view
+            LIMIT #{offset}, 5
             """)
-    List<Post> getMyList(Integer memberId);
+    List<Post> getMyList(Integer memberId, Integer offset);
 
     @Select("""
                         SELECT p.postid,
@@ -455,4 +457,20 @@ FROM post p
             where p.postid = #{postId}
             """)
     String selcetAuthByPostId(Integer postId);
+
+
+    // 회원 정보 화면에 해당 회원의 게시물과 누른 좋아요 갯수를 위한 sql 문
+    @Select("""
+            SELECT p.postid,
+                   p.title,
+                   p.content,
+                   p.createdate,
+                   p.view,
+                   COUNT(l.postid) AS likeCount
+            FROM post p
+                     LEFT JOIN likes l ON p.postid = l.postid
+            WHERE p.memberid = #{memberId}
+            GROUP BY p.postid, p.title, p.content, p.createdate, p.view
+            """)
+    List<Post> getMyListCount(Integer memberId);
 }

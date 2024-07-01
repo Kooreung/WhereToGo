@@ -22,19 +22,25 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import React, {useCallback, useContext, useEffect, useRef, useState} from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   emailPattern,
   passwordPattern,
   phoneNumberPattern,
 } from "../../Regex.jsx";
 import DaumPostcodeEmbed from "react-daum-postcode";
-import {faMagnifyingGlass, faXmark} from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
 import Lobby from "../Lobby.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
-import { getInputStyles } from '/src/css/styles.js';
+import { getInputStyles } from "/src/css/styles.js";
 
 export function MemberSignup() {
   const [email, setEmail] = useState("");
@@ -58,7 +64,9 @@ export function MemberSignup() {
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(true);
   const [file, setFile] = useState(null);
-  const [fileUrl, setFileUrl] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+  const [fileUrl, setFileUrl] = useState(
+    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+  );
   const { onClose, onOpen, isOpen } = useDisclosure();
   const toast = useToast();
   const navigate = useNavigate();
@@ -276,9 +284,16 @@ export function MemberSignup() {
           <Heading>회원 가입</Heading>
         </Center>
         <Center>
-          <label style={{display: 'inline-block', width: '200px', height: '200px', cursor: 'pointer'}}>
+          <label
+            style={{
+              display: "inline-block",
+              width: "200px",
+              height: "200px",
+              cursor: "pointer",
+            }}
+          >
             <Avatar
-              _hover={{filter: "brightness(0.7)"}}
+              _hover={{ filter: "brightness(0.7)" }}
               src={fileUrl}
               w="200px"
               h="200px"
@@ -290,7 +305,7 @@ export function MemberSignup() {
                   type="file"
                   multiple
                   accept="image/*"
-                  style={{display: "none"}}
+                  style={{ display: "none" }}
                   onChange={(e) => {
                     const selectedFile = e.target.files[0];
                     setFile(e.target.files[0]);
@@ -298,14 +313,14 @@ export function MemberSignup() {
                       const url = URL.createObjectURL(selectedFile);
                       setFileUrl(url);
                     } else {
-                      setFileUrl("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+                      setFileUrl(
+                        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+                      );
                     }
                   }}
                 />
                 <Center>
-                  <FormHelperText>
-                    프로필 이미지 설정
-                  </FormHelperText>
+                  <FormHelperText>프로필 이미지 설정</FormHelperText>
                 </Center>
               </FormControl>
             </Box>
@@ -398,7 +413,7 @@ export function MemberSignup() {
               <FormLabel mt={6}>닉네임</FormLabel>
               <Input
                 style={inputStyles}
-                maxLength="20"
+                maxLength="10"
                 placeholder="별명"
                 value={nickName}
                 onChange={(e) => setNickName(e.target.value.trim())}
@@ -409,7 +424,7 @@ export function MemberSignup() {
                 </FormHelperText>
               )}
               {!isNickNameDuplicate && isCheckNickName && (
-                <FormHelperText color="dodgerblue">
+                <FormHelperText color="green">
                   사용 가능한 닉네임입니다.
                 </FormHelperText>
               )}
@@ -420,7 +435,9 @@ export function MemberSignup() {
               <FormLabel mt={6}>성별</FormLabel>
               <RadioGroup mb={6} value={gender} onChange={(e) => setGender(e)}>
                 <Radio value="남자">남자</Radio>
-                <Radio style={{ marginLeft: '20px' }} value="여자">여자</Radio>
+                <Radio style={{ marginLeft: "20px" }} value="여자">
+                  여자
+                </Radio>
               </RadioGroup>
             </FormControl>
           </Box>
@@ -495,31 +512,39 @@ export function MemberSignup() {
           <Box>
             <FormControl>
               <FormLabel mt={6}>주소</FormLabel>
-                <InputGroup>
-                  <Input
-                    h={12}
-                    mb={10}
-                    maxLength="100"
-                    readOnly
-                    placeholder="주소를 검색하여 입력해 주세요."
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value.trim())}
-                  />
-                  <InputRightElement w={"75px"} mr={1}>
-                    <Button onClick={onOpen} mt={2}>
-                      <FontAwesomeIcon icon={faMagnifyingGlass} />
-                      검색
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
+              <InputGroup>
+                <Input
+                  h={12}
+                  mb={10}
+                  maxLength="100"
+                  readOnly
+                  placeholder="주소를 검색하여 입력해 주세요."
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value.trim())}
+                />
+                <InputRightElement w={"75px"} mr={1}>
+                  <Button onClick={onOpen} mt={2}>
+                    <FontAwesomeIcon icon={faMagnifyingGlass} />
+                    검색
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
             </FormControl>
           </Box>
           <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-              <ModalHeader style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <ModalHeader
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
                 주소 입력
-                <Button style={{ backgroundColor: 'white' }} onClick={onClose}><FontAwesomeIcon icon={faXmark} size="lg"/></Button>
+                <Button style={{ backgroundColor: "white" }} onClick={onClose}>
+                  <FontAwesomeIcon icon={faXmark} size="lg" />
+                </Button>
               </ModalHeader>
               <ModalBody>
                 <DaumPostcodeEmbed onComplete={handleComplete} />

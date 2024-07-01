@@ -1,12 +1,17 @@
 import React from "react";
-import { Box } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import CommentWrite from "./CommentWrite.jsx";
 import CommentList from "./CommentList.jsx";
 
 export function CommentComponent({ postId, isTransition, setIsTransition }) {
   return (
-    <Box>
-      <Box fontSize={"lg"} alignContent={"center"}></Box>
+    <Flex
+      maxW={"720px"}
+      w={"100%"}
+      direction={"column"}
+      align={"center"}
+      justify={"center"}
+    >
       <CommentWrite
         postId={postId}
         isTransition={isTransition}
@@ -17,7 +22,7 @@ export function CommentComponent({ postId, isTransition, setIsTransition }) {
         isTransition={isTransition}
         setIsTransition={setIsTransition}
       ></CommentList>
-    </Box>
+    </Flex>
   );
 }
 

@@ -154,7 +154,12 @@ public class PostService {
 
     // 게시글 Top 3 인기글 목록 서비스
     public List<Post> getPostListOfBest() {
-        return postMapper.selectPostOfBest();
+        List<Post> posts = postMapper.selectPostOfBest();
+        for (Post post : posts) {
+            String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), post.getProfileName());
+            post.setProfileName(key);
+        }
+        return posts;
     }
 
     // 게시글에서 선택한 장소 목록 서비스
@@ -248,10 +253,14 @@ public class PostService {
         return result;
     }
 
-    public Map<String, Object> myList(Integer memberId) {
-        List<Post> post = postMapper.getMyList(memberId);
+    public Map<String, Object> myList(Integer memberId, Integer page) {
+        Integer offset = (page - 1) * 5;
+        List<Post> post = postMapper.getMyList(memberId, offset);
+
+        List<Post> count = postMapper.getMyListCount(memberId);
         Map<String, Object> result = new HashMap<>();
         result.put("post", post);
+        result.put("count", count);
         return result;
     }
 

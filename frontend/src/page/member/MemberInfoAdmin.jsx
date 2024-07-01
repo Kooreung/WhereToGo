@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import {
   Avatar,
   Box,
@@ -12,7 +12,6 @@ import {
   Flex,
   Heading,
   Spinner,
-  Stack,
   Tab,
   TabList,
   TabPanel,
@@ -20,29 +19,28 @@ import {
   Tabs,
   Text,
 } from "@chakra-ui/react";
-import Lobby from "../Lobby.jsx";
-import { LoginContext } from "../../component/LoginProvider.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faHeart,
-  faLocationDot,
-  faPhone,
-  faReceipt,
-  faSquareEnvelope,
-} from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faReceipt } from "@fortawesome/free-solid-svg-icons";
+import { LoginContext } from "../../component/LoginProvider.jsx";
 
 export function MemberInfoAdmin() {
   const { memberId } = useParams();
   const [member, setMember] = useState(null);
-  const [post, setPost] = useState(null);
   const [profile, setProfile] = useState(null);
+  const [post, setPost] = useState([]);
+  const [count, setCount] = useState([]);
   const [postLikeList, setPostLikeList] = useState([]);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const account = useContext(LoginContext);
+  const [pagePost, setPagePost] = useState(1); // Separate page state for posts
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [activeTab, setActiveTab] = useState("post");
 
-  let likeCountAll = 0;
-
+  // 멤버 정보 및 탭 초기 데이터 로드
   useEffect(() => {
+    // 멤버 정보 및 프로필 로드
     axios
       .get(`/api/member/${memberId}`)
       .then((res) => {
@@ -53,26 +51,116 @@ export function MemberInfoAdmin() {
         console.log(err);
       });
 
-    axios
-      .get(`/api/post/myList?memberId=${memberId}`)
-      .then((res) => {
-        setPost(res.data.post);
-      })
-      .catch();
+    // 탭에 따른 데이터 로드
+    if (activeTab === "post") {
+      loadPostData();
+    } else {
+      loadPostLikeList();
+    }
+  }, [memberId, activeTab]); // memberId나 activeTab이 변경될 때마다 다시 로드
 
+  // 게시물 데이터 로드
+  const loadPostData = () => {
     axios
-      .get(`/api/post/likeList/${memberId}`)
+      .get(`/api/post/myList/${memberId}?page=${pagePost}&${searchParams}`)
       .then((res) => {
-        setPostLikeList(res.data.postList);
+        if (res.data.post.length > 0) {
+          setPost((prevPost) => [...prevPost, ...res.data.post]);
+          setCount(res.data.count);
+          setPagePost((prevPage) => prevPage + 1);
+          setHasMore(true); // 데이터 추가 로딩 가능 상태로 변경
+        } else {
+          setHasMore(false); // 더 이상 데이터가 없음을 표시
+        }
       })
-      .catch();
-  }, []);
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoadingMore(false); // 로딩 상태 종료
+      });
+  };
 
+  // 좋아요 목록 데이터 로드
+  const loadPostLikeList = () => {
+    axios
+      .get(`/api/post/likeList/${memberId}?page=${pagePost}&${searchParams}`)
+      .then((res) => {
+        if (res.data.postList.length > 0) {
+          setPostLikeList((prevPostList) => [
+            ...prevPostList,
+            ...res.data.postList,
+          ]);
+          setPagePost((prevPage) => prevPage + 1);
+          setHasMore(true); // 데이터 추가 로딩 가능 상태로 변경
+        } else {
+          setHasMore(false); // 더 이상 데이터가 없음을 표시
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoadingMore(false); // 로딩 상태 종료
+      });
+  };
+
+  // 스크롤 이벤트 처리
+  const handleScroll = () => {
+    const scrollTop =
+      (document.documentElement && document.documentElement.scrollTop) ||
+      document.body.scrollTop;
+    const scrollHeight =
+      (document.documentElement && document.documentElement.scrollHeight) ||
+      document.body.scrollHeight;
+    const clientHeight =
+      document.documentElement.clientHeight || window.innerHeight;
+    const scrolledToBottom =
+      Math.ceil(scrollTop + clientHeight) >= scrollHeight;
+
+    if (scrolledToBottom) {
+      if (!loadingMore && hasMore && activeTab === "post") {
+        setLoadingMore(true); // 로딩 상태 설정
+        loadPostData();
+      }
+
+      if (!loadingMore && hasMore && activeTab === "like") {
+        setLoadingMore(true); // 로딩 상태 설정
+        loadPostLikeList();
+      }
+    }
+  };
+
+  // 스크롤 이벤트 리스너 등록 및 해제
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
+
+  // 탭 변경 처리
+  const handleTabChange = (index) => {
+    if (index === 0) {
+      setPost([]);
+      setPagePost(1); // 페이지 초기화
+      setHasMore(true); // 추가 데이터 로딩 가능 상태 설정
+      setLoadingMore(false); // 로딩 상태 초기화
+    } else if (index === 1) {
+      setPostLikeList([]);
+      setPagePost(1); // 페이지 초기화
+      setHasMore(true); // 추가 데이터 로딩 가능 상태 설정
+      setLoadingMore(false); // 로딩 상태 초기화
+    }
+    setActiveTab(index === 0 ? "post" : "like");
+  };
+
+  // 멤버 데이터 로딩 중일 때 스피너 표시
   if (member === null) {
     return <Spinner />;
   }
 
-  post.forEach((p) => {
+  // 전체 좋아요 수 계산
+  let likeCountAll = 0;
+  count.forEach((p) => {
     likeCountAll += p.likeCount;
   });
 
@@ -104,7 +192,7 @@ export function MemberInfoAdmin() {
                     icon={faReceipt}
                     style={{ color: "#D8B7E5" }}
                   />{" "}
-                  {post.length}
+                  {count.length}
                 </Text>
                 <Text>
                   <FontAwesomeIcon
@@ -122,7 +210,12 @@ export function MemberInfoAdmin() {
           <Divider />
         </Box>
         <CardFooter>
-          <Tabs w="100%" variant="soft-rounded" colorScheme="purple">
+          <Tabs
+            w="100%"
+            variant="soft-rounded"
+            colorScheme="purple"
+            onChange={handleTabChange}
+          >
             <TabList mb={5}>
               <Tab>게시물</Tab>
               <Tab>좋아요</Tab>
@@ -151,6 +244,12 @@ export function MemberInfoAdmin() {
                     <Divider />
                   </Box>
                 ))}
+                {loadingMore && <Spinner />}
+                {!loadingMore && !hasMore && (
+                  <Center my={4}>
+                    <Text>마지막 게시물입니다.</Text>
+                  </Center>
+                )}
               </TabPanel>
               <TabPanel>
                 {postLikeList.map((post) => (
@@ -175,6 +274,12 @@ export function MemberInfoAdmin() {
                     <Divider />
                   </Box>
                 ))}
+                {loadingMore && <Spinner />}
+                {!loadingMore && !hasMore && (
+                  <Center my={4}>
+                    <Text>마지막 게시물입니다.</Text>
+                  </Center>
+                )}
               </TabPanel>
             </TabPanels>
           </Tabs>
