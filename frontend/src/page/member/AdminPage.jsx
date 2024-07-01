@@ -34,6 +34,7 @@ import {
   Th,
   Thead,
   Tr,
+  useColorModeValue,
   useDisclosure,
   useToast,
   Wrap,
@@ -74,6 +75,7 @@ export function AdminPage() {
   const [bannerLink, setBannerLink] = useState("");
   const [bannerFile, setBannerFile] = useState([]);
   const [city, setCity] = useState("");
+  const hColor = useColorModeValue("beige", "#2D3748");
 
   const {
     isOpen: isModalOpenOfAdd,
@@ -517,7 +519,7 @@ export function AdminPage() {
                         cursor={"pointer"}
                         sx={{
                           "&:hover": {
-                            backgroundColor: "RGBA(0, 0, 0, 0.06)",
+                            backgroundColor: hColor,
                           },
                         }}
                         key={member.memberId}
@@ -532,11 +534,11 @@ export function AdminPage() {
                         <Td>{member.inserted}</Td>
 
                         <Td>
-                          <Button
+                          <ButtonCircle
                             onClick={() => openDeleteModal(member.memberId)}
                           >
-                            삭제
-                          </Button>
+                            <FontAwesomeIcon icon={faTrash} />
+                          </ButtonCircle>
                         </Td>
                       </Tr>
                     ))}
@@ -647,7 +649,7 @@ export function AdminPage() {
                         cursor={"pointer"}
                         sx={{
                           "&:hover": {
-                            backgroundColor: "RGBA(0, 0, 0, 0.06)",
+                            backgroundColor: hColor,
                           },
                         }}
                         key={mdpick.postId}
@@ -687,7 +689,7 @@ export function AdminPage() {
                         cursor={"pointer"}
                         sx={{
                           "&:hover": {
-                            backgroundColor: "RGBA(0, 0, 0, 0.06)",
+                            backgroundColor: hColor,
                           },
                         }}
                         key={banner.bannerId}
@@ -824,12 +826,10 @@ export function AdminPage() {
           <ModalCloseButton />
           <ModalBody>정말 탈퇴 시키겠습니까?</ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={handleDeleteUser}>
+            <Button mr={3} onClick={handleDeleteUser}>
               확인
             </Button>
-            <Button variant="ghost" onClick={onDeleteAccountModalClose}>
-              취소
-            </Button>
+            <Button onClick={onDeleteAccountModalClose}>취소</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

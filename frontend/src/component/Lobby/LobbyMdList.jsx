@@ -1,4 +1,8 @@
-import { Box, Center, Flex, Image } from "@chakra-ui/react";
+import { Box, Center, Flex, Image, Grid,
+  GridItem,
+  Image,
+  Text,
+  useColorModeValue, } from "@chakra-ui/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   faChevronLeft,
@@ -19,6 +23,7 @@ export function LobbyMdList() {
   const intervalRef = useRef(null);
   const navigate = useNavigate();
   const account = useContext(LoginContext);
+  const hColor = useColorModeValue("beige", "#2D3748");
 
   useEffect(() => {
     intervalRef.current = setInterval(() => {
@@ -103,6 +108,11 @@ export function LobbyMdList() {
                 cursor={"pointer"}
                 w={{ base: "720px", sm: "720px", lg: "960px" }}
                 h={{ base: "200px", sm: "200px", lg: "250px" }}
+                sx={{
+                  "&:hover": {
+                    backgroundColor: hColor,
+                  },
+                }}
               >
                 <Image
                   src={post.banner}
