@@ -12,16 +12,12 @@ function Lobby() {
       alignItems={"center"}
       justify={"center"}
     >
-      <Box
-        w={{ base: "720px", lg: "800px", sm: "580px" }}
-        h={{ base: "240px", lg: "240px", sm: "200px" }}
-      >
+      <Box>
         <LobbyPlaceList />
       </Box>
 
       <Box
         w={{ base: "720px", lg: "960px", sm: "720px" }}
-        h={{ base: "240px", lg: "280px", sm: "240px" }}
         my={{ base: "32px", lg: "32px", sm: "24px" }}
       >
         <LobbyMdList />

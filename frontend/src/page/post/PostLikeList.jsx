@@ -46,7 +46,6 @@ export function PostLikeList() {
     axios.get(`/api/post/likeList/${memberId}?${searchParams}`).then((res) => {
       setPostLikeList(res.data.postList);
       setPageInfo(res.data.pageInfo);
-      console.log(res.data.postList);
     });
     setSearchType("all");
     setSearchKeyword("");
@@ -68,20 +67,24 @@ export function PostLikeList() {
 
   // 검색 클릭 시 URL
   function handleSearchClick() {
-    navigate(`/postLike/list?type=${searchType}&keyword=${searchKeyword}`);
+    navigate(
+      `/post/likeList/${memberId}?type=${searchType}&keyword=${searchKeyword}`,
+    );
   }
 
   // 검색 창 Enter 시 URL
   function handleSearchKeyDown(e) {
     if (e.key === "Enter") {
-      navigate(`/postLike/list?type=${searchType}&keyword=${searchKeyword}`);
+      navigate(
+        `/post/likeList/${memberId}?type=${searchType}&keyword=${searchKeyword}`,
+      );
     }
   }
 
   // 페이지 버튼 클릭 시
   function handlePageButtonClick(pageNumber) {
     searchParams.set("page", pageNumber);
-    navigate(`/postLike/list?${searchParams}`);
+    navigate(`/post/likeList/${memberId}?${searchParams}`);
   }
 
   if (!account.isLoggedIn()) {

@@ -1,30 +1,42 @@
+import { Box, Center, Flex, Image } from "@chakra-ui/react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
-  Box,
-  Center,
-  Flex,
-  Grid,
-  GridItem,
-  Image,
-  Text,
-} from "@chakra-ui/react";
-import React, { useContext, useEffect, useState } from "react";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
 import { LoginContext } from "../LoginProvider.jsx";
 import axios from "axios";
-import ContentParser from "../ContentParser.jsx";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons/faArrowLeft";
 
 export function LobbyMdList() {
   const [mdPost, setMdPost] = useState([]);
   const [banner, setBanner] = useState([]);
   const [prevPosts, setPrevPosts] = useState(0);
   const [nextPosts, setNextPosts] = useState(1);
+  const intervalRef = useRef(null);
   const navigate = useNavigate();
   const account = useContext(LoginContext);
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setNextPosts((prev) => {
+        if (prev < mdPost.length + 2) {
+          setPrevPosts(prevPosts + 1);
+          return prev + 1;
+        } else {
+          setPrevPosts(0);
+          return 1;
+        }
+      });
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     axios
@@ -48,6 +60,23 @@ export function LobbyMdList() {
       });
   }, []);
 
+  const handleButtonClick = (index) => {
+    setNextPosts(index);
+    setPrevPosts(index - 1);
+    clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setNextPosts((prev) => {
+        if (prev < mdPost.length + 2) {
+          setPrevPosts((prevState) => prevState + 1);
+          return prev + 1;
+        } else {
+          setPrevPosts(0);
+          return 1;
+        }
+      });
+    }, 5000);
+  };
+
   return (
     <Box align={"center"}>
       <HeadingVariant
@@ -57,173 +86,120 @@ export function LobbyMdList() {
       >
         MD 추천 Pick
       </HeadingVariant>
-      <Box w={"100%"} h={"100%"}>
-        <Box
-          w="100%"
-          h={{ base: "175px", sm: "175px", lg: "200px" }}
-          alignContent={"center"}
-        >
-          <Box
-            w={"100%"}
-            h={"100%"}
-            borderRadius={"12px"}
-            overflow="hidden"
-            justifyContent="center"
-            align={"center"}
-          >
 
-            {nextPosts >= 1 && nextPosts <= mdPost.length && (
-              <Box w={"100%"} h={"100%"}>
-                {mdPost.slice(prevPosts, nextPosts).map((post) => (
-                  <Box
-                    key={post.postId}
-                    onClick={() => navigate(`/post/${post.postId}`)}
-                    w={"100%"}
-                    h={"100%"}
-                  >
-                    <Grid
-                      w={"100%"}
-                      h={"100%"}
-                      templateColumns={"1fr 2fr"}
-                      templateRows={"1fr 1fr"}
-                      _hover={{ bgColor: "beige" }}
-                      cursor={"pointer"}
-                    >
-                      <GridItem>
-                        <Box alignContent={"center"} whiteSpace={"nowrap"}>
-                          <Flex pl={3}>
-                            <Text
-                              overflow={"hidden"}
-                              textOverflow={"ellipsis"}
-                              fontSize={"xl"}
-                              fontWeight={"bold"}
-                            >
-                              타이틀 {post.title}
-                            </Text>
-                          </Flex>
-                        </Box>
-                        <Box alignContent={"center"}>
-                          <Flex pl={3}>
-                            <Text overflow={"hidden"} textOverflow={"ellipsis"}>
-                              닉네임 {post.nickName}
-                            </Text>
-                          </Flex>
-                        </Box>
-                        <Box
-                          alignContent={"center"}
-                          overflow={"hidden"}
-                          textOverflow={"ellipsis"}
-                          whiteSpace={"nowrap"}
-                          borderY={"1px solid lightgray"}
-                        >
-                          <Box pl={3}>
-                            <Flex>
-                              <Box
-                                maxW={"560px"}
-                                textAlign={"start"}
-                                overflow={"hidden"}
-                                textOverflow={"ellipsis"}
-                                display={"-webkit-box"}
-                                css={{
-                                  "-webkit-line-clamp": "4",
-                                  "-webkit-box-orient": "vertical",
-                                  wordBreak: "break-word",
-                                  whiteSpace: "pre-wrap",
-                                }}
-                              >
-                                <ContentParser content={post.content} />
-                              </Box>
-                            </Flex>
-                          </Box>
-                        </Box>
-                      </GridItem>
-
-                      <GridItem colSpan={1} rowSpan={3} alignContent={"center"}>
-                        <Flex pl={3}>
-                          <Image src={post.banner} />
-                        </Flex>
-                      </GridItem>
-                    </Grid>
-                  </Box>
-                ))}
-              </Box>
-            )}
-
-            {nextPosts === mdPost.length + 1 && banner.length > 0 && (
+      <Box
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        w={{ base: "720px", sm: "720px", lg: "960px" }}
+        h={{ base: "200px", sm: "200px", lg: "250px" }}
+      >
+        {nextPosts >= 1 && nextPosts <= mdPost.length && (
+          <Box>
+            {mdPost.slice(prevPosts, nextPosts).map((post) => (
               <Box
-                key={banner[0].id}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-                w={"100%"}
-                h={"100%"}
+                key={post.postId}
+                onClick={() => navigate(`/post/${post.postId}`)}
+                cursor={"pointer"}
+                w={{ base: "720px", sm: "720px", lg: "960px" }}
+                h={{ base: "200px", sm: "200px", lg: "250px" }}
               >
-                <Image src={banner[0].bannerSrc} />
+                <Image
+                  src={post.banner}
+                  w={"100%"}
+                  h={"100%"}
+                  objectFit={"cover"}
+                />
               </Box>
-            )}
-            {nextPosts === mdPost.length + 2 && banner.length > 1 && (
-              <Box
-                key={banner[1].id}
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-                w={"100%"}
-                h={"100%"}
-              >
-                <Box>
-                  <Image src={banner[1].bannerSrc} />
-                </Box>
-              </Box>
-            )}
+            ))}
           </Box>
-        </Box>
-        <Center>
+        )}
+
+        {nextPosts === mdPost.length + 1 && banner.length > 0 && (
           <Box
-            cursor={"pointer"}
-            zIndex={"1"}
-            position={"relative"}
-            top={{ base: "-100px", lg: "-120px" }}
-            left={{ base: "-320px", lg: "-430px" }}
+            key={banner[0].id}
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            w={{ base: "720px", sm: "720px", lg: "960px" }}
+            h={{ base: "200px", sm: "200px", lg: "250px" }}
+            overflow={"hidden"}
           >
-            <ButtonCircle
-              onClick={() => {
-                if (nextPosts > 1) {
-                  setNextPosts(nextPosts - 1);
-                  setPrevPosts(prevPosts - 1);
-                }
-                if (nextPosts === 1) {
-                  setNextPosts(mdPost.length + 2);
-                  setPrevPosts(mdPost.length + 1);
-                }
-              }}
-            >
-              <FontAwesomeIcon icon={faArrowLeft} fontSize="2rem" />
-            </ButtonCircle>
+            <Image src={banner[0].bannerSrc} />
           </Box>
+        )}
+        {nextPosts === mdPost.length + 2 && banner.length > 1 && (
           <Box
-            cursor={"pointer"}
-            zIndex={"1"}
-            position={"relative"}
-            top={{ base: "-100px", lg: "-120px" }}
-            left={{ base: "320px", lg: "430px" }}
+            key={banner[1].id}
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            w={{ base: "720px", sm: "720px", lg: "960px" }}
+            h={{ base: "200px", sm: "200px", lg: "250px" }}
+            overflow={"hidden"}
           >
-            <ButtonCircle
-              onClick={() => {
-                if (nextPosts < mdPost.length + 2) {
-                  setNextPosts(nextPosts + 1);
-                  setPrevPosts(prevPosts + 1);
-                }
-                if (nextPosts === mdPost.length + 2) {
-                  setNextPosts(1);
-                  setPrevPosts(0);
-                }
-              }}
-            >
-              <FontAwesomeIcon icon={faArrowRight} fontSize="2rem" />
-            </ButtonCircle>
+            <Image src={banner[1].bannerSrc} />
           </Box>
-        </Center>
+        )}
       </Box>
+      <Center>
+        <Box
+          cursor={"pointer"}
+          zIndex={"1"}
+          position={"relative"}
+          top={{ base: "-115px", lg: "-150px" }}
+          left={{ base: "-320px", lg: "-430px" }}
+        >
+          <ButtonCircle
+            onClick={() => {
+              if (nextPosts > 1) {
+                setNextPosts(nextPosts - 1);
+                setPrevPosts(prevPosts - 1);
+              }
+              if (nextPosts === 1) {
+                setNextPosts(mdPost.length + 2);
+                setPrevPosts(mdPost.length + 1);
+              }
+            }}
+          >
+            <FontAwesomeIcon icon={faChevronLeft} fontSize="2rem" />
+          </ButtonCircle>
+        </Box>
+        <Box
+          cursor={"pointer"}
+          zIndex={"1"}
+          position={"relative"}
+          top={{ base: "-115px", lg: "-150px" }}
+          left={{ base: "320px", lg: "430px" }}
+        >
+          <ButtonCircle
+            onClick={() => {
+              if (nextPosts < mdPost.length + 2) {
+                setNextPosts(nextPosts + 1);
+                setPrevPosts(prevPosts + 1);
+              }
+              if (nextPosts === mdPost.length + 2) {
+                setNextPosts(1);
+                setPrevPosts(0);
+              }
+            }}
+          >
+            <FontAwesomeIcon icon={faChevronRight} fontSize="2rem" />
+          </ButtonCircle>
+        </Box>
+      </Center>
+      <Center>
+        <Flex position={"relative"} top={"-70px"} border={"1px dotted red"}>
+          {[...Array(mdPost.length + 2)].map((_, index) => (
+            <ButtonCircle
+              key={index}
+              variant={"small"}
+              bgColor={index === nextPosts - 1 ? "red" : "gray"}
+              onClick={() => handleButtonClick(index + 1)}
+            />
+          ))}
+        </Flex>
+      </Center>
     </Box>
   );
 }
