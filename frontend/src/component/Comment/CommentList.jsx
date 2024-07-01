@@ -13,11 +13,18 @@ function CommentList({ postId, isTransition, setIsTransition }) {
     }
   }, [isTransition]);
   if (commentList.length === 0) {
-    return <Box>댓글이 없습니당</Box>;
+    return (
+      <Box
+        border={"1px dotted red"}
+        w={{ base: "720px", sm: "540px", lg: "720px" }}
+      >
+        댓글이 없습니당
+      </Box>
+    );
   }
   return (
     <Box>
-      <Box p={3}>
+      <Box>
         {commentList.map((comment) => (
           <CommentItem
             comment={comment}

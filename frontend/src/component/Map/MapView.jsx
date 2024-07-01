@@ -300,7 +300,7 @@ const KakaoMapSearch = () => {
 
   return (
     <Box>
-      <Box id="map" ref={mapRef} w={"576px"} h={"360px"}></Box>
+      <Box id="map" ref={mapRef} w={"640px"} h={"400px"}></Box>
     </Box>
   );
 };

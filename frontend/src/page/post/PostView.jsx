@@ -5,9 +5,6 @@ import {
   Button,
   Divider,
   Flex,
-  Grid,
-  GridItem,
-  Heading,
   Image,
   Link,
   Modal,
@@ -29,7 +26,8 @@ import { LoginContext } from "../../component/LoginProvider.jsx";
 import CommentComponent from "../../component/Comment/CommentComponent.jsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCaretRight,
+  faChevronLeft,
+  faChevronRight,
   faEye,
   faHeart,
   faHeart as emptyHeart,
@@ -41,6 +39,7 @@ import { faHeart as fullHeart } from "@fortawesome/free-regular-svg-icons";
 import MapView from "../../component/Map/MapView.jsx";
 import defaultImage from "../../resource/img/unknownImage.png";
 import ButtonOutline from "../../css/Button/ButtonOutline.jsx";
+import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 
 export function PostView() {
   const { postId } = useParams();
@@ -138,13 +137,13 @@ export function PostView() {
   }
 
   function handleMoveLeft() {
-    setPositionX((prev) => Math.min(prev + 400, 0));
+    setPositionX((prev) => Math.min(prev + 540, 0));
   }
 
   function handleMoveRight() {
     const flexWidth = dataRef.current.scrollWidth;
     const containerWidth = dataRef.current.parentElement.offsetWidth;
-    setPositionX((prev) => Math.max(prev - 400, containerWidth - flexWidth));
+    setPositionX((prev) => Math.max(prev - 540, containerWidth - flexWidth));
   }
 
   function handleSelectInfo(place, index) {
@@ -153,12 +152,17 @@ export function PostView() {
   }
 
   return (
-    <Box w={{ base: "720px", lg: "960px" }}>
-      <Heading>{post.title}</Heading>
-      <Divider mb={10} />
+    <Box
+      w={{ base: "720px", sm: "640px", lg: "960px" }}
+      p={"1rem"}
+      border={"1px solid #D8B7E5"}
+      borderRadius={"1rem"}
+    >
+      <HeadingVariant>{post.title}</HeadingVariant>
+      <Divider my={{ base: "1rem", sm: "8px", lg: "1rem" }} />
       <Flex direction="column" align="center">
-        <Flex direction="column" align="center">
-          <Flex w={{ base: "720px", lg: "960px" }}>
+        <Flex direction="column" align="center" w={"100%"}>
+          <Flex w={"100%"}>
             <Flex>
               <Avatar
                 src={post.profileName}
@@ -204,25 +208,27 @@ export function PostView() {
             </Flex>
           </Flex>
 
-          <Box
-            w={"576px"}
-            h={"360px"}
-            bg={"lightgray"}
-            my={"32px"}
-            mt={"100px"}
-          >
+          <Box w={"640px"} h={"400px"} my={"2rem"}>
             <MapView />
           </Box>
 
           <Flex
-            w={"540px"}
-            h={"160px"}
+            w={"640px"}
+            h={"240px"}
             alignItems={"center"}
             justify={"space-evenly"}
-            bg={"lightgray"}
           >
-            <Button onClick={handleMoveLeft}>옆</Button>
-            <Box w={"400px"} overflow={"hidden"} alignItems={"center"}>
+            <ButtonOutline onClick={handleMoveLeft}>
+              <FontAwesomeIcon icon={faChevronLeft} />
+            </ButtonOutline>
+            <Flex
+              w={"540px"}
+              h={"160px"}
+              overflow={"hidden"}
+              alignItems={"center"}
+              borderRadius={"1rem"}
+              border={"1px solid #D8B7E5"}
+            >
               <Flex
                 ref={dataRef}
                 sx={{
@@ -240,13 +246,12 @@ export function PostView() {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <Flex w={"400px"} justifyContent={"center"}>
-                        <Box
-                          w={"120px"}
-                          h={"120px"}
-                          border={"1px dotted red"}
-                          alignContent={"center"}
-                        >
+                      <Flex
+                        w={"540px"}
+                        justifyContent={"center"}
+                        align={"center"}
+                      >
+                        <Box w={"160px"} h={"160px"} alignContent={"center"}>
                           <Image
                             src={place.picurl || defaultImage}
                             objectFit={"cover"}
@@ -254,23 +259,24 @@ export function PostView() {
                             h={"100%"}
                           />
                         </Box>
-                        <Box
-                          w={"260px"}
-                          h={"120px"}
-                          border={"1px dotted red"}
+                        <Flex
+                          w={"400px"}
+                          h={"160px"}
+                          direction={"column"}
                           p={3}
                         >
-                          <Box
+                          <HeadingVariant
                             overflow={"hidden"}
                             textOverflow={"ellipsis"}
                             whiteSpace={"nowrap"}
                           >
                             {index + 1}번 장소
-                          </Box>
+                          </HeadingVariant>
                           <Box
                             overflow={"hidden"}
                             textOverflow={"ellipsis"}
                             whiteSpace={"nowrap"}
+                            fontWeight={"bold"}
                           >
                             {place.placeName}
                           </Box>
@@ -281,30 +287,37 @@ export function PostView() {
                           >
                             {place.address}
                           </Box>
-                          <Box>게시글 등록 횟수 : {place.countPlace} 건</Box>
-                        </Box>
+                          <Spacer />
+                          <Box>
+                            장소가 등록 된 게시글 수 : {place.countPlace} 개
+                          </Box>
+                        </Flex>
                       </Flex>
                     </Link>
                   </Box>
                 ))}
               </Flex>
-            </Box>
-            <Button onClick={handleMoveRight}>옆</Button>
+            </Flex>
+            <ButtonOutline onClick={handleMoveRight}>
+              <FontAwesomeIcon icon={faChevronRight} />
+            </ButtonOutline>
           </Flex>
         </Flex>
         <Box
-          w={"720px"}
-          bg={"lightgray"}
+          maxW={"720px"}
+          w={"100%"}
           my={"32px"}
           p={"1rem"}
           whiteSpace={"pre-wrap"}
+          borderRadius={"1rem"}
+          bgColor={"#D8B7E5"}
         >
           <div dangerouslySetInnerHTML={{ __html: post.content }} />
         </Box>
 
-        <Divider border={"1px solid lightGray"} w={"720px"} />
+        <Divider border={"1px solid lightGray"} maxW={"720px"} w="100%" />
         {/* 좋아요 & 수정/삭제/목록 버튼 */}
-        <Flex w={"720px"} h={"64px"} my={"16px"} align={"center"}>
+        <Flex maxW={"720px"} w={"100%"} h={"4rem"} my={"16px"} align={"center"}>
           {/* 좋아요 */}
           <Tooltip
             isDisabled={account.isLoggedIn()}
