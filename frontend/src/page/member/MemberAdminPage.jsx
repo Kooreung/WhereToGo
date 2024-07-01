@@ -495,7 +495,7 @@ export function MemberAdminPage() {
   };
 
   return (
-    <Box>
+    <Box w={{ base: "720px", lg: "960px" }}>
       <Tabs variant="enclosed">
         <TabList>
           <Tab>회원관리</Tab>
@@ -626,7 +626,7 @@ export function MemberAdminPage() {
               </Box>
             </Center>
           </TabPanel>
-          <TabPanel width="90vw">
+          <TabPanel>
             <Wrap spacing={4} mb={6}>
               <WrapItem>
                 <Button colorScheme="orange" onClick={handleAddClick}>
@@ -639,7 +639,7 @@ export function MemberAdminPage() {
                 </Button>
               </WrapItem>
             </Wrap>
-            <Card w={{ base: "720px", lg: "960px" }}>
+            <Card w={{ base: "720px", lg: "100%" }}>
               <CardBody>
                 <Table>
                   <Thead>
@@ -679,7 +679,7 @@ export function MemberAdminPage() {
               </CardBody>
             </Card>
             {/*여기*/}
-            <Card mt={10} w={{ base: "720px", lg: "960px" }}>
+            <Card mt={10} w={{ base: "720px", lg: "100%" }}>
               <CardBody>
                 <Table>
                   <Thead>
