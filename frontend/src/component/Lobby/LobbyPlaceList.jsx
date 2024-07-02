@@ -176,12 +176,12 @@ export function LobbyPlaceList() {
 
   const gradientLeft = useColorModeValue(
     "linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))",
-    "linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))",
+    "linear-gradient(to right, rgba(26, 32, 44, 1), rgba(0, 0, 0, 0))",
   );
 
   const gradientRight = useColorModeValue(
     "linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))",
-    "linear-gradient(to left, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))",
+    "linear-gradient(to left, rgba(26, 32, 44, 1), rgba(0, 0, 0, 0))",
   );
 
   return (
