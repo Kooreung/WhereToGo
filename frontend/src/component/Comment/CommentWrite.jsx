@@ -26,7 +26,7 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
   const navigate = useNavigate();
 
   function handleSubmitComment() {
-    if (!account.isLoggedIn() || isTransition) {
+    if (!account.isLoggedIn() || isTransition || !comment.trim()) {
       return;
     }
     setIsTransition(true);
@@ -52,7 +52,7 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       e.stopPropagation();
-      if (!account.isLoggedIn() || comment.length === 0) {
+      if (!account.isLoggedIn() || !comment.trim()) {
         toast({
           status: "error",
           position: "bottom",
@@ -67,28 +67,34 @@ function CommentWrite({ postId, isTransition, setIsTransition }) {
 
   return (
     <Flex align={"center"} justify={"center"} w={"100%"} my={"1rem"}>
-      <Box w={"100%"}>
-        <Textarea
-          onChange={(e) => setComment(e.target.value)}
-          value={comment}
-          placeholder={"댓글을 입력하세요"}
-          onKeyDown={handleSubmitKeyDown}
-        />
-      </Box>
+      {account.isLoggedIn() && (
+        <Box w={"100%"}>
+          <Textarea
+            onChange={(e) => setComment(e.target.value)}
+            value={comment}
+            placeholder={"댓글을 입력하세요"}
+            onKeyDown={handleSubmitKeyDown}
+          />
+        </Box>
+      )}
       <Flex justify={"end"} mt={3}>
-        <Tooltip
-          isDisabled={account.isLoggedIn()}
-          hasArrow
-          label={"회원만 작성 가능합니다"}
-        >
-          <Button
-            onClick={onOpen}
-            isLoading={isTransition}
-            isDisabled={!account.isLoggedIn() || comment.length === 0}
+        {account.isLoggedIn() && (
+          <Tooltip
+            isDisabled={account.isLoggedIn()}
+            hasArrow
+            label={"회원만 작성 가능합니다"}
           >
-            작성
-          </Button>
-        </Tooltip>
+            <Button
+              onClick={onOpen}
+              isLoading={isTransition}
+              isDisabled={
+                !account.isLoggedIn() || comment.length === 0 || !comment.trim()
+              }
+            >
+              작성
+            </Button>
+          </Tooltip>
+        )}
       </Flex>
 
       <Modal isOpen={isOpen} onClose={onClose}>
