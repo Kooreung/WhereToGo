@@ -874,9 +874,7 @@ export function MemberAdminPage() {
           <ModalCloseButton />
           <ModalBody>정말 탈퇴 시키겠습니까?</ModalBody>
           <ModalFooter>
-            <Button mr={3} onClick={handleDeleteUser}>
-              확인
-            </Button>
+            <Button onClick={handleDeleteUser}>확인</Button>
             <Button onClick={onDeleteAccountModalClose}>취소</Button>
           </ModalFooter>
         </ModalContent>
