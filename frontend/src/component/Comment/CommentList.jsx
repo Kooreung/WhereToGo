@@ -14,7 +14,7 @@ function CommentList({ postId, isTransition, setIsTransition }) {
   }, [isTransition]);
   if (commentList.length === 0) {
     return (
-      <Box w={"100%"} borderWidth="1px" borderRadius={"lg"} p={3}>
+      <Box w={"100%"} borderWidth="1px" borderRadius={"1rem"} p={3}>
         작성된 댓글이 없습니다.
       </Box>
     );

@@ -33,7 +33,7 @@ export function PostListOfBest() {
             key={index}
             onClick={() => navigate(`/post/${post.postId}`)}
             borderWidth="1px"
-            borderRadius="lg"
+            borderRadius="1rem"
             boxShadow={"md"}
             cursor="pointer"
             w="280px"
@@ -54,7 +54,7 @@ export function PostListOfBest() {
                   objectFit={"cover"}
                   boxShadow={"md"}
                   src={post.picurl || defaultImage}
-                  borderRadius="lg"
+                  borderRadius="1rem"
                 />
               </Box>
               <Box

@@ -59,7 +59,7 @@ function CommentItem({ comment, isTransition, setIsTransition }) {
             w={"100%"}
             my={"1rem"}
             borderWidth="1px"
-            borderRadius={"lg"}
+            borderRadius={"1rem"}
             p={3}
           >
             <Box>

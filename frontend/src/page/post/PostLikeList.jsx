@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  Avatar,
   Box,
   Center,
   Flex,
@@ -115,7 +116,7 @@ export function PostLikeList() {
               h={{ base: "240px", lg: "240px", sm: "200px" }}
               cursor={"pointer"}
               boxShadow={"base"}
-              borderRadius={"12px"}
+              borderRadius={"1rem"}
               py={"1rem"}
               px={"1rem"}
               sx={{
@@ -155,14 +156,8 @@ export function PostLikeList() {
                 <Spacer />
                 <Flex w={"100%"} h={"32px"} alignItems={"center"}>
                   <Flex w={"45%"}>
-                    <Box
-                      w={"24px"}
-                      h={"24px"}
-                      mr={1}
-                      borderRadius={"100%"}
-                      boxShadow={"base"}
-                    >
-                      <Image src={post.profileName} borderRadius={"100%"} />
+                    <Box w={"24px"} h={"24px"} mr={1} boxShadow={"base"}>
+                      <Avatar w={"24px"} h={"24px"} src={post.profileName} />
                     </Box>
                     <Box
                       w={"100%"}

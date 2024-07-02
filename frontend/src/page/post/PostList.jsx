@@ -125,7 +125,7 @@ function PostList() {
               h={{ base: "240px", lg: "240px", sm: "200px" }}
               cursor={"pointer"}
               boxShadow={"base"}
-              borderRadius={"12px"}
+              borderRadius={"1rem"}
               py={"1rem"}
               px={"1rem"}
               sx={{
@@ -166,12 +166,7 @@ function PostList() {
                 <Flex w={"100%"} h={"32px"} alignItems={"center"}>
                   <Flex w={"50%"}>
                     <Flex overflow={"hidden"} textOverflow={"ellipsis"}>
-                      <Avatar
-                        w={"28px"}
-                        h={"28px"}
-                        src={post.profileName}
-                        borderRadius={"100%"}
-                      />
+                      <Avatar w={"24px"} h={"24px"} src={post.profileName} />
                       <Box
                         ml={1}
                         textAlign={"start"}

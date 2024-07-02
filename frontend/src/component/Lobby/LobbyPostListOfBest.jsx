@@ -96,14 +96,8 @@ function LobbyPostListOfBest(props) {
               <Spacer />
               <Flex w={"100%"} h={"32px"} alignItems={"center"}>
                 <Flex w={"45%"}>
-                  <Box
-                    w={"24px"}
-                    h={"24px"}
-                    mr={1}
-                    borderRadius={"100%"}
-                    boxShadow={"base"}
-                  >
-                    <Avatar w={"28px"} h={"28px"} src={post.profileName} />
+                  <Box w={"24px"} h={"24px"} mr={1} borderRadius={"100%"}>
+                    <Avatar w={"24px"} h={"24px"} src={post.profileName} />
                   </Box>
                   <Box
                     w={"100%"}

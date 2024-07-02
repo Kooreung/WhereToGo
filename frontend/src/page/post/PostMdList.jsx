@@ -117,7 +117,7 @@ export function PostMdList(props) {
                       key={index}
                       maxW="sm"
                       borderWidth="1px lightgray"
-                      borderRadius="lg"
+                      borderRadius="1rem"
                       overflow="hidden"
                       w="280px"
                       h="380px"
@@ -139,8 +139,7 @@ export function PostMdList(props) {
                           objectFit={"cover"}
                           boxShadow={"md"}
                           src={post.picurl || defaultImage}
-                          alt="Green double couch with wooden legs"
-                          borderRadius="lg"
+                          borderRadius={"1rem"}
                         />
                       </Box>
                       <Box
