@@ -137,11 +137,12 @@ function Navbar() {
           <Center
             onClick={() => navigate("/post/mdList")}
             cursor={"pointer"}
-            borderRadius={"1rem"}
             px={"1rem"}
+            borderBottom={"3px solid transparent"}
             sx={{
+              transition: "border-color 0.3s ease",
               "&:hover": {
-                backgroundColor: hColor,
+                borderBottom: `3px solid ${navColor}`,
               },
             }}
           >
@@ -150,11 +151,12 @@ function Navbar() {
           <Center
             onClick={() => navigate("/post/list")}
             cursor={"pointer"}
-            borderRadius={"1rem"}
             px={"1rem"}
+            borderBottom={"3px solid transparent"}
             sx={{
+              transition: "border-color 0.3s ease",
               "&:hover": {
-                backgroundColor: hColor,
+                borderBottom: `3px solid ${navColor}`,
               },
             }}
           >
