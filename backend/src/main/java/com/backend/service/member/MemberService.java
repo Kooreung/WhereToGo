@@ -3,7 +3,6 @@ package com.backend.service.member;
 import com.backend.NicknameGenerator.NickNameCreator;
 import com.backend.domain.member.Member;
 import com.backend.domain.member.MemberProfile;
-import com.backend.domain.post.Post;
 import com.backend.mapper.comment.CommentMapper;
 import com.backend.mapper.member.MemberMapper;
 import com.backend.mapper.post.PostMapper;
@@ -140,7 +139,7 @@ public class MemberService {
         result.put("member", dbmember);
 
         MemberProfile memberProfile = new MemberProfile();
-        memberProfile.setName(mapper.getProfileByMemberId(memberId));
+        memberProfile.setName(mapper.getProfileNameByMemberId(memberId));
         String src = STR."\{srcPrefix}/member/\{dbmember.getMemberId()}/\{memberProfile.getName()}";
         memberProfile.setSrc(src);
         result.put("profile", memberProfile);
