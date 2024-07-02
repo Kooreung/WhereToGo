@@ -19,6 +19,7 @@ public class Member {
     private LocalDate birth;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate inserted;
+    private String authType;
     private String address;
     private String phoneNumber;
 }

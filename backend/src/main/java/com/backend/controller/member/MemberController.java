@@ -20,6 +20,7 @@ import java.util.Map;
 public class MemberController {
     final MemberService service;
     private final EmailSenderService senderService;
+    private final MemberService memberService;
 
     // 회원가입
     @PostMapping("signup")
@@ -163,6 +164,13 @@ public class MemberController {
         }
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
+
+    @PutMapping("auth/{memberId}")
+    public void auth(@PathVariable Integer memberId, @RequestParam String authType, Authentication authentication) {
+
+        memberService.updateAuthType(memberId, authType);
     }
 
 }

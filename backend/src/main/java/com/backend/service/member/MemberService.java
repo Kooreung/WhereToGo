@@ -173,8 +173,15 @@ public class MemberService {
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
 
+        List<Member> members = mapper.selectMemberAllPaging(offset, searchType, keyword);
+        for (Member member : members) {
+            int memberId = member.getMemberId();
+            String authType = mapper.getAuthTypeByMemberId(memberId);
+            member.setAuthType(authType);
+        }
+
         return Map.of("pageInfo", pageInfo,
-                "memberList", mapper.selectMemberAllPaging(offset, searchType, keyword));
+                "memberList", members);
     }
 
 
@@ -351,5 +358,11 @@ public class MemberService {
 
     public void addAuthority(int memberId) {
         mapper.addAuthority(memberId);
+    }
+
+
+    public void updateAuthType(Integer memberId, String authType) {
+
+        mapper.updateAuthTypeByMemberId(memberId, authType);
     }
 }

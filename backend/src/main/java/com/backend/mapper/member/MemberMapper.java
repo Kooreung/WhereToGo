@@ -188,4 +188,18 @@ public interface MemberMapper {
             """)
     Integer countAllWithSearch(String searchType, String keyword);
 
+
+    @Select("""
+            SELECT authtype from authority
+            where memberid = #{memberId}
+            """)
+    String getAuthTypeByMemberId(int memberId);
+
+
+    @Update("""
+            UPDATE authority
+            SET authtype=#{authType}
+            where memberid=#{memberId}
+            """)
+    int updateAuthTypeByMemberId(Integer memberId, String authType);
 }
