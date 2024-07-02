@@ -13,6 +13,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
+import ButtonOutline from "../../css/Button/ButtonOutline.jsx";
 
 function CommentEdit({ comment, isTransition, setIsEditing, setIsTransition }) {
   const [reWriteComment, setReWriteComment] = useState(comment.comment);
@@ -69,17 +70,20 @@ function CommentEdit({ comment, isTransition, setIsEditing, setIsTransition }) {
           onKeyDown={handleSubmitKeyDown}
         />
       </Box>
-      <Box>
-        <Button
+      <Box mt={2}>
+        <ButtonOutline
           onClick={onOpen}
           isLoading={isTransition}
           isDisabled={
             comment.comment === reWriteComment || reWriteComment.length === 0
           }
+          size="sm"
         >
           확인
-        </Button>
-        <Button onClick={() => setIsEditing(false)}>취소</Button>
+        </ButtonOutline>
+        <ButtonOutline onClick={() => setIsEditing(false)} size={"sm"}>
+          취소
+        </ButtonOutline>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
