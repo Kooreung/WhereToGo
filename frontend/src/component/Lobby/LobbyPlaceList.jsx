@@ -248,7 +248,8 @@ export function LobbyPlaceList() {
                         w={{ base: "96px", lg: "96px", sm: "80px" }}
                         h={{ base: "96px", lg: "96px", sm: "80px" }}
                         boxShadow={"md"}
-                        name={place.src}
+                        name={" "}
+                        bgColor={"white"}
                         src={place.src || defaultImage}
                       />
                       <Box textAlign="center">{place.name}</Box>
