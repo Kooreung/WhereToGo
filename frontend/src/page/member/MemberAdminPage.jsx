@@ -62,6 +62,7 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 
 export function MemberAdminPage() {
   const [memberList, setMemberList] = useState([]);
+  const [withdrawnList, setWithdrawnList] = useState([]);
   const [mdPicks, setMdPicks] = useState([]);
   const [mdPosts, setMdPosts] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
@@ -92,16 +93,28 @@ export function MemberAdminPage() {
   const [selectedPosts, setSelectedPosts] = useState([]);
 
   const {
-    isOpen: isDeleteAccountModalOpen,
-    onOpen: onDeleteAccountModalOpen,
-    onClose: onDeleteAccountModalClose,
+    isOpen: isSoftDeleteAccountModalOpen,
+    onOpen: onSoftDeleteAccountModalOpen,
+    onClose: onSoftDeleteAccountModalClose,
   } = useDisclosure();
+
+  const {
+    isOpen: isHardDeleteAccountModalOpen,
+    onOpen: onHardDeleteAccountModalOpen,
+    onClose: onHardDeleteAccountModalClose,
+  } = useDisclosure();
+
   const [selectedMemberId, setSelectedMemberId] = useState(null);
 
   // 삭제하려는 사용자의 ID를 설정하고 모달을 열기 위한 함수
-  const openDeleteModal = (memberId) => {
+  const softDelete = (memberId) => {
     setSelectedMemberId(memberId); // 선택된 사용자의 ID를 상태에 저장
-    onDeleteAccountModalOpen(); // 모달을 엽니다.
+    onSoftDeleteAccountModalOpen(); // 모달을 엽니다.
+  };
+
+  const hardDelete = (memberId) => {
+    setSelectedMemberId(memberId); // 선택된 사용자의 ID를 상태에 저장
+    onHardDeleteAccountModalOpen(); // 모달을 엽니다.
   };
 
   function authTypeChange(authType, memberId) {
@@ -126,7 +139,7 @@ export function MemberAdminPage() {
       });
   }
 
-  function handleDeleteUser() {
+  function handleSoftDeleteUser() {
     axios
       .delete(`/api/member/delete`, {
         data: { memberId: selectedMemberId, password: "admin" },
@@ -142,7 +155,32 @@ export function MemberAdminPage() {
             (member) => member.memberId !== selectedMemberId,
           ),
         );
-        onDeleteAccountModalClose();
+        onSoftDeleteAccountModalClose();
+      })
+      .catch(() => {
+        toast({
+          status: "error",
+          description: "탈퇴중 문제가 생겼습니다.",
+          position: "bottom",
+        });
+      });
+  }
+
+  function handleHardDeleteUser() {
+    axios
+      .delete(`/api/member/hardDelete/${selectedMemberId}`)
+      .then(() => {
+        toast({
+          status: "success",
+          description: "회원이 탈퇴 되었습니다.",
+          position: "bottom",
+        });
+        setWithdrawnList((prevMemberList) =>
+          prevMemberList.filter(
+            (member) => member.memberId !== selectedMemberId,
+          ),
+        );
+        onHardDeleteAccountModalClose();
       })
       .catch(() => {
         toast({
@@ -234,6 +272,9 @@ export function MemberAdminPage() {
     axios.get(`/api/member/list?${searchParams}`).then((res) => {
       setMemberList(res.data.memberList);
       setPageInfo(res.data.pageInfo);
+    });
+    axios.get(`/api/member/withdrawnmember`).then((res) => {
+      setWithdrawnList(res.data.withdrawnMembers);
     });
     axios.get("/api/post/mdPickList").then((res) => {
       setMdPicks(res.data.post);
@@ -523,6 +564,7 @@ export function MemberAdminPage() {
       <Tabs variant="enclosed">
         <TabList>
           <Tab>회원관리</Tab>
+          <Tab>탈퇴한 회원</Tab>
           <Tab>배너 등록</Tab>
         </TabList>
         <TabPanels>
@@ -538,10 +580,10 @@ export function MemberAdminPage() {
                     <Tr>
                       <Th width="80px">#</Th>
                       <Th width="70px">이메일</Th>
-                      <Th w={20}>별명</Th>
-                      <Th w={20}>권한</Th>
+                      <Th w={20}>닉네임</Th>
                       <Th w={100}>가입일시</Th>
                       <Th width="80px">관리</Th>
+                      <Th w={20}>권한</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -561,6 +603,15 @@ export function MemberAdminPage() {
                           onClick={() => navigate(`/member/${member.memberId}`)}
                         >
                           {member.nickName}
+                        </Td>
+                        <Td>{member.inserted}</Td>
+
+                        <Td>
+                          <ButtonCircle
+                            onClick={() => softDelete(member.memberId)}
+                          >
+                            <FontAwesomeIcon icon={faTrash} />
+                          </ButtonCircle>
                         </Td>
                         <Td>
                           <Menu>
@@ -592,15 +643,6 @@ export function MemberAdminPage() {
                             </MenuList>
                           </Menu>
                         </Td>
-                        <Td>{member.inserted}</Td>
-
-                        <Td>
-                          <ButtonCircle
-                            onClick={() => openDeleteModal(member.memberId)}
-                          >
-                            <FontAwesomeIcon icon={faTrash} />
-                          </ButtonCircle>
-                        </Td>
                       </Tr>
                     ))}
                   </Tbody>
@@ -613,7 +655,7 @@ export function MemberAdminPage() {
                   <Select onChange={(e) => setSearchType(e.target.value)}>
                     <option value="all">전체</option>
                     <option value="email">이메일</option>
-                    <option value="nickName">작성자</option>
+                    <option value="nickName">닉네임</option>
                   </Select>
                 </Box>
                 <Box ml={2}>
@@ -680,6 +722,59 @@ export function MemberAdminPage() {
                 )}
               </Box>
             </Center>
+          </TabPanel>
+          <TabPanel>
+            <Box mb={10}>
+              <Heading>탈퇴 회원</Heading>
+            </Box>
+            {Array.isArray(withdrawnList) && withdrawnList.length === 0 && (
+              <Center>조회 결과가 없습니다.</Center>
+            )}
+            {Array.isArray(withdrawnList) && withdrawnList.length > 0 && (
+              <Box mb={10}>
+                <Table>
+                  <Thead>
+                    <Tr>
+                      <Th width="80px">#</Th>
+                      <Th width="70px">이메일</Th>
+                      <Th w={20}>닉네임</Th>
+                      <Th w={100}>가입일시</Th>
+                      <Th width="80px">관리</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {withdrawnList.map((member) => (
+                      <Tr
+                        cursor={"pointer"}
+                        sx={{
+                          "&:hover": {
+                            backgroundColor: hColor,
+                          },
+                        }}
+                        key={member.memberId}
+                      >
+                        <Td>{member.memberId}</Td>
+                        <Td>{member.email}</Td>
+                        <Td
+                          onClick={() => navigate(`/member/${member.memberId}`)}
+                        >
+                          {member.nickName}
+                        </Td>
+                        <Td>{member.inserted}</Td>
+
+                        <Td>
+                          <ButtonCircle
+                            onClick={() => hardDelete(member.memberId)}
+                          >
+                            <FontAwesomeIcon icon={faTrash} />
+                          </ButtonCircle>
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </Box>
+            )}
           </TabPanel>
           <TabPanel>
             <Wrap spacing={4} mb={6}>
@@ -900,8 +995,8 @@ export function MemberAdminPage() {
         </ModalContent>
       </Modal>
       <Modal
-        isOpen={isDeleteAccountModalOpen}
-        onClose={onDeleteAccountModalClose}
+        isOpen={isSoftDeleteAccountModalOpen}
+        onClose={onSoftDeleteAccountModalClose}
       >
         <ModalOverlay />
         <ModalContent>
@@ -909,10 +1004,29 @@ export function MemberAdminPage() {
           <ModalCloseButton />
           <ModalBody>정말 탈퇴 시키겠습니까?</ModalBody>
           <ModalFooter>
-            <Button mr={3} onClick={handleDeleteUser}>
+            <Button mr={3} onClick={handleSoftDeleteUser}>
               확인
             </Button>
-            <Button onClick={onDeleteAccountModalClose}>취소</Button>
+            <Button onClick={onSoftDeleteAccountModalClose}>취소</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal
+        isOpen={isHardDeleteAccountModalOpen}
+        onClose={onHardDeleteAccountModalClose}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>회원 탈퇴확인</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            회원의 모든 정보, 게시물 등이 삭제됩니다. 삭제 하시겠습니까?
+          </ModalBody>
+          <ModalFooter>
+            <Button mr={3} onClick={handleHardDeleteUser}>
+              확인
+            </Button>
+            <Button onClick={onHardDeleteAccountModalClose}>취소</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

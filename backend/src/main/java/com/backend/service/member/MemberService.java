@@ -123,7 +123,7 @@ public class MemberService {
             return false;
         }
 
-        Member dbMember = mapper.selectMemberBymemberId(member.getMemberId());
+        Member dbMember = mapper.selectMemberByMemberId(member.getMemberId());
 
         if (dbMember == null) {
             return false;
@@ -135,7 +135,7 @@ public class MemberService {
     //어드민이 유저관리 페이지에서 해당 멤버의 개인정보를 볼때 사용
     public Map<String, Object> getMemberInfoByMemberId(Integer memberId) {
         Map<String, Object> result = new HashMap<>();
-        Member dbmember = mapper.selectMemberBymemberId(memberId);
+        Member dbmember = mapper.selectMemberByMemberId(memberId);
         result.put("member", dbmember);
 
         MemberProfile memberProfile = new MemberProfile();
@@ -184,13 +184,20 @@ public class MemberService {
                 "memberList", members);
     }
 
+    public Map<String, Object> WithdrawnMember() {
+        Map<String, Object> result = new HashMap<>();
+        List<Member> withdrawnMembers = mapper.selectWithdrawnMember();
+        result.put("withdrawnMembers", withdrawnMembers);
+        return result;
+    }
+
 
     //개인정보 수정할때 쓰는 권한확인 코드
     public boolean hasAccessModify(Member member, Authentication authentication) {
         if (!authentication.getName().equals(member.getMemberId().toString())) {
             return false;
         }
-        Member dbMember = mapper.selectMemberBymemberId(member.getMemberId());
+        Member dbMember = mapper.selectMemberByMemberId(member.getMemberId());
         if (dbMember == null) {
             return false;
         }
@@ -212,7 +219,7 @@ public class MemberService {
             member.setPassword(passwordEncoder.encode(member.getPassword()));
         } else {
             // 입력 안됐으니 기존 값으로 유지
-            Member dbMember = mapper.selectMemberBymemberId(member.getMemberId());
+            Member dbMember = mapper.selectMemberByMemberId(member.getMemberId());
             member.setPassword(dbMember.getPassword());
         }
 
@@ -272,6 +279,9 @@ public class MemberService {
 //        List<Post> postList = postMapper.selectAllPost(memberId);
 
         mapper.deleteByid(memberId, randomNickName);
+
+        //멤버 프로필 db에서 삭제
+        mapper.deleteFileByMemberId(memberId);
     }
 
     public boolean validate(Member member) {
@@ -364,5 +374,9 @@ public class MemberService {
     public void updateAuthType(Integer memberId, String authType) {
 
         mapper.updateAuthTypeByMemberId(memberId, authType);
+    }
+
+    public void hardDeleteMember(Integer memberId) {
+        mapper.hardDeleteByMemberId(memberId);
     }
 }
