@@ -14,6 +14,10 @@ import {
   FormLabel,
   Heading,
   Input,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -54,6 +58,7 @@ import { LoginContext } from "../../component/LoginProvider.jsx";
 import ContentParser from "../../component/ContentParser.jsx";
 import ButtonNumber from "../../css/Button/ButtonOutline.jsx";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 
 export function MemberAdminPage() {
   const [memberList, setMemberList] = useState([]);
@@ -68,6 +73,7 @@ export function MemberAdminPage() {
   const [toggleState, setToggleState] = useState({});
   const [selectedFiles, setSelectedFiles] = useState({});
   const toast = useToast();
+  const [memberId, setMemberId] = useState("");
 
   //배너 변수
   const [bannerList, setBannerList] = useState([]);
@@ -97,6 +103,28 @@ export function MemberAdminPage() {
     setSelectedMemberId(memberId); // 선택된 사용자의 ID를 상태에 저장
     onDeleteAccountModalOpen(); // 모달을 엽니다.
   };
+
+  function authTypeChange(authType, memberId) {
+    // memberId를 인자로 받아 사용합니다.
+    axios
+      .put(`/api/member/auth/${memberId}?authType=${authType}`)
+      .then((response) => {
+        // 성공적인 응답 처리
+        console.log(response.data);
+        setMemberList((currentMembers) =>
+          currentMembers.map((member) => {
+            if (member.memberId === memberId) {
+              return { ...member, authType: authType };
+            }
+            return member;
+          }),
+        );
+      })
+      .catch((error) => {
+        // 오류 처리
+        console.error("Error:", error);
+      });
+  }
 
   function handleDeleteUser() {
     axios
@@ -227,7 +255,7 @@ export function MemberAdminPage() {
     if (keywordParam) {
       setSearchKeyword(keywordParam);
     }
-  }, [searchParams]);
+  }, [searchParams, memberId]);
 
   const pageNumbers = [];
   for (let i = pageInfo.leftPageNumber; i <= pageInfo.rightPageNumber; i++) {
@@ -417,10 +445,6 @@ export function MemberAdminPage() {
     }
   }
 
-  const handleLinkChange = (e) => {
-    setBannerLink(e.target.value);
-  };
-
   const handleBannerFileChange = (e) => {
     setBannerFile(e.target.files[0]);
   };
@@ -495,7 +519,7 @@ export function MemberAdminPage() {
   };
 
   return (
-    <Box>
+    <Box w={{ base: "720px", lg: "960px" }}>
       <Tabs variant="enclosed">
         <TabList>
           <Tab>회원관리</Tab>
@@ -515,6 +539,7 @@ export function MemberAdminPage() {
                       <Th width="80px">#</Th>
                       <Th width="70px">이메일</Th>
                       <Th w={20}>별명</Th>
+                      <Th w={20}>권한</Th>
                       <Th w={100}>가입일시</Th>
                       <Th width="80px">관리</Th>
                     </Tr>
@@ -536,6 +561,36 @@ export function MemberAdminPage() {
                           onClick={() => navigate(`/member/${member.memberId}`)}
                         >
                           {member.nickName}
+                        </Td>
+                        <Td>
+                          <Menu>
+                            <MenuButton
+                              as={Button}
+                              rightIcon={<ChevronDownIcon />}
+                              width="100px"
+                            >
+                              {member.authType}
+                            </MenuButton>
+                            <MenuList>
+                              {member.authType === "user" ? (
+                                <MenuItem
+                                  onClick={() =>
+                                    authTypeChange("admin", member.memberId)
+                                  }
+                                >
+                                  admin
+                                </MenuItem>
+                              ) : (
+                                <MenuItem
+                                  onClick={() =>
+                                    authTypeChange("user", member.memberId)
+                                  }
+                                >
+                                  user
+                                </MenuItem>
+                              )}
+                            </MenuList>
+                          </Menu>
                         </Td>
                         <Td>{member.inserted}</Td>
 
@@ -626,7 +681,7 @@ export function MemberAdminPage() {
               </Box>
             </Center>
           </TabPanel>
-          <TabPanel width="90vw">
+          <TabPanel>
             <Wrap spacing={4} mb={6}>
               <WrapItem>
                 <Button colorScheme="orange" onClick={handleAddClick}>
@@ -639,7 +694,7 @@ export function MemberAdminPage() {
                 </Button>
               </WrapItem>
             </Wrap>
-            <Card w={{ base: "720px", lg: "960px" }}>
+            <Card w={{ base: "720px", lg: "100%" }}>
               <CardBody>
                 <Table>
                   <Thead>
@@ -679,7 +734,7 @@ export function MemberAdminPage() {
               </CardBody>
             </Card>
             {/*여기*/}
-            <Card mt={10} w={{ base: "720px", lg: "960px" }}>
+            <Card mt={10} w={{ base: "720px", lg: "100%" }}>
               <CardBody>
                 <Table>
                   <Thead>
