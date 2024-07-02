@@ -26,7 +26,7 @@ export function PostListOfBest() {
           회원 인기글
         </HeadingVariant>
       </Box>
-      <Flex justify={"center"} gap={3}>
+      <Flex justify={"center"}>
         {/* 사이즈가 lg 이상일 때 */}
         {postListOfBest.map((post, index) => (
           <Box
@@ -38,6 +38,7 @@ export function PostListOfBest() {
             cursor="pointer"
             w="280px"
             h="390px"
+            mx={"1rem"}
             display={{ base: "block", lg: "block", sm: "none" }}
             sx={{
               transition: "transform 0.3s ease",
@@ -59,13 +60,19 @@ export function PostListOfBest() {
               </Box>
               <Box
                 alignContent={"center"}
+                mt={"8px"}
+                textAlign={"start"}
                 overflow={"hidden"}
                 textOverflow={"ellipsis"}
                 whiteSpace={"nowrap"}
-                mt={"8px"}
-                textAlign={"start"}
               >
-                <HeadingVariant>{post.title}</HeadingVariant>
+                <HeadingVariant
+                  overflow={"hidden"}
+                  textOverflow={"ellipsis"}
+                  whiteSpace={"nowrap"}
+                >
+                  {post.title}
+                </HeadingVariant>
               </Box>
               <Flex justifyContent={"space-between"} mt={"1rem"}>
                 <Box>{post.nickName}</Box>
@@ -98,6 +105,7 @@ export function PostListOfBest() {
             cursor="pointer"
             w="220px"
             h="310px"
+            mx={"4px"}
             display={{ base: "none", lg: "none", sm: "block" }}
             sx={{
               transition: "transform 0.3s ease",
@@ -119,14 +127,17 @@ export function PostListOfBest() {
               </Box>
               <Box
                 alignContent={"center"}
-                overflow={"hidden"}
-                textOverflow={"ellipsis"}
-                whiteSpace={"nowrap"}
                 mt={"8px"}
                 mx={"16px"}
                 textAlign={"start"}
               >
-                <HeadingVariant>{post.title}</HeadingVariant>
+                <HeadingVariant
+                  overflow={"hidden"}
+                  textOverflow={"ellipsis"}
+                  whiteSpace={"nowrap"}
+                >
+                  {post.title}
+                </HeadingVariant>
               </Box>
             </Box>
             <Flex

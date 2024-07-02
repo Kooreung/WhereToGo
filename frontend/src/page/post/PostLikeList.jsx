@@ -155,18 +155,18 @@ export function PostLikeList() {
                 </Flex>
                 <Spacer />
                 <Flex w={"100%"} h={"32px"} alignItems={"center"}>
-                  <Flex w={"45%"}>
-                    <Box w={"24px"} h={"24px"} mr={1} boxShadow={"base"}>
+                  <Flex w={"50%"}>
+                    <Flex overflow={"hidden"} textOverflow={"ellipsis"}>
                       <Avatar w={"24px"} h={"24px"} src={post.profileName} />
-                    </Box>
-                    <Box
-                      w={"100%"}
-                      textAlign={"start"}
-                      overflow={"hidden"}
-                      textOverflow={"ellipsis"}
-                    >
-                      {post.nickName}
-                    </Box>
+                      <Box
+                        ml={1}
+                        textAlign={"start"}
+                        overflow={"hidden"}
+                        textOverflow={"ellipsis"}
+                      >
+                        {post.nickName}
+                      </Box>
+                    </Flex>
                   </Flex>
                   <Spacer />
                   <Flex

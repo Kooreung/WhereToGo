@@ -62,7 +62,7 @@ function Navbar() {
                     onClick={() => navigate("/memberAdminPage")}
                     cursor={"pointer"}
                   >
-                    회원&배너 관리
+                    관리자 메뉴
                   </Center>
                 )}
                 {account.isLoggedIn() || (
