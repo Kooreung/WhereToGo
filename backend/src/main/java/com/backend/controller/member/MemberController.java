@@ -119,6 +119,12 @@ public class MemberController {
         return service.getMemberList(page, searchType, keyword);
     }
 
+    @GetMapping("withdrawnmember")
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    public Map<String, Object> withdrawnMember(Authentication authentication) {
+        return service.WithdrawnMember();
+    }
+
     // 마이페이지
     @GetMapping("memberinfo")
     public ResponseEntity memberInfo(Authentication authentication) {
@@ -164,6 +170,15 @@ public class MemberController {
         }
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
+
+    //어드민만 사용 가능 유저 완전삭제 기능
+    @DeleteMapping("hardDelete/{memberId}")
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    public ResponseEntity memberHardDelete(
+            @PathVariable Integer memberId) {
+        service.hardDeleteMember(memberId);
+        return ResponseEntity.ok().build();
     }
 
 
