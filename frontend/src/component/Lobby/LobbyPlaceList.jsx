@@ -204,7 +204,16 @@ export function LobbyPlaceList() {
               align={"center"}
             >
               {places.map((place, index) => (
-                <WrapItem key={index}>
+                <WrapItem
+                  key={index}
+                  sx={{
+                    transition: "transform 0.3s ease",
+                    "&:hover": {
+                      transform: "scale(1.10)",
+                      filter: "brightness(0.5)",
+                    },
+                  }}
+                >
                   <Box
                     w={{ base: "120px", lg: "120px", sm: "96px" }}
                     h={{ base: "120px", lg: "120px", sm: "96px" }}
