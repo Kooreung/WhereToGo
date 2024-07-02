@@ -25,7 +25,7 @@ export function LobbyMdList() {
     intervalRef.current = setInterval(() => {
       setNextPosts((prev) => {
         if (prev < mdPost.length + banner.length) {
-          setPrevPosts(prevPosts + 1);
+          setPrevPosts((prev) => (prev + 1) % (mdPost.length + banner.length));
           return prev + 1;
         } else {
           setPrevPosts(0);
@@ -37,7 +37,7 @@ export function LobbyMdList() {
     return () => {
       clearInterval(intervalRef.current);
     };
-  }, []);
+  }, [mdPost.length, banner.length]);
 
   useEffect(() => {
     axios
@@ -45,8 +45,7 @@ export function LobbyMdList() {
       .then((res) => {
         setMdPost(res.data.post);
       })
-      .catch((err) => console.log(err))
-      .finally(() => {});
+      .catch((err) => console.log(err));
 
     axios
       .get("/api/post/bannerList")
@@ -66,15 +65,15 @@ export function LobbyMdList() {
     clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => {
       setNextPosts((prev) => {
-        if (prev < mdPost.length + 2) {
-          setPrevPosts((prevState) => prevState + 1);
+        if (prev < mdPost.length + banner.length) {
+          setPrevPosts((prev) => (prev + 1) % (mdPost.length + banner.length));
           return prev + 1;
         } else {
           setPrevPosts(0);
           return 1;
         }
       });
-    }, 5000);
+    }, 3000);
   };
 
   return (
@@ -96,7 +95,7 @@ export function LobbyMdList() {
       >
         {nextPosts >= 1 && nextPosts <= mdPost.length && (
           <Box>
-            {mdPost.slice(prevPosts, nextPosts).map((post) => (
+            {mdPost.slice(nextPosts - 1, nextPosts).map((post) => (
               <Box
                 key={post.postId}
                 onClick={() => navigate(`/post/${post.postId}`)}
@@ -189,7 +188,7 @@ export function LobbyMdList() {
         >
           <ButtonCircle
             onClick={() => {
-              if (nextPosts < mdPost.length + 2) {
+              if (nextPosts < mdPost.length + banner.length) {
                 setNextPosts(nextPosts + 1);
                 setPrevPosts(prevPosts + 1);
               }
