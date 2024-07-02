@@ -75,12 +75,18 @@ function PostList() {
 
   // 검색 클릭 시 URL
   function handleSearchClick() {
+    if (!searchKeyword.trim()) {
+      return;
+    }
     navigate(`/post/list?type=${searchType}&keyword=${searchKeyword}`);
   }
 
   // 검색 창 Enter 시 URL
   function handleSearchKeyDown(e) {
     if (e.key === "Enter") {
+      if (!searchKeyword.trim()) {
+        return;
+      }
       navigate(`/post/list?type=${searchType}&keyword=${searchKeyword}`);
     }
   }
