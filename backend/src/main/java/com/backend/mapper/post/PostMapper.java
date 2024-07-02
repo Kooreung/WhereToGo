@@ -21,13 +21,12 @@ public interface PostMapper {
 
     // 게시글 조회 매퍼
     @Select("""
-            SELECT p.postid,p.title,p.content,p.createdate,p.view,p.memberid,p.mdpick, pro.profilename,
+            SELECT p.postid,p.title,p.content,p.createdate,p.view,p.memberid,p.mdpick,
                    m.nickname,
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l.memberid)  likeCount
             FROM post p
                      JOIN member m ON p.memberid = m.memberid
-                    JOIN profile pro ON pro.memberid = p.memberid
                      LEFT JOIN comment c ON p.postid = c.postid
                      LEFT JOIN likes l ON p.postid = l.postid
                         WHERE p.postid = #{postId}
@@ -40,7 +39,6 @@ public interface PostMapper {
             SELECT p.postid, p.title, p.content, p.createdate, p.view,
                    m.nickname, m.memberid,
                    plpic.picurl,
-                   pro.profilename,
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l.memberid) likeCount
             FROM post p JOIN member m ON p.memberid = m.memberid
@@ -49,7 +47,6 @@ public interface PostMapper {
                         LEFT JOIN likes l ON p.postid = l.postid
                         LEFT JOIN place pl ON p.postid = pl.postid
                         LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
-                        LEFT JOIN profile pro ON pro.memberid = m.memberid
              <where>
             a.authtype != 'admin'
                     <if test="searchType != null">
@@ -120,7 +117,6 @@ public interface PostMapper {
                       ORDER BY plpic.placeid ASC
                       LIMIT 1) AS picurl,
                      m.memberId,
-                     pro.profilename,
                      COUNT(DISTINCT c.commentid) commentCount,
                      COUNT(DISTINCT l.memberid) likeCount,
                      ROW_NUMBER() OVER (ORDER BY likeCount DESC, p.view DESC, commentCount DESC) postOfBest
@@ -129,7 +125,6 @@ public interface PostMapper {
                        LEFT JOIN comment c ON p.postid = c.postid
                        LEFT JOIN likes l ON p.postid = l.postid
                        LEFT JOIN place pl ON p.postid = pl.postid
-                       LEFT JOIN profile pro ON pro.memberid = m.memberid
               GROUP BY p.postid, p.title, p.view, m.nickName, p.content
               LIMIT 3
             """)
@@ -273,7 +268,6 @@ public interface PostMapper {
             SELECT p.postid, p.title, p.content, p.createdate, p.view,
                    m.nickname, m.memberid,
                    plpic.picurl,
-                   pro.profilename,
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l2.memberid) likeCount
             FROM post p JOIN member m ON p.memberid = m.memberid
@@ -282,7 +276,6 @@ public interface PostMapper {
                         LEFT JOIN likes l2 ON p.postid = l2.postid
                         LEFT JOIN place pl ON p.postid = pl.postid
                         LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
-                        LEFT JOIN profile pro ON pro.memberid = m.memberid
             <where>
                l.memberid = #{memberId}
                <if test="searchType != null">
@@ -459,8 +452,7 @@ public interface PostMapper {
             from authority a join post p on p.memberid = a.memberid
             where p.postid = #{postId}
             """)
-    String selcetAuthByPostId(Integer postId);
-
+    String selectAuthByPostId(Integer postId);
 
     // 회원 정보 화면에 해당 회원의 게시물과 누른 좋아요 갯수를 위한 sql 문
     @Select("""

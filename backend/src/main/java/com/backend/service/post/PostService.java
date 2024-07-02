@@ -3,6 +3,7 @@ package com.backend.service.post;
 import com.backend.domain.place.Place;
 import com.backend.domain.post.Banner;
 import com.backend.domain.post.Post;
+import com.backend.mapper.member.MemberMapper;
 import com.backend.mapper.post.PostMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -41,6 +42,8 @@ public class PostService {
 
     @Value("${image.src.prefix}")
     String srcPrefix;
+    @Autowired
+    private MemberMapper memberMapper;
 
     // 게시글 추가 | 작성 서비스
     public Integer savePost(Post post, Authentication authentication) {
@@ -69,9 +72,10 @@ public class PostService {
             session.setAttribute("lastViewTime_" + postId, Instant.now());
         }
         Post post = postMapper.selectByPostId(postId);
-        String auth = postMapper.selcetAuthByPostId(postId);
+        String auth = postMapper.selectAuthByPostId(postId);
+        String profileName = memberMapper.getProfileNameByMemberId(post.getMemberId());
 
-        String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), post.getProfileName());
+        String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), profileName);
 
         post.setProfileName(key);
 
@@ -145,7 +149,9 @@ public class PostService {
         List<Post> posts = postMapper.selectAllPost(offset, searchType, searchKeyword);
 
         for (Post post : posts) {
-            String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), post.getProfileName());
+            Integer memberId = post.getMemberId();
+            String profileName = memberMapper.getProfileNameByMemberId(memberId);
+            String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), profileName);
             post.setProfileName(key);
         }
 
@@ -156,7 +162,9 @@ public class PostService {
     public List<Post> getPostListOfBest() {
         List<Post> posts = postMapper.selectPostOfBest();
         for (Post post : posts) {
-            String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), post.getProfileName());
+            Integer memberId = post.getMemberId();
+            String profileName = memberMapper.getProfileNameByMemberId(memberId);
+            String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), profileName);
             post.setProfileName(key);
         }
         return posts;
@@ -237,7 +245,9 @@ public class PostService {
         List<Post> posts = postMapper.selectLikeList(memberId, offset, searchType, searchKeyword);
 
         for (Post post : posts) {
-            String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), post.getProfileName());
+            Integer inPostMemberId = post.getMemberId();
+            String profileName = memberMapper.getProfileNameByMemberId(inPostMemberId);
+            String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), profileName);
             post.setProfileName(key);
         }
 
@@ -247,7 +257,12 @@ public class PostService {
     //md 게시물 목록 서비스
     public Map<String, Object> getMdList(Map<String, Object> post, String searchType, String searchKeyword) {
         List<Post> posts = postMapper.selectMdPostList(post, searchType, searchKeyword);
-
+        for (Post onePost : posts) {
+            Integer inPostMemberId = onePost.getMemberId();
+            String profileName = memberMapper.getProfileNameByMemberId(inPostMemberId);
+            String key = String.format("%s/member/%s/%s", srcPrefix, onePost.getMemberId(), profileName);
+            onePost.setProfileName(key);
+        }
         Map<String, Object> result = new HashMap<>();
         result.put("post", posts);
         return result;

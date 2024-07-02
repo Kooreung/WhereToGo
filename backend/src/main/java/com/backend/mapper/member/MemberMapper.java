@@ -3,7 +3,6 @@ package com.backend.mapper.member;
 import com.backend.domain.member.Member;
 import org.apache.ibatis.annotations.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Mapper
@@ -90,14 +89,6 @@ public interface MemberMapper {
     int deleteFileByBoardIdAndName(Integer boardId, String fileName);
 
 
-    @Select("""
-            SELECT profilename 
-            from profile
-            where memberid = #{memberId}
-            """)
-    String getProfileByMemberId(int memberId);
-
-
     @Update("""
             update profile
             set profilename = #{profileName}
@@ -144,27 +135,27 @@ public interface MemberMapper {
 
     // 회원 리스트 admin 권한 안나오면서 조회 및 검색
     @Select("""
-        <script>
-        SELECT m.memberId, m.email, m.nickname, m.inserted
-        FROM member m JOIN authority a
-        ON m.memberId = a.memberId
-        <trim prefix="WHERE" prefixOverrides="OR">
-                   <if test="searchType != null">
-                       <bind name="pattern" value="'%' + keyword + '%'" />
-                       <if test="searchType == 'all' || searchType == 'email'">
-                           OR m.email LIKE #{pattern}
-                            AND a.authtype &lt;&gt; 'admin'
+            <script>
+            SELECT m.memberId, m.email, m.nickname, m.inserted
+            FROM member m JOIN authority a
+            ON m.memberId = a.memberId
+            <trim prefix="WHERE" prefixOverrides="OR">
+                       <if test="searchType != null">
+                           <bind name="pattern" value="'%' + keyword + '%'" />
+                           <if test="searchType == 'all' || searchType == 'email'">
+                               OR m.email LIKE #{pattern}
+                                AND a.authtype &lt;&gt; 'admin'
+                           </if>
+                           <if test="searchType == 'all' || searchType == 'nickName'">
+                               OR m.nickname LIKE #{pattern}
+                                AND a.authtype &lt;&gt; 'admin'
+                           </if>
                        </if>
-                       <if test="searchType == 'all' || searchType == 'nickName'">
-                           OR m.nickname LIKE #{pattern}
-                            AND a.authtype &lt;&gt; 'admin'
-                       </if>
-                   </if>
-               </trim>
-        ORDER BY m.memberId DESC
-        LIMIT #{offset}, 10
-        </script>
-        """)
+                   </trim>
+            ORDER BY m.memberId DESC
+            LIMIT #{offset}, 10
+            </script>
+            """)
     List<Member> selectMemberAllPaging(Integer offset, String searchType, String keyword);
 
     @Select("""
@@ -196,4 +187,19 @@ public interface MemberMapper {
             </script>
             """)
     Integer countAllWithSearch(String searchType, String keyword);
+
+
+    @Select("""
+            SELECT authtype from authority
+            where memberid = #{memberId}
+            """)
+    String getAuthTypeByMemberId(int memberId);
+
+
+    @Update("""
+            UPDATE authority
+            SET authtype=#{authType}
+            where memberid=#{memberId}
+            """)
+    int updateAuthTypeByMemberId(Integer memberId, String authType);
 }

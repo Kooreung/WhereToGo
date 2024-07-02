@@ -3,7 +3,6 @@ package com.backend.service.member;
 import com.backend.NicknameGenerator.NickNameCreator;
 import com.backend.domain.member.Member;
 import com.backend.domain.member.MemberProfile;
-import com.backend.domain.post.Post;
 import com.backend.mapper.comment.CommentMapper;
 import com.backend.mapper.member.MemberMapper;
 import com.backend.mapper.post.PostMapper;
@@ -140,7 +139,7 @@ public class MemberService {
         result.put("member", dbmember);
 
         MemberProfile memberProfile = new MemberProfile();
-        memberProfile.setName(mapper.getProfileByMemberId(memberId));
+        memberProfile.setName(mapper.getProfileNameByMemberId(memberId));
         String src = STR."\{srcPrefix}/member/\{dbmember.getMemberId()}/\{memberProfile.getName()}";
         memberProfile.setSrc(src);
         result.put("profile", memberProfile);
@@ -174,8 +173,15 @@ public class MemberService {
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
 
+        List<Member> members = mapper.selectMemberAllPaging(offset, searchType, keyword);
+        for (Member member : members) {
+            int memberId = member.getMemberId();
+            String authType = mapper.getAuthTypeByMemberId(memberId);
+            member.setAuthType(authType);
+        }
+
         return Map.of("pageInfo", pageInfo,
-                "memberList", mapper.selectMemberAllPaging(offset, searchType, keyword));
+                "memberList", members);
     }
 
 
@@ -352,5 +358,11 @@ public class MemberService {
 
     public void addAuthority(int memberId) {
         mapper.addAuthority(memberId);
+    }
+
+
+    public void updateAuthType(Integer memberId, String authType) {
+
+        mapper.updateAuthTypeByMemberId(memberId, authType);
     }
 }
