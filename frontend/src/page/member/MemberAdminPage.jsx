@@ -38,6 +38,7 @@ import {
   Th,
   Thead,
   Tr,
+  useBreakpointValue,
   useColorModeValue,
   useDisclosure,
   useToast,
@@ -82,6 +83,8 @@ export function MemberAdminPage() {
   const [bannerFile, setBannerFile] = useState([]);
   const [city, setCity] = useState("");
   const hColor = useColorModeValue("beige", "#2D3748");
+  const [visiblePosts, setVisiblePosts] = useState(3);
+  const itemsPerRow = useBreakpointValue({ base: 1, md: 4, lg: 3 });
 
   const {
     isOpen: isModalOpenOfAdd,
@@ -518,6 +521,12 @@ export function MemberAdminPage() {
     whiteSpace: "nowrap",
   };
 
+  function handleLoadMore() {
+    setVisiblePosts(
+      (prevVisiblePosts) => prevVisiblePosts + (itemsPerRow || 3),
+    );
+  }
+
   return (
     <Box w={{ base: "720px", lg: "960px" }}>
       <Tabs variant="enclosed">
@@ -779,7 +788,7 @@ export function MemberAdminPage() {
         <ModalContent>
           <ModalHeader>MD 리스트</ModalHeader>
           <ModalBody>배너에 등록할 게시글을 선택 해주세요.</ModalBody>
-          <Center>
+          <Center mb={5}>
             <Box>
               <Select
                 value={searchType}
@@ -807,16 +816,16 @@ export function MemberAdminPage() {
               </ButtonCircle>
             </Box>
           </Center>
-          {postsToShow.map((mdPost) => (
+          {postsToShow.slice(0, visiblePosts).map((mdPost) => (
             <Center key={mdPost.postId} mb={4}>
               <Card border="1px ligtgray" mb="3px" width={"400px"}>
                 <CardHeader>
-                  <Heading size="md">{mdPost.title}</Heading>
-                </CardHeader>
-
-                <CardBody>
-                  <Box display="flex">
-                    <ContentParser content={mdPost.content} />
+                  <Flex
+                    justify="space-between"
+                    textAlign="center"
+                    alignItems="center"
+                  >
+                    <Heading size="md">{mdPost.title}</Heading>
                     <Switch
                       isChecked={!!toggleState[mdPost.postId]}
                       onChange={() => handleMdSwitchChange(mdPost.postId)}
@@ -825,7 +834,13 @@ export function MemberAdminPage() {
                         !selectedPosts.includes(mdPost.postId)
                       }
                     />
-                  </Box>
+                  </Flex>
+                </CardHeader>
+
+                <CardBody>
+                  <Flex justify="space-between">
+                    <ContentParser content={mdPost.content} />
+                  </Flex>
                   {toggleState[mdPost.postId] && (
                     <>
                       {previewUrls[mdPost.postId] ? (
@@ -864,6 +879,11 @@ export function MemberAdminPage() {
               </Card>
             </Center>
           ))}
+          <Center mt={5}>
+            {visiblePosts < mdPosts.length - 1 && (
+              <Button onClick={handleLoadMore}>더보기</Button>
+            )}
+          </Center>
           <ModalFooter>
             <Button mr={3} onClick={handleSendMdPicks}>
               추가
@@ -909,9 +929,7 @@ export function MemberAdminPage() {
           <ModalCloseButton />
           <ModalBody>정말 탈퇴 시키겠습니까?</ModalBody>
           <ModalFooter>
-            <Button mr={3} onClick={handleDeleteUser}>
-              확인
-            </Button>
+            <Button onClick={handleDeleteUser}>확인</Button>
             <Button onClick={onDeleteAccountModalClose}>취소</Button>
           </ModalFooter>
         </ModalContent>

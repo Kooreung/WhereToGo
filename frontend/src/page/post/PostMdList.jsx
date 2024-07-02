@@ -72,11 +72,17 @@ export function PostMdList(props) {
   }
 
   function handleSearchClick() {
+    if (!searchKeyword.trim()) {
+      return;
+    }
     navigate(`/post/mdList?type=${searchType}&keyword=${searchKeyword}`);
   }
 
   function handleSearchKeyDown(e) {
     if (e.key === "Enter") {
+      if (!searchKeyword.trim()) {
+        return;
+      }
       navigate(`/post/mdList?type=${searchType}&keyword=${searchKeyword}`);
     }
   }

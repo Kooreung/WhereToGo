@@ -14,122 +14,124 @@ const places = [
   {
     name: "강남구",
     keyword: "강남구",
-    src: "",
+    src: "https://i.namu.wiki/i/ap0GeiZgqZy9c3NMxQAkqIsvFmDTCe55k8_ne34Dso0epFVP7LCnOiEMHZve7ma8MuOIDGohoXuld6TGsvkYKQ.webp",
   },
+
   {
     name: "영등포구",
     keyword: "영등포구",
-    src: "",
+    src: "https://www.ydp.go.kr/site/tour/images/main/tripspot_photo1_1.jpg",
   },
   {
     name: "용산구",
     keyword: "용산구",
-    src: "",
+    src: "https://i.namu.wiki/i/DK-BcaE6wDCM-N9UJbeQTn0SD9eWgsX9YKWK827rqjbrzDz0-CxW-JFOCiAsUL3CBZ4zE0UDR-p4sLaYPiUjww.webp",
   },
   {
     name: "강서구",
     keyword: "강서구",
-    src: "",
+    src: "https://botanicpark.seoul.go.kr/upload/seditorMulti/201912051055227163dfdb-9d8b-4d1d-9e63-4592b45c10be.jpg",
   },
   {
     name: "마포구",
     keyword: "마포구",
-    src: "",
-  },
-  {
-    name: "서대문구",
-    keyword: "서대문구",
-    src: "",
-  },
-  {
-    name: "성동구",
-    keyword: "성동구",
-    src: "",
-  },
-  {
-    name: "서초구",
-    keyword: "서초구",
-    src: "",
-  },
-  {
-    name: "강북구",
-    keyword: "강북구",
-    src: "",
-  },
-  {
-    name: "성북구",
-    keyword: "성북구",
-    src: "",
-  },
-  {
-    name: "동대문구",
-    keyword: "동대문구",
-    src: "",
-  },
-  {
-    name: "강동구",
-    keyword: "강동구",
-    src: "",
-  },
-  {
-    name: "은평구",
-    keyword: "은평구",
-    src: "",
-  },
-  {
-    name: "구로구",
-    keyword: "구로구",
-    src: "",
-  },
-  {
-    name: "동작구",
-    keyword: "동작구",
-    src: "",
-  },
-  {
-    name: "중구",
-    keyword: "중구",
-    src: "",
-  },
-  {
-    name: "광진구",
-    keyword: "광진구",
-    src: "",
-  },
-  {
-    name: "송파구",
-    keyword: "송파구",
-    src: "",
+    src: "https://media.timeout.com/images/102767917/750/422/image.jpg",
   },
   {
     name: "종로구",
     keyword: "종로구",
-    src: "",
+    src: "https://cdn.pixabay.com/photo/2019/04/20/11/30/korea-4141530_1280.jpg",
   },
+  {
+    name: "서대문구",
+    keyword: "서대문구",
+    src: "https://cdn.pixabay.com/photo/2014/08/14/08/34/university-417845_1280.jpg",
+  },
+  {
+    name: "성동구",
+    keyword: "성동구",
+    src: "https://conlab.visitkorea.or.kr/api/depot/public/depot-flow/query/download-image/32d1403a-dc0d-491e-b187-c5aba1d02bab/it14",
+  },
+  {
+    name: "서초구",
+    keyword: "서초구",
+    src: "https://conlab.visitkorea.or.kr/api/depot/public/depot-flow/query/download-image/a93c789f-a613-496e-a4ca-3690dd479401/it14",
+  },
+  {
+    name: "강북구",
+    keyword: "강북구",
+    src: "https://parks.seoul.go.kr/images/egovframework/com/template/df04.jpg",
+  },
+  {
+    name: "성북구",
+    keyword: "성북구",
+    src: "https://cdn.pixabay.com/photo/2022/12/28/12/31/seoul-7682788_640.jpg",
+  },
+  {
+    name: "동대문구",
+    keyword: "동대문구",
+    src: "https://cdn.pixabay.com/photo/2019/11/26/00/32/korea-4653276_1280.jpg",
+  },
+  {
+    name: "강동구",
+    keyword: "강동구",
+    src: "https://mediahub.seoul.go.kr/wp-content/uploads/mediahub/2022/08/dxFzYzSWfkbJzGybhaZpRRUwTzbXgjQo.JPG",
+  },
+  {
+    name: "은평구",
+    keyword: "은평구",
+    src: "https://conlab.visitkorea.or.kr/api/depot/public/depot-flow/query/download-image/1552e1f6-ee34-497d-a6f4-f640710014bd/it14",
+  },
+  {
+    name: "구로구",
+    keyword: "구로구",
+    src: "https://www.guro.go.kr/site/www/images/contents/cts2990_img1.jpg",
+  },
+  {
+    name: "동작구",
+    keyword: "동작구",
+    src: "https://korean.visitseoul.net/comm/getImage?srvcId=POST&parentSn=9506&fileTy=POSTTHUMB&fileNo=2",
+  },
+  {
+    name: "중구",
+    keyword: "중구",
+    src: "https://conlab.visitkorea.or.kr/api/depot/public/depot-flow/query/download-image/220949b2-6fab-4265-850f-cf0393d5e580/it14",
+  },
+  {
+    name: "광진구",
+    keyword: "광진구",
+    src: "https://www.gwangjin.com/imgdata/gwangjin_com/202004/2020042929118765.jpg",
+  },
+  {
+    name: "송파구",
+    keyword: "송파구",
+    src: "https://cdn.pixabay.com/photo/2022/11/27/11/23/building-7619502_1280.jpg",
+  },
+
   {
     name: "양천구",
     keyword: "양천구",
-    src: "",
+    src: "https://mbook.newstool.co.kr/daumeditor/images/2023/08/24/16/40/09_img1.jpg",
   },
   {
     name: "금천구",
     keyword: "금천구",
-    src: "",
+    src: "https://www.geumcheon.go.kr/site/portal/images/contents/cts957_img05.jpg",
   },
   {
     name: "도봉구",
     keyword: "도봉구",
-    src: "",
+    src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtWTscoqfa9LPgOeDIAmO2xRCFrmxc9VRItQ&s",
   },
   {
     name: "관악구",
     keyword: "관악구",
-    src: "",
+    src: "https://www.gwanak.go.kr/images/gwanak/m5/culture/tour/naksung_photo2.jpg",
   },
   {
     name: "노원구",
     keyword: "노원구",
-    src: "",
+    src: "https://gocamping.or.kr/upload/camp/598/thumb/thumb_720_33147DI31oJk8Kzvz8t964vm.jpg",
   },
   // 필요한 만큼 장소 추가
 ];
@@ -202,7 +204,16 @@ export function LobbyPlaceList() {
               align={"center"}
             >
               {places.map((place, index) => (
-                <WrapItem key={index}>
+                <WrapItem
+                  key={index}
+                  sx={{
+                    transition: "transform 0.3s ease",
+                    "&:hover": {
+                      transform: "scale(1.10)",
+                      filter: "brightness(0.5)",
+                    },
+                  }}
+                >
                   <Box
                     w={{ base: "120px", lg: "120px", sm: "96px" }}
                     h={{ base: "120px", lg: "120px", sm: "96px" }}
