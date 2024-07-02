@@ -1,5 +1,13 @@
 import React, { useRef, useState } from "react";
-import { Avatar, Box, Flex, Stack, WrapItem } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Center,
+  Flex,
+  Stack,
+  useColorModeValue,
+  WrapItem,
+} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import {
   faChevronLeft,
@@ -166,6 +174,16 @@ export function LobbyPlaceList() {
     setPositionX((prev) => Math.min(prev + scrollDistance, 0));
   }
 
+  const gradientLeft = useColorModeValue(
+    "linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))",
+    "linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))",
+  );
+
+  const gradientRight = useColorModeValue(
+    "linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))",
+    "linear-gradient(to left, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))",
+  );
+
   return (
     <Box>
       <HeadingVariant
@@ -182,15 +200,17 @@ export function LobbyPlaceList() {
         alignItems={"center"}
         justifyContent={"center"}
       >
-        <Box mr={"1rem"}>
+        <Box mr={"1rem"} zIndex={2}>
           <ButtonCircle onClick={handleMoveLeft}>
             <FontAwesomeIcon icon={faChevronLeft} size={"xl"} />
           </ButtonCircle>
         </Box>
-        <Box w={{ base: "720px", lg: "720px", sm: "480px" }}>
+        <Box
+          w={{ base: "720px", lg: "720px", sm: "480px" }}
+          overflow={"hidden"}
+        >
           <Box
             h={{ base: "160px", lg: "160px", sm: "140px" }}
-            overflow={"hidden"}
             borderRadius={"12px"}
             py={"1rem"}
           >
@@ -239,21 +259,32 @@ export function LobbyPlaceList() {
             </Flex>
           </Box>
         </Box>
-
-        <Box ml={"1rem"}>
-          <ButtonCircle
-            onClick={handleMoveRight}
-            cursor={"pointer"}
-            sx={{
-              "&:hover": {
-                backgroundColor: "RGBA(0, 0, 0, 0.1)",
-              },
-            }}
-          >
+        <Box ml={"1rem"} zIndex={2}>
+          <ButtonCircle onClick={handleMoveRight}>
             <FontAwesomeIcon icon={faChevronRight} size={"xl"} />
           </ButtonCircle>
         </Box>
       </Flex>
+      <Center h={"0px"}>
+        <Box
+          position={"relative"}
+          left={{ base: "-310px", sm: "-195px", lg: "-310px" }}
+          top={{ base: "-50px", sm: "-80px", lg: "-85px" }}
+          w={{ base: "50px", sm: "50px", lg: "50px" }}
+          h={{ base: "150px", sm: "130px", lg: "150px" }}
+          bg={gradientLeft}
+          zIndex={1}
+        />
+        <Box
+          position={"relative"}
+          left={{ base: "310px", sm: "195px", lg: "310px" }}
+          top={{ base: "-50px", sm: "-80px", lg: "-85px" }}
+          w={{ base: "50px", sm: "50px", lg: "50px" }}
+          h={{ base: "150px", sm: "130px", lg: "150px" }}
+          bg={gradientRight}
+          zIndex={1}
+        />
+      </Center>
     </Box>
   );
 }
