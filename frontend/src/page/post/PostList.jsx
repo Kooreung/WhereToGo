@@ -100,7 +100,7 @@ function PostList() {
         my={"2rem"}
       ></Divider>
       <Flex mx={"1rem"}>
-        <HeadingVariant variant={"large"} align={"start"}>
+        <HeadingVariant variant={"xlarge"} align={"start"}>
           회원 게시글
         </HeadingVariant>
         <Spacer />
