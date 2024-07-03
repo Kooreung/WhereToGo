@@ -21,6 +21,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faReceipt } from "@fortawesome/free-solid-svg-icons";
 import { LoginContext } from "../../component/LoginProvider.jsx";
+import Lobby from "../Lobby.jsx";
 
 export function MemberInfoAdmin() {
   const { memberId } = useParams();
@@ -154,7 +155,7 @@ export function MemberInfoAdmin() {
 
   // 멤버 데이터 로딩 중일 때 스피너 표시
   if (member === null) {
-    return <Spinner />;
+    return <Lobby />;
   }
 
   // 전체 좋아요 수 계산
