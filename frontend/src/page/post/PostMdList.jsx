@@ -105,9 +105,9 @@ export function PostMdList(props) {
             <Stack
               key={rowIndex}
               divider={<StackDivider borderColor={"blue"} />}
-              w={{ base: "720px", lg: "960px" }}
+              w={{ base: "630px", lg: "940px", sm: "630px" }}
             >
-              <Flex wrap="wrap" w="100%" justify={"center"} overflow={"hidden"}>
+              <Flex wrap="wrap" border={"1px dotted red"}>
                 {mdPost
                   .slice(
                     rowIndex * (itemsPerRow || 3),
@@ -117,13 +117,14 @@ export function PostMdList(props) {
                     <Box
                       key={index}
                       onClick={() => navigate(`/post/${post.postId}`)}
+                      overflow={"hidden"}
                       borderWidth="1px"
                       borderRadius="1rem"
                       boxShadow={"md"}
                       cursor="pointer"
                       w="280px"
                       h="390px"
-                      m={{ base: "1rem", sm: " 8px", lg: "1rem" }}
+                      m={"1rem"}
                       sx={{
                         transition: "transform 0.3s ease",
                         "&:hover": {
