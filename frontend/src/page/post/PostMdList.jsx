@@ -3,7 +3,6 @@ import {
   Avatar,
   Box,
   Button,
-  ButtonGroup,
   Center,
   Divider,
   Flex,
@@ -162,9 +161,9 @@ export function PostMdList(props) {
                         </Flex>
                       </Box>
                       <Divider />
-                      <ButtonGroup
-                        spacing="4"
+                      <Center
                         mt={"1rem"}
+                        gap={"8px"}
                         style={{ color: "#D8B7E5" }}
                       >
                         <Box>
@@ -178,7 +177,7 @@ export function PostMdList(props) {
                         <Box>
                           <FontAwesomeIcon icon={faEye} size="lg" /> {post.view}
                         </Box>
-                      </ButtonGroup>
+                      </Center>
                     </Box>
                   ))}
               </Flex>

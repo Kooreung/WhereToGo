@@ -1,4 +1,4 @@
-import { Box, ButtonGroup, Divider, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Center, Divider, Flex, Image, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -80,7 +80,7 @@ export function PostListOfBest() {
               </Flex>
             </Box>
             <Divider />
-            <ButtonGroup spacing="4" mt={"1rem"} style={{ color: "#D8B7E5" }}>
+            <Center mt={"1rem"} gap={"8px"} style={{ color: "#D8B7E5" }}>
               <Box>
                 <FontAwesomeIcon icon={faHeart} size={"lg"} /> {post.likeCount}
               </Box>
@@ -91,7 +91,7 @@ export function PostListOfBest() {
               <Box>
                 <FontAwesomeIcon icon={faEye} size="lg" /> {post.view}
               </Box>
-            </ButtonGroup>
+            </Center>
           </Box>
         ))}
         {/* 사이즈가 lg 이하일 때 */}
@@ -150,12 +150,7 @@ export function PostListOfBest() {
               <Box>{post.createDate}</Box>
             </Flex>
             <Divider />
-            <Flex
-              justify={"space-evenly"}
-              w={"65%"}
-              mt={"8px"}
-              style={{ color: "#D8B7E5" }}
-            >
+            <Center mt={"8px"} gap={"8px"} style={{ color: "#D8B7E5" }}>
               <Flex>
                 <Text mr={"4px"}>
                   <FontAwesomeIcon icon={faHeart} size="lg" />
@@ -174,7 +169,7 @@ export function PostListOfBest() {
                 </Text>
                 <Text>{post.view}</Text>
               </Flex>
-            </Flex>
+            </Center>
           </Box>
         ))}
       </Flex>

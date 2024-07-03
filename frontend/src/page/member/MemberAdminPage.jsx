@@ -29,6 +29,7 @@ import {
   Switch,
   Tab,
   Table,
+  TableContainer,
   TabList,
   TabPanel,
   TabPanels,
@@ -60,6 +61,7 @@ import ContentParser from "../../component/ContentParser.jsx";
 import ButtonNumber from "../../css/Button/ButtonOutline.jsx";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 import { ChevronDownIcon } from "@chakra-ui/icons";
+import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 
 export function MemberAdminPage() {
   const [memberList, setMemberList] = useState([]);
@@ -556,7 +558,6 @@ export function MemberAdminPage() {
   }
 
   const tdCellStyle = {
-    maxWidth: "100px",
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
@@ -569,7 +570,7 @@ export function MemberAdminPage() {
   }
 
   return (
-    <Box w={{ base: "720px", lg: "960px" }}>
+    <Box>
       <Tabs variant="enclosed">
         <TabList>
           <Tab>회원관리</Tab>
@@ -578,21 +579,24 @@ export function MemberAdminPage() {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <Box mb={10}>
-              <Heading>회원 목록</Heading>
+            <Box mb={"2rem"}>
+              <HeadingVariant variant={"large"}>회원 목록</HeadingVariant>
             </Box>
             {memberList.length === 0 && <Center>조회 결과가 없습니다.</Center>}
             {memberList.length > 0 && (
-              <Box mb={10}>
+              <TableContainer
+                w={{ base: "720px", sm: "720px", lg: "960px" }}
+                border={"1px dotted red"}
+                mb={"1rem"}
+              >
                 <Table>
                   <Thead>
                     <Tr>
-                      <Th width="80px">#</Th>
-                      <Th width="70px">이메일</Th>
-                      <Th w={20}>닉네임</Th>
-                      <Th w={100}>가입일시</Th>
-                      <Th width="80px">관리</Th>
-                      <Th w={20}>권한</Th>
+                      <Th w={"40%"}>이메일</Th>
+                      <Th w={"30%"}>닉네임</Th>
+                      <Th w={"10%"}>가입일시</Th>
+                      <Th w={"10%"}>관리</Th>
+                      <Th w={"10%"}>권한</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -606,28 +610,27 @@ export function MemberAdminPage() {
                         }}
                         key={member.memberId}
                       >
-                        <Td>{member.memberId}</Td>
-                        <Td>{member.email}</Td>
+                        <Td w={"40%"}>{member.email}</Td>
                         <Td
+                          w={"30%"}
                           onClick={() => navigate(`/member/${member.memberId}`)}
                         >
                           {member.nickName}
                         </Td>
-                        <Td>{member.inserted}</Td>
-
-                        <Td>
+                        <Td w={"10%"}>{member.inserted}</Td>
+                        <Td w={"10%"}>
                           <ButtonCircle
                             onClick={() => softDelete(member.memberId)}
                           >
                             <FontAwesomeIcon icon={faTrash} />
                           </ButtonCircle>
                         </Td>
-                        <Td>
+                        <Td w={"10%"}>
                           <Menu>
                             <MenuButton
                               as={Button}
                               rightIcon={<ChevronDownIcon />}
-                              width="100px"
+                              w={"100%"}
                             >
                               {member.authType}
                             </MenuButton>
@@ -656,7 +659,7 @@ export function MemberAdminPage() {
                     ))}
                   </Tbody>
                 </Table>
-              </Box>
+              </TableContainer>
             )}
             <Center>
               <Flex>
@@ -733,22 +736,26 @@ export function MemberAdminPage() {
             </Center>
           </TabPanel>
           <TabPanel>
-            <Box mb={10}>
-              <Heading>탈퇴 회원</Heading>
+            <Box mb={"2rem"}>
+              <HeadingVariant variant={"large"}>탈퇴 회원 목록</HeadingVariant>
             </Box>
             {Array.isArray(withdrawnList) && withdrawnList.length === 0 && (
               <Center>조회 결과가 없습니다.</Center>
             )}
             {Array.isArray(withdrawnList) && withdrawnList.length > 0 && (
-              <Box mb={10}>
+              <TableContainer
+                w={{ base: "720px", sm: "720px", lg: "960px" }}
+                border={"1px dotted red"}
+                mb={"1rem"}
+              >
                 <Table>
                   <Thead>
                     <Tr>
-                      <Th width="80px">#</Th>
-                      <Th width="70px">이메일</Th>
-                      <Th w={20}>닉네임</Th>
-                      <Th w={100}>가입일시</Th>
-                      <Th width="80px">관리</Th>
+                      <Th w={"20%"}>#</Th>
+                      <Th w={"20%"}>이메일</Th>
+                      <Th w={"30%"}>닉네임</Th>
+                      <Th w={"15%"}>가입일시</Th>
+                      <Th w={"10%"}>관리</Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -782,99 +789,106 @@ export function MemberAdminPage() {
                     ))}
                   </Tbody>
                 </Table>
-              </Box>
+              </TableContainer>
             )}
           </TabPanel>
           <TabPanel>
-            <Wrap spacing={4} mb={6}>
-              <WrapItem>
-                <Button colorScheme="orange" onClick={handleAddClick}>
-                  MDpost선택
-                </Button>
-              </WrapItem>
-              <WrapItem>
-                <Button colorScheme="yellow" onClick={handleOpenModal}>
-                  지역배너 선택
-                </Button>
-              </WrapItem>
-            </Wrap>
-            <Card w={{ base: "720px", lg: "100%" }}>
-              <CardBody>
-                <Table>
-                  <Thead>
-                    <Tr>
-                      <Th width={"150px"}>게시물 아이디</Th>
-                      <Th width={"200px"}>제목</Th>
-                      <Th width={"500px"}>내용</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {mdPicks.map((mdpick) => (
-                      <Tr
-                        cursor={"pointer"}
-                        sx={{
-                          "&:hover": {
-                            backgroundColor: hColor,
-                          },
-                        }}
-                        key={mdpick.postId}
-                      >
-                        <Td sx={tdCellStyle}>{mdpick.postId}</Td>
-                        <Td sx={tdCellStyle}>{mdpick.title}</Td>
-                        <Td sx={tdCellStyle}>
-                          <ContentParser content={mdpick.content} />{" "}
-                        </Td>
-                        <Td>
-                          <ButtonCircle
-                            onClick={() => handleDelete(mdpick.postId)}
-                          >
-                            <FontAwesomeIcon icon={faTrash} />
-                          </ButtonCircle>
-                        </Td>
+            <Box mb={"2rem"}>
+              <HeadingVariant variant={"large"}>배너 등록</HeadingVariant>
+            </Box>
+            <Box
+              w={{ base: "720px", sm: "720px", lg: "960px" }}
+              border={"1px dotted red"}
+              mb={"1rem"}
+            >
+              <Wrap>
+                <WrapItem>
+                  <Button onClick={handleAddClick}>MD 게시글 선택</Button>
+                </WrapItem>
+                <WrapItem>
+                  <Button onClick={handleOpenModal}>지역 배너 선택</Button>
+                </WrapItem>
+              </Wrap>
+              <Card w={{ base: "720px", lg: "960px" }}>
+                <CardBody>
+                  <Table>
+                    <Thead>
+                      <Tr>
+                        <Th width={"25%"}>게시물 아이디</Th>
+                        <Th width={"25%"}>제목</Th>
+                        <Th width={"50%"}>내용</Th>
                       </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
-              </CardBody>
-            </Card>
-            {/*여기*/}
-            <Card mt={10} w={{ base: "720px", lg: "100%" }}>
-              <CardBody>
-                <Table>
-                  <Thead>
-                    <Tr>
-                      <Th width={"150px"}>배너 아이디</Th>
-                      <Th width={"200px"}>지역이름</Th>
-                      <Th width={"500px"}>링크</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {bannerList.map((banner) => (
-                      <Tr
-                        cursor={"pointer"}
-                        sx={{
-                          "&:hover": {
-                            backgroundColor: hColor,
-                          },
-                        }}
-                        key={banner.bannerId}
-                      >
-                        <Td sx={tdCellStyle}>{banner.bannerId}</Td>
-                        <Td sx={tdCellStyle}>{banner.city}</Td>
-                        <Td sx={tdCellStyle}>{banner.link}</Td>
-                        <Td>
-                          <ButtonCircle
-                            onClick={() => handleBannerDelete(banner.bannerId)}
-                          >
-                            <FontAwesomeIcon icon={faTrash} />
-                          </ButtonCircle>
-                        </Td>
+                    </Thead>
+                    <Tbody>
+                      {mdPicks.map((mdpick) => (
+                        <Tr
+                          cursor={"pointer"}
+                          sx={{
+                            "&:hover": {
+                              backgroundColor: hColor,
+                            },
+                          }}
+                          key={mdpick.postId}
+                        >
+                          <Td sx={tdCellStyle}>{mdpick.postId}</Td>
+                          <Td sx={tdCellStyle}>{mdpick.title}</Td>
+                          <Td sx={tdCellStyle}>
+                            <ContentParser content={mdpick.content} />{" "}
+                          </Td>
+                          <Td>
+                            <ButtonCircle
+                              onClick={() => handleDelete(mdpick.postId)}
+                            >
+                              <FontAwesomeIcon icon={faTrash} />
+                            </ButtonCircle>
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </CardBody>
+              </Card>
+              {/*여기*/}
+              <Card mt={10} w={{ base: "720px", lg: "100%" }}>
+                <CardBody>
+                  <Table>
+                    <Thead>
+                      <Tr>
+                        <Th width={"150px"}>배너 아이디</Th>
+                        <Th width={"200px"}>지역이름</Th>
+                        <Th width={"500px"}>링크</Th>
                       </Tr>
-                    ))}
-                  </Tbody>
-                </Table>
-              </CardBody>
-            </Card>
+                    </Thead>
+                    <Tbody>
+                      {bannerList.map((banner) => (
+                        <Tr
+                          cursor={"pointer"}
+                          sx={{
+                            "&:hover": {
+                              backgroundColor: hColor,
+                            },
+                          }}
+                          key={banner.bannerId}
+                        >
+                          <Td sx={tdCellStyle}>{banner.bannerId}</Td>
+                          <Td sx={tdCellStyle}>{banner.city}</Td>
+                          <Td sx={tdCellStyle}>{banner.link}</Td>
+                          <Td>
+                            <ButtonCircle
+                              onClick={() =>
+                                handleBannerDelete(banner.bannerId)
+                              }
+                            >
+                              <FontAwesomeIcon icon={faTrash} />
+                            </ButtonCircle>
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </CardBody>
+              </Card>
+            </Box>
           </TabPanel>
         </TabPanels>
       </Tabs>
