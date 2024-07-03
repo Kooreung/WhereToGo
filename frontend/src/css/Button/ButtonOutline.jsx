@@ -74,8 +74,8 @@ function ButtonOutline({ variant = "SquaMedium", ...props }) {
   const preset = presets[variant] || presets["SquaMedium"];
 
   const bgColor = useColorModeValue(
-    "rgba(216, 183, 229, 0.5)",
-    "rgba(131, 96, 145, 0.5)",
+    "rgba(131, 96, 145, 1)",
+    "rgba(216, 183, 229, 1)",
   );
 
   const buttonWidth = useBreakpointValue({
