@@ -183,7 +183,7 @@ export function MemberAdminPage() {
       .catch(() => {
         toast({
           status: "error",
-          description: "탈퇴중 문제가 생겼습니다.",
+          description: "탈퇴 중 문제가 생겼습니다.",
           position: "bottom",
         });
       });
@@ -208,7 +208,7 @@ export function MemberAdminPage() {
       .catch(() => {
         toast({
           status: "error",
-          description: "탈퇴중 문제가 생겼습니다.",
+          description: "탈퇴 중 문제가 생겼습니다.",
           position: "bottom",
         });
       });
@@ -331,7 +331,6 @@ export function MemberAdminPage() {
       .get(`/api/post/mdList?type=${searchType}&keyword=${searchKeyword}`)
       .then((res) => {
         setMdPosts(res.data.post);
-        console.log("검색어", res.data.post);
       });
   }
 
@@ -1008,7 +1007,18 @@ export function MemberAdminPage() {
                 </CardHeader>
 
                 <CardBody>
-                  <Flex justify="space-between">
+                  <Flex
+                    justify="space-between"
+                    overflow={"hidden"}
+                    textOverflow={"ellipsis"}
+                    display={"-webkit-box"}
+                    css={{
+                      WebkitLineClamp: "3",
+                      WebkitBoxOrient: "vertical",
+                      wordBreak: "break-word",
+                      whiteSpace: "pre-wrap",
+                    }}
+                  >
                     <ContentParser content={mdPost.content} />
                   </Flex>
                   {toggleState[mdPost.postId] && (
@@ -1022,7 +1032,7 @@ export function MemberAdminPage() {
                           />
                         </Box>
                       ) : (
-                        <Box mb={7} w="100%" h="200px" bg="gray.200"></Box>
+                        <Box mb={7} w="100%" h="100px" bg="gray.200"></Box>
                       )}
                       <Box mb={7}>
                         <FormControl>

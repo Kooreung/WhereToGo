@@ -107,7 +107,7 @@ export function PostMdList(props) {
               divider={<StackDivider borderColor={"blue"} />}
               w={{ base: "720px", lg: "960px" }}
             >
-              <Flex wrap="wrap" w="100%" justify={"center"}>
+              <Flex wrap="wrap" w="100%" justify={"center"} overflow={"hidden"}>
                 {mdPost
                   .slice(
                     rowIndex * (itemsPerRow || 3),
@@ -393,9 +393,7 @@ export function PostMdList(props) {
       </Box>
       <Box mt={5}>
         {visiblePosts < mdPost.length - 1 && (
-          <Button onClick={handleLoadMore} color={"black.alpha.900"}>
-            더보기
-          </Button>
+          <Button onClick={handleLoadMore}>더보기</Button>
         )}
       </Box>
     </Box>
