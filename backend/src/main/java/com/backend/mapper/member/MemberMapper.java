@@ -154,10 +154,10 @@ public interface MemberMapper {
                     <bind name="pattern" value="'%' + keyword + '%'" />
                     <choose>
                         <when test="searchType == 'all' || searchType == 'email'">
-                            AND m.email LIKE #{pattern}
+                            AND (m.email LIKE #{pattern} OR m.nickname LIKE #{pattern})
                         </when>
                         <when test="searchType == 'all' || searchType == 'nickName'">
-                            AND m.nickname LIKE #{pattern}
+                            AND (m.nickname LIKE #{pattern} OR m.email LIKE #{pattern})
                         </when>
                     </choose>
                 </if>
@@ -190,19 +190,21 @@ public interface MemberMapper {
             SELECT COUNT(m.memberId)
             FROM member m JOIN authority a
             ON m.memberId = a.memberId
-                <trim prefix="WHERE" prefixOverrides="OR">
-                    <if test="searchType != null">
-                        <bind name="pattern" value="'%' + keyword + '%'" />
-                        <if test="searchType == 'all' || searchType == 'email'">
-                            OR m.email LIKE #{pattern}
-                            AND a.authtype &lt;&gt; 'admin'
-                        </if>
-                        <if test="searchType == 'all' || searchType == 'nickName'">
-                            OR m.nickname LIKE #{pattern}
-                            AND a.authtype &lt;&gt; 'admin'
-                        </if>
-                    </if>
-                </trim>
+                <where>
+                a.authtype &lt;&gt; 'admin'
+                AND m.email &lt;&gt; '1'
+                <if test="searchType != null">
+                    <bind name="pattern" value="'%' + keyword + '%'" />
+                    <choose>
+                        <when test="searchType == 'all' || searchType == 'email'">
+                            AND (m.email LIKE #{pattern} OR m.nickname LIKE #{pattern})
+                        </when>
+                        <when test="searchType == 'all' || searchType == 'nickName'">
+                            AND (m.nickname LIKE #{pattern} OR m.email LIKE #{pattern})
+                        </when>
+                    </choose>
+                </if>
+            </where>
             </script>
             """)
     Integer countAllWithSearch(String searchType, String keyword);
