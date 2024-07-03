@@ -69,14 +69,14 @@ const presets = {
   },
 };
 
-const bgColor = useColorModeValue(
-  "rgba(216, 183, 229, 0.5)",
-  "rgba(131, 96, 145, 0.5)",
-);
-
 function ButtonOutline({ variant = "SquaMedium", ...props }) {
   // 기본 프리셋 값 medium
   const preset = presets[variant] || presets["SquaMedium"];
+
+  const bgColor = useColorModeValue(
+    "rgba(216, 183, 229, 0.5)",
+    "rgba(131, 96, 145, 0.5)",
+  );
 
   const buttonWidth = useBreakpointValue({
     lg: preset.lg.w,
