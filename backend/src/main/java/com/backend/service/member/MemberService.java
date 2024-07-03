@@ -3,7 +3,6 @@ package com.backend.service.member;
 import com.backend.NicknameGenerator.NickNameCreator;
 import com.backend.domain.member.Member;
 import com.backend.domain.member.MemberProfile;
-import com.backend.domain.post.Post;
 import com.backend.mapper.comment.CommentMapper;
 import com.backend.mapper.member.MemberMapper;
 import com.backend.mapper.post.PostMapper;
@@ -124,7 +123,7 @@ public class MemberService {
             return false;
         }
 
-        Member dbMember = mapper.selectMemberBymemberId(member.getMemberId());
+        Member dbMember = mapper.selectMemberByMemberId(member.getMemberId());
 
         if (dbMember == null) {
             return false;
@@ -136,11 +135,11 @@ public class MemberService {
     //어드민이 유저관리 페이지에서 해당 멤버의 개인정보를 볼때 사용
     public Map<String, Object> getMemberInfoByMemberId(Integer memberId) {
         Map<String, Object> result = new HashMap<>();
-        Member dbmember = mapper.selectMemberBymemberId(memberId);
+        Member dbmember = mapper.selectMemberByMemberId(memberId);
         result.put("member", dbmember);
 
         MemberProfile memberProfile = new MemberProfile();
-        memberProfile.setName(mapper.getProfileByMemberId(memberId));
+        memberProfile.setName(mapper.getProfileNameByMemberId(memberId));
         String src = STR."\{srcPrefix}/member/\{dbmember.getMemberId()}/\{memberProfile.getName()}";
         memberProfile.setSrc(src);
         result.put("profile", memberProfile);
@@ -174,8 +173,22 @@ public class MemberService {
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
 
+        List<Member> members = mapper.selectMemberAllPaging(offset, searchType, keyword);
+        for (Member member : members) {
+            int memberId = member.getMemberId();
+            String authType = mapper.getAuthTypeByMemberId(memberId);
+            member.setAuthType(authType);
+        }
+
         return Map.of("pageInfo", pageInfo,
-                "memberList", mapper.selectMemberAllPaging(offset, searchType, keyword));
+                "memberList", members);
+    }
+
+    public Map<String, Object> WithdrawnMember() {
+        Map<String, Object> result = new HashMap<>();
+        List<Member> withdrawnMembers = mapper.selectWithdrawnMember();
+        result.put("withdrawnMembers", withdrawnMembers);
+        return result;
     }
 
 
@@ -184,7 +197,7 @@ public class MemberService {
         if (!authentication.getName().equals(member.getMemberId().toString())) {
             return false;
         }
-        Member dbMember = mapper.selectMemberBymemberId(member.getMemberId());
+        Member dbMember = mapper.selectMemberByMemberId(member.getMemberId());
         if (dbMember == null) {
             return false;
         }
@@ -206,7 +219,7 @@ public class MemberService {
             member.setPassword(passwordEncoder.encode(member.getPassword()));
         } else {
             // 입력 안됐으니 기존 값으로 유지
-            Member dbMember = mapper.selectMemberBymemberId(member.getMemberId());
+            Member dbMember = mapper.selectMemberByMemberId(member.getMemberId());
             member.setPassword(dbMember.getPassword());
         }
 
@@ -266,6 +279,9 @@ public class MemberService {
 //        List<Post> postList = postMapper.selectAllPost(memberId);
 
         mapper.deleteByid(memberId, randomNickName);
+
+        //멤버 프로필 db에서 삭제
+        mapper.deleteFileByMemberId(memberId);
     }
 
     public boolean validate(Member member) {
@@ -352,5 +368,15 @@ public class MemberService {
 
     public void addAuthority(int memberId) {
         mapper.addAuthority(memberId);
+    }
+
+
+    public void updateAuthType(Integer memberId, String authType) {
+
+        mapper.updateAuthTypeByMemberId(memberId, authType);
+    }
+
+    public void hardDeleteMember(Integer memberId) {
+        mapper.hardDeleteByMemberId(memberId);
     }
 }

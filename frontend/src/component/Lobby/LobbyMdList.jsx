@@ -19,13 +19,16 @@ export function LobbyMdList() {
   const intervalRef = useRef(null);
   const navigate = useNavigate();
   const account = useContext(LoginContext);
-  const hColor = useColorModeValue("beige", "#2D3748");
+  const hColor = useColorModeValue(
+    "rgba(216, 183, 229, 0.2)",
+    "rgba(131, 96, 145, 0.2)",
+  );
 
   useEffect(() => {
     intervalRef.current = setInterval(() => {
       setNextPosts((prev) => {
         if (prev < mdPost.length + banner.length) {
-          setPrevPosts(prevPosts + 1);
+          setPrevPosts((prev) => (prev + 1) % (mdPost.length + banner.length));
           return prev + 1;
         } else {
           setPrevPosts(0);
@@ -37,17 +40,15 @@ export function LobbyMdList() {
     return () => {
       clearInterval(intervalRef.current);
     };
-  }, []);
+  }, [mdPost.length, banner.length]);
 
   useEffect(() => {
     axios
       .get("/api/post/mdPickList")
       .then((res) => {
         setMdPost(res.data.post);
-        console.log(res.data);
       })
-      .catch((err) => console.log(err))
-      .finally(() => {});
+      .catch((err) => console.log(err));
 
     axios
       .get("/api/post/bannerList")
@@ -67,15 +68,15 @@ export function LobbyMdList() {
     clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => {
       setNextPosts((prev) => {
-        if (prev < mdPost.length + 2) {
-          setPrevPosts((prevState) => prevState + 1);
+        if (prev < mdPost.length + banner.length) {
+          setPrevPosts((prev) => (prev + 1) % (mdPost.length + banner.length));
           return prev + 1;
         } else {
           setPrevPosts(0);
           return 1;
         }
       });
-    }, 5000);
+    }, 3000);
   };
 
   return (
@@ -97,7 +98,7 @@ export function LobbyMdList() {
       >
         {nextPosts >= 1 && nextPosts <= mdPost.length && (
           <Box>
-            {mdPost.slice(prevPosts, nextPosts).map((post) => (
+            {mdPost.slice(nextPosts - 1, nextPosts).map((post) => (
               <Box
                 key={post.postId}
                 onClick={() => navigate(`/post/${post.postId}`)}
@@ -152,12 +153,12 @@ export function LobbyMdList() {
           </Box>
         )}
       </Box>
-      <Center>
+      <Center h={"0px"}>
         <Box
           cursor={"pointer"}
           zIndex={"1"}
           position={"relative"}
-          top={{ base: "-115px", lg: "-150px" }}
+          top={{ base: "-90px", lg: "-125px" }}
           left={{ base: "-320px", lg: "-430px" }}
         >
           <ButtonCircle
@@ -171,6 +172,12 @@ export function LobbyMdList() {
                 setPrevPosts(mdPost.length + banner.length - 1);
               }
             }}
+            bgColor={"rgba(216, 183, 229, 0.25)"}
+            sx={{
+              "&:hover": {
+                backgroundColor: "rgba(216, 183, 229, 0.75)",
+              },
+            }}
           >
             <FontAwesomeIcon icon={faChevronLeft} fontSize="2rem" />
           </ButtonCircle>
@@ -179,12 +186,12 @@ export function LobbyMdList() {
           cursor={"pointer"}
           zIndex={"1"}
           position={"relative"}
-          top={{ base: "-115px", lg: "-150px" }}
+          top={{ base: "-90px", lg: "-125px" }}
           left={{ base: "320px", lg: "430px" }}
         >
           <ButtonCircle
             onClick={() => {
-              if (nextPosts < mdPost.length + 2) {
+              if (nextPosts < mdPost.length + banner.length) {
                 setNextPosts(nextPosts + 1);
                 setPrevPosts(prevPosts + 1);
               }
@@ -193,13 +200,19 @@ export function LobbyMdList() {
                 setPrevPosts(0);
               }
             }}
+            bgColor={"rgba(216, 183, 229, 0.25)"}
+            sx={{
+              "&:hover": {
+                backgroundColor: "rgba(216, 183, 229, 0.75)",
+              },
+            }}
           >
             <FontAwesomeIcon icon={faChevronRight} fontSize="2rem" />
           </ButtonCircle>
         </Box>
       </Center>
-      <Center>
-        <Flex position={"relative"} top={"-70px"}>
+      <Center h={"0px"} w={"100%"}>
+        <Flex position={"relative"} top={"-25px"}>
           {[...Array(mdPost.length + banner.length)].map((_, index) => (
             <ButtonCircle
               variant={"small"}

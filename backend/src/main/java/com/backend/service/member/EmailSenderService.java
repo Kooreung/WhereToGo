@@ -3,6 +3,7 @@ package com.backend.service.member;
 import com.backend.domain.member.MemberMail;
 import com.backend.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,6 +16,9 @@ public class EmailSenderService {
     private final JavaMailSender mailSender;
     private final BCryptPasswordEncoder passwordEncoder;
     private final MemberMapper mapper;
+
+    @Value("${spring.mail.username}")
+    String senderEmail;
 
     public String createMail(String email) {
 
@@ -52,7 +56,7 @@ public class EmailSenderService {
 
         SimpleMailMessage message = new SimpleMailMessage();
 
-        message.setFrom("yourEmail");
+        message.setFrom(senderEmail);
         message.setTo(passwordMail.getToEmail());
         message.setSubject(passwordMail.getMailTitle());
         message.setText(passwordMail.getMailContent());

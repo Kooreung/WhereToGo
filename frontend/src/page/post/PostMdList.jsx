@@ -1,27 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  Avatar,
   Box,
   Button,
-  Card,
   Center,
   Divider,
   Flex,
-  Grid,
-  GridItem,
-  Heading,
   Image,
   Input,
   Select,
+  Spacer,
   Stack,
   StackDivider,
   Text,
   useBreakpointValue,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBars,
-  faCaretRight,
   faEye,
   faHeart,
   faMagnifyingGlass,
@@ -43,6 +41,10 @@ export function PostMdList(props) {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const account = useContext(LoginContext);
+  const hColor = useColorModeValue(
+    "rgba(216, 183, 229, 0.2)",
+    "rgba(131, 96, 145, 0.2)",
+  );
   const [showFirstScreen, setShowFirstScreen] = useState(true);
   // 화면 크기에 따라 항목 수 결정
   const itemsPerRow = useBreakpointValue({ base: 1, md: 4, lg: 3 });
@@ -72,11 +74,17 @@ export function PostMdList(props) {
   }
 
   function handleSearchClick() {
+    if (!searchKeyword.trim()) {
+      return;
+    }
     navigate(`/post/mdList?type=${searchType}&keyword=${searchKeyword}`);
   }
 
   function handleSearchKeyDown(e) {
     if (e.key === "Enter") {
+      if (!searchKeyword.trim()) {
+        return;
+      }
       navigate(`/post/mdList?type=${searchType}&keyword=${searchKeyword}`);
     }
   }
@@ -90,41 +98,32 @@ export function PostMdList(props) {
     <Box align="center" justify="center" overflowX={"hidden"}>
       {mdPost.length === 0 && <Center>조회 결과가 없습니다.</Center>}
       {mdPost.length > 0 && (
-        <>
+        <Box mt={"2rem"}>
           {Array.from({
             length: Math.ceil(visiblePosts / (itemsPerRow || 3)),
           }).map((_, rowIndex) => (
             <Stack
               key={rowIndex}
               divider={<StackDivider borderColor={"blue"} />}
-              my={"2rem"}
-              spacing={"2rem"}
               w={{ base: "720px", lg: "960px" }}
             >
-              <Flex
-                wrap="wrap"
-                w="100%"
-                ml={{ base: 12, lg: 3 }}
-                justify={{ lg: "flex-start" }}
-              >
+              <Flex wrap="wrap" w="100%" justify={"center"}>
                 {mdPost
                   .slice(
                     rowIndex * (itemsPerRow || 3),
                     rowIndex * (itemsPerRow || 3) + (itemsPerRow || 3),
                   )
                   .map((post, index) => (
-                    <Card
+                    <Box
                       key={index}
-                      maxW="sm"
-                      borderWidth="1px lightgray"
-                      borderRadius="lg"
-                      overflow="hidden"
-                      w="280px"
-                      h="380px"
-                      m="1rem"
-                      boxShadow={"md"}
                       onClick={() => navigate(`/post/${post.postId}`)}
+                      borderWidth="1px"
+                      borderRadius="1rem"
+                      boxShadow={"md"}
                       cursor="pointer"
+                      w="280px"
+                      h="390px"
+                      m={{ base: "1rem", sm: " 8px", lg: "1rem" }}
                       sx={{
                         transition: "transform 0.3s ease",
                         "&:hover": {
@@ -132,80 +131,62 @@ export function PostMdList(props) {
                         },
                       }}
                     >
-                      <Box>
-                        <Image
-                          mt={3}
-                          boxSize="230px"
-                          objectFit={"cover"}
-                          boxShadow={"md"}
-                          src={post.picurl || defaultImage}
-                          alt="Green double couch with wooden legs"
-                          borderRadius="lg"
-                        />
-                      </Box>
-                      <Box
-                        colSpan={7}
-                        rowSpan={1}
-                        alignContent={"center"}
-                        overflow={"hidden"}
-                        textOverflow={"ellipsis"}
-                        whiteSpace={"nowrap"}
-                        mt={3}
-                      >
-                        <Stack
-                          ml="6"
-                          mr={"6"}
-                          spacing="3"
+                      <Box w={"240px"} h={"320px"}>
+                        <Box mt={"1rem"}>
+                          <Image
+                            w={"240px"}
+                            h={"240px"}
+                            objectFit={"cover"}
+                            boxShadow={"md"}
+                            src={post.picurl || defaultImage}
+                            borderRadius="1rem"
+                          />
+                        </Box>
+                        <Box
+                          alignContent={"center"}
+                          mt={"8px"}
                           textAlign={"start"}
-                          noOfLines={2}
+                          overflow={"hidden"}
+                          textOverflow={"ellipsis"}
+                          whiteSpace={"nowrap"}
                         >
-                          <Heading color="#33664F" fontSize="2xl">
+                          <HeadingVariant
+                            overflow={"hidden"}
+                            textOverflow={"ellipsis"}
+                            whiteSpace={"nowrap"}
+                          >
                             {post.title}
-                          </Heading>
-                          <ContentParser content={post.content}></ContentParser>
-                        </Stack>
+                          </HeadingVariant>
+                        </Box>
+                        <Flex justifyContent={"space-between"} mt={"1rem"}>
+                          <Box>{post.nickName}</Box>
+                          <Box>{post.createDate}</Box>
+                        </Flex>
                       </Box>
-                      <Flex
-                        justifyContent={"space-between"}
-                        ml="6"
-                        mr={"6"}
-                        fontSize="xs"
-                      >
-                        <Box>{post.nickName}</Box>
-                        <Box>{post.createDate}</Box>
-                      </Flex>
-                      <Divider color="lightgray" />
-                      <Flex
-                        justify={"space-evenly"}
-                        w={"65%"}
+                      <Divider />
+                      <Center
                         mt={"1rem"}
+                        gap={"8px"}
                         style={{ color: "#D8B7E5" }}
                       >
-                        <Flex>
-                          <Text mr={"4px"}>
-                            <FontAwesomeIcon icon={faHeart} size="lg" />
-                          </Text>
-                          <Text>{post.likeCount}</Text>
-                        </Flex>
-                        <Flex>
-                          <Text mr={"4px"}>
-                            <FontAwesomeIcon icon={faComment} size="lg" />
-                          </Text>
-                          <Text>{post.commentCount}</Text>
-                        </Flex>
-                        <Flex>
-                          <Text mr={"4px"}>
-                            <FontAwesomeIcon icon={faEye} size="lg" />
-                          </Text>
-                          <Text>{post.view}</Text>
-                        </Flex>
-                      </Flex>
-                    </Card>
+                        <Box>
+                          <FontAwesomeIcon icon={faHeart} size={"lg"} />{" "}
+                          {post.likeCount}
+                        </Box>
+                        <Box>
+                          <FontAwesomeIcon icon={faComment} size={"lg"} />{" "}
+                          {post.commentCount}
+                        </Box>
+                        <Box>
+                          <FontAwesomeIcon icon={faEye} size="lg" /> {post.view}
+                        </Box>
+                      </Center>
+                    </Box>
                   ))}
               </Flex>
             </Stack>
           ))}
-        </>
+        </Box>
       )}
     </Box>
   );
@@ -216,143 +197,131 @@ export function PostMdList(props) {
       {mdPost.length === 0 && <Center>조회 결과가 없습니다.</Center>}
       {mdPost.length > 0 && (
         <VStack
-          divider={<StackDivider borderColor={"lightgray"} />}
+          divider={<StackDivider />}
           my={"2rem"}
-          spacing={"2rem"}
-          w={{ base: "720px", lg: "960px" }}
+          spacing={{ base: "2rem", lg: "2rem", sm: "1rem" }}
+          w={{ base: "720px", lg: "720px", sm: "660px" }}
         >
           {mdPost.slice(0, visiblePosts).map((post) => (
-            <Box
-              w={"720px"}
+            <Flex
               key={post.postId}
               onClick={() => navigate(`/post/${post.postId}`)}
+              w={{ base: "720px", lg: "720px", sm: "660px" }}
+              h={{ base: "240px", lg: "240px", sm: "200px" }}
+              cursor={"pointer"}
+              boxShadow={"base"}
+              borderRadius={"1rem"}
+              py={"1rem"}
+              px={"1rem"}
+              sx={{
+                "&:hover": {
+                  backgroundColor: hColor,
+                },
+              }}
             >
-              <Box>
-                <Grid
-                  w={"720px"}
-                  h={"224px"}
-                  templateColumns={"repeat(9, 1fr)"}
-                  templateRows={"1fr 1fr 5fr"}
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: "RGBA(0, 0, 0, 0.06)",
-                    },
+              <Flex
+                direction={"column"}
+                overflow={"hidden"}
+                textOverflow={"ellipsis"}
+                whiteSpace={"nowrap"}
+                w={"75%"}
+                h={"100%"}
+                pr={"1rem"}
+              >
+                <Flex mb={"8px"}>
+                  <HeadingVariant overflow={"hidden"} textOverflow={"ellipsis"}>
+                    {post.title}
+                  </HeadingVariant>
+                </Flex>
+                <Flex
+                  textAlign={"start"}
+                  overflow={"hidden"}
+                  textOverflow={"ellipsis"}
+                  display={"-webkit-box"}
+                  css={{
+                    WebkitLineClamp: "3",
+                    WebkitBoxOrient: "vertical",
+                    wordBreak: "break-word",
+                    whiteSpace: "pre-wrap",
                   }}
-                  cursor={"pointer"}
                 >
-                  <GridItem
-                    colSpan={9}
-                    rowSpan={1}
-                    alignContent={"center"}
-                    whiteSpace={"nowrap"}
-                    borderY={"1px solid lightgray"}
-                  >
-                    <Flex pl={3}>
-                      <Text
-                        display={{ base: "none", lg: "block" }}
-                        mr={1}
-                        fontSize={"xl"}
-                        fontWeight={"bold"}
-                      >
-                        제목 <FontAwesomeIcon icon={faCaretRight} />
-                      </Text>
-                      <Text
+                  <ContentParser content={post.content} />
+                </Flex>
+                <Spacer />
+                <Flex w={"100%"} h={"32px"} alignItems={"center"}>
+                  <Flex w={"50%"}>
+                    <Flex overflow={"hidden"} textOverflow={"ellipsis"}>
+                      <Avatar
+                        w={"24px"}
+                        h={"24px"}
+                        name={" "}
+                        bgColor={"white"}
+                        src={post.profileName}
+                      />
+                      <Box
+                        ml={1}
+                        textAlign={"start"}
                         overflow={"hidden"}
                         textOverflow={"ellipsis"}
-                        fontSize={"xl"}
-                        fontWeight={"bold"}
                       >
-                        타이틀 {post.title}
-                      </Text>
+                        {post.nickName}
+                      </Box>
                     </Flex>
-                  </GridItem>
-                  <GridItem colSpan={3} rowSpan={1} alignContent={"center"}>
-                    <Flex pl={3}>
+                  </Flex>
+                  <Spacer />
+                  <Flex
+                    gap={"10px"}
+                    w={"50%"}
+                    color={"lightgray"}
+                    fontSize={"12px"}
+                    justify={"end"}
+                  >
+                    <Flex>
                       <Text display={{ base: "none", lg: "block" }} mr={1}>
-                        작성자 <FontAwesomeIcon icon={faCaretRight} />
+                        조회
                       </Text>
-                      <Text overflow={"hidden"} textOverflow={"ellipsis"}>
-                        닉네임 {post.nickName}
-                      </Text>
-                    </Flex>
-                  </GridItem>
-                  <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
-                    <Flex pl={3}>
-                      <Text display={{ base: "none", lg: "block" }} mr={1}>
-                        조회수 <FontAwesomeIcon icon={faCaretRight} />
+                      <Text display={{ base: "block", lg: "none" }} mr={1}>
+                        <FontAwesomeIcon icon={faEye} size={"lg"} />
                       </Text>
                       <Text>{post.view}</Text>
                     </Flex>
-                  </GridItem>
-                  <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
-                    <Flex pl={3}>
+                    <Flex>
                       <Text display={{ base: "none", lg: "block" }} mr={1}>
-                        좋아요 <FontAwesomeIcon icon={faCaretRight} />
+                        좋아요
+                      </Text>
+                      <Text display={{ base: "block", lg: "none" }} mr={1}>
+                        <FontAwesomeIcon icon={faHeart} size={"lg"} />
                       </Text>
                       <Text>{post.likeCount}</Text>
                     </Flex>
-                  </GridItem>
-                  <GridItem colSpan={2} rowSpan={1} alignContent={"center"}>
-                    <Flex pl={3}>
+                    <Flex>
                       <Text display={{ base: "none", lg: "block" }} mr={1}>
-                        댓글 <FontAwesomeIcon icon={faCaretRight} />
+                        댓글
+                      </Text>
+                      <Text display={{ base: "block", lg: "none" }} mr={1}>
+                        <FontAwesomeIcon icon={faComment} size={"lg"} />
                       </Text>
                       <Text>{post.commentCount}</Text>
                     </Flex>
-                  </GridItem>
-                  <GridItem
-                    colSpan={2}
-                    rowSpan={1}
-                    alignContent={"center"}
-                    borderY={"1px solid lightgray"}
-                  >
-                    <Box w={"100%"} h={"100%"}>
-                      <Image
-                        src={post.picurl || defaultImage}
-                        objectFit={"cover"}
-                        w={"100%"}
-                        h={"100%"}
-                      />
-                    </Box>
-                  </GridItem>
-                  <GridItem
-                    colSpan={7}
-                    rowSpan={1}
-                    alignContent={"center"}
-                    overflow={"hidden"}
-                    textOverflow={"ellipsis"}
-                    whiteSpace={"nowrap"}
-                    borderY={"1px solid lightgray"}
-                  >
-                    <Box pl={3}>
-                      <Flex>
-                        <Text display={{ base: "none", lg: "block" }} mr={1}>
-                          내용 <FontAwesomeIcon icon={faCaretRight} />{" "}
-                        </Text>
-                        <Box
-                          maxW={"560px"}
-                          textAlign={"start"}
-                          overflow={"hidden"}
-                          textOverflow={"ellipsis"}
-                          display={"-webkit-box"}
-                          css={{
-                            "-webkit-line-clamp": "4",
-                            "-webkit-box-orient": "vertical",
-                            wordBreak: "break-word",
-                            whiteSpace: "pre-wrap",
-                          }}
-                        >
-                          <ContentParser content={post.content} />
-                        </Box>
-                      </Flex>
-                      <Text textAlign={"left"} mt={"1rem"} color={"lightgray"}>
-                        {post.createDate}
-                      </Text>
-                    </Box>
-                  </GridItem>
-                </Grid>
-              </Box>
-            </Box>
+                    <Flex>{post.createDate}</Flex>
+                  </Flex>
+                </Flex>
+              </Flex>
+              <Spacer />
+              <Flex
+                w={{ base: "200px", lg: "200px", sm: "160px" }}
+                h={"100%"}
+                align={"center"}
+              >
+                <Image
+                  src={post.picurl || defaultImage}
+                  w={{ base: "200px", lg: "200px", sm: "160px" }}
+                  h={{ base: "200px", lg: "200px", sm: "160px" }}
+                  objectFit={"cover"}
+                  borderRadius={"1rem"}
+                />
+              </Flex>
+            </Flex>
           ))}
         </VStack>
       )}
@@ -365,70 +334,68 @@ export function PostMdList(props) {
         <HeadingVariant variant={"xlarge"} align={"center"} mb={"1rem"}>
           MD'S PICK
         </HeadingVariant>
-        <Center>
-          <Box>
-            <Select
-              value={searchType}
-              onChange={(e) => {
-                setSearchType(e.target.value);
-              }}
-            >
-              <option value={"all"}>전체</option>
-              <option value={"titleAndContent"}>제목+내용</option>
-              <option value={"nickName"}>닉네임</option>
-              <option value={"placeName"}>장소명</option>
-              <option value={"address"}>지역명</option>
-            </Select>
-          </Box>
-          <Box ml={1}>
-            <Input
-              value={searchKeyword}
-              onChange={(e) => setSearchKeyword(e.target.value)}
-              placeholder="검색어"
-              onKeyDown={handleSearchKeyDown}
-            />
-          </Box>
-          <Box ml={2}>
-            <ButtonCircle onClick={handleSearchClick}>
-              <FontAwesomeIcon icon={faMagnifyingGlass} fontSize="small" />
-            </ButtonCircle>
-          </Box>
+        <Flex justify={"space-between"}>
+          <Box w={"80px"} />
+          <Flex justify={"center"} align={"center"}>
+            <Box>
+              <Select
+                value={searchType}
+                onChange={(e) => {
+                  setSearchType(e.target.value);
+                }}
+              >
+                <option value={"all"}>전체</option>
+                <option value={"titleAndContent"}>제목+내용</option>
+                <option value={"nickName"}>닉네임</option>
+                <option value={"placeName"}>장소명</option>
+                <option value={"address"}>지역명</option>
+              </Select>
+            </Box>
+            <Box ml={1}>
+              <Input
+                value={searchKeyword}
+                onChange={(e) => setSearchKeyword(e.target.value)}
+                placeholder="검색어"
+                onKeyDown={handleSearchKeyDown}
+              />
+            </Box>
+            <Box ml={2}>
+              <ButtonCircle onClick={handleSearchClick}>
+                <FontAwesomeIcon icon={faMagnifyingGlass} fontSize="small" />
+              </ButtonCircle>
+            </Box>
+            <Box ml={1}>
+              <ButtonCircle onClick={handleListButtonClick}>
+                <FontAwesomeIcon icon={faBars} fontSize="small" />
+              </ButtonCircle>
+            </Box>
+          </Flex>
           <Box ml={1}>
             {account.isAdmin() && (
-              <ButtonCircle
+              <Button
                 onClick={() => navigate(`/post/write`)}
-                fontSize="small"
+                color={"black.alpha.900"}
               >
                 글쓰기
-              </ButtonCircle>
+              </Button>
             )}
           </Box>
-          <Box ml={1}>
-            <ButtonCircle onClick={handleListButtonClick}>
-              <FontAwesomeIcon icon={faBars} fontSize="small" />
-            </ButtonCircle>
-          </Box>
-        </Center>
+        </Flex>
       </Box>
       {/*검색기능 */}
       <Divider
         border={"1px solid lightGray"}
         w={{ base: "720px", lg: "960px" }}
-        my={"2rem"}
-      ></Divider>
+      />
       {/*게시물 시작*/}
-      <Box
-        align="center"
-        justify="center"
-        overflowX={"hidden"}
-        borderWidth="1px"
-        borderRadius="lg"
-      >
+      <Box align="center" justify="center" overflowX={"hidden"}>
         {showFirstScreen ? <FirstScreen /> : <SecondScreen />}
       </Box>
       <Box mt={5}>
         {visiblePosts < mdPost.length - 1 && (
-          <Button onClick={handleLoadMore}>더보기</Button>
+          <Button onClick={handleLoadMore} color={"black.alpha.900"}>
+            더보기
+          </Button>
         )}
       </Box>
     </Box>

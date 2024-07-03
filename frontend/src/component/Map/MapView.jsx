@@ -186,6 +186,9 @@ const KakaoMapSearch = () => {
   }
 
   function PartDistanceInfo({ distance }) {
+    const distanceKm = Math.floor(distance / 1000);
+    const distanceM = Math.floor(distance % 1000);
+
     return (
       <Box
         style={{
@@ -200,10 +203,23 @@ const KakaoMapSearch = () => {
         <UnorderedList style={{ color: "black" }}>
           <Box>
             <Text as="span">거리: </Text>
-            <Text as="span" style={{ color: "#836091", fontWeight: "bold" }}>
-              {distance}
-            </Text>{" "}
-            <Text as="span">m </Text>
+            {distance > 1000 && (
+              <>
+                <Text
+                  as="span"
+                  style={{ color: "#836091", fontWeight: "bold" }}
+                >
+                  {distanceKm}
+                </Text>
+                <Text as="span"> km </Text>
+              </>
+            )}
+            <>
+              <Text as="span" style={{ color: "#836091", fontWeight: "bold" }}>
+                {distanceM}
+              </Text>
+              <Text as="span"> m</Text>
+            </>
           </Box>
         </UnorderedList>
       </Box>
@@ -239,6 +255,9 @@ const KakaoMapSearch = () => {
     const bicycleHour = Math.floor(bicycleTime / 60);
     const bicycleMin = bicycleTime % 60;
 
+    const distanceKm = Math.floor(distance / 1000);
+    const distanceM = Math.floor(distance % 1000);
+
     return (
       <Box
         style={{
@@ -255,10 +274,23 @@ const KakaoMapSearch = () => {
             <Text as="span" color={"black"}>
               총거리:{" "}
             </Text>
-            <Text as="span" style={{ color: "#836091", fontWeight: "bold" }}>
-              {distance}
-            </Text>
-            <Text as="span"> m</Text>
+            {distance > 1000 && (
+              <>
+                <Text
+                  as="span"
+                  style={{ color: "#836091", fontWeight: "bold" }}
+                >
+                  {distanceKm}
+                </Text>
+                <Text as="span"> km </Text>
+              </>
+            )}
+            <>
+              <Text as="span" style={{ color: "#836091", fontWeight: "bold" }}>
+                {distanceM}
+              </Text>
+              <Text as="span"> m</Text>
+            </>
           </Box>
           <Box>
             <Text as="span">도보: </Text>

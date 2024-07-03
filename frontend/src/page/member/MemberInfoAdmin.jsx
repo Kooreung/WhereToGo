@@ -10,7 +10,6 @@ import {
   Center,
   Divider,
   Flex,
-  Heading,
   Spinner,
   Tab,
   TabList,
@@ -171,7 +170,8 @@ export function MemberInfoAdmin() {
           <Flex>
             <Flex>
               <Avatar
-                name="defaultProfile"
+                name={" "}
+                bgColor={"white"}
                 src={profile.src}
                 w="75px"
                 h="75px"

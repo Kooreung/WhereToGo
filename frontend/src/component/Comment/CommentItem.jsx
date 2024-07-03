@@ -27,7 +27,10 @@ function CommentItem({ comment, isTransition, setIsTransition }) {
   const toast = useToast();
   const account = useContext(LoginContext);
   const { onClose, isOpen, onOpen } = useDisclosure();
-  const headColor = useColorModeValue("purple", "pink");
+  const headColor = useColorModeValue(
+    "rgba(131, 96, 145, 1)",
+    "rgba(216, 183, 229, 1)",
+  );
 
   function handleRemoveSubmit() {
     setIsTransition(true);
@@ -59,7 +62,7 @@ function CommentItem({ comment, isTransition, setIsTransition }) {
             w={"100%"}
             my={"1rem"}
             borderWidth="1px"
-            borderRadius={"lg"}
+            borderRadius={"1rem"}
             p={3}
           >
             <Box>

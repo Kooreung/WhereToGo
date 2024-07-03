@@ -40,12 +40,13 @@ export const customTheme = extendTheme({
       variants: {
         solid: {
           bgColor: "#D8B7E5",
-          color: "blackAlpha.900",
+          textColor: "blackAlpha.900",
           _hover: {
             bgColor: "#836091",
           },
           _dark: {
             bgColor: "#836091",
+            textColor: "whiteAlpha.900",
             _hover: {
               bgColor: "#D8B7E5",
             },

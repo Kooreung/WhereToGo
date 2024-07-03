@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  Avatar,
   Box,
   Center,
   Flex,
@@ -42,7 +43,10 @@ export function PostLikeList() {
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
   const account = useContext(LoginContext);
-  const hColor = useColorModeValue("beige", "#2D3748");
+  const hColor = useColorModeValue(
+    "rgba(216, 183, 229, 0.2)",
+    "rgba(131, 96, 145, 0.2)",
+  );
 
   useEffect(() => {
     axios.get(`/api/post/likeList/${memberId}?${searchParams}`).then((res) => {
@@ -115,7 +119,7 @@ export function PostLikeList() {
               h={{ base: "240px", lg: "240px", sm: "200px" }}
               cursor={"pointer"}
               boxShadow={"base"}
-              borderRadius={"12px"}
+              borderRadius={"1rem"}
               py={"1rem"}
               px={"1rem"}
               sx={{
@@ -154,24 +158,24 @@ export function PostLikeList() {
                 </Flex>
                 <Spacer />
                 <Flex w={"100%"} h={"32px"} alignItems={"center"}>
-                  <Flex w={"45%"}>
-                    <Box
-                      w={"24px"}
-                      h={"24px"}
-                      mr={1}
-                      borderRadius={"100%"}
-                      boxShadow={"base"}
-                    >
-                      <Image src={post.profileName} borderRadius={"100%"} />
-                    </Box>
-                    <Box
-                      w={"100%"}
-                      textAlign={"start"}
-                      overflow={"hidden"}
-                      textOverflow={"ellipsis"}
-                    >
-                      {post.nickName}
-                    </Box>
+                  <Flex w={"50%"}>
+                    <Flex overflow={"hidden"} textOverflow={"ellipsis"}>
+                      <Avatar
+                        w={"24px"}
+                        h={"24px"}
+                        name={" "}
+                        bgColor={"white"}
+                        src={post.profileName}
+                      />
+                      <Box
+                        ml={1}
+                        textAlign={"start"}
+                        overflow={"hidden"}
+                        textOverflow={"ellipsis"}
+                      >
+                        {post.nickName}
+                      </Box>
+                    </Flex>
                   </Flex>
                   <Spacer />
                   <Flex

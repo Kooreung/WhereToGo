@@ -45,7 +45,10 @@ function PostList() {
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const hColor = useColorModeValue("beige", "#2D3748");
+  const hColor = useColorModeValue(
+    "rgba(216, 183, 229, 0.2)",
+    "rgba(131, 96, 145, 0.2)",
+  );
 
   useEffect(() => {
     axios.get(`/api/post/list?${searchParams}`).then((res) => {
@@ -75,12 +78,18 @@ function PostList() {
 
   // 검색 클릭 시 URL
   function handleSearchClick() {
+    if (!searchKeyword.trim()) {
+      return;
+    }
     navigate(`/post/list?type=${searchType}&keyword=${searchKeyword}`);
   }
 
   // 검색 창 Enter 시 URL
   function handleSearchKeyDown(e) {
     if (e.key === "Enter") {
+      if (!searchKeyword.trim()) {
+        return;
+      }
       navigate(`/post/list?type=${searchType}&keyword=${searchKeyword}`);
     }
   }
@@ -100,12 +109,17 @@ function PostList() {
         my={"2rem"}
       ></Divider>
       <Flex mx={"1rem"}>
-        <HeadingVariant variant={"large"} align={"start"}>
+        <HeadingVariant variant={"xlarge"} align={"start"}>
           회원 게시글
         </HeadingVariant>
         <Spacer />
         {account.isLoggedIn() && (
-          <Button onClick={() => navigate(`/post/write`)}>글쓰기</Button>
+          <Button
+            onClick={() => navigate(`/post/write`)}
+            color={"black.alpha.900"}
+          >
+            글쓰기
+          </Button>
         )}
       </Flex>
       {/* 회원 게시글 페이지 */}
@@ -125,7 +139,7 @@ function PostList() {
               h={{ base: "240px", lg: "240px", sm: "200px" }}
               cursor={"pointer"}
               boxShadow={"base"}
-              borderRadius={"12px"}
+              borderRadius={"1rem"}
               py={"1rem"}
               px={"1rem"}
               sx={{
@@ -167,10 +181,11 @@ function PostList() {
                   <Flex w={"50%"}>
                     <Flex overflow={"hidden"} textOverflow={"ellipsis"}>
                       <Avatar
-                        w={"28px"}
-                        h={"28px"}
+                        w={"24px"}
+                        h={"24px"}
+                        name={" "}
+                        bgColor={"white"}
                         src={post.profileName}
-                        borderRadius={"100%"}
                       />
                       <Box
                         ml={1}
@@ -262,7 +277,7 @@ function PostList() {
                 <option value={"address"}>지역명</option>
               </Select>
             </Box>
-            <Box>
+            <Box ml={1}>
               <Input
                 value={searchKeyword}
                 onChange={(e) => {
@@ -272,7 +287,7 @@ function PostList() {
                 placeholder={"검색어"}
               />
             </Box>
-            <Box>
+            <Box ml={2}>
               <ButtonCircle onClick={handleSearchClick}>
                 <FontAwesomeIcon icon={faMagnifyingGlass} fontSize="small" />
               </ButtonCircle>

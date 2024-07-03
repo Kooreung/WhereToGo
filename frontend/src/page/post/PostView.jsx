@@ -49,7 +49,10 @@ export function PostView() {
   const [place, setPlace] = useState([]);
   const [like, setLike] = useState({ like: false, count: 0 });
   const [comment, setComment] = useState({ count: 0 });
-  const navColor = useColorModeValue("#D8B7E5", "#836091");
+  const navColor = useColorModeValue(
+    "rgba(216, 183, 229, 1)",
+    "rgba(131, 96, 145, 1)",
+  );
 
   const [isLikeLoading, setIsLikeLoading] = useState(false);
   const [isTransition, setIsTransition] = useState(false);

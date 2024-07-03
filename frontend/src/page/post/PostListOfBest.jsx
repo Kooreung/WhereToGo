@@ -1,4 +1,4 @@
-import { Box, ButtonGroup, Divider, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Center, Divider, Flex, Image, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -26,18 +26,19 @@ export function PostListOfBest() {
           회원 인기글
         </HeadingVariant>
       </Box>
-      <Flex justify={"center"} gap={3}>
+      <Flex justify={"center"}>
         {/* 사이즈가 lg 이상일 때 */}
         {postListOfBest.map((post, index) => (
           <Box
             key={index}
             onClick={() => navigate(`/post/${post.postId}`)}
             borderWidth="1px"
-            borderRadius="lg"
+            borderRadius="1rem"
             boxShadow={"md"}
             cursor="pointer"
             w="280px"
             h="390px"
+            mx={"1rem"}
             display={{ base: "block", lg: "block", sm: "none" }}
             sx={{
               transition: "transform 0.3s ease",
@@ -54,18 +55,24 @@ export function PostListOfBest() {
                   objectFit={"cover"}
                   boxShadow={"md"}
                   src={post.picurl || defaultImage}
-                  borderRadius="lg"
+                  borderRadius="1rem"
                 />
               </Box>
               <Box
                 alignContent={"center"}
+                mt={"8px"}
+                textAlign={"start"}
                 overflow={"hidden"}
                 textOverflow={"ellipsis"}
                 whiteSpace={"nowrap"}
-                mt={"8px"}
-                textAlign={"start"}
               >
-                <HeadingVariant>{post.title}</HeadingVariant>
+                <HeadingVariant
+                  overflow={"hidden"}
+                  textOverflow={"ellipsis"}
+                  whiteSpace={"nowrap"}
+                >
+                  {post.title}
+                </HeadingVariant>
               </Box>
               <Flex justifyContent={"space-between"} mt={"1rem"}>
                 <Box>{post.nickName}</Box>
@@ -73,7 +80,7 @@ export function PostListOfBest() {
               </Flex>
             </Box>
             <Divider />
-            <ButtonGroup spacing="4" mt={"1rem"} style={{ color: "#D8B7E5" }}>
+            <Center mt={"1rem"} gap={"8px"} style={{ color: "#D8B7E5" }}>
               <Box>
                 <FontAwesomeIcon icon={faHeart} size={"lg"} /> {post.likeCount}
               </Box>
@@ -84,7 +91,7 @@ export function PostListOfBest() {
               <Box>
                 <FontAwesomeIcon icon={faEye} size="lg" /> {post.view}
               </Box>
-            </ButtonGroup>
+            </Center>
           </Box>
         ))}
         {/* 사이즈가 lg 이하일 때 */}
@@ -98,6 +105,7 @@ export function PostListOfBest() {
             cursor="pointer"
             w="220px"
             h="310px"
+            mx={"4px"}
             display={{ base: "none", lg: "none", sm: "block" }}
             sx={{
               transition: "transform 0.3s ease",
@@ -119,14 +127,17 @@ export function PostListOfBest() {
               </Box>
               <Box
                 alignContent={"center"}
-                overflow={"hidden"}
-                textOverflow={"ellipsis"}
-                whiteSpace={"nowrap"}
                 mt={"8px"}
                 mx={"16px"}
                 textAlign={"start"}
               >
-                <HeadingVariant>{post.title}</HeadingVariant>
+                <HeadingVariant
+                  overflow={"hidden"}
+                  textOverflow={"ellipsis"}
+                  whiteSpace={"nowrap"}
+                >
+                  {post.title}
+                </HeadingVariant>
               </Box>
             </Box>
             <Flex
@@ -139,12 +150,7 @@ export function PostListOfBest() {
               <Box>{post.createDate}</Box>
             </Flex>
             <Divider />
-            <Flex
-              justify={"space-evenly"}
-              w={"65%"}
-              mt={"8px"}
-              style={{ color: "#D8B7E5" }}
-            >
+            <Center mt={"8px"} gap={"8px"} style={{ color: "#D8B7E5" }}>
               <Flex>
                 <Text mr={"4px"}>
                   <FontAwesomeIcon icon={faHeart} size="lg" />
@@ -163,7 +169,7 @@ export function PostListOfBest() {
                 </Text>
                 <Text>{post.view}</Text>
               </Flex>
-            </Flex>
+            </Center>
           </Box>
         ))}
       </Flex>
