@@ -129,7 +129,7 @@ function Navbar() {
         h={"50px"}
         boxShadow={"md"}
         boxSizing={"border-box"}
-        borderY={"2px solid"}
+        borderBottom={"2px solid"}
         borderColor={navColor}
       >
         {/* 중간 메뉴 */}
