@@ -41,7 +41,7 @@ export function PostMdList(props) {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const account = useContext(LoginContext);
-  const hColor = useColorModeValue("beige", "#2D3748");
+  const hColor = useColorModeValue("rgba(216, 183, 229, 0.2)", "#2D3748");
   const [showFirstScreen, setShowFirstScreen] = useState(true);
   // 화면 크기에 따라 항목 수 결정
   const itemsPerRow = useBreakpointValue({ base: 1, md: 4, lg: 3 });

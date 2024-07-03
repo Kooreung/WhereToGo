@@ -23,7 +23,7 @@ import { faComment } from "@fortawesome/free-regular-svg-icons";
 function LobbyPostListOfBest(props) {
   const [postListOfBest, setPostListOfBest] = useState([]);
   const navigate = useNavigate();
-  const hColor = useColorModeValue("beige", "#2D3748");
+  const hColor = useColorModeValue("rgba(216, 183, 229, 0.2)", "#2D3748");
   useEffect(() => {
     axios.get(`/api/post/list/postListOfBest`).then((res) => {
       setPostListOfBest(res.data);

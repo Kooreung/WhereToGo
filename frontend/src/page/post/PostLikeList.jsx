@@ -43,7 +43,7 @@ export function PostLikeList() {
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
   const account = useContext(LoginContext);
-  const hColor = useColorModeValue("beige", "#2D3748");
+  const hColor = useColorModeValue("rgba(216, 183, 229, 0.2)", "#2D3748");
 
   useEffect(() => {
     axios.get(`/api/post/likeList/${memberId}?${searchParams}`).then((res) => {

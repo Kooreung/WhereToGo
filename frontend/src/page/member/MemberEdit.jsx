@@ -7,10 +7,7 @@ import {
   Card,
   CardBody,
   CardFooter,
-  CardHeader,
   Center,
-  Divider,
-  Flex,
   FormControl,
   FormHelperText,
   Heading,
@@ -276,6 +273,7 @@ function MemberEdit(props) {
                   style={inputStyles}
                   onChange={(e) => setOldPassword(e.target.value)}
                   placeholder={"암호를 변경하려면 입력하세요"}
+                  type={"password"}
                 />
               </Box>
               <Box>

@@ -85,7 +85,7 @@ export function MemberAdminPage() {
   const [bannerLink, setBannerLink] = useState(import.meta.env.VITE_KEY_WORD);
   const [bannerFile, setBannerFile] = useState([]);
   const [city, setCity] = useState("");
-  const hColor = useColorModeValue("beige", "#2D3748");
+  const hColor = useColorModeValue("rgba(216, 183, 229, 0.2)", "#2D3748");
   const [visiblePosts, setVisiblePosts] = useState(3);
   const itemsPerRow = useBreakpointValue({ base: 1, md: 4, lg: 3 });
 
@@ -645,11 +645,7 @@ export function MemberAdminPage() {
                         key={member.memberId}
                       >
                         <Td w={"40%"}>{member.email}</Td>
-                        <Td
-                          w={"30%"}
-                        >
-                          {member.nickName}
-                        </Td>
+                        <Td w={"30%"}>{member.nickName}</Td>
                         <Td w={"10%"}>{member.inserted}</Td>
                         <Td w={"10%"}>
                           <ButtonCircle
@@ -666,7 +662,7 @@ export function MemberAdminPage() {
                             <MenuButton
                               as={Button}
                               rightIcon={<ChevronDownIcon />}
-                              w={"100%"}
+                              w={"100px"}
                             >
                               {member.authType}
                             </MenuButton>
