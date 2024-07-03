@@ -42,6 +42,7 @@ import MapView from "../../component/Map/MapView.jsx";
 import defaultImage from "../../resource/img/unknownImage.png";
 import ButtonOutline from "../../css/Button/ButtonOutline.jsx";
 import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
+import Lobby from "../Lobby.jsx";
 
 export function PostView() {
   const { postId } = useParams();
@@ -99,6 +100,10 @@ export function PostView() {
   // 게시글 번호 확인
   if (post === null || post === undefined) {
     return <Spinner />;
+  }
+
+  if (post.postId === null) {
+    return <Lobby />;
   }
 
   // 게시글 좋아요 클릭 시
