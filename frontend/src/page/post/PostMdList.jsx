@@ -107,7 +107,7 @@ export function PostMdList(props) {
               divider={<StackDivider borderColor={"blue"} />}
               w={{ base: "630px", lg: "940px", sm: "630px" }}
             >
-              <Flex wrap="wrap" border={"1px dotted red"}>
+              <Flex wrap="wrap">
                 {mdPost
                   .slice(
                     rowIndex * (itemsPerRow || 3),
@@ -393,7 +393,7 @@ export function PostMdList(props) {
         {showFirstScreen ? <FirstScreen /> : <SecondScreen />}
       </Box>
       <Box mt={5}>
-        {visiblePosts < mdPost.length - 1 && (
+        {visiblePosts < mdPost.length && (
           <Button onClick={handleLoadMore}>더보기</Button>
         )}
       </Box>
