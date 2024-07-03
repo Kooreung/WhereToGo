@@ -27,8 +27,14 @@ function Navbar() {
   const navigate = useNavigate();
   const account = useContext(LoginContext);
   const { colorMode, toggleColorMode } = useColorMode();
-  const navColor = useColorModeValue("#D8B7E5", "#836091");
-  const hColor = useColorModeValue("rgba(216, 183, 229, 0.2)", "#2D3748");
+  const navColor = useColorModeValue(
+    "rgba(131, 96, 145, 1)",
+    "rgba(216, 183, 229, 1)",
+  );
+  const hColor = useColorModeValue(
+    "rgba(216, 183, 229, 0.2)",
+    "rgba(131, 96, 145, 0.2)",
+  );
 
   return (
     <Box w={"100%"} mb={"4rem"}>

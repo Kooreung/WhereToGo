@@ -45,7 +45,10 @@ function PostList() {
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const hColor = useColorModeValue("rgba(216, 183, 229, 0.2)", "#2D3748");
+  const hColor = useColorModeValue(
+    "rgba(216, 183, 229, 0.2)",
+    "rgba(131, 96, 145, 0.2)",
+  );
 
   useEffect(() => {
     axios.get(`/api/post/list?${searchParams}`).then((res) => {
@@ -111,7 +114,12 @@ function PostList() {
         </HeadingVariant>
         <Spacer />
         {account.isLoggedIn() && (
-          <Button onClick={() => navigate(`/post/write`)}>글쓰기</Button>
+          <Button
+            onClick={() => navigate(`/post/write`)}
+            color={"black.alpha.900"}
+          >
+            글쓰기
+          </Button>
         )}
       </Flex>
       {/* 회원 게시글 페이지 */}
@@ -172,7 +180,13 @@ function PostList() {
                 <Flex w={"100%"} h={"32px"} alignItems={"center"}>
                   <Flex w={"50%"}>
                     <Flex overflow={"hidden"} textOverflow={"ellipsis"}>
-                      <Avatar w={"24px"} h={"24px"} src={post.profileName} />
+                      <Avatar
+                        w={"24px"}
+                        h={"24px"}
+                        name={" "}
+                        bgColor={"white"}
+                        src={post.profileName}
+                      />
                       <Box
                         ml={1}
                         textAlign={"start"}
@@ -263,7 +277,7 @@ function PostList() {
                 <option value={"address"}>지역명</option>
               </Select>
             </Box>
-            <Box>
+            <Box ml={1}>
               <Input
                 value={searchKeyword}
                 onChange={(e) => {
@@ -273,7 +287,7 @@ function PostList() {
                 placeholder={"검색어"}
               />
             </Box>
-            <Box>
+            <Box ml={2}>
               <ButtonCircle onClick={handleSearchClick}>
                 <FontAwesomeIcon icon={faMagnifyingGlass} fontSize="small" />
               </ButtonCircle>

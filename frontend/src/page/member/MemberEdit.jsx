@@ -215,6 +215,7 @@ function MemberEdit(props) {
                 _hover={{ filter: "brightness(0.7)" }}
                 cursor={"pointer"}
                 name="defaultProfile"
+                bgColor={"white"}
                 src={profile.src}
                 w="250px"
                 h="250px"
@@ -258,6 +259,7 @@ function MemberEdit(props) {
                     isCheckedNickName || member.nickName === oldNickName
                   }
                   onClick={handleCheckNickName}
+                  color={"black.alpha.900"}
                 >
                   중복확인
                 </Button>
@@ -287,6 +289,7 @@ function MemberEdit(props) {
                     setMember({ ...member, password: newPassword });
                     setIsPasswordValid(isValidPassword(newPassword));
                   }}
+                  type={"password"}
                 />
                 {!isPasswordValid && (
                   <FormHelperText>
@@ -299,6 +302,7 @@ function MemberEdit(props) {
                 <Input
                   style={inputStyles}
                   onChange={(e) => setPasswordCheck(e.target.value)}
+                  type={"password"}
                 />
                 {member.password === passwordCheck || (
                   <FormHelperText>암호가 일치하지 않습니다.</FormHelperText>
@@ -308,19 +312,17 @@ function MemberEdit(props) {
           </Stack>
         </CardBody>
         <CardFooter display="flex" justifyContent="flex-end">
-          <ButtonGroup spacing="2">
+          <ButtonGroup>
             <Button
               isDisabled={isDisableSaveButton}
               onClick={onOpen}
-              colorScheme={"blue"}
-              size={"sm"}
+              color={"black.alpha.900"}
             >
               저장
             </Button>
             <Button
-              colorScheme={"blue"}
-              size={"sm"}
               onClick={() => navigate("/memberinfo")}
+              color={"black.alpha.900"}
             >
               취소
             </Button>

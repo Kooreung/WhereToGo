@@ -19,7 +19,10 @@ export function LobbyMdList() {
   const intervalRef = useRef(null);
   const navigate = useNavigate();
   const account = useContext(LoginContext);
-  const hColor = useColorModeValue("rgba(216, 183, 229, 0.2)", "#2D3748");
+  const hColor = useColorModeValue(
+    "rgba(216, 183, 229, 0.2)",
+    "rgba(131, 96, 145, 0.2)",
+  );
 
   useEffect(() => {
     intervalRef.current = setInterval(() => {

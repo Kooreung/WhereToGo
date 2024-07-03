@@ -7,7 +7,11 @@ import HeadingVariant from "../css/Heading/HeadingVariant.jsx";
 function Footer() {
   const navigate = useNavigate();
   const account = useContext(LoginContext);
-  const navColor = useColorModeValue("#D8B7E5", "#836091");
+  const navColor = useColorModeValue(
+    "rgba(216, 183, 229, 1)",
+    "rgba(131, 96, 145, 1)",
+  );
+
   return (
     <Flex
       w={"100%"}

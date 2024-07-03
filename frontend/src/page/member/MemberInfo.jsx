@@ -194,21 +194,14 @@ export function MemberInfo(props) {
           />
           <Text>Like</Text>
         </Box>
-        <ButtonGroup spacing="2">
+        <ButtonGroup>
           <Button
-            size={"sm"}
-            variant="solid"
-            colorScheme="blue"
             onClick={() => navigate(`/member/edit`)}
+            color={"black.alpha.900"}
           >
             수정
           </Button>
-          <Button
-            size={"sm"}
-            variant="solid"
-            colorScheme="red"
-            onClick={onOpen}
-          >
+          <Button onClick={onOpen} color={"black.alpha.900"}>
             탈퇴
           </Button>
           <Modal isOpen={isOpen} onClose={onClose}>

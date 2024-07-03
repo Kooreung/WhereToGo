@@ -23,7 +23,10 @@ import { faComment } from "@fortawesome/free-regular-svg-icons";
 function LobbyPostListOfBest(props) {
   const [postListOfBest, setPostListOfBest] = useState([]);
   const navigate = useNavigate();
-  const hColor = useColorModeValue("rgba(216, 183, 229, 0.2)", "#2D3748");
+  const hColor = useColorModeValue(
+    "rgba(216, 183, 229, 0.2)",
+    "rgba(131, 96, 145, 0.2)",
+  );
   useEffect(() => {
     axios.get(`/api/post/list/postListOfBest`).then((res) => {
       setPostListOfBest(res.data);
@@ -97,7 +100,13 @@ function LobbyPostListOfBest(props) {
               <Flex w={"100%"} h={"32px"} alignItems={"center"}>
                 <Flex w={"45%"}>
                   <Box w={"24px"} h={"24px"} mr={1} borderRadius={"100%"}>
-                    <Avatar w={"24px"} h={"24px"} src={post.profileName} />
+                    <Avatar
+                      w={"24px"}
+                      h={"24px"}
+                      name={" "}
+                      bgColor={"white"}
+                      src={post.profileName}
+                    />
                   </Box>
                   <Box
                     w={"100%"}
@@ -166,7 +175,12 @@ function LobbyPostListOfBest(props) {
         </Card>
       ))}
       <Center>
-        <Button onClick={() => navigate("/post/list")}>다른 글 더 보기</Button>
+        <Button
+          onClick={() => navigate("/post/list")}
+          color={"black.alpha.900"}
+        >
+          다른 글 더 보기
+        </Button>
       </Center>
     </Box>
   );

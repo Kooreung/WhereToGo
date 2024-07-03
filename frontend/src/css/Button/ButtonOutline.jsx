@@ -1,5 +1,9 @@
 import React from "react";
-import { Button, useBreakpointValue } from "@chakra-ui/react";
+import {
+  Button,
+  useBreakpointValue,
+  useColorModeValue,
+} from "@chakra-ui/react";
 
 // 사이즈 별 분류 , 반응에 따른 사이즈
 const presets = {
@@ -65,6 +69,11 @@ const presets = {
   },
 };
 
+const bgColor = useColorModeValue(
+  "rgba(216, 183, 229, 0.5)",
+  "rgba(131, 96, 145, 0.5)",
+);
+
 function ButtonOutline({ variant = "SquaMedium", ...props }) {
   // 기본 프리셋 값 medium
   const preset = presets[variant] || presets["SquaMedium"];
@@ -85,8 +94,8 @@ function ButtonOutline({ variant = "SquaMedium", ...props }) {
       w={buttonWidth}
       h={buttonHeight}
       variant={"outline"}
-      color={"#836091"}
-      colorScheme={"#836091"}
+      color={bgColor}
+      colorScheme={bgColor}
       cursor={"pointer"}
       align={"center"}
       justifyContent="center"

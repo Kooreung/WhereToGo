@@ -48,17 +48,18 @@ import {
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBackwardFast,
-  faBackwardStep,
-  faForwardFast,
-  faForwardStep,
+  faAngleLeft,
+  faAngleRight,
+  faAnglesLeft,
+  faAnglesRight,
   faMagnifyingGlass,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import Lobby from "../Lobby.jsx";
 import { LoginContext } from "../../component/LoginProvider.jsx";
 import ContentParser from "../../component/ContentParser.jsx";
-import ButtonNumber from "../../css/Button/ButtonOutline.jsx";
+
+import ButtonOutline from "../../css/Button/ButtonOutline.jsx";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
@@ -85,7 +86,10 @@ export function MemberAdminPage() {
   const [bannerLink, setBannerLink] = useState(import.meta.env.VITE_KEY_WORD);
   const [bannerFile, setBannerFile] = useState([]);
   const [city, setCity] = useState("");
-  const hColor = useColorModeValue("rgba(216, 183, 229, 0.2)", "#2D3748");
+  const hColor = useColorModeValue(
+    "rgba(216, 183, 229, 0.2)",
+    "rgba(131, 96, 145, 0.2)",
+  );
   const [visiblePosts, setVisiblePosts] = useState(3);
   const itemsPerRow = useBreakpointValue({ base: 1, md: 4, lg: 3 });
 
@@ -619,7 +623,6 @@ export function MemberAdminPage() {
             {memberList.length > 0 && (
               <TableContainer
                 w={{ base: "720px", sm: "720px", lg: "960px" }}
-                border={"1px dotted red"}
                 mb={"1rem"}
               >
                 <Table>
@@ -663,6 +666,7 @@ export function MemberAdminPage() {
                               as={Button}
                               rightIcon={<ChevronDownIcon />}
                               w={"100px"}
+                              color={"black.alpha.900"}
                             >
                               {member.authType}
                             </MenuButton>
@@ -723,20 +727,24 @@ export function MemberAdminPage() {
               <Box>
                 {pageInfo.prevPageNumber && (
                   <>
-                    <ButtonNumber onClick={() => handlePageButtonClick(1)}>
-                      <FontAwesomeIcon icon={faBackwardFast} />
-                    </ButtonNumber>
-                    <ButtonNumber
+                    <ButtonOutline
+                      onClick={() => handlePageButtonClick(1)}
+                      colorScheme={"gray"}
+                    >
+                      <FontAwesomeIcon icon={faAnglesLeft} />
+                    </ButtonOutline>
+                    <ButtonOutline
                       onClick={() =>
                         handlePageButtonClick(pageInfo.prevPageNumber)
                       }
+                      colorScheme={"gray"}
                     >
-                      <FontAwesomeIcon icon={faBackwardStep} />
-                    </ButtonNumber>
+                      <FontAwesomeIcon icon={faAngleLeft} />
+                    </ButtonOutline>
                   </>
                 )}
                 {pageNumbers.map((pageNumber) => (
-                  <ButtonNumber
+                  <ButtonOutline
                     onClick={() => handlePageButtonClick(pageNumber)}
                     key={pageNumber}
                     colorScheme={
@@ -746,24 +754,26 @@ export function MemberAdminPage() {
                     }
                   >
                     {pageNumber}
-                  </ButtonNumber>
+                  </ButtonOutline>
                 ))}
                 {pageInfo.nextPageNumber && (
                   <>
-                    <ButtonNumber
+                    <ButtonOutline
                       onClick={() =>
                         handlePageButtonClick(pageInfo.nextPageNumber)
                       }
+                      colorScheme={"gray"}
                     >
-                      <FontAwesomeIcon icon={faForwardStep} />
-                    </ButtonNumber>
-                    <ButtonNumber
+                      <FontAwesomeIcon icon={faAngleRight} />
+                    </ButtonOutline>
+                    <ButtonOutline
                       onClick={() =>
                         handlePageButtonClick(pageInfo.lastPageNumber)
                       }
+                      colorScheme={"gray"}
                     >
-                      <FontAwesomeIcon icon={faForwardFast} />
-                    </ButtonNumber>
+                      <FontAwesomeIcon icon={faAnglesRight} />
+                    </ButtonOutline>
                   </>
                 )}
               </Box>
@@ -779,7 +789,6 @@ export function MemberAdminPage() {
             {Array.isArray(withdrawnList) && withdrawnList.length > 0 && (
               <TableContainer
                 w={{ base: "720px", sm: "720px", lg: "960px" }}
-                border={"1px dotted red"}
                 mb={"1rem"}
               >
                 <Table>
@@ -830,12 +839,8 @@ export function MemberAdminPage() {
             <Box mb={"2rem"}>
               <HeadingVariant variant={"large"}>배너 등록</HeadingVariant>
             </Box>
-            <Box
-              w={{ base: "720px", sm: "720px", lg: "960px" }}
-              border={"1px dotted red"}
-              mb={"1rem"}
-            >
-              <Wrap>
+            <Box w={{ base: "720px", sm: "720px", lg: "960px" }} mb={"1rem"}>
+              <Wrap mb={"1rem"}>
                 <WrapItem>
                   <Button onClick={handleAddClick}>MD 게시글 선택</Button>
                 </WrapItem>
@@ -1009,7 +1014,6 @@ export function MemberAdminPage() {
                   {toggleState[mdPost.postId] && (
                     <>
                       {previewUrls[mdPost.postId] ? (
-                        // 이미지 미리보기를 표시합니다.
                         <Box mb={7} w="100%" h="200px" overflow="hidden">
                           <img
                             src={previewUrls[mdPost.postId]}
@@ -1018,7 +1022,6 @@ export function MemberAdminPage() {
                           />
                         </Box>
                       ) : (
-                        // 기본 이미지 또는 플레이스홀더를 표시합니다.
                         <Box mb={7} w="100%" h="200px" bg="gray.200"></Box>
                       )}
                       <Box mb={7}>
@@ -1046,7 +1049,9 @@ export function MemberAdminPage() {
           ))}
           <Center mt={5}>
             {visiblePosts < mdPosts.length - 1 && (
-              <Button onClick={handleLoadMore}>더보기</Button>
+              <Button onClick={handleLoadMore} color={"black.alpha.900"}>
+                더보기
+              </Button>
             )}
           </Center>
           <ModalFooter>

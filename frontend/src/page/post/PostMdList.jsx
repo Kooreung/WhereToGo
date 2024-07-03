@@ -41,7 +41,10 @@ export function PostMdList(props) {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const account = useContext(LoginContext);
-  const hColor = useColorModeValue("rgba(216, 183, 229, 0.2)", "#2D3748");
+  const hColor = useColorModeValue(
+    "rgba(216, 183, 229, 0.2)",
+    "rgba(131, 96, 145, 0.2)",
+  );
   const [showFirstScreen, setShowFirstScreen] = useState(true);
   // 화면 크기에 따라 항목 수 결정
   const itemsPerRow = useBreakpointValue({ base: 1, md: 4, lg: 3 });
@@ -248,7 +251,13 @@ export function PostMdList(props) {
                 <Flex w={"100%"} h={"32px"} alignItems={"center"}>
                   <Flex w={"50%"}>
                     <Flex overflow={"hidden"} textOverflow={"ellipsis"}>
-                      <Avatar w={"24px"} h={"24px"} src={post.profileName} />
+                      <Avatar
+                        w={"24px"}
+                        h={"24px"}
+                        name={" "}
+                        bgColor={"white"}
+                        src={post.profileName}
+                      />
                       <Box
                         ml={1}
                         textAlign={"start"}
@@ -363,7 +372,10 @@ export function PostMdList(props) {
           </Flex>
           <Box ml={1}>
             {account.isAdmin() && (
-              <Button onClick={() => navigate(`/post/write`)} fontSize="small">
+              <Button
+                onClick={() => navigate(`/post/write`)}
+                color={"black.alpha.900"}
+              >
                 글쓰기
               </Button>
             )}
@@ -381,7 +393,9 @@ export function PostMdList(props) {
       </Box>
       <Box mt={5}>
         {visiblePosts < mdPost.length - 1 && (
-          <Button onClick={handleLoadMore}>더보기</Button>
+          <Button onClick={handleLoadMore} color={"black.alpha.900"}>
+            더보기
+          </Button>
         )}
       </Box>
     </Box>
