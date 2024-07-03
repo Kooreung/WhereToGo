@@ -107,6 +107,20 @@ export function MemberAdminPage() {
     onClose: onHardDeleteAccountModalClose,
   } = useDisclosure();
 
+  const {
+    isOpen: isMdPostModalOpen,
+    onOpen: onMdPostModalOpen,
+    onClose: onMdPostModalClose,
+  } = useDisclosure();
+
+  const [deletePostId, setDeletePostId] = useState(null);
+
+  const {
+    isOpen: isBannerModalOpen,
+    onOpen: onBannerModalOpen,
+    onClose: onBannerModalClose,
+  } = useDisclosure();
+
   const [selectedMemberId, setSelectedMemberId] = useState(null);
 
   // 삭제하려는 사용자의 ID를 설정하고 모달을 열기 위한 함수
@@ -342,6 +356,15 @@ export function MemberAdminPage() {
       // 오류 처리 로직을 추가합니다.
     }
   };
+  const handleDeleteConfirm = () => {
+    handleDelete(deletePostId);
+    onMdPostModalClose();
+  };
+
+  const openDeleteModal = (postId) => {
+    setDeletePostId(postId);
+    onMdPostModalOpen();
+  };
 
   async function handleModalClose() {
     // // 상태 업데이트를 비동기적으로 처리합니다.
@@ -443,20 +466,29 @@ export function MemberAdminPage() {
   );
 
   //--------------------------------------------배너모달
+  const [selectedBannerId, setSelectedBannerId] = useState(null);
 
-  async function handleBannerDelete(bannerId) {
+  const handleBannerDelete = async (bannerId) => {
     try {
-      // `axios.delete` 요청을 기다립니다.
       await axios.delete(`/api/post/banner/remove/${bannerId}`);
-      // 요청이 성공하면 배너 리스트 상태를 업데이트합니다.
       setBannerList((prevBannerList) =>
         prevBannerList.filter((banner) => banner.bannerId !== bannerId),
       );
+      onBannerModalClose();
     } catch (error) {
-      // 오류 처리
       console.error("배너 삭제 중 오류 발생:", error);
     }
-  }
+  };
+  const handleBannerDeleteClick = (bannerId) => {
+    setSelectedBannerId(bannerId);
+    onBannerModalOpen();
+  };
+
+  const handleBannerDeleteConfirm = () => {
+    if (selectedBannerId !== null) {
+      handleBannerDelete(selectedBannerId);
+    }
+  };
 
   function fetchBannerList() {
     // 배너 리스트를 불러오는 로직
@@ -828,7 +860,7 @@ export function MemberAdminPage() {
                         </Td>
                         <Td>
                           <ButtonCircle
-                            onClick={() => handleDelete(mdpick.postId)}
+                            onClick={() => openDeleteModal(mdpick.postId)}
                           >
                             <FontAwesomeIcon icon={faTrash} />
                           </ButtonCircle>
@@ -839,6 +871,17 @@ export function MemberAdminPage() {
                 </Table>
               </CardBody>
             </Card>
+            <Modal isOpen={isMdPostModalOpen} onClose={onMdPostModalClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>삭제 확인</ModalHeader>
+                <ModalBody>정말로 삭제하시겠습니까?</ModalBody>
+                <ModalFooter>
+                  <Button onClick={handleDeleteConfirm}>확인</Button>
+                  <Button onClick={onMdPostModalClose}>취소</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
             {/*여기*/}
             <Card mt={10} w={{ base: "720px", lg: "100%" }}>
               <CardBody>
@@ -866,7 +909,9 @@ export function MemberAdminPage() {
                         <Td sx={tdCellStyle}>{banner.link}</Td>
                         <Td>
                           <ButtonCircle
-                            onClick={() => handleBannerDelete(banner.bannerId)}
+                            onClick={() =>
+                              handleBannerDeleteClick(banner.bannerId)
+                            }
                           >
                             <FontAwesomeIcon icon={faTrash} />
                           </ButtonCircle>
@@ -877,6 +922,17 @@ export function MemberAdminPage() {
                 </Table>
               </CardBody>
             </Card>
+            <Modal isOpen={isBannerModalOpen} onClose={onBannerModalClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>삭제 확인</ModalHeader>
+                <ModalBody>정말로 삭제하시겠습니까?</ModalBody>
+                <ModalFooter>
+                  <Button onClick={handleBannerDeleteConfirm}>확인</Button>
+                  <Button onClick={onBannerModalClose}>취소</Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
           </TabPanel>
         </TabPanels>
       </Tabs>
