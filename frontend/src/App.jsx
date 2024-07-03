@@ -5,7 +5,6 @@ import PostWrite from "./page/post/PostWrite.jsx";
 
 import { MemberInfo } from "./page/member/MemberInfo.jsx"; // 라우터 설정
 import { MemberSignup } from "./page/member/MemberSignup.jsx";
-import { CommentComponent } from "./component/Comment/CommentComponent.jsx";
 import { PostView } from "./page/post/PostView.jsx";
 import PostList from "./page/post/PostList.jsx";
 import { PostEdit } from "./page/post/PostEdit.jsx";
@@ -58,8 +57,6 @@ const router = createBrowserRouter([
       { path: "post/mdList", element: <PostMdList /> },
       // 좋아요한 게시글 목록 페이지
       { path: "post/likeList/:memberId", element: <PostLikeList /> },
-      // 댓글 페이지
-      { path: "comment", element: <CommentComponent /> },
     ],
   },
 ]);

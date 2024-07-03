@@ -192,7 +192,7 @@ export function MemberInfo(props) {
             size="lg"
             style={{ color: "#D8B7E5", marginRight: "8px" }}
           />
-          <Text>Like</Text>
+          <Text>활동 내역</Text>
         </Box>
         <ButtonGroup>
           <Button

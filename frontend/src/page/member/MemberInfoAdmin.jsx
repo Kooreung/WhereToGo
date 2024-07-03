@@ -194,15 +194,15 @@ export function MemberInfoAdmin() {
                   />{" "}
                   {count.length}
                 </Text>
-                <Text>
+                <Text mr={"1"}>
                   <FontAwesomeIcon
                     icon={faHeart}
                     style={{ color: "#D8B7E5" }}
-                  />{" "}
-                  {likeCountAll}
+                  />
                 </Text>
+                <Text>{likeCountAll}</Text>
               </Flex>
-              <Text>{member.inserted}</Text>
+              <Text>가입일자 : {member.inserted}</Text>
             </Flex>
           </Flex>
         </CardBody>
@@ -217,8 +217,8 @@ export function MemberInfoAdmin() {
             onChange={handleTabChange}
           >
             <TabList mb={5}>
-              <Tab>게시물</Tab>
-              <Tab>좋아요</Tab>
+              <Tab>작성한 게시물</Tab>
+              <Tab>좋아요를 누른 게시물</Tab>
             </TabList>
             <TabPanels>
               <TabPanel>
