@@ -595,25 +595,25 @@ export function MemberAdminPage() {
                             backgroundColor: hColor,
                           },
                         }}
+                        onClick={() => navigate(`/member/${member.memberId}`)}
                         key={member.memberId}
                       >
                         <Td>{member.memberId}</Td>
                         <Td>{member.email}</Td>
-                        <Td
-                          onClick={() => navigate(`/member/${member.memberId}`)}
-                        >
-                          {member.nickName}
-                        </Td>
+                        <Td>{member.nickName}</Td>
                         <Td>{member.inserted}</Td>
 
                         <Td>
                           <ButtonCircle
-                            onClick={() => softDelete(member.memberId)}
+                            onClick={(e) => {
+                              e.stopPropagation(); // 이벤트 버블링 방지
+                              softDelete(member.memberId);
+                            }}
                           >
                             <FontAwesomeIcon icon={faTrash} />
                           </ButtonCircle>
                         </Td>
-                        <Td>
+                        <Td onClick={(e) => e.stopPropagation()}>
                           <Menu>
                             <MenuButton
                               as={Button}
@@ -625,17 +625,19 @@ export function MemberAdminPage() {
                             <MenuList>
                               {member.authType === "user" ? (
                                 <MenuItem
-                                  onClick={() =>
-                                    authTypeChange("admin", member.memberId)
-                                  }
+                                  onClick={(e) => {
+                                    e.stopPropagation(); // 이벤트 버블링 방지
+                                    authTypeChange("admin", member.memberId);
+                                  }}
                                 >
                                   admin
                                 </MenuItem>
                               ) : (
                                 <MenuItem
-                                  onClick={() =>
-                                    authTypeChange("user", member.memberId)
-                                  }
+                                  onClick={(e) => {
+                                    e.stopPropagation(); // 이벤트 버블링 방지
+                                    authTypeChange("user", member.memberId);
+                                  }}
                                 >
                                   user
                                 </MenuItem>
@@ -751,20 +753,20 @@ export function MemberAdminPage() {
                             backgroundColor: hColor,
                           },
                         }}
+                        onClick={() => navigate(`/member/${member.memberId}`)}
                         key={member.memberId}
                       >
                         <Td>{member.memberId}</Td>
                         <Td>{member.email}</Td>
-                        <Td
-                          onClick={() => navigate(`/member/${member.memberId}`)}
-                        >
-                          {member.nickName}
-                        </Td>
+                        <Td>{member.nickName}</Td>
                         <Td>{member.inserted}</Td>
 
                         <Td>
                           <ButtonCircle
-                            onClick={() => hardDelete(member.memberId)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              hardDelete(member.memberId);
+                            }}
                           >
                             <FontAwesomeIcon icon={faTrash} />
                           </ButtonCircle>
