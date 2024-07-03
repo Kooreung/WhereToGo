@@ -1082,9 +1082,7 @@ export function MemberAdminPage() {
           <ModalCloseButton />
           <ModalBody>정말 탈퇴 시키겠습니까?</ModalBody>
           <ModalFooter>
-            <Button mr={3} onClick={handleSoftDeleteUser}>
-              확인
-            </Button>
+            <Button onClick={handleSoftDeleteUser}>확인</Button>
             <Button onClick={onSoftDeleteAccountModalClose}>취소</Button>
           </ModalFooter>
         </ModalContent>
@@ -1101,9 +1099,7 @@ export function MemberAdminPage() {
             회원의 모든 정보, 게시물 등이 삭제됩니다. 삭제 하시겠습니까?
           </ModalBody>
           <ModalFooter>
-            <Button mr={3} onClick={handleHardDeleteUser}>
-              확인
-            </Button>
+            <Button onClick={handleHardDeleteUser}>확인</Button>
             <Button onClick={onHardDeleteAccountModalClose}>취소</Button>
           </ModalFooter>
         </ModalContent>
