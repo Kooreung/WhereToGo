@@ -8,6 +8,7 @@ import java.util.List;
 @Mapper
 public interface MemberMapper {
 
+    //유저 가입기능
     @Insert("""
             INSERT INTO member (email, password, nickname, name, gender, birth, address, phonenumber)
             VALUES (#{email}, #{password}, #{nickName}, #{name}, #{gender}, #{birth}, #{address}, #{phoneNumber})
@@ -30,6 +31,7 @@ public interface MemberMapper {
             """)
     Member selectByNickName(String nickName);
 
+    //멤버 정보 멤버 아이디로 찾는 기능
     @Select("""
             SELECT memberId, 
                    email, 
@@ -44,8 +46,9 @@ public interface MemberMapper {
             FROM member
             where memberId = #{memberId};
             """)
-    Member selectMemberBymemberId(int memberId);
+    Member selectMemberByMemberId(int memberId);
 
+    //유저 닉네임, 비밀번호 업데이트에 사용
     @Update("""
             UPDATE member 
             SET
@@ -55,6 +58,7 @@ public interface MemberMapper {
             """)
     int update(Member member);
 
+    //유저 임시삭제 상태 유저가 작성한 게시물, 댓글은 남아있음 유저 상태를 업데이트해 삭제처럼 보이게함
     @Update("""
             UPDATE member
             SET email = '1',
@@ -68,12 +72,14 @@ public interface MemberMapper {
                         """)
     int deleteByid(Integer memberId, String randomNickName);
 
+    //프로필 업데이트, 가입시 선택한 프로필 넣음
     @Insert("""
             insert into profile(memberid, profilename)
             values(#{memberId},#{profileName})
             """)
     int updateProfileName(Integer memberId, String profileName);
 
+    //프로필이름 가져오는 기능
     @Select("""
             SELECT profilename
             from profile
@@ -81,14 +87,15 @@ public interface MemberMapper {
             """)
     String getProfileNameByMemberId(Integer memberId);
 
+    //프로필 삭제
     @Delete("""
             DELETE FROM profile
             WHERE memberid=#{boardId}
-              AND profilename=#{fileName}
             """)
-    int deleteFileByBoardIdAndName(Integer boardId, String fileName);
+    int deleteFileByMemberId(Integer memberId);
 
 
+    //프로필 업데이트
     @Update("""
             update profile
             set profilename = #{profileName}
@@ -103,6 +110,7 @@ public interface MemberMapper {
                 WHERE email = #{email}
             """)
     int findByEmailAndUpdatePassword(String email, String pw);
+
 
     @Select("""
             SELECT authtype
@@ -139,24 +147,34 @@ public interface MemberMapper {
             SELECT m.memberId, m.email, m.nickname, m.inserted
             FROM member m JOIN authority a
             ON m.memberId = a.memberId
-            <trim prefix="WHERE" prefixOverrides="OR">
-                       <if test="searchType != null">
-                           <bind name="pattern" value="'%' + keyword + '%'" />
-                           <if test="searchType == 'all' || searchType == 'email'">
-                               OR m.email LIKE #{pattern}
-                                AND a.authtype &lt;&gt; 'admin'
-                           </if>
-                           <if test="searchType == 'all' || searchType == 'nickName'">
-                               OR m.nickname LIKE #{pattern}
-                                AND a.authtype &lt;&gt; 'admin'
-                           </if>
-                       </if>
-                   </trim>
+            <where>
+                a.authtype &lt;&gt; 'admin'
+                AND m.email &lt;&gt; '1'
+                <if test="searchType != null">
+                    <bind name="pattern" value="'%' + keyword + '%'" />
+                    <choose>
+                        <when test="searchType == 'all' || searchType == 'email'">
+                            AND m.email LIKE #{pattern}
+                        </when>
+                        <when test="searchType == 'all' || searchType == 'nickName'">
+                            AND m.nickname LIKE #{pattern}
+                        </when>
+                    </choose>
+                </if>
+            </where>
             ORDER BY m.memberId DESC
             LIMIT #{offset}, 10
             </script>
             """)
     List<Member> selectMemberAllPaging(Integer offset, String searchType, String keyword);
+
+
+    //탈퇴한 유저 조회
+    @Select("""
+            SELECT * from member
+            where email = '1'
+            """)
+    List<Member> selectWithdrawnMember();
 
     @Select("""
             SELECT COUNT(*) 
@@ -165,6 +183,7 @@ public interface MemberMapper {
             WHERE authtype <> 'admin'
             """)
     Integer countAll();
+
 
     @Select("""
             <script>
@@ -188,18 +207,26 @@ public interface MemberMapper {
             """)
     Integer countAllWithSearch(String searchType, String keyword);
 
-
+    //멤버의 권한확인
     @Select("""
             SELECT authtype from authority
             where memberid = #{memberId}
             """)
     String getAuthTypeByMemberId(int memberId);
 
-
+    //멤버의 권한변경
     @Update("""
             UPDATE authority
             SET authtype=#{authType}
             where memberid=#{memberId}
             """)
     int updateAuthTypeByMemberId(Integer memberId, String authType);
+
+
+    //유저 완전삭제 게시물, 댓글, 좋아요, 프로필 모든정보 삭제
+    @Delete("""
+            DELETE FROM member
+            where memberid=#{memberId}
+            """)
+    int hardDeleteByMemberId(Integer memberId);
 }
