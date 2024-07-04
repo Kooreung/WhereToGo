@@ -86,7 +86,7 @@ export function LobbyMdList() {
         mb={{ lg: "16px", sm: "8px" }}
         textAlign={"start"}
       >
-        MD 추천 Pick
+        MD 추천 PICK
       </HeadingVariant>
 
       <Box
