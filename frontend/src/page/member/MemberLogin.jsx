@@ -4,7 +4,6 @@ import {
   Center,
   FormControl,
   FormLabel,
-  Heading,
   Input,
   InputGroup,
   InputRightElement,
@@ -35,7 +34,8 @@ export function MemberLogin() {
       .post("/api/member/login", { email, password })
       .then((res) => {
         // localStorage 에 토큰 정보 저장
-        account.login(res.data.token);
+        console.log(res.data);
+        account.login(res.data);
         toast({
           status: "success",
           description: "로그인 되었습니다.",

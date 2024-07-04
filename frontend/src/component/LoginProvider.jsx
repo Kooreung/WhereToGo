@@ -1,31 +1,66 @@
 import React, { createContext, useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode"; // 여러 컴포넌트가 현재 로그인 정보 사용하기 위해 Context 사용
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
-// 여러 컴포넌트가 현재 로그인 정보 사용하기 위해 Context 사용
 export const LoginContext = createContext(null);
 
 export function LoginProvider({ children }) {
   const [memberId, setMemberId] = useState(0);
   const [email, setEmail] = useState("");
   const [nickName, setNickName] = useState("");
-  // 로그인 한 날짜(시간) state 에 저장
   const [expired, setExpired] = useState(0);
   const [authority, setAuthority] = useState([]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token === null) {
-      return;
+    const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (!accessToken && refreshToken) {
+      refreshAccessToken(refreshToken, memberId);
+    } else if (accessToken) {
+      const decodedToken = jwtDecode(accessToken);
+      if (decodedToken.exp * 1000 < Date.now()) {
+        if (refreshToken) {
+          refreshAccessToken(refreshToken, decodedToken.sub);
+        }
+      } else {
+        login({ accessToken, refreshToken });
+      }
     }
-    login(token);
   }, []);
 
-  // 로그인 유무 확인 함수
-  function isLoggedIn() {
-    return Date.now() < expired * 1000;
+  function setLoginState(decodedToken) {
+    setMemberId(decodedToken.sub);
+    setEmail(decodedToken.email);
+    setNickName(decodedToken.nickName);
+    setAuthority(decodedToken.scope.split(" "));
+    setExpired(decodedToken.exp);
   }
 
-  // 게시글 권한 확인 함수
+  function refreshAccessToken(oldrefreshToken, memberId) {
+    axios
+      .post("/api/token/refresh", {
+        refreshToken: oldrefreshToken,
+        memberId: memberId,
+      })
+      .then((response) => {
+        const { accessToken, refreshToken } = response.data;
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+        login(response.data);
+      })
+      .catch((error) => {
+        console.error("토큰 갱신 실패", error);
+        logout();
+      });
+  }
+
+  function isLoggedIn() {
+    // 로컬 스토리지에서 accessToken을 가져옵니다.
+    const accessToken = localStorage.getItem("accessToken");
+    // accessToken이 존재하면 true, 그렇지 않으면 false를 반환합니다.
+    return !!accessToken;
+  }
+
   function hasAccessMemberId(param) {
     return memberId == param;
   }
@@ -39,19 +74,15 @@ export function LoginProvider({ children }) {
   }
 
   function login(token) {
-    localStorage.setItem("token", token);
-    // jwtDecode(token)으로 토큰의 페이로드(정보)를 가져옴
-    const payload = jwtDecode(token);
-    // payload 에서 가져온 해당 정보를 상태로 설정함
-    setExpired(payload.exp);
-    setEmail(payload.email);
-    setNickName(payload.nickName);
-    setMemberId(payload.sub);
-    setAuthority(payload.scope.split(" "));
+    localStorage.setItem("accessToken", token.accessToken);
+    localStorage.setItem("refreshToken", token.refreshToken);
+    const decodedToken = jwtDecode(token.accessToken);
+    setLoginState(decodedToken);
   }
 
   function logout() {
-    localStorage.removeItem("token");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     setExpired(0);
     setEmail("");
     setNickName("");
@@ -62,15 +93,15 @@ export function LoginProvider({ children }) {
   return (
     <LoginContext.Provider
       value={{
-        email: email,
-        nickName: nickName,
-        memberId: memberId,
-        login: login,
-        logout: logout,
-        isLoggedIn: isLoggedIn,
-        hasAccessEmail: hasAccessEmail,
-        hasAccessMemberId: hasAccessMemberId,
-        isAdmin: isAdmin,
+        email,
+        nickName,
+        memberId,
+        login,
+        logout,
+        isLoggedIn,
+        hasAccessEmail,
+        hasAccessMemberId,
+        isAdmin,
       }}
     >
       {children}
