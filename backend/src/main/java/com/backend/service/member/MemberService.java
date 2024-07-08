@@ -332,35 +332,47 @@ public class MemberService {
             // db 에 저장된 password 와 사용자가 입력한 password 를 비교해서 같으면 실행
             if (passwordEncoder.matches(member.getPassword(), db.getPassword())) {
                 result = new HashMap<>();
-                String token = "";
+                String accessToken = "";
+                String refreshToken = "";
                 // 현재 시간 가져옴
                 Instant now = Instant.now();
 
                 List<String> authority = mapper.selectAuthorityByMemberId(db.getMemberId());
 
                 String authorityString = authority.stream()
-                        .collect(Collectors.joining(""));
+                        .collect(Collectors.joining(" "));
 
-
-                JwtClaimsSet claims = JwtClaimsSet.builder()
+                // 엑세스 토큰 생성
+                JwtClaimsSet accessClaims = JwtClaimsSet.builder()
                         .issuer("self") // 토큰 발급자
-                        .issuedAt(now) //  토큰 발급 시간
-                        .expiresAt(now.plusSeconds(60 * 60 * 24 * 7)) // 토큰 만료 시간
+                        .issuedAt(now) // 토큰 발급 시간
+                        .expiresAt(now.plusSeconds(60 * 60 * 24)) // 토큰 만료 시간
                         .subject(db.getMemberId().toString()) // unique 한 값 사용
                         .claim("scope", authorityString) // 권한
                         .claim("nickName", db.getNickName())
                         .claim("email", db.getEmail())
                         .build();
 
-                // 인코딩 된 jwk 변수에 할당
-                token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+                // 리프레시 토큰 생성
+                JwtClaimsSet refreshClaims = JwtClaimsSet.builder()
+                        .issuer("self")
+                        .issuedAt(now)
+                        .expiresAt(now.plusSeconds(60 * 60 * 24 * 7)) // 예: 30일 후 만료
+                        .subject(db.getMemberId().toString())
+                        .build();
 
-                result.put("token", token);
+                // 인코딩 된 jwk 변수에 할당
+                accessToken = jwtEncoder.encode(JwtEncoderParameters.from(accessClaims)).getTokenValue();
+                refreshToken = jwtEncoder.encode(JwtEncoderParameters.from(refreshClaims)).getTokenValue();
+
+                result.put("accessToken", accessToken);
+                result.put("refreshToken", refreshToken);
             }
         }
 
         return result;
     }
+
 
     public int selectByLastMemberId(Member member) {
         return mapper.selectByLastMemberId(member);

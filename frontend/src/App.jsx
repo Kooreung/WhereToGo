@@ -20,7 +20,7 @@ import { PostMdList } from "./page/post/PostMdList.jsx"; // axios interceptor �
 
 // axios interceptor 설정
 axios.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("accessToken");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
