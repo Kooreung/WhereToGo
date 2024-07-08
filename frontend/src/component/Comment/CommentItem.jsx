@@ -11,6 +11,7 @@ import {
   ModalOverlay,
   Spacer,
   Text,
+  Textarea,
   useColorModeValue,
   useDisclosure,
   useToast,
@@ -21,9 +22,18 @@ import { LoginContext } from "../LoginProvider.jsx";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CommentReplyList } from "./CommentReplyList.jsx";
 
-function CommentItem({ comment, isTransition, setIsTransition }) {
+function CommentItem({
+  comment,
+  isTransition,
+  setIsTransition,
+  postId,
+  commentId,
+}) {
   const [isEditing, setIsEditing] = useState(false);
+  const [isReply, setIsReply] = useState(false);
+  const [replyComment, setReplyComment] = useState("");
   const toast = useToast();
   const account = useContext(LoginContext);
   const { onClose, isOpen, onOpen } = useDisclosure();
@@ -53,6 +63,14 @@ function CommentItem({ comment, isTransition, setIsTransition }) {
       });
   }
 
+  function handleSubmitReply() {
+    axios.post("/api/replycomment/addreply", {
+      postId,
+      commentId,
+      replyComment,
+    });
+  }
+
   return (
     <Box>
       {isEditing || (
@@ -69,7 +87,36 @@ function CommentItem({ comment, isTransition, setIsTransition }) {
               <Text color={headColor} fontWeight={"bolder"} m1={1}>
                 {comment.nickName}
               </Text>
-              <Text>{comment.comment}</Text>
+              <Flex>
+                <Text>{comment.comment}</Text>
+                <Text
+                  fontSize={"smaller"}
+                  ml={4}
+                  mt={1}
+                  cursor={"pointer"}
+                  color={"lightgray"}
+                  sx={{
+                    "&:hover": {
+                      color: `purple`,
+                    },
+                  }}
+                  onClick={() => setIsReply(true)}
+                >
+                  댓글달기
+                </Text>
+              </Flex>
+              {isReply && (
+                <Box>
+                  <Flex>
+                    <Textarea
+                      onChange={(e) => setReplyComment(e.target.value)}
+                      value={replyComment}
+                    />
+                    <Button onClick={handleSubmitReply}>작성</Button>
+                  </Flex>
+                </Box>
+              )}
+              <CommentReplyList></CommentReplyList>
             </Box>
             <Spacer />
             <Box>

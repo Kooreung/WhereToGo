@@ -3,7 +3,7 @@ import { Box } from "@chakra-ui/react";
 import axios from "axios";
 import CommentItem from "./CommentItem.jsx";
 
-function CommentList({ postId, isTransition, setIsTransition }) {
+function CommentList({ postId, isTransition, setIsTransition, commentId }) {
   const [commentList, setCommentList] = useState([]);
   useEffect(() => {
     if (!isTransition) {
@@ -23,6 +23,8 @@ function CommentList({ postId, isTransition, setIsTransition }) {
     <Box w={"100%"}>
       {commentList.map((comment) => (
         <CommentItem
+          postId={postId}
+          commentId={comment.commentId}
           comment={comment}
           key={comment.commentId}
           isTransition={isTransition}
