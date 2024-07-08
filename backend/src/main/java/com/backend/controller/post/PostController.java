@@ -51,8 +51,9 @@ public class PostController {
     public Map<String, Object> postList(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(value = "type", required = false) String searchType,
-            @RequestParam(value = "keyword", defaultValue = "") String searchKeyword) {
-        return postService.getPostList(page, searchType, searchKeyword);
+            @RequestParam(value = "keyword", defaultValue = "") String searchKeyword,
+            @RequestParam(value = "region", defaultValue = "") String searchReg) {
+        return postService.getPostList(page, searchType, searchKeyword, searchReg);
     }
 
 
@@ -87,7 +88,7 @@ public class PostController {
     public ResponseEntity<Map<String, Object>> getLikeList(
             @PathVariable Integer memberId,
             @RequestParam(defaultValue = "1") Integer page, @RequestParam(value = "type", required = false) String searchType,
-                                                           @RequestParam(value = "keyword", defaultValue = "") String searchKeyword) {
+            @RequestParam(value = "keyword", defaultValue = "") String searchKeyword) {
         System.out.println("searchKeyword = " + searchKeyword);
         Map<String, Object> likedPosts = postService.getLikeAllList(memberId, page, searchType, searchKeyword);
         return ResponseEntity.ok(likedPosts);

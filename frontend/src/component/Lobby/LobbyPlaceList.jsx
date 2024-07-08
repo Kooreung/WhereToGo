@@ -2,8 +2,13 @@ import React, { useRef, useState } from "react";
 import {
   Avatar,
   Box,
+  Button,
   Center,
   Flex,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Stack,
   useColorModeValue,
   WrapItem,
@@ -18,7 +23,7 @@ import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 import defaultImage from "../../resource/img/unknownImage.png";
 import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 
-const places = [
+const regionSeoul = [
   {
     name: "강남구",
     keyword: "강남구",
@@ -115,7 +120,6 @@ const places = [
     keyword: "송파구",
     src: "https://cdn.pixabay.com/photo/2022/11/27/11/23/building-7619502_1280.jpg",
   },
-
   {
     name: "양천구",
     keyword: "양천구",
@@ -141,12 +145,37 @@ const places = [
     keyword: "노원구",
     src: "https://gocamping.or.kr/upload/camp/598/thumb/thumb_720_33147DI31oJk8Kzvz8t964vm.jpg",
   },
-  // 필요한 만큼 장소 추가
+];
+
+const regionGyeonggi = [
+  {
+    name: "수원",
+    keyword: "수원",
+  },
+  {
+    name: "용인",
+    keyword: "용인",
+  },
+  {
+    name: "성남",
+    keyword: "성남",
+  },
+  {
+    name: "부천",
+    keyword: "부천",
+  },
 ];
 
 export function LobbyPlaceList() {
-  const dataRef = useRef(null);
+  const [selectRegion, setSelectRegion] = useState("서울");
   const [positionX, setPositionX] = useState(0);
+  const places =
+    selectRegion === "서울"
+      ? regionSeoul
+      : selectRegion === "경기"
+        ? regionGyeonggi
+        : [];
+  const dataRef = useRef(null);
   const navigate = useNavigate();
 
   function getScrollDistance() {
@@ -186,14 +215,26 @@ export function LobbyPlaceList() {
 
   return (
     <Box>
-      <HeadingVariant
-        variant={"large"}
-        mb={{ lg: "16px", sm: "8px" }}
-        ml={{ lg: "40px", sm: "50px" }}
-        textAlign={"start"}
-      >
-        장소 선택
-      </HeadingVariant>
+      <Flex mb={{ lg: "16px", sm: "8px" }} alignItems={"center"}>
+        <HeadingVariant
+          variant={"large"}
+          ml={{ lg: "40px", sm: "50px" }}
+          mr={"1rem"}
+          textAlign={"start"}
+        >
+          장소 선택
+        </HeadingVariant>
+        <Menu>
+          <MenuButton as={Button} bgColor={"white"} border={"1px dotted red"}>
+            {" "}
+            {selectRegion}{" "}
+          </MenuButton>
+          <MenuList>
+            <MenuItem onClick={() => setSelectRegion("서울")}>서울</MenuItem>
+            <MenuItem onClick={() => setSelectRegion("경기")}>경기</MenuItem>
+          </MenuList>
+        </Menu>
+      </Flex>
       <Flex
         w={"100%"}
         h={"100%"}

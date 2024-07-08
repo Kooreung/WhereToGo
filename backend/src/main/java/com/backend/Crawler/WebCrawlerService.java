@@ -88,7 +88,6 @@ public class WebCrawlerService {
                             // entryIframe과 searchIframe이 모두 없고 title 태그가 존재하는 경우
                             List<WebElement> titleElements = driver.findElements(By.cssSelector("div.title_box.no_ellipsis > strong.title"));
                             if (!titleElements.isEmpty()) {
-                                System.out.println("타이틀이야~");
                                 String fallbackUrl = "https://map.naver.com/p/search/" + place.getPlaceName();
                                 System.out.println(fallbackUrl);
 

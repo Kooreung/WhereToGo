@@ -118,10 +118,10 @@ public class PostService {
     }
 
     // 게시글 목록 서비스
-    public Map<String, Object> getPostList(Integer page, String searchType, String searchKeyword) {
+    public Map<String, Object> getPostList(Integer page, String searchType, String searchKeyword, String searchReg) {
         Map pageInfo = new HashMap();
 
-        Integer countAllPost = postMapper.countAllpost(searchType, searchKeyword);
+        Integer countAllPost = postMapper.countAllpost(searchType, searchKeyword, searchReg);
         Integer offset = (page - 1) * 5;
         Integer lastPageNumber = (countAllPost - 1) / 5 + 1;
         Integer leftPageNumber = ((page - 1) / 10) * 10 + 1;
@@ -146,7 +146,7 @@ public class PostService {
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
 
-        List<Post> posts = postMapper.selectAllPost(offset, searchType, searchKeyword);
+        List<Post> posts = postMapper.selectAllPost(offset, searchType, searchKeyword, searchReg);
 
         for (Post post : posts) {
             Integer memberId = post.getMemberId();
