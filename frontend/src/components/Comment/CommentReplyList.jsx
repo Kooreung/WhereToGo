@@ -1,7 +1,7 @@
 import { Box, Flex, Spacer, Text, useColorModeValue } from "@chakra-ui/react";
 import React, { useContext, useState } from "react";
-import { LoginContext } from "../LoginProvider.jsx";
-import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
+import { LoginContext } from "../ui/LoginProvider.jsx";
+import ButtonCircle from "../ui/Button/ButtonCircle.jsx";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CommentReplyEdit } from "./CommentReplyEdit.jsx";

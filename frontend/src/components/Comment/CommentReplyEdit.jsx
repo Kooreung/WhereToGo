@@ -1,6 +1,6 @@
 import { Box, Button, Flex, Textarea, useToast } from "@chakra-ui/react";
 import React, { useState } from "react";
-import ButtonOutline from "../../css/Button/ButtonOutline.jsx";
+import ButtonOutline from "../ui/Button/ButtonOutline.jsx";
 import axios from "axios";
 
 export function CommentReplyEdit({
