@@ -14,4 +14,5 @@ public class Reply {
     private String replyComment;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate createDate;
+    private String nickName;
 }

@@ -7,6 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(rollbackFor = Exception.class)
 @RequiredArgsConstructor
@@ -16,5 +18,9 @@ public class CommentReplyService {
     public void saveReply(Reply reply, Authentication authentication) {
         reply.setMemberId(Integer.valueOf(authentication.getName()));
         mapper.insertReply(reply);
+    }
+
+    public List<Reply> replycommentList(Integer commentId) {
+        return mapper.selectReplyCommentList(commentId);
     }
 }

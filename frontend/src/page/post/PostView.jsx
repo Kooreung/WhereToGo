@@ -17,7 +17,6 @@ import {
   Spacer,
   Spinner,
   Text,
-  Tooltip,
   useColorModeValue,
   useDisclosure,
   useToast,
@@ -329,22 +328,16 @@ export function PostView() {
         {/* 좋아요 & 수정/삭제/목록 버튼 */}
         <Flex maxW={"720px"} w={"100%"} h={"4rem"} align={"center"}>
           {/* 좋아요 */}
-          <Tooltip
-            isDisabled={account.isLoggedIn()}
-            hasArrow
-            label={"로그인 해주세요"}
-          >
-            <ButtonOutline variant={"RecMedium"} onClick={handleLikeCount}>
-              <Flex align={"center"} gap={1}>
-                <Text>
-                  {like.like && <FontAwesomeIcon icon={emptyHeart} />}
-                  {like.like || <FontAwesomeIcon icon={fullHeart} />}
-                </Text>
+          <ButtonOutline variant={"RecMedium"} onClick={handleLikeCount}>
+            <Flex align={"center"} gap={1}>
+              <Text>
+                {like.like && <FontAwesomeIcon icon={emptyHeart} />}
+                {like.like || <FontAwesomeIcon icon={fullHeart} />}
+              </Text>
 
-                <Text>{like.count}</Text>
-              </Flex>
-            </ButtonOutline>
-          </Tooltip>
+              <Text>{like.count}</Text>
+            </Flex>
+          </ButtonOutline>
           <Spacer />
           {/* 수정 및 삭제 버튼 */}
           {(account.hasAccessMemberId(post.memberId) || account.isAdmin()) && (

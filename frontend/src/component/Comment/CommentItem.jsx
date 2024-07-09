@@ -25,11 +25,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CommentReplyList } from "./CommentReplyList.jsx";
 
 function CommentItem({
+  postId,
   comment,
   isTransition,
   setIsTransition,
-  postId,
   commentId,
+  replyList,
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isReply, setIsReply] = useState(false);
@@ -64,11 +65,29 @@ function CommentItem({
   }
 
   function handleSubmitReply() {
-    axios.post("/api/replycomment/addreply", {
-      postId,
-      commentId,
-      replyComment,
-    });
+    if (!account.isLoggedIn() || isTransition || !replyComment.trim()) {
+      return;
+    }
+    setIsTransition(true);
+    axios
+      .post("/api/replycomment/addreply", {
+        postId,
+        commentId,
+        replyComment,
+      })
+      .then((res) => {
+        setReplyComment("");
+        toast({
+          status: "success",
+          position: "bottom",
+          description: "등록완료",
+          isClosable: true,
+        });
+      })
+      .catch((err) => {})
+      .finally(() => {
+        setIsTransition(false);
+      });
   }
 
   return (
@@ -107,8 +126,9 @@ function CommentItem({
               </Flex>
               {isReply && (
                 <Box>
-                  <Flex>
+                  <Flex mt={4}>
                     <Textarea
+                      mb={4}
                       onChange={(e) => setReplyComment(e.target.value)}
                       value={replyComment}
                     />
@@ -116,7 +136,7 @@ function CommentItem({
                   </Flex>
                 </Box>
               )}
-              <CommentReplyList></CommentReplyList>
+              <CommentReplyList commentId={commentId} replyList={replyList} />
             </Box>
             <Spacer />
             <Box>
@@ -126,7 +146,7 @@ function CommentItem({
                   <ButtonCircle onClick={() => setIsEditing(true)}>
                     <FontAwesomeIcon icon={faPenToSquare} />
                   </ButtonCircle>
-                  <ButtonCircle onClick={onOpen} isLoading={isTransition}>
+                  <ButtonCircle onClick={onOpen}>
                     <FontAwesomeIcon icon={faTrash} />
                   </ButtonCircle>
                 </Flex>
