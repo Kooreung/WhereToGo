@@ -213,36 +213,15 @@ from authority a
          join post p on p.memberid = a.memberid
 where p.postid = 1240;
 
+CREATE TABLE `Reply`
+(
+    `replyId`      INT(11)       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `commentid`    INT(11)       NOT NULL,
+    `postid`       INT(11)       NOT NULL,
+    `memberid`     INT(11)       NOT NULL,
+    `replyComment` VARCHAR(1000) NOT NULL,
+    `createdate`   DATE          NOT NULL
+);
 
-SELECT p.postid,
-       pl.placename,
-       pl.address,
-       pl.placeurl,
-       pl.latitude,
-       pl.longitude,
-       plpic.picurl,
-       (SELECT COUNT(pl_inner.postid)
-        FROM place pl_inner
-        WHERE pl_inner.placeurl = pl.placeurl) countPlace
-FROM post p
-         JOIN place pl ON p.postid = pl.postid
-         LEFT JOIN placepic plpic ON pl.placename = plpic.placename
-WHERE p.postid = 6;
-
-
-SELECT p.postid,
-       pl.placename,
-       pl.address,
-       pl.placeurl,
-       pl.latitude,
-       pl.longitude,
-       plpic.picurl,
-       pl.placeIndex,
-       (SELECT COUNT(pl_inner.postid)
-        FROM place pl_inner
-        WHERE pl_inner.placeurl = pl.placeurl) countPlace
-FROM post p
-         JOIN place pl ON p.postid = pl.postid
-         LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
-WHERE p.postid = 124
-order by pl.placeIndex;
+DESC commentreply;
+DESC comment;

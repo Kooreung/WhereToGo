@@ -11,6 +11,7 @@ import {
   ModalOverlay,
   Spacer,
   Text,
+  Textarea,
   useColorModeValue,
   useDisclosure,
   useToast,
@@ -21,9 +22,20 @@ import { LoginContext } from "../ui/LoginProvider.jsx";
 import ButtonCircle from "../ui/Button/ButtonCircle.jsx";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CommentReplyList } from "./CommentReplyList.jsx";
 
-function CommentItem({ comment, isTransition, setIsTransition }) {
+function CommentItem({
+  postId,
+  comment,
+  isTransition,
+  setIsTransition,
+  commentId,
+  replyList,
+  replyId,
+}) {
   const [isEditing, setIsEditing] = useState(false);
+  const [isReply, setIsReply] = useState(false);
+  const [replyComment, setReplyComment] = useState("");
   const toast = useToast();
   const account = useContext(LoginContext);
   const { onClose, isOpen, onOpen } = useDisclosure();
@@ -53,23 +65,80 @@ function CommentItem({ comment, isTransition, setIsTransition }) {
       });
   }
 
+  function handleSubmitReply() {
+    if (!account.isLoggedIn() || isTransition || !replyComment.trim()) {
+      return;
+    }
+    setIsTransition(true);
+    axios
+      .post("/api/replycomment/addreply", {
+        postId,
+        commentId,
+        replyComment,
+      })
+      .then((res) => {
+        setReplyComment("");
+        toast({
+          status: "success",
+          position: "bottom",
+          description: "등록완료",
+          isClosable: true,
+        });
+      })
+      .catch((err) => {})
+      .finally(() => {
+        setIsTransition(false);
+        setIsReply(false);
+      });
+  }
+
   return (
     <Box>
       {isEditing || (
-        <Box>
-          <Flex
-            maxW={"720px"}
-            w={"100%"}
-            my={"1rem"}
-            borderWidth="1px"
-            borderRadius={"1rem"}
-            p={3}
-          >
+        <Box
+          maxW={"720px"}
+          w={"100%"}
+          my={"1rem"}
+          borderWidth="1px"
+          borderRadius={"1rem"}
+          p={3}
+        >
+          <Flex>
             <Box>
               <Text color={headColor} fontWeight={"bolder"} m1={1}>
                 {comment.nickName}
               </Text>
-              <Text>{comment.comment}</Text>
+              <Box>
+                <Text w={{ base: "650px", lg: "600px", sm: "500px" }}>
+                  {comment.comment}
+                </Text>
+                <Text
+                  fontSize={"smaller"}
+                  mt={1}
+                  cursor={"pointer"}
+                  color={"lightgray"}
+                  sx={{
+                    "&:hover": {
+                      color: `purple`,
+                    },
+                  }}
+                  onClick={() => setIsReply(!isReply)}
+                >
+                  댓글달기
+                </Text>
+              </Box>
+              {isReply && (
+                <Box>
+                  <Flex mt={4}>
+                    <Textarea
+                      mb={4}
+                      onChange={(e) => setReplyComment(e.target.value)}
+                      value={replyComment}
+                    />
+                    <Button onClick={handleSubmitReply}>작성</Button>
+                  </Flex>
+                </Box>
+              )}
             </Box>
             <Spacer />
             <Box>
@@ -79,7 +148,7 @@ function CommentItem({ comment, isTransition, setIsTransition }) {
                   <ButtonCircle onClick={() => setIsEditing(true)}>
                     <FontAwesomeIcon icon={faPenToSquare} />
                   </ButtonCircle>
-                  <ButtonCircle onClick={onOpen} isLoading={isTransition}>
+                  <ButtonCircle onClick={onOpen}>
                     <FontAwesomeIcon icon={faTrash} />
                   </ButtonCircle>
                 </Flex>
@@ -97,6 +166,12 @@ function CommentItem({ comment, isTransition, setIsTransition }) {
               </ModalFooter>
             </ModalContent>
           </Modal>
+          <CommentReplyList
+            commentId={commentId}
+            replyList={replyList}
+            isTransition={isTransition}
+            setIsTransition={setIsTransition}
+          />
         </Box>
       )}
       {isEditing && (
