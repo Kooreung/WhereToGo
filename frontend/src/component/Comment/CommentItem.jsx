@@ -88,6 +88,7 @@ function CommentItem({
       .catch((err) => {})
       .finally(() => {
         setIsTransition(false);
+        setIsReply(false);
       });
   }
 
