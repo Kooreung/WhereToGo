@@ -17,7 +17,8 @@ import MemberAdminPage from "./page/member/MemberAdminPage.jsx";
 import MemberInfoAdmin from "./page/member/MemberInfoAdmin.jsx";
 import { PostLikeList } from "./page/post/PostLikeList.jsx";
 import { PostMdList } from "./page/post/PostMdList.jsx";
-import ChatWebSocket from "./component/Chat/ChatWebSocket.jsx"; // axios interceptor 설정
+import ChatWebSocket from "./component/Chat/ChatWebSocket.jsx";
+import ChatListPage from "./component/Chat/ChatListPage.jsx"; // axios interceptor 설정
 
 // axios interceptor 설정
 axios.interceptors.request.use((config) => {
@@ -57,6 +58,7 @@ const router = createBrowserRouter([
       // 좋아요한 게시글 목록 페이지
       { path: "post/likeList/:memberId", element: <PostLikeList /> },
       { path: "/websocket", element: <ChatWebSocket /> },
+      { path: "chatList", element: <ChatListPage /> }
     ],
   },
 ]);

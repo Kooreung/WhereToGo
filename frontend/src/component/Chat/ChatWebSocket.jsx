@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Stomp } from "@stomp/stompjs";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 
-export function ChatWebSocket() {
+export function ChatWebSocket({ roomInfo }) {
   //웹소켓 연결 객체
   const stompClient = useRef(null);
   // 메시지 리스트
@@ -11,8 +10,10 @@ export function ChatWebSocket() {
   // 사용자 입력을 저장할 변수
   const [inputValue, setInputValue] = useState("");
   const [roomId, setRoomId] = useState("");
+  const [memberId,setMemberId] = useState("");
+  const [nickName,setNickName] = useState("");
 
-  const connect = () => {
+  const connect = (roomId) => {
     //웹소켓 연결
     const socket = new WebSocket("ws://localhost:8080/ws");
     stompClient.current = Stomp.over(socket);
@@ -27,8 +28,8 @@ export function ChatWebSocket() {
   };
 
   //멤버아이디가 채팅방 번호임
-  const fetchMessages = () => {
-    return axios.get(`/api/chat/${memberId}`).then((response) => {
+  const fetchMessages = (roomId) => {
+    return axios.get(`/api/chat/${roomId}`).then((response) => {
       setMessages(response.data);
     });
   };
@@ -58,38 +59,36 @@ export function ChatWebSocket() {
       setInputValue("");
     }
   };
-  useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    const decodedToken = jwtDecode(accessToken);
-    const memberId = decodedToken.sub;
-    const nickName = decodedToken.nickName;
-    axios.post(`/api/chatroom/${memberId}`).then((response) => {
-      setRoomId(response.data);
-      console.log("Roomid? : ", response.data);
-      connect();
-      fetchMessages();
-    });
 
-    // 컴포넌트 언마운트 시 웹소켓 연결 해제
-    return () => disconnect();
-  }, []);
+  useEffect(() => {
+    if (roomInfo) {
+      setRoomId(roomInfo.chatRoomId);
+      setMemberId(roomInfo.memberId);
+      setNickName(roomInfo.memberNickName);
+      connect(roomInfo.chatRoomId);
+      fetchMessages(roomInfo.chatRoomId);
+    }
+
+    return ()=> disconnect();
+  }, [roomInfo]); // roomInfo를 의존성 배열에 추가합니다.
+
   return (
-    <div>
-      <ul>
-        <div>
-          {/* 입력 필드 */}
-          <input type="text" value={inputValue} onChange={handleInputChange} />
-          {/* 메시지 전송, 메시지 리스트에 추가 */}
-          <button onClick={sendMessage}>입력</button>
-        </div>
-        {/* 메시지 리스트 출력 */}
-        {messages.map((item, index) => (
-          <div key={index} className="list-item">
-            {item.message}
+      <div>
+        <ul>
+          <div>
+            {/* 입력 필드 */}
+            <input type="text" value={inputValue} onChange={handleInputChange} />
+            {/* 메시지 전송, 메시지 리스트에 추가 */}
+            <button onClick={sendMessage}>입력</button>
           </div>
-        ))}
-      </ul>
-    </div>
+          {/* 메시지 리스트 출력 */}
+          {messages.map((item, index) => (
+              <div key={index} className="list-item">
+                {item.message}
+              </div>
+          ))}
+        </ul>
+      </div>
   );
 }
 

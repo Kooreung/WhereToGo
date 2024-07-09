@@ -246,3 +246,7 @@ FROM post p
          LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
 WHERE p.postid = 124
 order by pl.placeIndex;
+
+
+SELECT * FROM chatmessage
+where chatRoomId=5;

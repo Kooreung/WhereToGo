@@ -6,6 +6,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
@@ -18,9 +19,13 @@ public class ChatController {
 
 
     @PostMapping("chatroom/{memberId}")
-    public Optional<ChatRoom> getChatroom(@PathVariable Integer memberId) {
-        System.out.println(memberId);
+    public ResponseEntity getChatroom(@PathVariable int memberId) {
         return chatService.getChatRoom(memberId);
+    }
+
+    @GetMapping("chatroom")
+    public ResponseEntity getChatroom() {
+        return chatService.getChatRoomList();
     }
 
     // 채팅 리스트 반환
@@ -35,9 +40,11 @@ public class ChatController {
     @MessageMapping("/message")
     public ResponseEntity<Void> receiveMessage(@RequestBody ChatMessage chat) {
         // 메시지를 해당 채팅방 구독자들에게 전송
+        LocalDateTime time = LocalDateTime.now();
+        chat.setTimestamp(time);
         chatService.saveChat(chat);
         String url = String.format("/sub/chatroom/%s", chat.getChatRoomId());
-        template.convertAndSend("/sub/chatroom/", chat);
+        template.convertAndSend(url, chat);
         return ResponseEntity.ok().build();
     }
 }

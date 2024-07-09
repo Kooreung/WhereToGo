@@ -51,11 +51,7 @@ export function MemberInfo(props) {
 
   useEffect(() => {
     axios
-      .get(`/api/member/memberinfo`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+      .get(`/api/member/memberinfo`)
       .then((res) => {
         setMember(res.data.member);
         setFile(res.data.profile);
