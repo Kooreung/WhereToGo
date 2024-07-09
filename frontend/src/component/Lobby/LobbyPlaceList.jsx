@@ -23,146 +23,124 @@ import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 import defaultImage from "../../resource/img/unknownImage.png";
 import HeadingVariant from "../../css/Heading/HeadingVariant.jsx";
 
-const regionSeoul = [
+const seoulCity = [
   {
-    name: "강남구",
-    keyword: "강남구",
-    src: "https://i.namu.wiki/i/ap0GeiZgqZy9c3NMxQAkqIsvFmDTCe55k8_ne34Dso0epFVP7LCnOiEMHZve7ma8MuOIDGohoXuld6TGsvkYKQ.webp",
+    name: "서울 전체",
+    addressCity: "110000000",
   },
-
   {
-    name: "영등포구",
-    keyword: "영등포구",
+    name: "송파/강동",
+    addressCity: "1100000001",
+    // src: "https://i.namu.wiki/i/ap0GeiZgqZy9c3NMxQAkqIsvFmDTCe55k8_ne34Dso0epFVP7LCnOiEMHZve7ma8MuOIDGohoXuld6TGsvkYKQ.webp",
+  },
+  {
+    name: "강남/서초",
+    addressCity: "1100000002",
     src: "https://www.ydp.go.kr/site/tour/images/main/tripspot_photo1_1.jpg",
   },
   {
-    name: "용산구",
-    keyword: "용산구",
+    name: "영등포/동작/관악",
+    addressCity: "1100000003",
     src: "https://i.namu.wiki/i/DK-BcaE6wDCM-N9UJbeQTn0SD9eWgsX9YKWK827rqjbrzDz0-CxW-JFOCiAsUL3CBZ4zE0UDR-p4sLaYPiUjww.webp",
   },
   {
-    name: "강서구",
-    keyword: "강서구",
+    name: "구로/금천구",
+    addressCity: "1100000004",
     src: "https://botanicpark.seoul.go.kr/upload/seditorMulti/201912051055227163dfdb-9d8b-4d1d-9e63-4592b45c10be.jpg",
   },
   {
-    name: "마포구",
-    keyword: "마포구",
+    name: "강서/양천구",
+    addressCity: "1100000005",
     src: "https://media.timeout.com/images/102767917/750/422/image.jpg",
   },
   {
-    name: "종로구",
-    keyword: "종로구",
+    name: "마포/은평/서대문",
+    addressCity: "1100000006",
     src: "https://cdn.pixabay.com/photo/2019/04/20/11/30/korea-4141530_1280.jpg",
   },
   {
-    name: "서대문구",
-    keyword: "서대문구",
+    name: "종로/용산/중구",
+    addressCity: "1100000007",
     src: "https://cdn.pixabay.com/photo/2014/08/14/08/34/university-417845_1280.jpg",
   },
   {
-    name: "성동구",
-    keyword: "성동구",
+    name: "성북구/강북",
+    addressCity: "1100000008",
     src: "https://conlab.visitkorea.or.kr/api/depot/public/depot-flow/query/download-image/32d1403a-dc0d-491e-b187-c5aba1d02bab/it14",
   },
   {
-    name: "서초구",
-    keyword: "서초구",
+    name: "도봉구/노원",
+    addressCity: "1100000009",
     src: "https://conlab.visitkorea.or.kr/api/depot/public/depot-flow/query/download-image/a93c789f-a613-496e-a4ca-3690dd479401/it14",
   },
   {
-    name: "강북구",
-    keyword: "강북구",
+    name: "동대문/중랑구",
+    addressCity: "1100000010",
     src: "https://parks.seoul.go.kr/images/egovframework/com/template/df04.jpg",
   },
   {
-    name: "성북구",
-    keyword: "성북구",
+    name: "성동구/광진구",
+    addressCity: "1100000011",
     src: "https://cdn.pixabay.com/photo/2022/12/28/12/31/seoul-7682788_640.jpg",
-  },
-  {
-    name: "동대문구",
-    keyword: "동대문구",
-    src: "https://cdn.pixabay.com/photo/2019/11/26/00/32/korea-4653276_1280.jpg",
-  },
-  {
-    name: "강동구",
-    keyword: "강동구",
-    src: "https://mediahub.seoul.go.kr/wp-content/uploads/mediahub/2022/08/dxFzYzSWfkbJzGybhaZpRRUwTzbXgjQo.JPG",
-  },
-  {
-    name: "은평구",
-    keyword: "은평구",
-    src: "https://conlab.visitkorea.or.kr/api/depot/public/depot-flow/query/download-image/1552e1f6-ee34-497d-a6f4-f640710014bd/it14",
-  },
-  {
-    name: "구로구",
-    keyword: "구로구",
-    src: "https://www.guro.go.kr/site/www/images/contents/cts2990_img1.jpg",
-  },
-  {
-    name: "동작구",
-    keyword: "동작구",
-    src: "https://korean.visitseoul.net/comm/getImage?srvcId=POST&parentSn=9506&fileTy=POSTTHUMB&fileNo=2",
-  },
-  {
-    name: "중구",
-    keyword: "중구",
-    src: "https://conlab.visitkorea.or.kr/api/depot/public/depot-flow/query/download-image/220949b2-6fab-4265-850f-cf0393d5e580/it14",
-  },
-  {
-    name: "광진구",
-    keyword: "광진구",
-    src: "https://www.gwangjin.com/imgdata/gwangjin_com/202004/2020042929118765.jpg",
-  },
-  {
-    name: "송파구",
-    keyword: "송파구",
-    src: "https://cdn.pixabay.com/photo/2022/11/27/11/23/building-7619502_1280.jpg",
-  },
-  {
-    name: "양천구",
-    keyword: "양천구",
-    src: "https://mbook.newstool.co.kr/daumeditor/images/2023/08/24/16/40/09_img1.jpg",
-  },
-  {
-    name: "금천구",
-    keyword: "금천구",
-    src: "https://www.geumcheon.go.kr/site/portal/images/contents/cts957_img05.jpg",
-  },
-  {
-    name: "도봉구",
-    keyword: "도봉구",
-    src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtWTscoqfa9LPgOeDIAmO2xRCFrmxc9VRItQ&s",
-  },
-  {
-    name: "관악구",
-    keyword: "관악구",
-    src: "https://www.gwanak.go.kr/images/gwanak/m5/culture/tour/naksung_photo2.jpg",
-  },
-  {
-    name: "노원구",
-    keyword: "노원구",
-    src: "https://gocamping.or.kr/upload/camp/598/thumb/thumb_720_33147DI31oJk8Kzvz8t964vm.jpg",
   },
 ];
 
-const regionGyeonggi = [
+const gyeonggiCity = [
   {
-    name: "수원",
-    keyword: "수원",
+    name: "경기 전체",
+    addressCountry: "410000000",
   },
   {
-    name: "용인",
-    keyword: "용인",
+    name: "파주/김포/고양",
+    addressCity: "4100000001",
   },
   {
-    name: "성남",
-    keyword: "성남",
+    name: "양주/의정부",
+    addressCity: "4100000002",
   },
   {
-    name: "부천",
-    keyword: "부천",
+    name: "연천/동두천/포천",
+    addressCity: "4100000003",
+  },
+  {
+    name: "남양주/가평",
+    addressCity: "4100000004",
+  },
+  {
+    name: "구리/하남",
+    addressCity: "4100000005",
+  },
+  {
+    name: "양평/광주",
+    addressCity: "4100000006",
+  },
+  {
+    name: "여주/이천",
+    addressCity: "4100000007",
+  },
+  {
+    name: "용인/안성",
+    addressCity: "4100000008",
+  },
+  {
+    name: "성남/과천/의왕",
+    addressCity: "4100000009",
+  },
+  {
+    name: "수원/화성",
+    addressCity: "4100000010",
+  },
+  {
+    name: "오산/평택",
+    addressCity: "4100000011",
+  },
+  {
+    name: "안양/군포/안산",
+    addressCity: "4100000012",
+  },
+  {
+    name: "부천/광명/시흥",
+    addressCity: "4100000013",
   },
 ];
 
@@ -171,10 +149,18 @@ export function LobbyPlaceList() {
   const [positionX, setPositionX] = useState(0);
   const places =
     selectRegion === "서울"
-      ? regionSeoul
+      ? seoulCity
       : selectRegion === "경기"
-        ? regionGyeonggi
+        ? gyeonggiCity
         : [];
+  const buttonStrokeColor = useColorModeValue(
+    "rgba(131, 96, 145, 1)",
+    "rgba(216, 183, 229, 1)",
+  );
+  const hColor = useColorModeValue(
+    "rgba(216, 183, 229, 0.2)",
+    "rgba(131, 96, 145, 0.2)",
+  );
   const dataRef = useRef(null);
   const navigate = useNavigate();
 
@@ -225,7 +211,16 @@ export function LobbyPlaceList() {
           장소 선택
         </HeadingVariant>
         <Menu>
-          <MenuButton as={Button} bgColor={"white"} border={"1px dotted red"}>
+          <MenuButton
+            as={Button}
+            border={`1px solid ${buttonStrokeColor}`}
+            backgroundColor={"white"}
+            sx={{
+              "&:hover": {
+                backgroundColor: hColor,
+              },
+            }}
+          >
             {" "}
             {selectRegion}{" "}
           </MenuButton>
@@ -282,7 +277,9 @@ export function LobbyPlaceList() {
                     <Stack
                       align="center"
                       onClick={() =>
-                        navigate(`/post/list?type=all&keyword=${place.keyword}`)
+                        navigate(
+                          `/post/list?type=all&region=${place.addressCity}`,
+                        )
                       }
                     >
                       <Avatar

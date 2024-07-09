@@ -38,6 +38,7 @@ public interface PostMapper {
             <script>
             SELECT p.postid, p.title, p.content, p.createdate, p.view,
                    m.nickname, m.memberid,
+                   pl.addresscity,
                    plpic.picurl,
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l.memberid) likeCount
@@ -51,8 +52,13 @@ public interface PostMapper {
                 a.authtype != 'admin'
                 <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
+                    <bind name="region" value="'%' + searchReg + '%'"/>
                     <if test="searchType == 'all'">
-                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern} OR pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
+                        AND (p.title LIKE #{pattern} 
+                            OR p.content LIKE #{pattern} 
+                            OR m.nickname LIKE #{pattern} 
+                            OR pl.address LIKE #{pattern} 
+                            OR pl.placename LIKE #{pattern})
                     </if>
                     <if test="searchType == 'titleAndContent'">
                         AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
@@ -65,6 +71,9 @@ public interface PostMapper {
                     </if>
                     <if test="searchType == 'address'">
                         AND (pl.address LIKE #{pattern} OR pl.address LIKE #{pattern})
+                    </if>
+                    <if test="searchType == 'all'">
+                        AND (pl.addresscity LIKE #{region})
                     </if>
                 </if>
             </where>
@@ -86,21 +95,29 @@ public interface PostMapper {
                a.authtype != 'admin'
                        <if test="searchType != null">
                        <bind name="pattern" value="'%' + searchKeyword + '%'"/>
-                       <if test="searchType == 'all'">
-                           AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern} OR pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
-                       </if>
-                       <if test="searchType == 'titleAndContent'">
-                           AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
-                       </if>
-                       <if test="searchType == 'nickName'">
-                           AND m.nickname LIKE #{pattern}
-                       </if>
-                       <if test="searchType == 'placeName'">
-                           AND (pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
-                       </if>
-                       <if test="searchType == 'address'">
-                           AND (pl.address LIKE #{pattern} OR pl.address LIKE #{pattern})
-                       </if>
+                       <bind name="region" value="'%' + searchReg + '%'"/>
+                        <if test="searchType == 'all'">
+                            AND (p.title LIKE #{pattern} 
+                                OR p.content LIKE #{pattern} 
+                                OR m.nickname LIKE #{pattern} 
+                                OR pl.address LIKE #{pattern} 
+                                OR pl.placename LIKE #{pattern})
+                        </if>
+                        <if test="searchType == 'titleAndContent'">
+                            AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
+                        </if>
+                        <if test="searchType == 'nickName'">
+                            AND m.nickname LIKE #{pattern}
+                        </if>
+                        <if test="searchType == 'placeName'">
+                            AND (pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
+                        </if>
+                        <if test="searchType == 'address'">
+                            AND (pl.address LIKE #{pattern} OR pl.address LIKE #{pattern})
+                        </if>
+                        <if test="searchType == 'all'">
+                            AND (pl.addresscity LIKE #{region})
+                        </if>
                    </if>
                    </where>
             </script>
