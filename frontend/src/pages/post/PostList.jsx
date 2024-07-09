@@ -41,6 +41,9 @@ function PostList() {
   const account = useContext(LoginContext);
   const [postList, setPostList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
+  const [nowLatitude, setNowLatitude] = useState(37.52499981233085);
+  const [nowLongitude, setNowLongitude] = useState(126.70531779795746);
+  const [error, setError] = useState(null);
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -49,6 +52,33 @@ function PostList() {
     "rgba(216, 183, 229, 0.2)",
     "rgba(131, 96, 145, 0.2)",
   );
+
+  // 현재 위치 정보 가져오기
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setNowLatitude(position.coords.latitude);
+        setNowLongitude(position.coords.longitude);
+      },
+      (error) => {
+        setError(error.message);
+      },
+    );
+  }, []);
+
+  // 현재 위치 정보 전송하기
+  useEffect(() => {
+    if (nowLongitude && nowLatitude) {
+      axios
+        .post(`/api/nowPosition`, {
+          latitude: nowLatitude,
+          longitude: nowLongitude,
+        })
+        .then((res) => {
+          console.log(res.data);
+        });
+    }
+  }, [nowLatitude, nowLongitude]);
 
   useEffect(() => {
     axios.get(`/api/post/list?${searchParams}`).then((res) => {
