@@ -93,24 +93,25 @@ function CommentItem({
   return (
     <Box>
       {isEditing || (
-        <Box>
-          <Flex
-            maxW={"720px"}
-            w={"100%"}
-            my={"1rem"}
-            borderWidth="1px"
-            borderRadius={"1rem"}
-            p={3}
-          >
+        <Box
+          maxW={"720px"}
+          w={"100%"}
+          my={"1rem"}
+          borderWidth="1px"
+          borderRadius={"1rem"}
+          p={3}
+        >
+          <Flex>
             <Box>
               <Text color={headColor} fontWeight={"bolder"} m1={1}>
                 {comment.nickName}
               </Text>
-              <Flex>
-                <Text>{comment.comment}</Text>
+              <Box>
+                <Text w={{ base: "650px", lg: "600px", sm: "500px" }}>
+                  {comment.comment}
+                </Text>
                 <Text
                   fontSize={"smaller"}
-                  ml={4}
                   mt={1}
                   cursor={"pointer"}
                   color={"lightgray"}
@@ -119,11 +120,11 @@ function CommentItem({
                       color: `purple`,
                     },
                   }}
-                  onClick={() => setIsReply(true)}
+                  onClick={() => setIsReply(!isReply)}
                 >
                   댓글달기
                 </Text>
-              </Flex>
+              </Box>
               {isReply && (
                 <Box>
                   <Flex mt={4}>
@@ -136,7 +137,6 @@ function CommentItem({
                   </Flex>
                 </Box>
               )}
-              <CommentReplyList commentId={commentId} replyList={replyList} />
             </Box>
             <Spacer />
             <Box>
@@ -164,6 +164,7 @@ function CommentItem({
               </ModalFooter>
             </ModalContent>
           </Modal>
+          <CommentReplyList commentId={commentId} replyList={replyList} />
         </Box>
       )}
       {isEditing && (
