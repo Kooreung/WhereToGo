@@ -171,6 +171,18 @@ function Navbar() {
           <Center onClick={() => navigate("/websocket")}>웹소켓</Center>
         </Flex>
       </Box>
+      {/*<Box*/}
+      {/*  position="fixed"*/}
+      {/*  bottom="0"*/}
+      {/*  right="0"*/}
+      {/*  w="300px" // 'width' 대신 'w'를 사용합니다.*/}
+      {/*  h="100px" // 'height' 대신 'h'를 사용합니다.*/}
+      {/*  bgColor="#f9f9f9" // 'background-color' 대신 'bgColor'를 사용합니다.*/}
+      {/*  border="1px solid #ccc" // 오타 수정: 'soild' -> 'solid'*/}
+      {/*  p="10px" // 'padding' 대신 'p'를 사용합니다.*/}
+      {/*>*/}
+      {/*  zzzzz크크루삥뽕*/}
+      {/*</Box>*/}
     </Box>
   );
 }

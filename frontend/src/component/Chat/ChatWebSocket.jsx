@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Stomp } from "@stomp/stompjs";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 export function ChatWebSocket() {
   //웹소켓 연결 객체
@@ -9,6 +10,7 @@ export function ChatWebSocket() {
   const [messages, setMessages] = new useState([]);
   // 사용자 입력을 저장할 변수
   const [inputValue, setInputValue] = useState("");
+  const [roomId, setRoomId] = useState("");
 
   const connect = () => {
     //웹소켓 연결
@@ -16,7 +18,7 @@ export function ChatWebSocket() {
     stompClient.current = Stomp.over(socket);
     stompClient.current.connect({}, () => {
       //메시지 수신(1은 roomId를 임시로 표현)
-      stompClient.current.subscribe(`/sub/chatroom/1`, (message) => {
+      stompClient.current.subscribe(`/sub/chatroom/${roomId}`, (message) => {
         //누군가 발송했던 메시지를 리스트에 추가
         const newMessage = JSON.parse(message.body);
         setMessages((prevMessages) => [...prevMessages, newMessage]);
@@ -24,8 +26,9 @@ export function ChatWebSocket() {
     });
   };
 
+  //멤버아이디가 채팅방 번호임
   const fetchMessages = () => {
-    return axios.get("/ws/chat/1").then((response) => {
+    return axios.get(`/api/chat/${memberId}`).then((response) => {
       setMessages(response.data);
     });
   };
@@ -46,8 +49,9 @@ export function ChatWebSocket() {
     if (stompClient.current && inputValue) {
       //현재로서는 임의의 테스트 값을 삽입
       const body = {
-        id: 1,
-        name: "테스트1",
+        chatRoomId: roomId,
+        memberId: memberId,
+        name: nickName,
         message: inputValue,
       };
       stompClient.current.send(`/pub/message`, {}, JSON.stringify(body));
@@ -55,8 +59,17 @@ export function ChatWebSocket() {
     }
   };
   useEffect(() => {
-    connect();
-    fetchMessages();
+    const accessToken = localStorage.getItem("accessToken");
+    const decodedToken = jwtDecode(accessToken);
+    const memberId = decodedToken.sub;
+    const nickName = decodedToken.nickName;
+    axios.post(`/api/chatroom/${memberId}`).then((response) => {
+      setRoomId(response.data);
+      console.log("Roomid? : ", response.data);
+      connect();
+      fetchMessages();
+    });
+
     // 컴포넌트 언마운트 시 웹소켓 연결 해제
     return () => disconnect();
   }, []);
