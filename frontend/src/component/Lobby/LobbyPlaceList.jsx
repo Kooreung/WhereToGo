@@ -88,7 +88,7 @@ const seoulCity = [
 const gyeonggiCity = [
   {
     name: "경기 전체",
-    addressCountry: "410000000",
+    addressCity: "410000000",
   },
   {
     name: "파주/김포/고양",
@@ -144,6 +144,49 @@ const gyeonggiCity = [
   },
 ];
 
+const incheonCity = [
+  {
+    name: "인천 전체",
+    addressCity: "280000000",
+  },
+  {
+    name: "계양구",
+    addressCity: "2800000001",
+  },
+  {
+    name: "부평구",
+    addressCity: "2800000002",
+  },
+  {
+    name: "미추홀구",
+    addressCity: "2800000003",
+  },
+  {
+    name: "남동구",
+    addressCity: "2800000004",
+  },
+  {
+    name: "서구",
+    addressCity: "2800000005",
+  },
+  {
+    name: "동구",
+    addressCity: "2800000006",
+  },
+  {
+    name: "중구",
+    addressCity: "2800000007",
+  },
+  {
+    name: "연수구",
+    addressCity: "2800000008",
+  },
+  {
+    name: "옹진군",
+    addressCity: "2800000009",
+  },
+];
+
 export function LobbyPlaceList() {
   const [selectRegion, setSelectRegion] = useState("서울");
   const [positionX, setPositionX] = useState(0);
@@ -152,7 +195,9 @@ export function LobbyPlaceList() {
       ? seoulCity
       : selectRegion === "경기"
         ? gyeonggiCity
-        : [];
+        : selectRegion === "인천"
+          ? incheonCity
+          : [];
   const buttonStrokeColor = useColorModeValue(
     "rgba(131, 96, 145, 1)",
     "rgba(216, 183, 229, 1)",
@@ -227,6 +272,7 @@ export function LobbyPlaceList() {
           <MenuList>
             <MenuItem onClick={() => setSelectRegion("서울")}>서울</MenuItem>
             <MenuItem onClick={() => setSelectRegion("경기")}>경기</MenuItem>
+            <MenuItem onClick={() => setSelectRegion("인천")}>인천</MenuItem>
           </MenuList>
         </Menu>
       </Flex>
