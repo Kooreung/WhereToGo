@@ -224,7 +224,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
     let getMapCenter = map.getCenter();
 
     ps.keywordSearch(searchTerm, callback, {
-      radius: 20000,
+      // radius: 20000,
       location: new kakao.maps.LatLng(
         getMapCenter.getLat(),
         getMapCenter.getLng(),
