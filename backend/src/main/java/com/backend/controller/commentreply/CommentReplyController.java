@@ -48,6 +48,7 @@ public class CommentReplyController {
     @DeleteMapping("delete")
     @PreAuthorize("isAuthenticated()")
     public void deleteCommentReply(@RequestBody Reply reply, Authentication authentication) {
+        service.replydelete(reply, authentication);
         System.out.println("reply = " + reply);
     }
 }

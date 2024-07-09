@@ -5,6 +5,7 @@ import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CommentReplyEdit } from "./CommentReplyEdit.jsx";
+import axios from "axios";
 
 export function CommentReplyList({
   replyList,
@@ -18,6 +19,20 @@ export function CommentReplyList({
     "rgba(131, 96, 145, 1)",
     "rgba(216, 183, 229, 1)",
   );
+
+  function handleRemoveReply(replyId) {
+    setIsTransition(true);
+    axios
+      .delete("/api/replycomment/delete", {
+        data: { replyId },
+      })
+      .then((res) => {})
+      .catch((err) => {})
+      .finally(() => {
+        setIsTransition(false);
+      });
+  }
+
   return (
     <Box>
       {replyList.map((replyComment, index) => {
@@ -50,7 +65,9 @@ export function CommentReplyList({
                       <ButtonCircle onClick={() => setEditingReplyIndex(index)}>
                         <FontAwesomeIcon icon={faPenToSquare} />
                       </ButtonCircle>
-                      <ButtonCircle>
+                      <ButtonCircle
+                        onClick={() => handleRemoveReply(replyComment.replyId)}
+                      >
                         <FontAwesomeIcon icon={faTrash} />
                       </ButtonCircle>
                     </Flex>

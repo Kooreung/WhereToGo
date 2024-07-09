@@ -35,4 +35,8 @@ public class CommentReplyService {
         }
         return true;
     }
+
+    public void replydelete(Reply reply, Authentication authentication) {
+        mapper.deleteByReply(reply);
+    }
 }
