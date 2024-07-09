@@ -168,6 +168,7 @@ function Navbar() {
           >
             회원 게시판
           </Center>
+          <Center onClick={() => navigate("/websocket")}>웹소켓</Center>
         </Flex>
       </Box>
     </Box>
