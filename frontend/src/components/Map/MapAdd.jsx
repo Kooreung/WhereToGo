@@ -8,7 +8,7 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { renderToString } from "react-dom/server";
-import ButtonOutline from "../../css/Button/ButtonOutline.jsx";
+import ButtonOutline from "../ui/Button/ButtonOutline.jsx";
 
 const loadKakaoMapScript = (appKey, libraries = []) => {
   return new Promise((resolve, reject) => {
@@ -34,45 +34,62 @@ const loadKakaoMapScript = (appKey, libraries = []) => {
 };
 
 const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
-  const mapRef = useRef(null);
   const kakaoMapAppKey = import.meta.env.VITE_KAKAO_MAP_APP_KEY;
-  const [places, setPlaces] = useState([]);
-  // const [placeData, setPlaceData] = useState([]);
+  const mapRef = useRef(null);
+  const [nowLatitude, setNowLatitude] = useState(37.567157695939926);
+  const [nowLongitude, setNowLongitude] = useState(126.979353948294);
+  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [places, setPlaces] = useState([]);
   const [map, setMap] = useState(null);
   const [ps, setPs] = useState(null);
-
   const [searchedMarkers, setSearchedMarkers] = useState([]);
   const [selectedMarkers, setSelectedMarkers] = useState([]);
   const [polylines, setPolylines] = useState([]);
 
+  // 현재 위치 정보 가져오기
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setNowLatitude(position.coords.latitude);
+        setNowLongitude(position.coords.longitude);
+      },
+      (error) => {
+        setError(error.message);
+      },
+    );
+  }, []);
+
   // 기본 지도 생성
   useEffect(() => {
-    loadKakaoMapScript(kakaoMapAppKey, ["services"])
-      .then(() => {
-        const container = mapRef.current;
-        const options = {
-          center: new window.kakao.maps.LatLng(
-            37.567157695939926,
-            126.979353948294,
-          ),
-          level: 3,
-        };
+    if (nowLongitude && nowLatitude) {
+      loadKakaoMapScript(kakaoMapAppKey, ["services"])
+        .then(() => {
+          const container = mapRef.current;
+          const options = {
+            center: new window.kakao.maps.LatLng(nowLatitude, nowLongitude),
+            level: 3,
+          };
 
-        const map = new window.kakao.maps.Map(container, options);
-        setMap(map);
+          const map = new window.kakao.maps.Map(container, options);
+          setMap(map);
 
-        // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
-        const zoomControl = new kakao.maps.ZoomControl();
-        map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+          // 줌 컨트롤 기능
+          const zoomControl = new kakao.maps.ZoomControl();
+          map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
-        const placesService = new window.kakao.maps.services.Places();
-        setPs(placesService);
-      })
-      .catch((error) => {
-        console.error("Kakao map script loading error: ", error);
-      });
-  }, [kakaoMapAppKey]);
+          // 장소 검색 서비스
+          const placesService = new window.kakao.maps.services.Places();
+          setPs(placesService);
+        })
+        .catch((error) => {
+          console.error(
+            "카카오 맵을 불러오는 데 오류가 발생하였습니다.",
+            error,
+          );
+        });
+    }
+  }, [kakaoMapAppKey, nowLongitude, nowLatitude]);
 
   // 검색 시 생성되는 마커
   useEffect(() => {
@@ -161,9 +178,9 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   useEffect(() => {
     if (map) {
       polylines.forEach((polyline) => polyline.setMap(null));
+
       if (selectedPlaces.length > 1) {
         const bounds = new window.kakao.maps.LatLngBounds();
-
         const newPolylines = selectedPlaces.map((place, index) => {
           if (index === selectedPlaces.length - 1) return null;
           const polyline = new window.kakao.maps.Polyline({
@@ -269,6 +286,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
     if (searchedMarkers[index]) {
       searchedMarkers[index].setMap(null);
     }
+
     const newSearchedMarkers = searchedMarkers.filter((_, i) => i !== index);
     setSearchedMarkers(newSearchedMarkers);
   };
