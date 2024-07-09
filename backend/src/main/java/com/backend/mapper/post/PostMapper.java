@@ -161,8 +161,9 @@ public interface PostMapper {
                     WHERE pl_inner.placeurl = pl.placeurl) countPlace
             FROM post p
                      JOIN place pl ON p.postid = pl.postid
-                     LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
+                     LEFT JOIN placepic plpic ON pl.placename = plpic.placename
             WHERE p.postid = #{postId}
+            order by pl.placeIndex;
             """)
     List<Place> selectPlaceList(Integer postId);
 
