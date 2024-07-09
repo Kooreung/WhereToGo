@@ -5,6 +5,7 @@ import com.backend.domain.reply.Reply;
 import com.backend.service.comment.CommentService;
 import com.backend.service.commentreply.CommentReplyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,6 @@ public class CommentReplyController {
     @PreAuthorize("isAuthenticated()")
     public void addCommentReply(@RequestBody Reply reply, Authentication authentication) {
         service.saveReply(reply, authentication);
-        System.out.println("reply = " + reply);
     }
 
     @GetMapping("list/{postId}")
@@ -34,4 +34,20 @@ public class CommentReplyController {
         return commentList;
     }
 
+    @PutMapping("edit")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity editCommentReply(@RequestBody Reply reply, Authentication authentication) {
+        if (service.validate(reply)) {
+            service.editReply(reply, authentication);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping("delete")
+    @PreAuthorize("isAuthenticated()")
+    public void deleteCommentReply(@RequestBody Reply reply, Authentication authentication) {
+        System.out.println("reply = " + reply);
+    }
 }

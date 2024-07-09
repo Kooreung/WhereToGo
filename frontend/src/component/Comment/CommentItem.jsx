@@ -31,6 +31,7 @@ function CommentItem({
   setIsTransition,
   commentId,
   replyList,
+  replyId,
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isReply, setIsReply] = useState(false);
@@ -164,7 +165,12 @@ function CommentItem({
               </ModalFooter>
             </ModalContent>
           </Modal>
-          <CommentReplyList commentId={commentId} replyList={replyList} />
+          <CommentReplyList
+            commentId={commentId}
+            replyList={replyList}
+            isTransition={isTransition}
+            setIsTransition={setIsTransition}
+          />
         </Box>
       )}
       {isEditing && (

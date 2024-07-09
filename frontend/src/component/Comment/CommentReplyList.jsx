@@ -1,29 +1,43 @@
-import { Box, Flex, Spacer, Text } from "@chakra-ui/react";
-import React, { useContext } from "react";
+import { Box, Flex, Spacer, Text, useColorModeValue } from "@chakra-ui/react";
+import React, { useContext, useState } from "react";
 import { LoginContext } from "../LoginProvider.jsx";
 import ButtonCircle from "../../css/Button/ButtonCircle.jsx";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { CommentReplyEdit } from "./CommentReplyEdit.jsx";
 
-export function CommentReplyList({ commentId, replyList }) {
+export function CommentReplyList({
+  replyList,
+  isTransition,
+  setIsTransition,
+  replyComment,
+}) {
   const account = useContext(LoginContext);
-  // if (replyList && replyList.length === 0) {
-  //   return (
-  //     <Box w={"100%"} borderWidth="1px" borderRadius={"1rem"} p={3}>
-  //       작성된 댓글이 없습니다.
-  //     </Box>
-  //   );
-  // }
-
+  const [editingReplyIndex, setEditingReplyIndex] = useState(null);
+  const headColor = useColorModeValue(
+    "rgba(131, 96, 145, 1)",
+    "rgba(216, 183, 229, 1)",
+  );
   return (
     <Box>
-      {replyList &&
-        replyList.map((replyComment, index) => {
-          return (
-            <Box key={index}>
+      {replyList.map((replyComment, index) => {
+        const isEditing = editingReplyIndex === index;
+        return (
+          <Box key={index}>
+            {isEditing ? (
+              <CommentReplyEdit
+                replyComment={replyComment}
+                replyList={replyList}
+                isTransition={isTransition}
+                setIsTransition={setIsTransition}
+                setEditingReplyIndex={setEditingReplyIndex}
+              />
+            ) : (
               <Flex mt={2}>
                 <Box ml={4}>
-                  <Box mr={3}>{replyComment.nickName}</Box>
+                  <Box mr={3} color={headColor} fontWeight={"bolder"}>
+                    {replyComment.nickName}
+                  </Box>
                   <Text mr={3} w={{ base: "650px", lg: "550px", sm: "450px" }}>
                     {replyComment.replyComment}
                   </Text>
@@ -33,7 +47,7 @@ export function CommentReplyList({ commentId, replyList }) {
                   <Text color={"lightgray"}>{replyComment.createDate}</Text>
                   {account.hasAccessMemberId(replyComment.memberId) && (
                     <Flex gap={3}>
-                      <ButtonCircle>
+                      <ButtonCircle onClick={() => setEditingReplyIndex(index)}>
                         <FontAwesomeIcon icon={faPenToSquare} />
                       </ButtonCircle>
                       <ButtonCircle>
@@ -43,9 +57,10 @@ export function CommentReplyList({ commentId, replyList }) {
                   )}
                 </Box>
               </Flex>
-            </Box>
-          );
-        })}
+            )}
+          </Box>
+        );
+      })}
     </Box>
   );
 }

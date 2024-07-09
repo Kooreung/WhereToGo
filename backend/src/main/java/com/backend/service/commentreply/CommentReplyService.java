@@ -23,4 +23,16 @@ public class CommentReplyService {
     public List<Reply> replycommentList(Integer commentId) {
         return mapper.selectReplyCommentList(commentId);
     }
+
+    public void editReply(Reply reply, Authentication authentication) {
+        reply.setMemberId(Integer.valueOf(authentication.getName()));
+        mapper.modifyReply(reply);
+    }
+
+    public boolean validate(Reply reply) {
+        if (reply.getReplyComment().isBlank()) {
+            return false;
+        }
+        return true;
+    }
 }
