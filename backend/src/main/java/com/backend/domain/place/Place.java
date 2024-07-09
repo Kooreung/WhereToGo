@@ -15,6 +15,7 @@ public class Place {
     private Double longitude;
     private LocalDateTime createdAt;
 
+    private Integer placeIndex;
     private Integer postId;
     private String picurl;
     private Integer countPlace;

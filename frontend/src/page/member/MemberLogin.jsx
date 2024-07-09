@@ -34,7 +34,6 @@ export function MemberLogin() {
       .post("/api/member/login", { email, password })
       .then((res) => {
         // localStorage 에 토큰 정보 저장
-        console.log(res.data);
         account.login(res.data);
         toast({
           status: "success",

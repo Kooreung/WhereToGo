@@ -91,7 +91,7 @@ function PostWrite() {
         axios
           .post(
             "/api/place/add",
-            selectedPlaces.map((place) => ({
+            selectedPlaces.map((place, index) => ({
               placeName: place.place_name,
               placeUrl: place.place_url,
               address: place.address_name,
@@ -99,6 +99,7 @@ function PostWrite() {
               latitude: parseFloat(place.y),
               longitude: parseFloat(place.x),
               postId: postId,
+              placeIndex: index + 1, // 여기에 인덱스를 추가했습니다.
             })),
           )
           .then((res) => {
