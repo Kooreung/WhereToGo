@@ -17,12 +17,14 @@ import MemberAdmin from "./pages/member/MemberAdmin.jsx";
 import MemberInfoAdmin from "./pages/member/MemberInfoAdmin.jsx";
 import { PostLikeList } from "./pages/post/PostLikeList.jsx";
 import { PostMdList } from "./pages/post/PostMdList.jsx"; // axios interceptor 설정
+import ChatWebSocket from "./component/Chat/ChatWebSocket.jsx";
+import ChatListPage from "./component/Chat/ChatListPage.jsx"; // axios interceptor 설정
 
 // axios interceptor 설정
 axios.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  const accessToken = localStorage.getItem("accessToken");
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
   }
   return config;
 });
@@ -55,6 +57,8 @@ const router = createBrowserRouter([
       { path: "post/mdList", element: <PostMdList /> },
       // 좋아요한 게시글 목록 페이지
       { path: "post/likeList/:memberId", element: <PostLikeList /> },
+      { path: "/websocket", element: <ChatWebSocket /> },
+      { path: "chatList", element: <ChatListPage /> },
     ],
   },
 ]);

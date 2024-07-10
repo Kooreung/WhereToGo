@@ -56,11 +56,7 @@ function MemberEdit(props) {
 
   useEffect(() => {
     axios
-      .get(`/api/member/memberinfo`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+      .get(`/api/member/memberinfo`)
       .then((res) => {
         const member1 = res.data.member;
         setMember({ ...member1, password: "" });
@@ -113,7 +109,7 @@ function MemberEdit(props) {
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         },
       )
@@ -123,7 +119,6 @@ function MemberEdit(props) {
           description: "회원 정보가 수정되었습니다.",
           position: "bottom",
         });
-        console.log("token", res.data.token);
         account.login(res.data.token);
         navigate(`/memberinfo`);
       })

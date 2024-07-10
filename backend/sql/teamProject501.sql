@@ -225,3 +225,25 @@ CREATE TABLE `Reply`
 
 DESC commentreply;
 DESC comment;
+
+
+SELECT p.postid,
+       pl.placename,
+       pl.address,
+       pl.placeurl,
+       pl.latitude,
+       pl.longitude,
+       plpic.picurl,
+       pl.placeIndex,
+       (SELECT COUNT(pl_inner.postid)
+        FROM place pl_inner
+        WHERE pl_inner.placeurl = pl.placeurl) countPlace
+FROM post p
+         JOIN place pl ON p.postid = pl.postid
+         LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
+WHERE p.postid = 124
+order by pl.placeIndex;
+
+
+SELECT * FROM chatmessage
+where chatRoomId=5;

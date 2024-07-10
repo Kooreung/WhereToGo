@@ -357,7 +357,7 @@ public class MemberService {
                 JwtClaimsSet refreshClaims = JwtClaimsSet.builder()
                         .issuer("self")
                         .issuedAt(now)
-                        .expiresAt(now.plusSeconds(60 * 60 * 24 * 7)) // 예: 30일 후 만료
+                        .expiresAt(now.plusSeconds(60 * 60 * 24 * 7))
                         .subject(db.getMemberId().toString())
                         .build();
 
