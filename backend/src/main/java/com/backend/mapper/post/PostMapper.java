@@ -41,7 +41,8 @@ public interface PostMapper {
                    pl.addresscity,
                    plpic.picurl,
                    COUNT(DISTINCT c.commentid) commentCount,
-                   COUNT(DISTINCT l.memberid) likeCount
+                   COUNT(DISTINCT l.memberid) likeCount,
+                   (6371 * acos(cos(radians(#{latitude})) * cos(radians(pl.latitude)) * cos(radians(pl.longitude) - radians(#{longitude})) + sin(radians(#{latitude})) * sin(radians(pl.latitude)))) AS distance
             FROM post p JOIN member m ON p.memberid = m.memberid
                         JOIN authority a ON p.memberid = a.memberid
                         LEFT JOIN comment c ON p.postid = c.postid
@@ -54,7 +55,7 @@ public interface PostMapper {
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
                     <bind name="region" value="'%' + searchReg + '%'"/>
                     <if test="searchType == 'all'">
-                        AND (p.title LIKE #{pattern} 
+                        AND (p.title LIKE #{pattern}
                             OR p.content LIKE #{pattern} 
                             OR m.nickname LIKE #{pattern} 
                             OR pl.address LIKE #{pattern} 
@@ -78,11 +79,12 @@ public interface PostMapper {
                 </if>
             </where>
             GROUP BY p.postid
-            ORDER BY p.postid DESC
+            ORDER BY distance ASC, p.postid DESC
             LIMIT #{offset}, 5
             </script>
             """)
-    List<Post> selectAllPost(Integer offset, String searchType, String searchKeyword, String searchReg);
+    List<Post> selectAllPost(Integer offset, String searchType, String searchKeyword, String searchReg,
+                             Double latitude, Double longitude);
 
     // 게시글 목록 카운트 매퍼
     @Select("""
@@ -122,7 +124,8 @@ public interface PostMapper {
                    </where>
             </script>
             """)
-    Integer countAllpost(String searchType, String searchKeyword, String searchReg);
+    Integer countAllpost(String searchType, String searchKeyword, String searchReg,
+                         @Param("latitude") Double latitude, @Param("longitude") Double longitude);
 
     // 게시글 Top 3 인기글 목록 매퍼
     @Select("""

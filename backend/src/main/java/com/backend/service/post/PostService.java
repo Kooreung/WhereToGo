@@ -117,11 +117,19 @@ public class PostService {
         }
     }
 
+    public Map<String, Object> getPostListByLocation(Double latitude, Double longitude) {
+        Map<String, Object> pageInfo = new HashMap<>();
+        List<Post> posts = postMapper.selectAllPost(0, null, null, null, latitude, longitude);
+
+        pageInfo.put("postList", posts);
+        return pageInfo;
+    }
+
     // 게시글 목록 서비스
-    public Map<String, Object> getPostList(Integer page, String searchType, String searchKeyword, String searchReg) {
+    public Map<String, Object> getPostList(Integer page, String searchType, String searchKeyword, String searchReg, Double latitude, Double longitude) {
         Map pageInfo = new HashMap();
 
-        Integer countAllPost = postMapper.countAllpost(searchType, searchKeyword, searchReg);
+        Integer countAllPost = postMapper.countAllpost(searchType, searchKeyword, searchReg, latitude, longitude);
         Integer offset = (page - 1) * 5;
         Integer lastPageNumber = (countAllPost - 1) / 5 + 1;
         Integer leftPageNumber = ((page - 1) / 10) * 10 + 1;
@@ -146,7 +154,7 @@ public class PostService {
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
 
-        List<Post> posts = postMapper.selectAllPost(offset, searchType, searchKeyword, searchReg);
+        List<Post> posts = postMapper.selectAllPost(offset, searchType, searchKeyword, searchReg, latitude, longitude);
 
         for (Post post : posts) {
             Integer memberId = post.getMemberId();
@@ -154,7 +162,7 @@ public class PostService {
             String key = String.format("%s/member/%s/%s", srcPrefix, post.getMemberId(), profileName);
             post.setProfileName(key);
         }
-
+        
         return Map.of("pageInfo", pageInfo, "postList", posts);
     }
 

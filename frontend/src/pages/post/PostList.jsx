@@ -47,57 +47,59 @@ function PostList() {
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchRegion, setSearchRegion] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const hColor = useColorModeValue(
     "rgba(216, 183, 229, 0.2)",
     "rgba(131, 96, 145, 0.2)",
   );
 
-  // 현재 위치 정보 가져오기
+  // 현재 위치 정보 가져오기 & 내보내기
+  useEffect(() => {}, []);
+
   useEffect(() => {
+    // 위치 정보 가져오기
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        setNowLatitude(position.coords.latitude);
-        setNowLongitude(position.coords.longitude);
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        // 위치 정보 설정
+        setNowLatitude(latitude);
+        setNowLongitude(longitude);
+
+        // axios 요청 보내기
+        const fetchPosts = async () => {
+          try {
+            const response = await axios.get(`/api/post/list`, {
+              params: {
+                page: searchParams.get("page") || 1,
+                type: searchParams.get("type") || "all",
+                keyword: searchParams.get("keyword") || "",
+                region: searchParams.get("region") || "",
+                lat: latitude,
+                lng: longitude,
+              },
+            });
+            // 서버에서 받은 데이터 설정
+            setPostList(response.data.postList);
+            setPageInfo(response.data.pageInfo);
+          } catch (error) {
+            console.error("Error fetching posts:", error);
+          }
+        };
+
+        fetchPosts();
       },
       (error) => {
         setError(error.message);
       },
     );
-  }, []);
 
-  // 현재 위치 정보 전송하기
-  useEffect(() => {
-    if (nowLongitude && nowLatitude) {
-      axios
-        .post(`/api/nowPosition`, {
-          latitude: nowLatitude,
-          longitude: nowLongitude,
-        })
-        .then((res) => {
-          console.log(res.data);
-        });
-    }
-  }, [nowLatitude, nowLongitude]);
-
-  useEffect(() => {
-    axios.get(`/api/post/list?${searchParams}`).then((res) => {
-      setPostList(res.data.postList);
-      setPageInfo(res.data.pageInfo);
-      console.log(res.data.postList);
-    });
-    setSearchType("all");
-    setSearchKeyword("");
-
-    const typeParam = searchParams.get("type");
-    const keywordParam = searchParams.get("keyword");
-
-    if (typeParam) {
-      setSearchType(typeParam);
-    }
-    if (keywordParam) {
-      setSearchKeyword(keywordParam);
-    }
+    // searchParams 변경에 따라 setSearchType, setSearchKeyword 설정
+    setSearchType(searchParams.get("type") || "all");
+    setSearchKeyword(searchParams.get("keyword") || "");
+    setSearchRegion(searchParams.get("region") || "");
   }, [searchParams, setCurrentPage]);
 
   // 페이지 수

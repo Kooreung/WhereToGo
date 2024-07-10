@@ -52,10 +52,11 @@ public class PostController {
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(value = "type", required = false) String searchType,
             @RequestParam(value = "keyword", defaultValue = "") String searchKeyword,
-            @RequestParam(value = "region", defaultValue = "") String searchReg) {
-        return postService.getPostList(page, searchType, searchKeyword, searchReg);
+            @RequestParam(value = "region", defaultValue = "") String searchReg,
+            @RequestParam(value = "lat", required = false) Double latitude,
+            @RequestParam(value = "lng", required = false) Double longitude) {
+        return postService.getPostList(page, searchType, searchKeyword, searchReg, latitude, longitude);
     }
-
 
     // 게시글 MD추천 목록 Controller
     @GetMapping("mdList")
