@@ -159,7 +159,16 @@ function CommentItem({
                       value={replyComment}
                       onKeyDown={handleSubmitReplyKeyDown}
                     />
-                    <Button onClick={onModalOpenReply}>작성</Button>
+                    <Button
+                      onClick={onModalOpenReply}
+                      isDisabled={
+                        !account.isLoggedIn() ||
+                        replyComment.length === 0 ||
+                        !replyComment.trim()
+                      }
+                    >
+                      작성
+                    </Button>
                   </Flex>
                 </Box>
               )}

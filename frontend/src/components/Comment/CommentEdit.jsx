@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   Box,
   Button,
+  Flex,
   Modal,
   ModalBody,
   ModalContent,
@@ -13,7 +14,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import ButtonOutline from "../ui/Button/ButtonOutline.jsx";
+import ButtonNeo from "../ui/Button/ButtonNeo.jsx";
 
 function CommentEdit({ comment, isTransition, setIsEditing, setIsTransition }) {
   const [reWriteComment, setReWriteComment] = useState(comment.comment);
@@ -22,25 +23,42 @@ function CommentEdit({ comment, isTransition, setIsEditing, setIsTransition }) {
 
   function handleEditSubmit() {
     setIsTransition(true);
-    axios
-      .put("/api/comment/edit", {
-        comment: reWriteComment,
-        commentId: comment.commentId,
-      })
-      .then((res) => {
-        toast({
-          status: "success",
-          position: "bottom",
-          isClosable: true,
-          description: "수정완료",
+    const trimmedComment = reWriteComment.trim();
+    const trimmedOriginalComment = comment.comment.trim();
+
+    if (
+      trimmedComment !== trimmedOriginalComment && // 제거된 reWriteComment가 원래 코멘트와 다르고
+      trimmedComment.length > 0 // 제거된 reWriteComment의 길이가 0보다 크면
+    ) {
+      onOpen();
+      axios
+        .put("/api/comment/edit", {
+          comment: reWriteComment,
+          commentId: comment.commentId,
+        })
+        .then((res) => {
+          toast({
+            status: "success",
+            position: "bottom",
+            isClosable: true,
+            description: "수정완료",
+          });
+        })
+        .catch((err) => {})
+        .finally(() => {
+          setIsTransition(false);
+          setIsEditing(false);
         });
-      })
-      .catch((err) => {})
-      .finally(() => {
-        onClose();
-        setIsTransition(false);
-        setIsEditing(false);
+    } else {
+      toast({
+        status: "error",
+        isClosable: true,
+        description: "이전 댓글과 동일합니다",
+        position: "bottom",
       });
+      onClose();
+      setIsTransition(false);
+    }
   }
 
   function handleSubmitKeyDown(e) {
@@ -62,7 +80,6 @@ function CommentEdit({ comment, isTransition, setIsEditing, setIsTransition }) {
 
   return (
     <Box>
-      Comment수정
       <Box>
         <Textarea
           value={reWriteComment}
@@ -70,21 +87,14 @@ function CommentEdit({ comment, isTransition, setIsEditing, setIsTransition }) {
           onKeyDown={handleSubmitKeyDown}
         />
       </Box>
-      <Box mt={2}>
-        <ButtonOutline
-          onClick={onOpen}
-          isLoading={isTransition}
-          isDisabled={
-            comment.comment === reWriteComment || reWriteComment.length === 0
-          }
-          size="sm"
-        >
+      <Flex mt={2}>
+        <ButtonNeo onClick={onOpen} isLoading={isTransition} mr={1}>
           확인
-        </ButtonOutline>
-        <ButtonOutline onClick={() => setIsEditing(false)} size={"sm"}>
+        </ButtonNeo>
+        <ButtonNeo onClick={() => setIsEditing(false)} size={"sm"}>
           취소
-        </ButtonOutline>
-      </Box>
+        </ButtonNeo>
+      </Flex>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>

@@ -13,8 +13,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import ButtonOutline from "../ui/Button/ButtonOutline.jsx";
 import axios from "axios";
+import ButtonNeo from "../ui/Button/ButtonNeo.jsx";
 
 export function CommentReplyEdit({
   replyComment,
@@ -30,30 +30,42 @@ export function CommentReplyEdit({
 
   function handleSubmitEditReply() {
     setIsTransition(true);
-    axios
-      .put("/api/replycomment/edit", {
-        replyComment: reWriteComment,
-        replyId: replyComment.replyId,
-      })
-      .then((res) => {
-        toast({
-          status: "success",
-          description: "수정완료",
-          position: "bottom",
-          isClosable: true,
+    const trimmedReplyComment = reWriteComment.trim();
+    const trimmedOriginalComment = replyComment.replyComment.trim();
+
+    if (
+      trimmedReplyComment !== trimmedOriginalComment && // 제거된 reWriteComment가 원래 코멘트와 다르고
+      trimmedReplyComment.length > 0 // 제거된 reWriteComment의 길이가 0보다 크면
+    ) {
+      onOpen();
+      axios
+        .put("/api/replycomment/edit", {
+          replyComment: reWriteComment,
+          replyId: replyComment.replyId,
+        })
+        .then((res) => {
+          toast({
+            status: "success",
+            description: "수정완료",
+            position: "bottom",
+            isClosable: true,
+          });
+        })
+        .catch((err) => {})
+        .finally(() => {
+          setIsTransition(false);
+          setEditingReplyIndex(null);
         });
-      })
-      .catch((err) => {
-        toast({
-          status: "error",
-          isClosable: true,
-          description: "수정실패",
-        });
-      })
-      .finally(() => {
-        setIsTransition(false);
-        setEditingReplyIndex(null);
+    } else {
+      toast({
+        status: "error",
+        isClosable: true,
+        description: "이전 댓글과 동일합니다",
+        position: "bottom",
       });
+      onClose();
+      setIsTransition(false);
+    }
   }
 
   function handleEditReplyKeyDown(e) {
@@ -83,21 +95,21 @@ export function CommentReplyEdit({
   return (
     <Box>
       <Box>
-        Comment수정
         <Flex>
           <Textarea
-            mb={4}
+            mb={2}
+            mt={4}
             value={reWriteComment}
             onChange={(e) => setReWriteComment(e.target.value)}
             onKeyDown={handleEditReplyKeyDown}
           />
         </Flex>
-        <Box>
-          <Button onClick={onOpen}>확인</Button>
-          <ButtonOutline onClick={() => setEditingReplyIndex(null)}>
-            취소
-          </ButtonOutline>
-        </Box>
+        <Flex>
+          <ButtonNeo onClick={onOpen} mr={1} size={"large"}>
+            확인
+          </ButtonNeo>
+          <ButtonNeo onClick={() => setEditingReplyIndex(null)}>취소</ButtonNeo>
+        </Flex>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
