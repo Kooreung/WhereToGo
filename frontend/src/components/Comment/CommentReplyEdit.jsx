@@ -1,4 +1,17 @@
-import { Box, Button, Flex, Textarea, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Textarea,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import React, { useState } from "react";
 import ButtonOutline from "../ui/Button/ButtonOutline.jsx";
 import axios from "axios";
@@ -13,6 +26,7 @@ export function CommentReplyEdit({
     replyComment.replyComment,
   );
   const toast = useToast();
+  const { onClose, isOpen, onOpen } = useDisclosure();
 
   function handleSubmitEditReply() {
     setIsTransition(true);
@@ -54,12 +68,23 @@ export function CommentReplyEdit({
           />
         </Flex>
         <Box>
-          <Button onClick={handleSubmitEditReply}>확인</Button>
+          <Button onClick={onOpen}>확인</Button>
           <ButtonOutline onClick={() => setEditingReplyIndex(null)}>
             취소
           </ButtonOutline>
         </Box>
       </Box>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>작성 확인</ModalHeader>
+          <ModalBody>작성하시겠습니까?</ModalBody>
+          <ModalFooter>
+            <Button onClick={handleSubmitEditReply}>확인</Button>
+            <Button onClick={onClose}>취소</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }
