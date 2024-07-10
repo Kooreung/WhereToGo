@@ -151,7 +151,7 @@ function CommentItem({
                     mt={1}
                     mr={2}
                     cursor={"pointer"}
-                    color={"lightgray"}
+                    color={"gray"}
                     sx={{
                       "&:hover": {
                         color: `purple`,
@@ -165,7 +165,7 @@ function CommentItem({
                     fontSize={"smaller"}
                     mt={1}
                     cursor={"pointer"}
-                    color={"lightgray"}
+                    color={"gray"}
                     sx={{
                       "&:hover": {
                         color: `purple`,
@@ -173,7 +173,7 @@ function CommentItem({
                     }}
                     onClick={() => setIsOpenList(!isOpenList)}
                   >
-                    답글
+                    답글 {comment.replyCount}
                   </Text>
                 </Flex>
               </Box>

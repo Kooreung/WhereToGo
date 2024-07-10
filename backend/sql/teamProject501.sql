@@ -225,3 +225,15 @@ CREATE TABLE `Reply`
 
 DESC commentreply;
 DESC comment;
+
+SELECT c.commentid,
+       c.comment,
+       c.memberid,
+       m.nickName,
+       c.createdate,
+       COUNT(cr.commentid) AS replyCount
+FROM comment c
+         JOIN member m ON c.memberid = m.memberid
+         LEFT JOIN commentreply cr ON c.commentid = cr.commentid
+WHERE c.postid = 40
+GROUP BY c.commentid, c.comment, c.memberid, m.nickName, c.createdate
