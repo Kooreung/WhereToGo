@@ -17,8 +17,8 @@ import MemberAdmin from "./pages/member/MemberAdmin.jsx";
 import MemberInfoAdmin from "./pages/member/MemberInfoAdmin.jsx";
 import { PostLikeList } from "./pages/post/PostLikeList.jsx";
 import { PostMdList } from "./pages/post/PostMdList.jsx"; // axios interceptor 설정
-import ChatWebSocket from "./component/Chat/ChatWebSocket.jsx";
-import ChatListPage from "./component/Chat/ChatListPage.jsx"; // axios interceptor 설정
+import ChatWebSocket from "./components/Chat/ChatWebSocket.jsx";
+import ChatListPage from "./components/Chat/ChatListPage.jsx"; // axios interceptor 설정
 
 // axios interceptor 설정
 axios.interceptors.request.use((config) => {

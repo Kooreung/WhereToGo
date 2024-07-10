@@ -8,6 +8,10 @@ import {
   Flex,
   Image,
   Input,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Select,
   Spacer,
   StackDivider,
@@ -25,6 +29,7 @@ import {
   faEye,
   faHeart,
   faMagnifyingGlass,
+  faSliders,
 } from "@fortawesome/free-solid-svg-icons";
 import { LoginContext } from "../../components/ui/LoginProvider.jsx";
 import axios from "axios";
@@ -39,23 +44,32 @@ import ButtonOutline from "../../components/ui/Button/ButtonOutline.jsx";
 function PostList() {
   const navigate = useNavigate();
   const account = useContext(LoginContext);
+  const [error, setError] = useState(null);
   const [postList, setPostList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
+  const [selectList, setSelectList] = useState("가까운순");
+  const listSlider =
+    selectList === "가까운순"
+      ? "closely"
+      : selectList === "최신순"
+        ? "recently"
+        : [];
   const [nowLatitude, setNowLatitude] = useState(37.52499981233085);
   const [nowLongitude, setNowLongitude] = useState(126.70531779795746);
-  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchRegion, setSearchRegion] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+
+  const buttonStrokeColor = useColorModeValue(
+    "rgba(131, 96, 145, 1)",
+    "rgba(216, 183, 229, 1)",
+  );
   const hColor = useColorModeValue(
     "rgba(216, 183, 229, 0.2)",
     "rgba(131, 96, 145, 0.2)",
   );
-
-  // 현재 위치 정보 가져오기 & 내보내기
-  useEffect(() => {}, []);
 
   useEffect(() => {
     // 위치 정보 가져오기
@@ -74,11 +88,12 @@ function PostList() {
             const response = await axios.get(`/api/post/list`, {
               params: {
                 page: searchParams.get("page") || 1,
+                listSlider: searchParams.get("listSlider") || "closely",
                 type: searchParams.get("type") || "all",
                 keyword: searchParams.get("keyword") || "",
                 region: searchParams.get("region") || "",
-                lat: latitude,
-                lng: longitude,
+                lat: nowLatitude,
+                lng: nowLongitude,
               },
             });
             // 서버에서 받은 데이터 설정
@@ -132,6 +147,11 @@ function PostList() {
     navigate(`/post/list?${searchParams}`);
   }
 
+  function handleSelectList(selectListStyle) {
+    searchParams.set("listSlider", selectListStyle);
+    navigate(`/post/list?${searchParams}`);
+  }
+
   return (
     <Box align="center" justify="center">
       <PostListOfBest />
@@ -145,9 +165,32 @@ function PostList() {
           회원 게시글
         </HeadingVariant>
         <Spacer />
+        <Menu>
+          <MenuButton
+            as={Button}
+            border={`1px solid ${buttonStrokeColor}`}
+            backgroundColor={"white"}
+            sx={{
+              "&:hover": {
+                backgroundColor: hColor,
+              },
+            }}
+          >
+            <FontAwesomeIcon icon={faSliders} />
+          </MenuButton>
+          <MenuList>
+            <MenuItem onClick={() => handleSelectList("closely")}>
+              가까운 순
+            </MenuItem>
+            <MenuItem onClick={() => handleSelectList("recently")}>
+              최신 순
+            </MenuItem>
+          </MenuList>
+        </Menu>
         {account.isLoggedIn() && (
           <Button
             onClick={() => navigate(`/post/write`)}
+            ml={{ base: "8px", lg: "1rem", sm: "8px" }}
             color={"black.alpha.900"}
           >
             글쓰기

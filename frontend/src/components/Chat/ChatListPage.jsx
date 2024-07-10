@@ -3,7 +3,7 @@ import axios from "axios";
 import { Box, Flex } from "@chakra-ui/react";
 import { jwtDecode } from "jwt-decode";
 import ChatWebSocket from "./ChatWebSocket.jsx";
-import { LoginContext } from "../../components/ui/LoginProvider.jsx"; // 채팅 컴포넌트를 import 합니다.
+import { LoginContext } from "../ui/LoginProvider.jsx"; // 채팅 컴포넌트를 import 합니다.
 
 // 채팅 컴포넌트를 import 합니다.
 

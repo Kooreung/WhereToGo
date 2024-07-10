@@ -50,12 +50,13 @@ public class PostController {
     @GetMapping("list")
     public Map<String, Object> postList(
             @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(value = "listSlider", defaultValue = "closely") String listSlider,
             @RequestParam(value = "type", required = false) String searchType,
             @RequestParam(value = "keyword", defaultValue = "") String searchKeyword,
             @RequestParam(value = "region", defaultValue = "") String searchReg,
             @RequestParam(value = "lat", required = false) Double latitude,
             @RequestParam(value = "lng", required = false) Double longitude) {
-        return postService.getPostList(page, searchType, searchKeyword, searchReg, latitude, longitude);
+        return postService.getPostList(page, listSlider, searchType, searchKeyword, searchReg, latitude, longitude);
     }
 
     // 게시글 MD추천 목록 Controller

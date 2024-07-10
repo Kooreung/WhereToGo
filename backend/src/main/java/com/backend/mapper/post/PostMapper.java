@@ -56,9 +56,9 @@ public interface PostMapper {
                     <bind name="region" value="'%' + searchReg + '%'"/>
                     <if test="searchType == 'all'">
                         AND (p.title LIKE #{pattern}
-                            OR p.content LIKE #{pattern} 
-                            OR m.nickname LIKE #{pattern} 
-                            OR pl.address LIKE #{pattern} 
+                            OR p.content LIKE #{pattern}
+                            OR m.nickname LIKE #{pattern}
+                            OR pl.address LIKE #{pattern}
                             OR pl.placename LIKE #{pattern})
                     </if>
                     <if test="searchType == 'titleAndContent'">
@@ -79,11 +79,18 @@ public interface PostMapper {
                 </if>
             </where>
             GROUP BY p.postid
-            ORDER BY distance ASC, p.postid DESC
+            <choose>
+                <when test="listSlider == 'closely'">
+                    ORDER BY distance ASC, p.postid DESC
+                </when>
+                <when test="listSlider == 'recently'">
+                    ORDER BY p.postid DESC
+                </when>
+            </choose>
             LIMIT #{offset}, 5
             </script>
             """)
-    List<Post> selectAllPost(Integer offset, String searchType, String searchKeyword, String searchReg,
+    List<Post> selectAllPost(Integer offset, String listSlider, String searchType, String searchKeyword, String searchReg,
                              Double latitude, Double longitude);
 
     // 게시글 목록 카운트 매퍼
@@ -124,7 +131,7 @@ public interface PostMapper {
                    </where>
             </script>
             """)
-    Integer countAllpost(String searchType, String searchKeyword, String searchReg,
+    Integer countAllpost(String searchType, String listSlider, String searchKeyword, String searchReg,
                          @Param("latitude") Double latitude, @Param("longitude") Double longitude);
 
     // 게시글 Top 3 인기글 목록 매퍼
