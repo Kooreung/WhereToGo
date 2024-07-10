@@ -61,8 +61,9 @@ import ContentParser from "../../utils/ContentParser.jsx";
 
 import ButtonOutline from "../../components/ui/Button/ButtonOutline.jsx";
 import ButtonCircle from "../../components/ui/Button/ButtonCircle.jsx";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, WarningIcon } from "@chakra-ui/icons";
 import HeadingVariant from "../../components/ui/Heading/HeadingVariant.jsx";
+import { WaringList } from "./WaringList.jsx";
 
 export function MemberAdmin() {
   const [memberList, setMemberList] = useState([]);
@@ -612,6 +613,7 @@ export function MemberAdmin() {
           <Tab>회원관리</Tab>
           <Tab>탈퇴한 회원</Tab>
           <Tab>배너 등록</Tab>
+          <Tab>신고 목록</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -948,6 +950,12 @@ export function MemberAdmin() {
                   </ModalFooter>
                 </ModalContent>
               </Modal>
+            </Box>
+          </TabPanel>
+          <TabPanel>
+            <Box>
+              <WarningIcon />
+              <WaringList />
             </Box>
           </TabPanel>
         </TabPanels>
