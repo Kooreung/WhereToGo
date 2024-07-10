@@ -1,5 +1,7 @@
 package com.backend.WebSocket.chat;
 
+import com.backend.WebSocket.sseemitter.NotificationController;
+import com.backend.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -7,7 +9,6 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,6 +17,9 @@ public class ChatController {
 
     private final SimpMessageSendingOperations template;
     private final ChatService chatService;
+    private final NotificationController notificationController;
+    private final MemberMapper memberMapper;
+    private final ChatMapper chatMapper;
 
 
     @PostMapping("chatroom/{memberId}")
@@ -39,6 +43,15 @@ public class ChatController {
     //메시지 송신 및 수신, /pub가 생략된 모습. 클라이언트 단에선 /pub/message로 요청
     @MessageMapping("/message")
     public ResponseEntity<Void> receiveMessage(@RequestBody ChatMessage chat) {
+        String auth = memberMapper.getAuthTypeByMemberId(chat.getMemberId());
+        Integer id = 0;
+        if (auth == "admin") {
+            id = chat.getMemberId();
+        } else {
+            id = chatMapper.getMemberId(chat.getChatRoomId());
+        }
+        notificationController.sendMessageToUser(id, "메세지 와떠염");
+
         // 메시지를 해당 채팅방 구독자들에게 전송
         LocalDateTime time = LocalDateTime.now();
         chat.setTimestamp(time);

@@ -47,4 +47,11 @@ public interface ChatMapper {
             SELECT * FROM chatroom
             """)
     List<ChatRoom> getChatRoomList();
+
+
+    @Select("""
+            SELECT memberId from chatroom
+            where chatRoomId= #{chatRoomId}
+            """)
+    Integer getMemberId(Integer chatRoomId);
 }

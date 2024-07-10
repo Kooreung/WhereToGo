@@ -3,7 +3,8 @@ import axios from "axios";
 import { Box, Flex } from "@chakra-ui/react";
 import { jwtDecode } from "jwt-decode";
 import ChatWebSocket from "./ChatWebSocket.jsx";
-import { LoginContext } from "../../components/ui/LoginProvider.jsx"; // 채팅 컴포넌트를 import 합니다.
+import { LoginContext } from "../../components/ui/LoginProvider.jsx";
+import { useNotifications } from "./NotificationProvider.jsx"; // 채팅 컴포넌트를 import 합니다.
 
 // 채팅 컴포넌트를 import 합니다.
 
@@ -14,6 +15,14 @@ export function ChatListPage() {
   const account = useContext(LoginContext);
   const isAdmin = account.isAdmin();
   const [showChat, setShowChat] = useState(false);
+
+  const { notifications, addNotification, removeNotification } =
+    useNotifications();
+
+  // 예를 들어, 새 알림을 추가하는 함수를 사용할 수 있습니다.
+  const handleNewNotification = () => {
+    addNotification({ id: "new", message: "새 알림 메시지" });
+  };
 
   useEffect(() => {
     console.log(account.isAdmin());
@@ -84,6 +93,19 @@ export function ChatListPage() {
           {/* 채팅 컴포넌트를 상자에 추가합니다. */}
         </Box>
       )}
+      <div>
+        <button onClick={handleNewNotification}>알림 추가</button>
+        <ul>
+          {notifications.map((notification) => (
+            <li key={notification.id}>
+              {notification.message}
+              <button onClick={() => removeNotification(notification.id)}>
+                삭제
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </Flex>
   );
 }
