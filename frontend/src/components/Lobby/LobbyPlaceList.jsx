@@ -26,7 +26,7 @@ import HeadingVariant from "../ui/Heading/HeadingVariant.jsx";
 const seoulCity = [
   {
     name: "서울 전체",
-    addressCity: "110000000",
+    addressCity: "11000000",
   },
   {
     name: "송파/강동",
@@ -88,7 +88,7 @@ const seoulCity = [
 const gyeonggiCity = [
   {
     name: "경기 전체",
-    addressCity: "410000000",
+    addressCity: "41000000",
   },
   {
     name: "파주/김포/고양",
@@ -147,7 +147,7 @@ const gyeonggiCity = [
 const incheonCity = [
   {
     name: "인천 전체",
-    addressCity: "280000000",
+    addressCity: "28000000",
   },
   {
     name: "계양구",
@@ -184,6 +184,10 @@ const incheonCity = [
   {
     name: "옹진군",
     addressCity: "2800000009",
+  },
+  {
+    name: "강화군",
+    addressCity: "2800000010",
   },
 ];
 

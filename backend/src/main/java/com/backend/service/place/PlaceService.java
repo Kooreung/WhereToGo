@@ -123,6 +123,7 @@ public class PlaceService {
         incheonCity.put("중구", "2800000007");
         incheonCity.put("연수구", "2800000008");
         incheonCity.put("옹진군", "2800000009");
+        incheonCity.put("강화군", "2800000010");
 
         return incheonCity.getOrDefault(city, ""); // 없으면 빈 문자열 반환
     }
