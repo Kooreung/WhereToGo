@@ -102,13 +102,22 @@ function CommentItem({
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       e.stopPropagation();
-      if (!account.isLoggedIn() || !replyComment.trim()) {
-        toast({
-          status: "error",
-          position: "bottom",
-          description: "댓글을 입력하세요",
-          isClosable: true,
-        });
+      if (!replyComment.trim() || !account.isLoggedIn()) {
+        if (!account.isLoggedIn()) {
+          toast({
+            status: "error",
+            position: "bottom",
+            description: "로그인이 필요한 서비스입니다",
+            isClosable: true,
+          });
+        } else {
+          toast({
+            status: "error",
+            position: "bottom",
+            description: "댓글을 입력하세요",
+            isClosable: true,
+          });
+        }
       } else {
         onModalOpenReply();
       }
