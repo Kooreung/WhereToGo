@@ -113,7 +113,7 @@ export function ChatWebSocket({ roomInfo }) {
 
   // 스크롤을 위한 ref 생성
   const messagesEndRef = useRef(null);
-  const [showScrollButton, setShowScrollButton] = useState(true);
+  const [showScrollButton, setShowScrollButton] = useState(false);
 
   // 스크롤을 아래로 이동시키는 함수
   const scrollToBottom = () => {
@@ -131,7 +131,7 @@ export function ChatWebSocket({ roomInfo }) {
     const position = chatBoxRef.current.scrollTop;
     const height = chatBoxRef.current.scrollHeight;
     setScrollPosition(position);
-    setScrollHeight(height - 800);
+    setScrollHeight(height - 1000);
   };
 
   // 새 메시지 도착 시 스크롤 조건 확인 및 처리
