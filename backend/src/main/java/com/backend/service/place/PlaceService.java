@@ -32,6 +32,11 @@ public class PlaceService {
                 addressCity = getCityGyeonggiCode(addressParts[1]);
                 break;
             }
+            case "인천": {
+                addressCountry = "2800000000";
+                addressCity = getCityIncheonCode(addressParts[1]);
+                break;
+            }
         }
 
         place.setAddressCountry(addressCountry);
@@ -105,6 +110,21 @@ public class PlaceService {
         gyeonggiCity.put("시흥시", "4100000013");
 
         return gyeonggiCity.getOrDefault(city, ""); // 없으면 빈 문자열 반환
+    }
+
+    private String getCityIncheonCode(String city) {
+        Map<String, String> incheonCity = new HashMap<>();
+        incheonCity.put("계양구", "2800000001");
+        incheonCity.put("부평구", "2800000002");
+        incheonCity.put("미추홀구", "2800000003");
+        incheonCity.put("남동구", "2800000004");
+        incheonCity.put("서구", "2800000005");
+        incheonCity.put("동구", "2800000006");
+        incheonCity.put("중구", "2800000007");
+        incheonCity.put("연수구", "2800000008");
+        incheonCity.put("옹진군", "2800000009");
+
+        return incheonCity.getOrDefault(city, ""); // 없으면 빈 문자열 반환
     }
 }
 
