@@ -36,6 +36,7 @@ function CommentItem({
   const [isEditing, setIsEditing] = useState(false);
   const [isReply, setIsReply] = useState(false);
   const [replyComment, setReplyComment] = useState("");
+  const [isOpenList, setIsOpenList] = useState(false);
   const toast = useToast();
   const account = useContext(LoginContext);
   const { onClose, isOpen, onOpen } = useDisclosure();
@@ -144,20 +145,37 @@ function CommentItem({
                 <Text w={{ base: "650px", lg: "600px", sm: "500px" }}>
                   {comment.comment}
                 </Text>
-                <Text
-                  fontSize={"smaller"}
-                  mt={1}
-                  cursor={"pointer"}
-                  color={"lightgray"}
-                  sx={{
-                    "&:hover": {
-                      color: `purple`,
-                    },
-                  }}
-                  onClick={() => setIsReply(!isReply)}
-                >
-                  댓글달기
-                </Text>
+                <Flex>
+                  <Text
+                    fontSize={"smaller"}
+                    mt={1}
+                    mr={2}
+                    cursor={"pointer"}
+                    color={"lightgray"}
+                    sx={{
+                      "&:hover": {
+                        color: `purple`,
+                      },
+                    }}
+                    onClick={() => setIsReply(!isReply)}
+                  >
+                    댓글달기
+                  </Text>
+                  <Text
+                    fontSize={"smaller"}
+                    mt={1}
+                    cursor={"pointer"}
+                    color={"lightgray"}
+                    sx={{
+                      "&:hover": {
+                        color: `purple`,
+                      },
+                    }}
+                    onClick={() => setIsOpenList(!isOpenList)}
+                  >
+                    답글
+                  </Text>
+                </Flex>
               </Box>
               {isReply && (
                 <Box>
@@ -219,12 +237,14 @@ function CommentItem({
               </ModalFooter>
             </ModalContent>
           </Modal>
-          <CommentReplyList
-            commentId={commentId}
-            replyList={replyList}
-            isTransition={isTransition}
-            setIsTransition={setIsTransition}
-          />
+          {isOpenList && (
+            <CommentReplyList
+              commentId={commentId}
+              replyList={replyList}
+              isTransition={isTransition}
+              setIsTransition={setIsTransition}
+            />
+          )}
         </Box>
       )}
       {isEditing && (
