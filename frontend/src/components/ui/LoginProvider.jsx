@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useEffect, useState} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
@@ -7,7 +7,7 @@ export const LoginContext = createContext(null);
 export function useAuth() {
   const context = useContext(LoginContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within a LoginProvider');
+    throw new Error("useAuth must be used within a LoginProvider");
   }
   return context;
 }
