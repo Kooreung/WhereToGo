@@ -18,4 +18,5 @@ public class Comment {
     private String nickName;
     //    대댓글 담기 객체
     private List<Reply> replyList;
+    private Integer replyCount;
 }

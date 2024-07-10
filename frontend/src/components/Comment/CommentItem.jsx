@@ -36,6 +36,7 @@ function CommentItem({
   const [isEditing, setIsEditing] = useState(false);
   const [isReply, setIsReply] = useState(false);
   const [replyComment, setReplyComment] = useState("");
+  const [isOpenList, setIsOpenList] = useState(false);
   const toast = useToast();
   const account = useContext(LoginContext);
   const { onClose, isOpen, onOpen } = useDisclosure();
@@ -43,7 +44,12 @@ function CommentItem({
     "rgba(131, 96, 145, 1)",
     "rgba(216, 183, 229, 1)",
   );
-
+  const {
+    isOpen: isModalOpenReply,
+    onOpen: onModalOpenReply,
+    onClose: onModalCloseReply,
+  } = useDisclosure();
+  // 댓글 삭제
   function handleRemoveSubmit() {
     setIsTransition(true);
     axios
@@ -64,7 +70,7 @@ function CommentItem({
         setIsTransition(false);
       });
   }
-
+  // 대댓글 작성
   function handleSubmitReply() {
     if (!account.isLoggedIn() || isTransition || !replyComment.trim()) {
       return;
@@ -89,7 +95,34 @@ function CommentItem({
       .finally(() => {
         setIsTransition(false);
         setIsReply(false);
+        onModalCloseReply();
       });
+  }
+
+  function handleSubmitReplyKeyDown(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!replyComment.trim() || !account.isLoggedIn()) {
+        if (!account.isLoggedIn()) {
+          toast({
+            status: "error",
+            position: "bottom",
+            description: "로그인이 필요한 서비스입니다",
+            isClosable: true,
+          });
+        } else {
+          toast({
+            status: "error",
+            position: "bottom",
+            description: "댓글을 입력하세요",
+            isClosable: true,
+          });
+        }
+      } else {
+        onModalOpenReply();
+      }
+    }
   }
 
   return (
@@ -112,20 +145,37 @@ function CommentItem({
                 <Text w={{ base: "650px", lg: "600px", sm: "500px" }}>
                   {comment.comment}
                 </Text>
-                <Text
-                  fontSize={"smaller"}
-                  mt={1}
-                  cursor={"pointer"}
-                  color={"lightgray"}
-                  sx={{
-                    "&:hover": {
-                      color: `purple`,
-                    },
-                  }}
-                  onClick={() => setIsReply(!isReply)}
-                >
-                  댓글달기
-                </Text>
+                <Flex>
+                  <Text
+                    fontSize={"smaller"}
+                    mt={1}
+                    mr={2}
+                    cursor={"pointer"}
+                    color={"gray"}
+                    sx={{
+                      "&:hover": {
+                        color: `purple`,
+                      },
+                    }}
+                    onClick={() => setIsReply(!isReply)}
+                  >
+                    댓글달기
+                  </Text>
+                  <Text
+                    fontSize={"smaller"}
+                    mt={1}
+                    cursor={"pointer"}
+                    color={"gray"}
+                    sx={{
+                      "&:hover": {
+                        color: `purple`,
+                      },
+                    }}
+                    onClick={() => setIsOpenList(!isOpenList)}
+                  >
+                    답글 {comment.replyCount}
+                  </Text>
+                </Flex>
               </Box>
               {isReply && (
                 <Box>
@@ -134,8 +184,18 @@ function CommentItem({
                       mb={4}
                       onChange={(e) => setReplyComment(e.target.value)}
                       value={replyComment}
+                      onKeyDown={handleSubmitReplyKeyDown}
                     />
-                    <Button onClick={handleSubmitReply}>작성</Button>
+                    <Button
+                      onClick={onModalOpenReply}
+                      isDisabled={
+                        !account.isLoggedIn() ||
+                        replyComment.length === 0 ||
+                        !replyComment.trim()
+                      }
+                    >
+                      작성
+                    </Button>
                   </Flex>
                 </Box>
               )}
@@ -166,12 +226,25 @@ function CommentItem({
               </ModalFooter>
             </ModalContent>
           </Modal>
-          <CommentReplyList
-            commentId={commentId}
-            replyList={replyList}
-            isTransition={isTransition}
-            setIsTransition={setIsTransition}
-          />
+          <Modal isOpen={isModalOpenReply} onClose={onModalCloseReply}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>작성 확인</ModalHeader>
+              <ModalBody>작성하시겠습니까?</ModalBody>
+              <ModalFooter>
+                <Button onClick={handleSubmitReply}>확인</Button>
+                <Button onClick={onModalCloseReply}>취소</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+          {isOpenList && (
+            <CommentReplyList
+              commentId={commentId}
+              replyList={replyList}
+              isTransition={isTransition}
+              setIsTransition={setIsTransition}
+            />
+          )}
         </Box>
       )}
       {isEditing && (
