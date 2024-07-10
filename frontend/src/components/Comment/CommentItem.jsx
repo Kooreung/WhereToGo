@@ -43,7 +43,12 @@ function CommentItem({
     "rgba(131, 96, 145, 1)",
     "rgba(216, 183, 229, 1)",
   );
-
+  const {
+    isOpen: isModalOpenReply,
+    onOpen: onModalOpenReply,
+    onClose: onModalCloseReply,
+  } = useDisclosure();
+  // 댓글 삭제
   function handleRemoveSubmit() {
     setIsTransition(true);
     axios
@@ -64,7 +69,7 @@ function CommentItem({
         setIsTransition(false);
       });
   }
-
+  // 대댓글 작성
   function handleSubmitReply() {
     if (!account.isLoggedIn() || isTransition || !replyComment.trim()) {
       return;
@@ -89,7 +94,25 @@ function CommentItem({
       .finally(() => {
         setIsTransition(false);
         setIsReply(false);
+        onModalCloseReply();
       });
+  }
+
+  function handleSubmitReplyKeyDown(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!account.isLoggedIn() || !replyComment.trim()) {
+        toast({
+          status: "error",
+          position: "bottom",
+          description: "댓글을 입력하세요",
+          isClosable: true,
+        });
+      } else {
+        onModalOpenReply();
+      }
+    }
   }
 
   return (
@@ -134,8 +157,9 @@ function CommentItem({
                       mb={4}
                       onChange={(e) => setReplyComment(e.target.value)}
                       value={replyComment}
+                      onKeyDown={handleSubmitReplyKeyDown}
                     />
-                    <Button onClick={handleSubmitReply}>작성</Button>
+                    <Button onClick={onModalOpenReply}>작성</Button>
                   </Flex>
                 </Box>
               )}
@@ -163,6 +187,17 @@ function CommentItem({
               <ModalFooter>
                 <Button onClick={handleRemoveSubmit}>확인</Button>
                 <Button onClick={onClose}>취소</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+          <Modal isOpen={isModalOpenReply} onClose={onModalCloseReply}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>작성 확인</ModalHeader>
+              <ModalBody>작성하시겠습니까?</ModalBody>
+              <ModalFooter>
+                <Button onClick={handleSubmitReply}>확인</Button>
+                <Button onClick={onModalCloseReply}>취소</Button>
               </ModalFooter>
             </ModalContent>
           </Modal>
