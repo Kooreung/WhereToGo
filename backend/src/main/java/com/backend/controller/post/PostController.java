@@ -5,6 +5,8 @@ import com.backend.domain.post.Banner;
 import com.backend.domain.post.Post;
 import com.backend.service.post.PostService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +23,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PostController {
 
+    private static final Logger log = LoggerFactory.getLogger(PostController.class);
     private final PostService postService;
 
     // 게시글 추가 | 작성 Controller
@@ -56,6 +59,7 @@ public class PostController {
             @RequestParam(value = "region", defaultValue = "") String searchReg,
             @RequestParam(value = "lat", required = false) Double latitude,
             @RequestParam(value = "lng", required = false) Double longitude) {
+
         return postService.getPostList(page, listSlider, searchType, searchKeyword, searchReg, latitude, longitude);
     }
 

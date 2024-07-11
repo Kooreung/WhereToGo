@@ -26,61 +26,61 @@ import HeadingVariant from "../ui/Heading/HeadingVariant.jsx";
 const seoulCity = [
   {
     name: "서울 전체",
-    addressCity: "11000000",
+    addressCode: "11000000",
   },
   {
     name: "송파/강동",
-    addressCity: "1100000001",
+    addressCode: "1100000001",
     // src: "https://i.namu.wiki/i/ap0GeiZgqZy9c3NMxQAkqIsvFmDTCe55k8_ne34Dso0epFVP7LCnOiEMHZve7ma8MuOIDGohoXuld6TGsvkYKQ.webp",
   },
   {
     name: "강남/서초",
-    addressCity: "1100000002",
+    addressCode: "1100000002",
     src: "https://www.ydp.go.kr/site/tour/images/main/tripspot_photo1_1.jpg",
   },
   {
     name: "영등포/동작/관악",
-    addressCity: "1100000003",
+    addressCode: "1100000003",
     src: "https://i.namu.wiki/i/DK-BcaE6wDCM-N9UJbeQTn0SD9eWgsX9YKWK827rqjbrzDz0-CxW-JFOCiAsUL3CBZ4zE0UDR-p4sLaYPiUjww.webp",
   },
   {
     name: "구로/금천구",
-    addressCity: "1100000004",
+    addressCode: "1100000004",
     src: "https://botanicpark.seoul.go.kr/upload/seditorMulti/201912051055227163dfdb-9d8b-4d1d-9e63-4592b45c10be.jpg",
   },
   {
     name: "강서/양천구",
-    addressCity: "1100000005",
+    addressCode: "1100000005",
     src: "https://media.timeout.com/images/102767917/750/422/image.jpg",
   },
   {
     name: "마포/은평/서대문",
-    addressCity: "1100000006",
+    addressCode: "1100000006",
     src: "https://cdn.pixabay.com/photo/2019/04/20/11/30/korea-4141530_1280.jpg",
   },
   {
     name: "종로/용산/중구",
-    addressCity: "1100000007",
+    addressCode: "1100000007",
     src: "https://cdn.pixabay.com/photo/2014/08/14/08/34/university-417845_1280.jpg",
   },
   {
     name: "성북구/강북",
-    addressCity: "1100000008",
+    addressCode: "1100000008",
     src: "https://conlab.visitkorea.or.kr/api/depot/public/depot-flow/query/download-image/32d1403a-dc0d-491e-b187-c5aba1d02bab/it14",
   },
   {
     name: "도봉구/노원",
-    addressCity: "1100000009",
+    addressCode: "1100000009",
     src: "https://conlab.visitkorea.or.kr/api/depot/public/depot-flow/query/download-image/a93c789f-a613-496e-a4ca-3690dd479401/it14",
   },
   {
     name: "동대문/중랑구",
-    addressCity: "1100000010",
+    addressCode: "1100000010",
     src: "https://parks.seoul.go.kr/images/egovframework/com/template/df04.jpg",
   },
   {
     name: "성동구/광진구",
-    addressCity: "1100000011",
+    addressCode: "1100000011",
     src: "https://cdn.pixabay.com/photo/2022/12/28/12/31/seoul-7682788_640.jpg",
   },
 ];
@@ -88,106 +88,106 @@ const seoulCity = [
 const gyeonggiCity = [
   {
     name: "경기 전체",
-    addressCity: "41000000",
+    addressCode: "41000000",
   },
   {
     name: "파주/김포/고양",
-    addressCity: "4100000001",
+    addressCode: "4100000001",
   },
   {
     name: "양주/의정부",
-    addressCity: "4100000002",
+    addressCode: "4100000002",
   },
   {
     name: "연천/동두천/포천",
-    addressCity: "4100000003",
+    addressCode: "4100000003",
   },
   {
     name: "남양주/가평",
-    addressCity: "4100000004",
+    addressCode: "4100000004",
   },
   {
     name: "구리/하남",
-    addressCity: "4100000005",
+    addressCode: "4100000005",
   },
   {
     name: "양평/광주",
-    addressCity: "4100000006",
+    addressCode: "4100000006",
   },
   {
     name: "여주/이천",
-    addressCity: "4100000007",
+    addressCode: "4100000007",
   },
   {
     name: "용인/안성",
-    addressCity: "4100000008",
+    addressCode: "4100000008",
   },
   {
     name: "성남/과천/의왕",
-    addressCity: "4100000009",
+    addressCode: "4100000009",
   },
   {
     name: "수원/화성",
-    addressCity: "4100000010",
+    addressCode: "4100000010",
   },
   {
     name: "오산/평택",
-    addressCity: "4100000011",
+    addressCode: "4100000011",
   },
   {
     name: "안양/군포/안산",
-    addressCity: "4100000012",
+    addressCode: "4100000012",
   },
   {
     name: "부천/광명/시흥",
-    addressCity: "4100000013",
+    addressCode: "4100000013",
   },
 ];
 
 const incheonCity = [
   {
     name: "인천 전체",
-    addressCity: "28000000",
+    addressCode: "28000000",
   },
   {
     name: "계양구",
-    addressCity: "2800000001",
+    addressCode: "2800000001",
   },
   {
     name: "부평구",
-    addressCity: "2800000002",
+    addressCode: "2800000002",
   },
   {
     name: "미추홀구",
-    addressCity: "2800000003",
+    addressCode: "2800000003",
   },
   {
     name: "남동구",
-    addressCity: "2800000004",
+    addressCode: "2800000004",
   },
   {
     name: "서구",
-    addressCity: "2800000005",
+    addressCode: "2800000005",
   },
   {
     name: "동구",
-    addressCity: "2800000006",
+    addressCode: "2800000006",
   },
   {
     name: "중구",
-    addressCity: "2800000007",
+    addressCode: "2800000007",
   },
   {
     name: "연수구",
-    addressCity: "2800000008",
+    addressCode: "2800000008",
   },
   {
     name: "옹진군",
-    addressCity: "2800000009",
+    addressCode: "2800000009",
   },
   {
     name: "강화군",
-    addressCity: "2800000010",
+    addressCode: "2800000010",
   },
 ];
 
@@ -328,7 +328,7 @@ export function LobbyPlaceList() {
                       align="center"
                       onClick={() =>
                         navigate(
-                          `/post/list?type=all&region=${place.addressCity}`,
+                          `/post/list?type=all&region=${place.addressCode}`,
                         )
                       }
                     >
