@@ -10,6 +10,7 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
+import {useNotifications} from "./NotificationProvider.jsx";
 
 export function ChatWebSocket({ roomInfo }) {
   //웹소켓 연결 객체
@@ -25,6 +26,9 @@ export function ChatWebSocket({ roomInfo }) {
   const [isNewMessage, setIsNewMessage] = useState(false);
   const [newMessage, setNewMessage] = useState("");
 
+  const { notifications, addNotification, removeNotification } =
+      useNotifications();
+
   const connect = (roomInfo) => {
     //웹소켓 연결
     const socket = new WebSocket("ws://localhost:8080/ws");
@@ -37,7 +41,7 @@ export function ChatWebSocket({ roomInfo }) {
           //누군가 발송했던 메시지를 리스트에 추가
           const nowMessage = JSON.parse(message.body);
           setNewMessage(message.body);
-          console.log(nowMessage);
+          console.log(nowMessage.state);
           setMessages((prevMessages) => [...prevMessages, nowMessage]);
           if (nickName === nowMessage.name) {
             setIsNewMessage(false);
@@ -86,7 +90,7 @@ export function ChatWebSocket({ roomInfo }) {
 
   //메세지 전송
   const sendMessage = () => {
-    console.log(memberId);
+    scrollToBottom();
     if (stompClient.current && inputValue) {
       //현재로서는 임의의 테스트 값을 삽입
       const body = {
@@ -157,7 +161,7 @@ export function ChatWebSocket({ roomInfo }) {
     fetchMessages(roomInfo.chatRoomId);
     if (isNewMessage) {
       //스크롤을 제일 밑으로 내린 길이의 - 800인 위치에서 메세지를 보고있을때 메세지가 새로오면 새로운 메세지 버튼 띄우기
-      scrollToBottom();
+
       if (scrollPosition >= scrollHeight) {
         scrollToBottom();
       } else {
@@ -166,7 +170,7 @@ export function ChatWebSocket({ roomInfo }) {
       }
       setIsNewMessage(false);
     }
-  }, [newMessage]);
+  }, [newMessage,notifications]);
 
   //----------------------------------------
 

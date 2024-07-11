@@ -100,19 +100,22 @@ public class ChatController {
             if (!adminExist.equals("none")) {
                 chatService.updateAdminOnline(chatRoom.getChatRoomId());
                 chatService.messageRead(chatRoom.getChatRoomId(), chatRoom.getMemberId());
-                String url = String.format("/sub/chatroom/%s", chatRoom.getChatRoomId());
-                Map<String, Integer> map = new HashMap<>();
-                map.put("userState", 1);
-                template.convertAndSend(url, map);
+//                String url = String.format("/sub/chatroom/%s", chatRoom.getChatRoomId());
+//                Map<String, Integer> map = new HashMap<>();
+//                map.put("state", 1);
+//                template.convertAndSend(url, map);
+                notificationController.sendState(chatRoom.getChatRoomId(),"어드민 온라인");
             }
 
         } else {
             chatService.updateUserOnline(chatRoom);
             chatService.messageRead(chatRoom.getChatRoomId(), chatRoom.getMemberId());
+            Integer id = Integer.valueOf(chatMapper.getAssignedAdminId(chatRoom.getChatRoomId()));
             String url = String.format("/sub/chatroom/%s", chatRoom.getChatRoomId());
-            Map<String, Integer> map = new HashMap<>();
-            map.put("userState", 1);
-            template.convertAndSend(url, map);
+//            Map<String, Integer> map = new HashMap<>();
+//            map.put("state", 1);
+//            template.convertAndSend(url, map);
+            notificationController.sendState(id,"어드민 온라인");
         }
 
     }

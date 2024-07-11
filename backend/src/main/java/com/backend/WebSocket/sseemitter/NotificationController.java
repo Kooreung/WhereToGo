@@ -26,7 +26,7 @@ public class NotificationController {
         emitter.onCompletion(() -> userEmitters.remove(userId));
         emitter.onTimeout(() -> userEmitters.remove(userId));
         emitter.onError((e) -> userEmitters.remove(userId));
-
+        sendMessageToUser(userId,2,"gdgdgd");
         return emitter;
     }
 
@@ -36,6 +36,21 @@ public class NotificationController {
         Map<String, Object> data = new HashMap<>();
         data.put("userId", userId);
         data.put("senderId", senderId);
+        data.put("message", message);
+        SseEmitter emitter = userEmitters.get(userId);
+        if (emitter != null) {
+            try {
+                emitter.send(SseEmitter.event().name("message").data(data));
+            } catch (Exception e) {
+                emitter.completeWithError(e);
+            }
+        }
+    }
+
+    public void sendState(Integer userId, String message) {
+        System.out.println("userid = "+userId);
+        Map<String, Object> data = new HashMap<>();
+        data.put("userId", userId);
         data.put("message", message);
         SseEmitter emitter = userEmitters.get(userId);
         if (emitter != null) {

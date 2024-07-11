@@ -35,6 +35,7 @@ export function ChatListPage() {
       });
     }
     axios.get(`/api/chatroom/${decodedToken.sub}`).then((res) => {
+      console.log(res.data.AdminChatRoom);
       setNoneAdminChatList(res.data.noneAdminChatRoom);
       setAdminChatList(res.data.AdminChatRoom);
     });
@@ -49,11 +50,6 @@ export function ChatListPage() {
       memberNickName: user.memberNickName,
     });
     setShowChat(true);
-
-    setAdminChatList({
-      ...chat,
-      unreadMessagesCount: 0,
-    });
   }
 
   function closeChat() {
@@ -68,7 +64,6 @@ export function ChatListPage() {
       const chatIndex = AdminChatList.findIndex(
         (chat) => chat.chatRoomId === notification.senderId,
       );
-      console.log("인덳스 " + chatIndex);
 
       // 일치하는 채팅방이 있다면, unreadMessagesCount를 증가시킵니다.
       if (chatIndex !== -1) {
@@ -78,9 +73,6 @@ export function ChatListPage() {
           unreadMessagesCount:
             updatedChatList[chatIndex].unreadMessagesCount + 1,
         };
-        console.log(
-          "카운트 : " + updatedChatList[chatIndex].unreadMessagesCount,
-        );
         setAdminChatList(updatedChatList);
       }
     });
@@ -142,20 +134,6 @@ export function ChatListPage() {
           {/* 채팅 컴포넌트를 상자에 추가합니다. */}
         </Box>
       )}
-      <div>
-        <button onClick={handleNewNotification}>알림 추가</button>
-        <ul>
-          {notifications.map((notification) => (
-            <li key={notification.id}>
-              {notification.id}
-              유저아디 : {notification.senderId}/{notification.message}
-              <button onClick={() => removeNotification(notification.userId)}>
-                삭제
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
     </Flex>
   );
 }
