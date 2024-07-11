@@ -225,3 +225,30 @@ CREATE TABLE `Reply`
 
 DESC commentreply;
 DESC comment;
+
+
+CREATE TABLE report (
+    reportid INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    postid INT(11),
+    commentid INT(11),
+    reportreason varchar(20),
+    repostdetailreason text,
+    processyn char(1),
+    processdate timestamp,
+    processorid int(11),
+    createid   int(11),
+    creatdate timestamp
+);
+
+    id
+    게시판 id
+    댓글 id
+    신고사유 enum
+    신고상세사유
+    처리여부
+    처리일자
+    처리한사람
+    생성한사람
+    생성일자
+
+

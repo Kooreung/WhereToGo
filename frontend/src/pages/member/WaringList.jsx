@@ -1,9 +1,66 @@
-import { Box } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
+import HeadingVariant from "../../components/ui/Heading/HeadingVariant.jsx";
+import React, { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export function WaringList() {
+  const navigate = useNavigate();
+  const [reportList, setReportList] = useState([]);
+
+  useMemo(() => {
+    axios.get("/api/report/list").then((res) => {
+      setReportList(res.data);
+    });
+  }, []);
+
   return (
-    <Box>
-      <Box>HELLOWORLD</Box>
-    </Box>
+    <>
+      <Box mb={"2rem"}>
+        <HeadingVariant variant={"large"}>회원 목록</HeadingVariant>
+      </Box>
+      {reportList.length === 0 && <Center>조회 결과가 없습니다.</Center>}
+      {reportList.length > 0 && (
+        <TableContainer
+          w={{ base: "720px", sm: "720px", lg: "960px" }}
+          mb={"1rem"}
+        >
+          <Table>
+            <Thead>
+              <Tr>
+                <Th w={"40%"}>게시판 제목</Th>
+                <Th w={"40%"}>신고사유</Th>
+                <Th w={"10%"}>신고일자</Th>
+                <Th w={"10%"}>신고자</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {reportList.map((report) => (
+                <Tr
+                  cursor={"pointer"}
+                  onClick={() => navigate(`/report/${report.reportId}`)}
+                  key={report.reportId}
+                >
+                  <Td w={"40%"}>{report.postname}</Td>
+                  <Td w={"30%"}>{report.reportreason}</Td>
+                  <Td w={"10%"}>{report.creatdate}</Td>
+                  <Td w={"10%"}>{report.creatname}</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      )}
+    </>
   );
 }
