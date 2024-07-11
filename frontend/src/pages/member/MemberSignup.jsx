@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Center,
+  Flex,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -18,6 +19,7 @@ import {
   Radio,
   RadioGroup,
   Select,
+  Text,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -58,6 +60,8 @@ export function MemberSignup() {
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(true);
   const [file, setFile] = useState(null);
+  const [isCustomEmail, setIsCustomEmail] = useState(true);
+  const [isSelectValue, setIsSelectValue] = useState("");
   const [fileUrl, setFileUrl] = useState(
     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
   );
@@ -68,7 +72,7 @@ export function MemberSignup() {
 
   const inputStyles = getInputStyles();
 
-  const isValidEmail = (email) => emailPattern.test(email);
+  const isValidEmail = (fullEmail) => emailPattern.test(fullEmail);
   const isValidPassword = (password) => passwordPattern.test(password);
   const isValidPhoneNumber = (phoneNumber) =>
     phoneNumberPattern.test(phoneNumber);
@@ -120,10 +124,11 @@ export function MemberSignup() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (email && isValidEmail(email)) {
+      const fullEmail = `${email}@${isSelectValue}`;
+      if (fullEmail && isValidEmail(fullEmail)) {
         setIsEmailValid(true);
         axios
-          .get(`/api/member/check?email=${email}`)
+          .get(`/api/member/check?email=${fullEmail}`)
           .then(() => {
             setIsEmailDuplicate(true);
             setIsCheckEmail(false);
@@ -134,11 +139,12 @@ export function MemberSignup() {
               setIsEmailDuplicate(false);
             }
           });
-      } else if (email) {
-        setIsEmailValid(false);
+      } else if (fullEmail) {
+        setIsEmailValid(false); // 이메일이 유효하지 않을 때 상태 변경
         setIsCheckEmail(false);
         setIsEmailDuplicate(false);
       }
+      console.log(fullEmail);
 
       if (nickName) {
         axios
@@ -157,7 +163,7 @@ export function MemberSignup() {
     }, 500); // 500ms 디바운싱
 
     return () => clearTimeout(timer);
-  }, [email, nickName]);
+  }, [email, isSelectValue, nickName]);
 
   // 연도, 월을 변경할 때마다 해당 월의 일 수를 계산
   useEffect(() => {
@@ -172,12 +178,13 @@ export function MemberSignup() {
   }, [birthYear, birthMonth]);
 
   function handleClick() {
-    setIsEmailValid(isValidEmail(email));
+    const fullEmail = `${email}@${isSelectValue}`;
+    setIsEmailValid(isValidEmail(fullEmail));
     setIsPasswordValid(isValidPassword(password));
     setIsPhoneNumberValid(isValidPhoneNumber(phoneNumber));
 
     if (
-      !isValidEmail(email) ||
+      !isValidEmail(fullEmail) ||
       !isValidPassword(password) ||
       !isValidPhoneNumber(phoneNumber) ||
       isEmailDuplicate ||
@@ -195,7 +202,7 @@ export function MemberSignup() {
 
     axios
       .postForm("/api/member/signup", {
-        email,
+        email: `${email}@${isSelectValue}`,
         password,
         name,
         nickName,
@@ -263,6 +270,17 @@ export function MemberSignup() {
     isDisabled = true;
   }
 
+  const handleSelectChange = (e) => {
+    const selectedValue = e.target.value;
+    if (selectedValue === "inputOn") {
+      setIsCustomEmail(true);
+      setIsSelectValue("");
+    } else {
+      setIsCustomEmail(false);
+      setIsSelectValue(e.target.value);
+    }
+  };
+
   if (account.isLoggedIn()) {
     return (
       <Box>
@@ -324,17 +342,37 @@ export function MemberSignup() {
           <Box>
             <FormControl>
               <FormLabel mt={14}>이메일</FormLabel>
-              <Input
-                style={inputStyles}
-                maxLength="25"
-                placeholder="project@naver.com"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value.trim());
-                  setIsEmailValid(isValidEmail(e.target.value));
-                }}
-              />
-              {!isEmailValid && (
+              <Flex alignItems={"center"}>
+                <Input
+                  style={inputStyles}
+                  maxLength="25"
+                  placeholder="email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value.trim());
+                  }}
+                />
+                <Text ml={3} mr={3} fontSize={"md"}>
+                  @
+                </Text>
+                <Input
+                  style={inputStyles}
+                  disabled={!isCustomEmail}
+                  value={isSelectValue}
+                  onChange={(e) => setIsSelectValue(e.target.value)}
+                  mr={1}
+                />
+                <Select style={inputStyles} onChange={handleSelectChange}>
+                  <option value="inputOn">직접 입력</option>
+                  <option value="naver.com">naver.com</option>
+                  <option value="gmail.com">gmail.com</option>
+                  <option value="hanmail.net">hanmail.net</option>
+                  <option value="daum.net">daum.net</option>
+                  <option value="nate.com">nate.com</option>
+                  <option value="yahoo.co.kr">yahoo.co.kr</option>
+                </Select>
+              </Flex>
+              {!isEmailValid && email.trim().length > 0 && (
                 <FormHelperText color="red">
                   유효한 이메일 주소를 입력해주세요.
                 </FormHelperText>
@@ -365,7 +403,7 @@ export function MemberSignup() {
                   setIsPasswordValid(isValidPassword(e.target.value));
                 }}
               />
-              {!isPasswordValid && (
+              {!isPasswordValid && password.trim().length > 0 && (
                 <FormHelperText color="red">
                   비밀번호는 8-20자 사이의 영문자와 숫자를 포함해야 합니다.
                 </FormHelperText>
@@ -412,16 +450,18 @@ export function MemberSignup() {
                 value={nickName}
                 onChange={(e) => setNickName(e.target.value.trim())}
               />
-              {isNickNameDuplicate && (
+              {isNickNameDuplicate && nickName.trim().length > 0 && (
                 <FormHelperText color="red">
                   사용할 수 없는 닉네임입니다. 다른 닉네임을 입력해 주세요.
                 </FormHelperText>
               )}
-              {!isNickNameDuplicate && isCheckNickName && (
-                <FormHelperText color="green">
-                  사용 가능한 닉네임입니다.
-                </FormHelperText>
-              )}
+              {!isNickNameDuplicate &&
+                isCheckNickName &&
+                nickName.trim().length > 0 && (
+                  <FormHelperText color="green">
+                    사용 가능한 닉네임입니다.
+                  </FormHelperText>
+                )}
             </FormControl>
           </Box>
           <Box>
@@ -496,7 +536,7 @@ export function MemberSignup() {
                   setIsPhoneNumberValid(isValidPhoneNumber(e.target.value));
                 }}
               />
-              {!isPhoneNumberValid && (
+              {!isPhoneNumberValid && phoneNumber.trim().length > 0 && (
                 <FormHelperText color="red">
                   올바른 전화번호 형식이 아닙니다.
                 </FormHelperText>
