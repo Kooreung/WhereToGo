@@ -9,6 +9,9 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,9 +30,14 @@ public class ChatController {
         return chatService.getChatRoom(memberId);
     }
 
-    @GetMapping("chatroom")
-    public ResponseEntity getChatroom() {
-        return chatService.getChatRoomList();
+    @GetMapping("chatroom/{adminId}")
+    public ResponseEntity getChatroom(@PathVariable Integer adminId) {
+        Map<String, Object> map = new HashMap<>();
+        List<ChatRoom> noneAdminChatRoom = chatService.getChatRoomList();
+        List<ChatRoom> AdminChatRoom = chatService.getChatRoomWithAssignedAdmin(adminId);
+        map.put("noneAdminChatRoom", noneAdminChatRoom);
+        map.put("AdminChatRoom", AdminChatRoom);
+        return ResponseEntity.ok().body(map);
     }
 
     // 채팅 리스트 반환
@@ -44,13 +52,33 @@ public class ChatController {
     @MessageMapping("/message")
     public ResponseEntity<Void> receiveMessage(@RequestBody ChatMessage chat) {
         String auth = memberMapper.getAuthTypeByMemberId(chat.getMemberId());
+        boolean readState = false;
         Integer id = 0;
-        if (auth == "admin") {
-            id = chat.getMemberId();
+        if (auth.equals("admin")) {
+            String adminExist = chatMapper.getAssignedAdminId(chat.getChatRoomId());
+            if (adminExist.equals("none")) {
+                chatMapper.updateAssignedAdmin(chat.getChatRoomId(), chat.getMemberId());
+            } else {
+                chatService.updateAdminOnline(chat.getChatRoomId());
+                chatService.messageRead(chat.getChatRoomId(), chat.getMemberId());
+            }
+            id = chat.getChatRoomId();
+            readState = chatMapper.getUserStatus(chat.getChatRoomId());
+            chat.setUserRead(readState);
+            notificationController.sendMessageToUser(id, chat.getMemberId(), "어드민의 메세지 와떠염");
         } else {
-            id = chatMapper.getMemberId(chat.getChatRoomId());
+            String adminExist = chatMapper.getAssignedAdminId(chat.getChatRoomId());
+            if (adminExist.equals("none")) {
+
+            } else {
+                id = Integer.valueOf(chatMapper.getAssignedAdminId(chat.getChatRoomId()));
+                notificationController.sendMessageToUser(id, chat.getMemberId(), "유저의 메세지 와떠염");
+            }
+
+            readState = chatMapper.getAdminStatus(chat.getChatRoomId());
+            chat.setUserRead(readState);
         }
-        notificationController.sendMessageToUser(id, "메세지 와떠염");
+
 
         // 메시지를 해당 채팅방 구독자들에게 전송
         LocalDateTime time = LocalDateTime.now();
@@ -59,5 +87,44 @@ public class ChatController {
         String url = String.format("/sub/chatroom/%s", chat.getChatRoomId());
         template.convertAndSend(url, chat);
         return ResponseEntity.ok().build();
+    }
+
+
+    //유저, 어드민 온라인 오프라인 관리
+    @PutMapping("chatonline")
+    public void updateChatRoomOnline(@RequestBody ChatRoom chatRoom) {
+        String auth = memberMapper.getAuthTypeByMemberId(chatRoom.getMemberId());
+        System.out.println(auth);
+        if (auth.equals("admin")) {
+            String adminExist = chatMapper.getAssignedAdminId(chatRoom.getChatRoomId());
+            if (!adminExist.equals("none")) {
+                chatService.updateAdminOnline(chatRoom.getChatRoomId());
+                chatService.messageRead(chatRoom.getChatRoomId(), chatRoom.getMemberId());
+                String url = String.format("/sub/chatroom/%s", chatRoom.getChatRoomId());
+                Map<String, Integer> map = new HashMap<>();
+                map.put("userState", 1);
+                template.convertAndSend(url, map);
+            }
+
+        } else {
+            chatService.updateUserOnline(chatRoom);
+            chatService.messageRead(chatRoom.getChatRoomId(), chatRoom.getMemberId());
+            String url = String.format("/sub/chatroom/%s", chatRoom.getChatRoomId());
+            Map<String, Integer> map = new HashMap<>();
+            map.put("userState", 1);
+            template.convertAndSend(url, map);
+        }
+
+    }
+
+    @PutMapping("chatoffline")
+    public void updateChatRoomOffline(@RequestBody ChatRoom chatRoom) {
+        String auth = memberMapper.getAuthTypeByMemberId(chatRoom.getMemberId());
+        if (auth.equals("admin")) {
+            chatService.updateAdminOffline(chatRoom);
+        } else {
+            chatService.updateUserOffnline(chatRoom);
+        }
+
     }
 }

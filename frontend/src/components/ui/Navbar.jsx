@@ -25,12 +25,14 @@ import ChatWebSocket from "../../component/Chat/ChatWebSocket.jsx";
 import { LoginContext } from "./LoginProvider.jsx";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { useNotifications } from "../../component/Chat/NotificationProvider.jsx";
 
 function Navbar() {
   const navigate = useNavigate();
   const { colorMode, toggleColorMode } = useColorMode();
   const [showChat, setShowChat] = useState(false); //
   const account = useContext(LoginContext);
+  const {} = useNotifications();
   const [roominfo, setRoomInfo] = useState([]);
 
   const navColor = useColorModeValue(
@@ -219,7 +221,9 @@ function Navbar() {
           zIndex={2}
           cursor={"pointer"}
           onClick={openChat}
-        ></Box>
+        >
+          <Box>NEW</Box>
+        </Box>
       )}
       {showChat && (
         <Box

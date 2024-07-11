@@ -7,25 +7,23 @@ import { NotificationContext } from "./NotificationProvider.jsx";
 export function EventSubscriber() {
   const { memberId } = useContext(LoginContext);
   const { addNotification } = useContext(NotificationContext);
-
+  let currentId = 0;
   useEffect(() => {
     if (memberId) {
       const eventSource = new EventSource(`/api/subscribe/${memberId}`);
 
       eventSource.onmessage = (event) => {
-        const data = event.data;
-        console.log(event);
-        if (!data === null) {
-          // 알림 상태 업데이트
-          addNotification(data);
-        }
+        const data = JSON.parse(event.data);
+        data.id = ++currentId;
+        console.log("??? :" + JSON.parse(event.data).message);
+        addNotification(data);
       };
 
       return () => {
         eventSource.close();
       };
     }
-  }, [memberId, addNotification]);
+  }, [memberId]);
 
   // 이 컴포넌트는 UI를 렌더링하지 않고, 이벤트 수신만을 담당합니다.
   return null;

@@ -9,5 +9,6 @@ public class ChatRoom {
     private Integer chatRoomId;
     private Integer memberId;
     private String memberNickName;
+    private Integer unreadMessagesCount;
 
 }

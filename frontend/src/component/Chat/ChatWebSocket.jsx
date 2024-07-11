@@ -23,27 +23,35 @@ export function ChatWebSocket({ roomInfo }) {
   const [nickName, setNickName] = useState("");
   // 새 메시지 도착 여부를 위한 상태 변수
   const [isNewMessage, setIsNewMessage] = useState(false);
+  const [newMessage, setNewMessage] = useState("");
 
-  const connect = (roomId) => {
+  const connect = (roomInfo) => {
     //웹소켓 연결
     const socket = new WebSocket("ws://localhost:8080/ws");
     stompClient.current = Stomp.over(socket);
     stompClient.current.connect({}, () => {
       //메시지 수신(1은 roomId를 임시로 표현)
-      stompClient.current.subscribe(`/sub/chatroom/${roomId}`, (message) => {
-        //누군가 발송했던 메시지를 리스트에 추가
-        const newMessage = JSON.parse(message.body);
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
-        console.log(message.body);
-        console.log(nickName);
-        console.log(newMessage.name);
-        if (nickName === newMessage.name) {
-          setIsNewMessage(false);
-          scrollToBottom();
-        } else {
-          setIsNewMessage(true);
-        }
-      });
+      stompClient.current.subscribe(
+        `/sub/chatroom/${roomInfo.chatRoomId}`,
+        (message) => {
+          //누군가 발송했던 메시지를 리스트에 추가
+          const nowMessage = JSON.parse(message.body);
+          setNewMessage(message.body);
+          console.log(nowMessage);
+          setMessages((prevMessages) => [...prevMessages, nowMessage]);
+          if (nickName === nowMessage.name) {
+            setIsNewMessage(false);
+            scrollToBottom();
+          } else {
+            setIsNewMessage(true);
+          }
+        },
+      );
+    });
+    axios.put("api/chatonline", {
+      chatRoomId: roomInfo.chatRoomId,
+      memberId: roomInfo.memberId,
+      memberNickName: roomInfo.memberNickName,
     });
   };
 
@@ -55,6 +63,11 @@ export function ChatWebSocket({ roomInfo }) {
   };
 
   const disconnect = () => {
+    axios.put("api/chatoffline", {
+      chatRoomId: roomInfo.chatRoomId,
+      memberId: roomInfo.memberId,
+      memberNickName: roomInfo.memberNickName,
+    });
     if (stompClient.current) {
       stompClient.current.disconnect();
     }
@@ -92,14 +105,14 @@ export function ChatWebSocket({ roomInfo }) {
       setRoomId(roomInfo.chatRoomId);
       setMemberId(roomInfo.memberId);
       setNickName(roomInfo.memberNickName);
-      connect(roomInfo.chatRoomId);
+      connect(roomInfo);
       fetchMessages(roomInfo.chatRoomId);
     }
 
     return () => disconnect();
   }, [roomInfo]); // roomInfo를 의존성 배열에 추가합니다.
 
-  const Message = ({ message, isOwnMessage }) => {
+  const Message = ({ userRead, message, isOwnMessage }) => {
     const align = isOwnMessage ? "flex-end" : "flex-start";
     const bg = useColorModeValue("blue.100", "blue.700");
     return (
@@ -107,6 +120,11 @@ export function ChatWebSocket({ roomInfo }) {
         <Box ml={2} mr={2} bg={bg} borderRadius="lg" p={2}>
           <Text color={isOwnMessage ? "white" : "black"}>{message}</Text>
         </Box>
+        {!userRead && (
+          <Text fontSize="sm" color="gray.500">
+            안읽음
+          </Text>
+        )}
       </Flex>
     );
   };
@@ -136,8 +154,10 @@ export function ChatWebSocket({ roomInfo }) {
 
   // 새 메시지 도착 시 스크롤 조건 확인 및 처리
   useEffect(() => {
+    fetchMessages(roomInfo.chatRoomId);
     if (isNewMessage) {
       //스크롤을 제일 밑으로 내린 길이의 - 800인 위치에서 메세지를 보고있을때 메세지가 새로오면 새로운 메세지 버튼 띄우기
+      scrollToBottom();
       if (scrollPosition >= scrollHeight) {
         scrollToBottom();
       } else {
@@ -146,7 +166,7 @@ export function ChatWebSocket({ roomInfo }) {
       }
       setIsNewMessage(false);
     }
-  }, [isNewMessage, scrollPosition, scrollHeight]);
+  }, [newMessage]);
 
   //----------------------------------------
 
@@ -164,11 +184,13 @@ export function ChatWebSocket({ roomInfo }) {
         {/* 메시지 리스트 */}
         <VStack spacing={4} align="stretch">
           {messages.map((item, index) => (
-            <Message
-              key={index}
-              message={item.message}
-              isOwnMessage={item.memberId == memberId}
-            />
+            <Box key={index}>
+              <Message
+                userRead={item.userRead}
+                message={item.message}
+                isOwnMessage={item.memberId == memberId}
+              />
+            </Box>
           ))}
           {/* 스크롤을 위한 더미 div */}
           <div ref={messagesEndRef} />

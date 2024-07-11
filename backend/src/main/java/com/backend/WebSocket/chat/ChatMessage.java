@@ -17,6 +17,7 @@ public class ChatMessage {
     private Integer memberId;
     private String name;
     private String message;
+    private boolean userRead;
 
     private LocalDateTime timestamp;
 
