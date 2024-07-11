@@ -44,25 +44,24 @@ import HeadingVariant from "../../components/ui/Heading/HeadingVariant.jsx";
 import Lobby from "../lobby/Lobby.jsx";
 
 export function PostView() {
+  const account = useContext(LoginContext);
+  const [authType, setAuthType] = useState("");
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const [place, setPlace] = useState([]);
   const [like, setLike] = useState({ like: false, count: 0 });
   const [comment, setComment] = useState({ count: 0 });
+  const [isLikeLoading, setIsLikeLoading] = useState(false);
+  const [isTransition, setIsTransition] = useState(false);
+  const [positionX, setPositionX] = useState(0);
+  const [selectedPlace, setSelectedPlace] = useState(0);
+  const navigate = useNavigate();
+  const toast = useToast();
+  const dataRef = useRef(null);
   const navColor = useColorModeValue(
     "rgba(216, 183, 229, 1)",
     "rgba(131, 96, 145, 1)",
   );
-
-  const [isLikeLoading, setIsLikeLoading] = useState(false);
-  const [isTransition, setIsTransition] = useState(false);
-  const account = useContext(LoginContext);
-  const navigate = useNavigate();
-  const dataRef = useRef(null);
-  const [positionX, setPositionX] = useState(0);
-  const [authType, setAuthType] = useState("");
-  const toast = useToast();
-
   const {
     isOpen: isModalOpenOfDelete,
     onOpen: onModalOpenOfDelete,
@@ -148,17 +147,20 @@ export function PostView() {
 
   function handleMoveLeft() {
     setPositionX((prev) => Math.min(prev + 520, 0));
+    if (selectedPlace > 0) {
+      setSelectedPlace(selectedPlace - 1);
+      console.log(selectedPlace - 1);
+    }
   }
 
   function handleMoveRight() {
     const flexWidth = dataRef.current.scrollWidth;
     const containerWidth = dataRef.current.parentElement.offsetWidth;
     setPositionX((prev) => Math.max(prev - 520, containerWidth - flexWidth));
-  }
-
-  function handleSelectInfo(place, index) {
-    console.log(index);
-    console.log(place);
+    if (selectedPlace < place.length - 1) {
+      setSelectedPlace(selectedPlace + 1);
+      console.log(selectedPlace + 1);
+    }
   }
 
   return (
@@ -222,7 +224,7 @@ export function PostView() {
             my={"2rem"}
             borderRadius={"1rem"}
           >
-            <MapView />
+            <MapView selectedPlace={selectedPlace} />
           </Box>
 
           <Flex alignItems={"center"} gap={"1rem"}>
@@ -244,11 +246,7 @@ export function PostView() {
                   }}
                 >
                   {place.map((place, index) => (
-                    <Box
-                      w={"100%"}
-                      key={index}
-                      onMouseEnter={() => handleSelectInfo(place, index)}
-                    >
+                    <Box w={"100%"} key={index}>
                       <Link
                         href={place.placeUrl}
                         target="_blank"
