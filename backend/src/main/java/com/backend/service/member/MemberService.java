@@ -24,6 +24,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
+import java.security.Timestamp;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -390,5 +391,19 @@ public class MemberService {
 
     public void hardDeleteMember(Integer memberId) {
         mapper.hardDeleteByMemberId(memberId);
+    }
+
+    public Integer getMemberIdByToken(String token) {
+        return mapper.getMemberIdByToken(token);
+    }
+
+    // 인증 링크 누르면 권한 바꾸기
+    public void authCertify(Integer memberId) {
+        mapper.authCertify(memberId);
+    }
+
+    // 현재시간과 토큰 만료시간 비교해서 true, false 값 리턴
+    public boolean isTokenExpired(Integer memberId) {
+        return mapper.isTokenExpired(memberId);
     }
 }

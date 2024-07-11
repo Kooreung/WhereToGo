@@ -101,6 +101,11 @@ export function MemberInfo(props) {
       });
   }
 
+  function handleCertify() {
+    console.log(member);
+    axios.post("/api/member/certify", member).then().catch();
+  }
+
   if (!account.isLoggedIn()) {
     return (
       <Box>
@@ -190,6 +195,9 @@ export function MemberInfo(props) {
           />
           <Text>활동 내역</Text>
         </Box>
+        <Text cursor={"pointer"} onClick={handleCertify}>
+          네모
+        </Text>
         <ButtonGroup>
           <Button
             onClick={() => navigate(`/member/edit`)}

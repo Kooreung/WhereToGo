@@ -3,6 +3,7 @@ package com.backend.mapper.member;
 import com.backend.domain.member.Member;
 import org.apache.ibatis.annotations.*;
 
+import java.security.Timestamp;
 import java.util.List;
 
 @Mapper
@@ -231,4 +232,53 @@ public interface MemberMapper {
             where memberid=#{memberId}
             """)
     int hardDeleteByMemberId(Integer memberId);
+
+    // 이메일 발송하면서 토큰 저장
+    @Insert("""
+            INSERT INTO certifytoken (memberId, token, expirationTime)
+            VALUES (#{memberId}, #{token}, TIMESTAMPADD(SECOND, #{expirationSeconds}, CURRENT_TIMESTAMP))
+            """)
+    int tokenSave(Integer memberId, String token);
+
+    // 해당 멤버의 토큰 가져오기
+    @Select("""
+            SELECT memberId
+            FROM certifytoken
+            WHERE token = #{token}
+            """)
+    Integer getMemberIdByToken(String token);
+
+    // 인증 링크 누르면 권한 바꾸기
+    @Update("""
+            UPDATE authority
+            SET authtype='admin'
+            WHERE memberid=#{memberId}
+            """)
+    int authCertify(Integer memberId);
+
+    // 토큰이 있는경우 토큰 업데이트
+    @Update("""
+            UPDATE certifytoken
+            SET token=#{token},
+            createdAt = CURRENT_TIMESTAMP,
+            expirationTime = TIMESTAMPADD(SECOND , 60, CURRENT_TIMESTAMP)
+            WHERE memberid=#{memberId}
+            """)
+    int tokenUpdate(Integer memberId, String token);
+
+    // 해당 멤버가 토큰 가지고있는지 없는지
+    @Select("""
+            SELECT memberId
+            FROM certifytoken
+            WHERE memberid=#{memberId}
+            """)
+    Integer getCertifyMemberId(Integer memberId);
+
+    // 현재시간과 토큰 만료시간 비교해서 true, false 값 리턴
+    @Select("""
+            SELECT expirationTime < NOW()
+            FROM certifytoken
+            WHERE memberid=#{memberId}
+            """)
+    boolean isTokenExpired(Integer memberId);
 }
