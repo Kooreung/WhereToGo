@@ -225,6 +225,7 @@ CREATE TABLE `Reply`
 
 DESC commentreply;
 DESC comment;
+DESC report;
 
 
 CREATE TABLE report (
@@ -264,6 +265,18 @@ SELECT
     r.creatDate,
     p.title as titlename,
     creator.nickName as creatorname
+FROM report r
+         LEFT JOIN post p ON p.postId = r.postId
+         LEFT JOIN comment c ON c.commentId = r.commentId
+         LEFT JOIN member creator ON creator.memberId = r.createId
+         LEFT JOIN member processor ON processor.memberId = r.processorId;
+ALTER TABLE report
+    MODIFY COLUMN processYn CHAR(1) DEFAULT 'N';
+
+ALTER TABLE report
+    MODIFY COLUMN processYn VARCHAR(5) DEFAULT 'N';
+
+SELECT COUNT(DISTINCT r.reportId)
 FROM report r
          LEFT JOIN post p ON p.postId = r.postId
          LEFT JOIN comment c ON c.commentId = r.commentId

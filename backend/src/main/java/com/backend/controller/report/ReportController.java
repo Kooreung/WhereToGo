@@ -38,16 +38,9 @@ public class ReportController {
     // 신고게시글 목록 Controller
     @GetMapping("recordlist")
     public ResponseEntity postList(
-            @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(value = "listSlider", defaultValue = "closely") String listSlider,
-            @RequestParam(value = "type", required = false) String searchType,
-            @RequestParam(value = "keyword", defaultValue = "") String searchKeyword,
-            @RequestParam(value = "region", defaultValue = "") String searchReg,
-            @RequestParam(value = "lat", required = false) Double latitude,
-            @RequestParam(value = "lng", required = false) Double longitude) {
-//        return reportService.getReportList(page, listSlider, searchType, searchKeyword, searchReg, latitude, longitude);
+            @RequestParam(defaultValue = "1") Integer page) {
         try {
-            return ResponseEntity.ok().body(reportService.getReportList());
+            return ResponseEntity.ok().body(reportService.getReportList(page));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("서버에러 ㅋㅋ");
         }

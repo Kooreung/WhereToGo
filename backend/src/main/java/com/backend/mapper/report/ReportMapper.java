@@ -10,8 +10,8 @@ import java.util.List;
 @Mapper
 public interface ReportMapper {
     @Insert("""
-            INSERT INTO report (postId, commentId, reportReason, reportDetailReason, processYn, processDate, processorId, createId, creatDate)
-            VALUES (#{postId}, #{commentId}, #{reportReason}, #{reportDetailReason}, #{processYn}, #{processDate}, #{processorId}, #{createId}, #{creatDate})
+            INSERT INTO report (postId, commentId, reportReason, reportDetailReason, processDate, processorId, createId)
+            VALUES (#{postId}, #{commentId}, #{reportReason}, #{reportDetailReason}, #{processDate}, #{processorId}, #{createId})
             """)
     void insertReport(Report report);
 
@@ -57,6 +57,18 @@ public interface ReportMapper {
             LEFT JOIN comment c ON c.commentId = r.commentId
             LEFT JOIN member creator ON creator.memberId = r.createId
             LEFT JOIN member processor ON processor.memberId = r.processorId
+            ORDER BY r.reportId DESC
+            LIMIT #{offset}, 10
             """)
-    List<Report> select();
+    List<Report> select(Integer page, Integer offset);
+
+    @Select("""
+            SELECT COUNT(DISTINCT r.reportId)
+            FROM report r
+            LEFT JOIN post p ON p.postId = r.postId
+            LEFT JOIN comment c ON c.commentId = r.commentId
+            LEFT JOIN member creator ON creator.memberId = r.createId
+            LEFT JOIN member processor ON processor.memberId = r.processorId
+            """)
+    Integer countAllSelect();
 }
