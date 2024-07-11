@@ -251,4 +251,21 @@ CREATE TABLE report (
     생성한사람
     생성일자
 
-
+SELECT
+    r.reportId,
+    r.postId,
+    r.commentId,
+    r.reportReason,
+    r.reportDetailReason,
+    r.processYn,
+    r.processDate,
+    r.processorId,
+    r.createId,
+    r.creatDate,
+    p.title as titlename,
+    creator.nickName as creatorname
+FROM report r
+         LEFT JOIN post p ON p.postId = r.postId
+         LEFT JOIN comment c ON c.commentId = r.commentId
+         LEFT JOIN member creator ON creator.memberId = r.createId
+         LEFT JOIN member processor ON processor.memberId = r.processorId;

@@ -42,8 +42,8 @@ export function WaringList() {
                 <Th w={"40%"}>신고사유</Th>
                 <Th w={"40%"}>상세사유</Th>
                 <Th w={"40%"}>신고자</Th>
-                <Th w={"10%"}>처리여부</Th>
                 <Th w={"10%"}>신고일자</Th>
+                <Th w={"10%"}>처리여부</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -53,12 +53,12 @@ export function WaringList() {
                   onClick={() => navigate(`/report/${report.reportId}`)}
                   key={report.reportId}
                 >
-                  <Td w={"40%"}>{report.titlename}</Td>
-                  <Td w={"30%"}>{report.reportreason}</Td>
-                  <Td w={"10%"}>{report.repostdetailreason}</Td>
-                  <Td w={"10%"}>{report.creatorname}</Td>
-                  <Td w={"10%"}>{report.processyn}</Td>
-                  <Td w={"10%"}>{report.creatdate}</Td>
+                  <Td w={"40%"}>{report.titleName}</Td>
+                  <Td w={"30%"}>{report.reportReason}</Td>
+                  <Td w={"10%"}>{report.reportDetailReason}</Td>
+                  <Td w={"10%"}>{report.creatorName}</Td>
+                  <Td w={"10%"}>{report.creatDate}</Td>
+                  <Td w={"10%"}>{report.processYn}</Td>
                 </Tr>
               ))}
             </Tbody>

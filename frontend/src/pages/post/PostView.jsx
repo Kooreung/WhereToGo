@@ -35,6 +35,7 @@ import {
   faList,
   faPenToSquare,
   faTrash,
+  faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as fullHeart } from "@fortawesome/free-regular-svg-icons";
 import MapView from "../../components/Map/MapView.jsx";
@@ -42,6 +43,7 @@ import defaultImage from "../../assets/img/unknownImage.png";
 import ButtonOutline from "../../components/ui/Button/ButtonOutline.jsx";
 import HeadingVariant from "../../components/ui/Heading/HeadingVariant.jsx";
 import Lobby from "../lobby/Lobby.jsx";
+import { ReportModal } from "./ReportModal.jsx";
 
 export function PostView() {
   const { postId } = useParams();
@@ -67,6 +69,12 @@ export function PostView() {
     isOpen: isModalOpenOfDelete,
     onOpen: onModalOpenOfDelete,
     onClose: onModalCloseOfDelete,
+  } = useDisclosure();
+
+  const {
+    isOpen: isModalOpenOfReport,
+    onOpen: onModalOpenOfReport,
+    onClose: onModalCloseOfReport,
   } = useDisclosure();
 
   useEffect(() => {
@@ -343,6 +351,9 @@ export function PostView() {
               <Text>{like.count}</Text>
             </Flex>
           </ButtonOutline>
+          <ButtonOutline variant={"RecMedium"} onClick={onModalOpenOfReport}>
+            <FontAwesomeIcon icon={faTriangleExclamation} />
+          </ButtonOutline>
           <Spacer />
           {/* 수정 및 삭제 버튼 */}
           {(account.hasAccessMemberId(post.memberId) || account.isAdmin()) && (
@@ -413,6 +424,12 @@ export function PostView() {
             </ModalFooter>
           </ModalContent>
         </Modal>
+        <ReportModal
+          postId={post.postId}
+          onOpen={onModalOpenOfReport}
+          isOpen={isModalOpenOfReport}
+          onClose={onModalCloseOfReport}
+        ></ReportModal>
       </Flex>
     </Box>
   );

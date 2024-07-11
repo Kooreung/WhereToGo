@@ -4,6 +4,7 @@ import com.backend.domain.report.Report;
 import com.backend.service.report.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,19 @@ import org.springframework.web.bind.annotation.*;
 public class ReportController {
 
     private final ReportService reportService;
+
+    @PostMapping("add")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity getComment(@RequestBody Report report, Authentication authentication) {
+        System.out.println("report = " + report);
+        if (reportService.validate(report)) {
+            reportService.saveReport(report, authentication);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 
     // 신고게시글 조회 Controller
     @GetMapping("{reportId}")

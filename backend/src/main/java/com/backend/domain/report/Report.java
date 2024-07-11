@@ -7,21 +7,21 @@ import java.time.LocalDate;
 
 @Data
 public class Report {
-    private Integer reportid;
-    private Integer postid;
-    private Integer commentid;
-    private String reportreason;
-    private String repostdetailreason;
-    private String processyn;
+    private Integer reportId;
+    private Integer postId;
+    private Integer commentId;
+    private String reportReason;
+    private String reportDetailReason;
+    private String processYn;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate processdate;
-    private Integer processorid;
-    private Integer createid;
+    private LocalDate processDate;
+    private Integer processorId;
+    private Integer createId;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate creatdate;
+    private LocalDate creatDate;
 
-    private String titlename;
-    private String creatorname;
+    private String titleName;
+    private String creatorName;
 //    private Post post;
 //    private Member creator;
 //    private Member processor;
