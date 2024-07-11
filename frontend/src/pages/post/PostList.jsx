@@ -44,18 +44,8 @@ import ButtonOutline from "../../components/ui/Button/ButtonOutline.jsx";
 function PostList() {
   const navigate = useNavigate();
   const account = useContext(LoginContext);
-  const [error, setError] = useState(null);
   const [postList, setPostList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
-  const [selectList, setSelectList] = useState("가까운순");
-  const listSlider =
-    selectList === "가까운순"
-      ? "closely"
-      : selectList === "최신순"
-        ? "recently"
-        : [];
-  const [nowLatitude, setNowLatitude] = useState(37.52499981233085);
-  const [nowLongitude, setNowLongitude] = useState(126.70531779795746);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
@@ -75,12 +65,9 @@ function PostList() {
     // 위치 정보 가져오기
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        // 위치 정보 설정
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
-
-        // 위치 정보 설정
-        setNowLatitude(latitude);
-        setNowLongitude(longitude);
 
         // axios 요청 보내기
         const fetchPosts = async () => {
@@ -92,22 +79,45 @@ function PostList() {
                 type: searchParams.get("type") || "all",
                 keyword: searchParams.get("keyword") || "",
                 region: searchParams.get("region") || "",
-                lat: nowLatitude,
-                lng: nowLongitude,
+                lat: latitude,
+                lng: longitude,
               },
             });
             // 서버에서 받은 데이터 설정
             setPostList(response.data.postList);
             setPageInfo(response.data.pageInfo);
           } catch (error) {
-            console.error("Error fetching posts:", error);
+            console.error("요청 오류 발생", error);
           }
         };
-
         fetchPosts();
       },
-      (error) => {
-        setError(error.message);
+      () => {
+        const latitude = 37.52499981233085;
+        const longitude = 126.70531779795746;
+
+        // axios 요청 보내기
+        const fetchPosts = async () => {
+          try {
+            const response = await axios.get(`/api/post/list`, {
+              params: {
+                page: searchParams.get("page") || 1,
+                listSlider: searchParams.get("listSlider") || "recently",
+                type: searchParams.get("type") || "all",
+                keyword: searchParams.get("keyword") || "",
+                region: searchParams.get("region") || "",
+                lat: latitude,
+                lng: longitude,
+              },
+            });
+            // 서버에서 받은 데이터 설정
+            setPostList(response.data.postList);
+            setPageInfo(response.data.pageInfo);
+          } catch (error) {
+            console.error("요청 오류 발생", error);
+          }
+        };
+        fetchPosts();
       },
     );
 

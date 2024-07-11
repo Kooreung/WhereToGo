@@ -68,10 +68,10 @@ public interface PostMapper {
                         AND m.nickname LIKE #{pattern}
                     </if>
                     <if test="searchType == 'placeName'">
-                        AND (pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
+                        AND (OR pl.placename LIKE #{pattern})
                     </if>
                     <if test="searchType == 'address'">
-                        AND (pl.address LIKE #{pattern} OR pl.address LIKE #{pattern})
+                        AND (pl.address LIKE #{pattern})
                     </if>
                     <if test="searchType == 'all'">
                         AND (pl.addresscity LIKE #{region})
@@ -80,12 +80,12 @@ public interface PostMapper {
             </where>
             GROUP BY p.postid
             <choose>
-                <when test="listSlider == 'closely'">
-                    ORDER BY distance ASC, p.postid DESC
-                </when>
                 <when test="listSlider == 'recently'">
                     ORDER BY p.postid DESC
                 </when>
+                <otherwise>
+                    ORDER BY distance ASC, p.postid DESC
+                </otherwise>
             </choose>
             LIMIT #{offset}, 5
             </script>
