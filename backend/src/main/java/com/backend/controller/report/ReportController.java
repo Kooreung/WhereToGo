@@ -14,16 +14,15 @@ public class ReportController {
 
     private final ReportService reportService;
 
-    // 게시글 조회 Controller
+    // 신고게시글 조회 Controller
     @GetMapping("{reportId}")
     public ResponseEntity postRead(@PathVariable Integer reportId, Authentication authentication) {
         Report result = reportService.getReportByReportId(reportId);
-
         return ResponseEntity.ok().body(result);
     }
 
-    // 게시글 목록 Controller
-    @GetMapping("list")
+    // 신고게시글 목록 Controller
+    @GetMapping("recordlist")
     public ResponseEntity postList(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(value = "listSlider", defaultValue = "closely") String listSlider,

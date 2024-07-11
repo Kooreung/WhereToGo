@@ -19,7 +19,7 @@ export function WaringList() {
   const [reportList, setReportList] = useState([]);
 
   useMemo(() => {
-    axios.get("/api/report/list").then((res) => {
+    axios.get("/api/report/recordlist").then((res) => {
       setReportList(res.data);
     });
   }, []);
@@ -40,8 +40,10 @@ export function WaringList() {
               <Tr>
                 <Th w={"40%"}>게시판 제목</Th>
                 <Th w={"40%"}>신고사유</Th>
+                <Th w={"40%"}>상세사유</Th>
+                <Th w={"40%"}>신고자</Th>
+                <Th w={"10%"}>처리여부</Th>
                 <Th w={"10%"}>신고일자</Th>
-                <Th w={"10%"}>신고자</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -51,10 +53,12 @@ export function WaringList() {
                   onClick={() => navigate(`/report/${report.reportId}`)}
                   key={report.reportId}
                 >
-                  <Td w={"40%"}>{report.postname}</Td>
+                  <Td w={"40%"}>{report.titlename}</Td>
                   <Td w={"30%"}>{report.reportreason}</Td>
+                  <Td w={"10%"}>{report.repostdetailreason}</Td>
+                  <Td w={"10%"}>{report.creatorname}</Td>
+                  <Td w={"10%"}>{report.processyn}</Td>
                   <Td w={"10%"}>{report.creatdate}</Td>
-                  <Td w={"10%"}>{report.creatname}</Td>
                 </Tr>
               ))}
             </Tbody>
