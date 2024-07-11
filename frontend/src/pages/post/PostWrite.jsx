@@ -10,7 +10,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Tooltip,
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
@@ -23,14 +22,13 @@ import Lobby from "../lobby/Lobby.jsx";
 import ButtonOutline from "../../components/ui/Button/ButtonOutline.jsx";
 
 function PostWrite() {
+  const account = useContext(LoginContext); // 로그인 상태를 확인하기 위해 LoginContext 에서 isLoggedIn 함수를 가져옴
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectedPlaces, setSelectedPlaces] = useState([]);
-  const [disableSaveButton, setDisableSaveButton] = useState("able");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
-  const account = useContext(LoginContext); // 로그인 상태를 확인하기 위해 LoginContext 에서 isLoggedIn 함수를 가져옴
   const {
     isOpen: isModalOpenOfSave,
     onOpen: onModalOpenOfSave,
@@ -180,28 +178,13 @@ function PostWrite() {
               <DraftEditor setContent={setContent} />
             </Box>
             <Box my={"2rem"}>
-              <Tooltip
-                hasArrow
-                isDisabled={disableSaveButton === "able"}
-                label={
-                  disableSaveButton === "disableToTitle"
-                    ? "제목을 확인해주세요."
-                    : disableSaveButton === "disableToContent"
-                      ? "내용을 확인해주세요."
-                      : disableSaveButton === "disableToPlace"
-                        ? "장소를 선택해주세요."
-                        : ""
-                }
+              <ButtonOutline
+                variant={"RecMedium"}
+                onClick={onModalOpenOfSave}
+                isLoading={loading}
               >
-                <ButtonOutline
-                  variant={"RecMedium"}
-                  onClick={onModalOpenOfSave}
-                  isLoading={loading}
-                  isDisabled={disableSaveButton !== "able"}
-                >
-                  등록
-                </ButtonOutline>
-              </Tooltip>
+                등록
+              </ButtonOutline>
               <ButtonOutline
                 variant={"RecMedium"}
                 onClick={onModalOpenOfCancel}

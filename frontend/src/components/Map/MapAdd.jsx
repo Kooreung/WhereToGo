@@ -38,10 +38,9 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
   const mapRef = useRef(null);
   const [nowLatitude, setNowLatitude] = useState(37.567157695939926);
   const [nowLongitude, setNowLongitude] = useState(126.979353948294);
-  const [error, setError] = useState(null);
+  const [map, setMap] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [places, setPlaces] = useState([]);
-  const [map, setMap] = useState(null);
   const [ps, setPs] = useState(null);
   const [searchedMarkers, setSearchedMarkers] = useState([]);
   const [selectedMarkers, setSelectedMarkers] = useState([]);
@@ -54,9 +53,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
         setNowLatitude(position.coords.latitude);
         setNowLongitude(position.coords.longitude);
       },
-      (error) => {
-        setError(error.message);
-      },
+      () => {},
     );
   }, []);
 
@@ -367,7 +364,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
       align={"center"}
     >
       <Box w={{ base: "720px", sm: "540px", lg: "720px" }}>
-        <Flex>
+        <Flex mb={"1rem"}>
           <Input
             type="text"
             value={searchTerm}
@@ -379,25 +376,35 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
             검색
           </ButtonOutline>
         </Flex>
-        <Box maxH={"200px"} overflowY={"auto"} my={3} px={"1rem"}>
-          {places.map((place, index) => (
-            <Flex key={index}>
-              <Box>
-                <Link
-                  href={place.place_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {place.place_name}
-                </Link>
-              </Box>
-              <Spacer />
-              <Button onClick={() => selectPlace(place)}>
-                <FontAwesomeIcon icon={faPlus} />
-              </Button>
-            </Flex>
-          ))}
-        </Box>
+        {places.map && (
+          <Box
+            maxH={"214px"}
+            overflowY={"auto"}
+            my={"1rem"}
+            px={"1rem"}
+            py={"4px"}
+            border={"1px solid #D8B7E5"}
+            borderLeftRadius={"1rem"}
+          >
+            {places.map((place, index) => (
+              <Flex key={index} borderY={"1px solid lightgray"}>
+                <Box>
+                  <Link
+                    href={place.place_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {place.place_name}
+                  </Link>
+                </Box>
+                <Spacer />
+                <Button onClick={() => selectPlace(place)}>
+                  <FontAwesomeIcon icon={faPlus} />
+                </Button>
+              </Flex>
+            ))}
+          </Box>
+        )}
       </Box>
 
       <Box
@@ -416,6 +423,9 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
               alignItems="center"
               justifyContent="center"
               p={"8px"}
+              my={"4px"}
+              border={"1px solid #D8B7E5"}
+              borderRadius={"1rem"}
             >
               <Box>
                 <Box>
