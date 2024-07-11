@@ -29,8 +29,8 @@ public interface PostMapper {
                      JOIN member m ON p.memberid = m.memberid
                      LEFT JOIN comment c ON p.postid = c.postid
                      LEFT JOIN likes l ON p.postid = l.postid
-                        WHERE p.postid = #{postId}
-                        """)
+            WHERE p.postid = #{postId}
+            """)
     Post selectByPostId(Integer postId);
 
     // 게시글 목록 매퍼
@@ -38,7 +38,7 @@ public interface PostMapper {
             <script>
             SELECT p.postid, p.title, p.content, p.createdate, p.view,
                    m.nickname, m.memberid,
-                   pl.addresscity,
+                   pl.addresscode,
                    plpic.picurl,
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l.memberid) likeCount,
@@ -74,7 +74,7 @@ public interface PostMapper {
                         AND (pl.address LIKE #{pattern})
                     </if>
                     <if test="searchType == 'all'">
-                        AND (pl.addresscity LIKE #{region})
+                        AND (pl.addresscode LIKE #{region})
                     </if>
                 </if>
             </where>
@@ -125,7 +125,7 @@ public interface PostMapper {
                             AND (pl.address LIKE #{pattern} OR pl.address LIKE #{pattern})
                         </if>
                         <if test="searchType == 'all'">
-                            AND (pl.addresscity LIKE #{region})
+                            AND (pl.addresscode LIKE #{region})
                         </if>
                    </if>
                    </where>
@@ -162,6 +162,7 @@ public interface PostMapper {
             SELECT p.postid,
                    pl.placename,
                    pl.address,
+                   pl.addresscode,
                    pl.placeurl,
                    pl.latitude,
                    pl.longitude,

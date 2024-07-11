@@ -19,28 +19,23 @@ public class PlaceService {
     @Transactional
     public void addPlace(Place place) {
         String[] addressParts = place.getAddress().split(" ");
-        String addressCountry = "";
-        String addressCity = "";
+        String addressCode = "";
         switch (addressParts[0]) {
             case "서울": {
-                addressCountry = "1100000000";
-                addressCity = getCitySeoulCode(addressParts[1]);
+                addressCode = getCitySeoulCode(addressParts[1]);
                 break;
             }
             case "경기": {
-                addressCountry = "4100000000";
-                addressCity = getCityGyeonggiCode(addressParts[1]);
+                addressCode = getCityGyeonggiCode(addressParts[1]);
                 break;
             }
             case "인천": {
-                addressCountry = "2800000000";
-                addressCity = getCityIncheonCode(addressParts[1]);
+                addressCode = getCityIncheonCode(addressParts[1]);
                 break;
             }
         }
 
-        place.setAddressCountry(addressCountry);
-        place.setAddressCity(addressCity);
+        place.setAddressCode(addressCode);
         mapper.insert(place);
     }
 

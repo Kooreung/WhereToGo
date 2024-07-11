@@ -157,6 +157,7 @@ function PostList() {
     navigate(`/post/list?${searchParams}`);
   }
 
+  // 슬라이더 선택 시
   function handleSelectList(selectListStyle) {
     searchParams.set("listSlider", selectListStyle);
     navigate(`/post/list?${searchParams}`);
