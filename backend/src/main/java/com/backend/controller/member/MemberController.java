@@ -118,6 +118,7 @@ public class MemberController {
         Integer memberId = service.getMemberIdByToken(token);
 
         if(memberId == null) {
+            System.out.println("문제1");
             return ResponseEntity.notFound().build();
         } else {
             service.authCertify(memberId);
@@ -125,6 +126,7 @@ public class MemberController {
 
         // 토큰 만료시간을 현재 시간과 비교
         if(service.isTokenExpired(memberId)) {
+            System.out.println("문제2");
             return ResponseEntity.notFound().build();
         }
 

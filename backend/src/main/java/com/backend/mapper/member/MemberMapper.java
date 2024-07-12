@@ -235,8 +235,8 @@ public interface MemberMapper {
 
     // 이메일 발송하면서 토큰 저장
     @Insert("""
-            INSERT INTO certifytoken (memberId, token, expirationTime)
-            VALUES (#{memberId}, #{token}, TIMESTAMPADD(SECOND, #{expirationSeconds}, CURRENT_TIMESTAMP))
+            INSERT INTO certifytoken (memberId, token)
+            VALUES (#{memberId}, #{token})
             """)
     int tokenSave(Integer memberId, String token);
 
@@ -261,7 +261,7 @@ public interface MemberMapper {
             UPDATE certifytoken
             SET token=#{token},
             createdAt = CURRENT_TIMESTAMP,
-            expirationTime = TIMESTAMPADD(SECOND , 60, CURRENT_TIMESTAMP)
+            expirationTime = TIMESTAMPADD(SECOND , 300, CURRENT_TIMESTAMP)
             WHERE memberid=#{memberId}
             """)
     int tokenUpdate(Integer memberId, String token);
