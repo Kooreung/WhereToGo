@@ -225,3 +225,14 @@ CREATE TABLE `Reply`
 
 DESC commentreply;
 DESC comment;
+
+select *
+from authority
+where memberid = 39;
+
+select *
+from member;
+
+update authority
+set authtype = 'user'
+where memberid = 39;

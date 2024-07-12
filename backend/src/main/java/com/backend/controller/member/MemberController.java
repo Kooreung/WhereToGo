@@ -118,17 +118,15 @@ public class MemberController {
         Integer memberId = service.getMemberIdByToken(token);
 
         if(memberId == null) {
-            System.out.println("문제1");
             return ResponseEntity.notFound().build();
-        } else {
-            service.authCertify(memberId);
         }
 
         // 토큰 만료시간을 현재 시간과 비교
         if(service.isTokenExpired(memberId)) {
-            System.out.println("문제2");
             return ResponseEntity.notFound().build();
         }
+
+        service.authCertify(memberId);
 
         return ResponseEntity.ok().build();
     }
