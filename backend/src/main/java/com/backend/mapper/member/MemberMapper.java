@@ -281,4 +281,18 @@ public interface MemberMapper {
             WHERE memberid=#{memberId}
             """)
     boolean isTokenExpired(Integer memberId);
+
+    @Select("""
+            SELECT *
+            FROM member
+            WHERE memberid=#{memberId}
+            """)
+    Member getMemberById(Integer memberId);
+
+    @Select("""
+    SELECT *
+    FROM certifytoken
+    WHERE memberid=#{memberId}
+""")
+    String getByToken(Integer memberId);
 }

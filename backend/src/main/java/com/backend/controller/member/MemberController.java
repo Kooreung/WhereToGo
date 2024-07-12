@@ -17,6 +17,7 @@ import java.security.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.UUID;
 
 
 @RestController
@@ -65,7 +66,8 @@ public class MemberController {
     // 로그인
     @PostMapping("login")
     public ResponseEntity login(@RequestBody Member member) {
-        Map<String, Object> map = service.getToken(member);
+        String token = UUID.randomUUID().toString();
+        Map<String, Object> map = service.getToken(member, token);
 
         if (map == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -111,10 +113,10 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+
     // 2차 인증 이메일에서 인증 링크 누르면
     @GetMapping("tokenCertify")
-    public ResponseEntity<String> tokenCertify(@RequestParam("token") String token) {
-        System.out.println(token);
+    public ResponseEntity tokenCertify(@RequestParam("token") String token) {
         Integer memberId = service.getMemberIdByToken(token);
 
         if(memberId == null) {
@@ -128,7 +130,14 @@ public class MemberController {
 
         service.authCertify(memberId);
 
-        return ResponseEntity.ok().build();
+        // 권한 바꿨으니 기존 토큰 없애고 갱신
+        Member member = service.getMemberById(memberId);
+        Map<String, Object> map = service.getToken(member, token);
+
+        if (map == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(map);
     }
 
     // 회원 수정

@@ -45,7 +45,15 @@ export function MemberCertify() {
     setLoading(true);
     axios
       .get(`/api/member/tokenCertify?token=${token}`)
-      .then(() => {
+      .then((res) => {
+        console.log(res.data);
+
+        const accessToken = res.data.accessToken;
+        const refreshToken = res.data.refreshToken;
+
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+
         setLoading(false);
       })
       .catch((error) => {
