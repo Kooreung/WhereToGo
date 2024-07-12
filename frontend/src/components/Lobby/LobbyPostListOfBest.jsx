@@ -27,11 +27,13 @@ function LobbyPostListOfBest(props) {
     "rgba(216, 183, 229, 0.2)",
     "rgba(131, 96, 145, 0.2)",
   );
+
   useEffect(() => {
     axios.get(`/api/post/list/postListOfBest`).then((res) => {
       setPostListOfBest(res.data);
     });
   }, []);
+
   return (
     <Box>
       <HeadingVariant

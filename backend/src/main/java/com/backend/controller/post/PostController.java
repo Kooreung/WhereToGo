@@ -95,7 +95,6 @@ public class PostController {
             @PathVariable Integer memberId,
             @RequestParam(defaultValue = "1") Integer page, @RequestParam(value = "type", required = false) String searchType,
             @RequestParam(value = "keyword", defaultValue = "") String searchKeyword) {
-        System.out.println("searchKeyword = " + searchKeyword);
         Map<String, Object> likedPosts = postService.getLikeAllList(memberId, page, searchType, searchKeyword);
         return ResponseEntity.ok(likedPosts);
     }
@@ -139,7 +138,6 @@ public class PostController {
     // 내 게시물 목록 Controller
     @GetMapping("myList/{memberId}")
     public Map<String, Object> myList(@PathVariable Integer memberId, @RequestParam(defaultValue = "1") Integer page) {
-        System.out.println("페이지" + page);
         return postService.myList(memberId, page);
     }
 

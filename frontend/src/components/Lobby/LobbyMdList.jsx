@@ -12,23 +12,42 @@ import ButtonCircle from "../ui/Button/ButtonCircle.jsx";
 import HeadingVariant from "../ui/Heading/HeadingVariant.jsx";
 
 export function LobbyMdList() {
+  const account = useContext(LoginContext);
   const [mdPost, setMdPost] = useState([]);
   const [banner, setBanner] = useState([]);
   const [prevPosts, setPrevPosts] = useState(0);
   const [nextPosts, setNextPosts] = useState(1);
   const intervalRef = useRef(null);
   const navigate = useNavigate();
-  const account = useContext(LoginContext);
   const hColor = useColorModeValue(
     "rgba(216, 183, 229, 0.2)",
     "rgba(131, 96, 145, 0.2)",
   );
 
+  const fetchData = async () => {
+    try {
+      const [mdPostResponse, bannerResponse] = await Promise.all([
+        axios.get("/api/post/mdPickList"),
+        axios.get("/api/post/bannerList"),
+      ]);
+
+      setMdPost(mdPostResponse.data.post);
+      setBanner(bannerResponse.data);
+    } catch (error) {
+      console.error("데이터 불러오기 실패:", error);
+    }
+  };
+
   useEffect(() => {
+    fetchData();
+  }, []);
+
+  const BannerInterval = () => {
     intervalRef.current = setInterval(() => {
       setNextPosts((prev) => {
-        if (prev < mdPost.length + banner.length) {
-          setPrevPosts((prev) => (prev + 1) % (mdPost.length + banner.length));
+        const totalPosts = mdPost.length + banner.length;
+        if (prev < totalPosts) {
+          setPrevPosts((prev) => (prev + 1) % totalPosts);
           return prev + 1;
         } else {
           setPrevPosts(0);
@@ -36,47 +55,18 @@ export function LobbyMdList() {
         }
       });
     }, 3000);
-
-    return () => {
-      clearInterval(intervalRef.current);
-    };
-  }, [mdPost.length, banner.length]);
+  };
 
   useEffect(() => {
-    axios
-      .get("/api/post/mdPickList")
-      .then((res) => {
-        setMdPost(res.data.post);
-      })
-      .catch((err) => console.log(err));
-
-    axios
-      .get("/api/post/bannerList")
-      .then((response) => {
-        // 상태 업데이트로 리스트를 다시 렌더링
-        setBanner(response.data);
-      })
-      .catch((error) => {
-        // 오류 처리
-        console.error("배너 리스트 불러오기 실패:", error);
-      });
-  }, []);
+    BannerInterval();
+    return () => clearInterval(intervalRef.current);
+  }, [mdPost.length, banner.length]);
 
   const handleButtonClick = (index) => {
     setNextPosts(index);
     setPrevPosts(index - 1);
     clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(() => {
-      setNextPosts((prev) => {
-        if (prev < mdPost.length + banner.length) {
-          setPrevPosts((prev) => (prev + 1) % (mdPost.length + banner.length));
-          return prev + 1;
-        } else {
-          setPrevPosts(0);
-          return 1;
-        }
-      });
-    }, 3000);
+    BannerInterval();
   };
 
   return (

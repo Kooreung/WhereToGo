@@ -220,14 +220,16 @@ const incheonCity = [
 export function LobbyPlaceList() {
   const [selectRegion, setSelectRegion] = useState("서울");
   const [positionX, setPositionX] = useState(0);
-  const places =
-    selectRegion === "서울"
-      ? seoulCity
-      : selectRegion === "경기"
-        ? gyeonggiCity
-        : selectRegion === "인천"
-          ? incheonCity
-          : [];
+  const dataRef = useRef(null);
+  const navigate = useNavigate();
+
+  const regionCityMap = {
+    서울: seoulCity,
+    경기: gyeonggiCity,
+    인천: incheonCity,
+  };
+  const places = regionCityMap[selectRegion] || [];
+
   const buttonStrokeColor = useColorModeValue(
     "rgba(131, 96, 145, 1)",
     "rgba(216, 183, 229, 1)",
@@ -236,8 +238,16 @@ export function LobbyPlaceList() {
     "rgba(216, 183, 229, 0.2)",
     "rgba(131, 96, 145, 0.2)",
   );
-  const dataRef = useRef(null);
-  const navigate = useNavigate();
+
+  const gradientLeft = useColorModeValue(
+    "linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))",
+    "linear-gradient(to right, rgba(26, 32, 44, 1), rgba(0, 0, 0, 0))",
+  );
+
+  const gradientRight = useColorModeValue(
+    "linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))",
+    "linear-gradient(to left, rgba(26, 32, 44, 1), rgba(0, 0, 0, 0))",
+  );
 
   function getScrollDistance() {
     const screenWidth = window.innerWidth;
@@ -263,16 +273,6 @@ export function LobbyPlaceList() {
     const scrollDistance = getScrollDistance();
     setPositionX((prev) => Math.min(prev + scrollDistance, 0));
   }
-
-  const gradientLeft = useColorModeValue(
-    "linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))",
-    "linear-gradient(to right, rgba(26, 32, 44, 1), rgba(0, 0, 0, 0))",
-  );
-
-  const gradientRight = useColorModeValue(
-    "linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))",
-    "linear-gradient(to left, rgba(26, 32, 44, 1), rgba(0, 0, 0, 0))",
-  );
 
   const handleSelectRegion = (region) => {
     setSelectRegion(region);
