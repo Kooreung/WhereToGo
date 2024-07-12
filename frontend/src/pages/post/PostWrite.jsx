@@ -140,7 +140,7 @@ function PostWrite() {
     });
   }
 
-  if (!account.isLoggedIn() || !account.isAdmin() || !account.isCertifyUser()) {
+  if (!account.isLoggedIn() || account.isUser()) {
     return (
       <Box>
         <Lobby />;
