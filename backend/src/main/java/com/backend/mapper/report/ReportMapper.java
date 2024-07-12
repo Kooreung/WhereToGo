@@ -4,6 +4,7 @@ import com.backend.domain.report.Report;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -71,4 +72,11 @@ public interface ReportMapper {
             LEFT JOIN member processor ON processor.memberId = r.processorId
             """)
     Integer countAllSelect();
+
+    @Update("""
+            UPDATE report
+            SET processYn= #{processYn}, processorId= #{processorId}
+            WHERE reportId= #{reportId}
+            """)
+    void updateReport(Report report);
 }

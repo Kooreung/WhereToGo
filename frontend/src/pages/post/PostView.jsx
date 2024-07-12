@@ -30,6 +30,7 @@ import {
   faChevronLeft,
   faChevronRight,
   faEye,
+  faEyeSlash,
   faHeart,
   faHeart as emptyHeart,
   faList,
@@ -64,6 +65,9 @@ export function PostView() {
   const [positionX, setPositionX] = useState(0);
   const [authType, setAuthType] = useState("");
   const toast = useToast();
+  const [isBlind, setIsBlind] = useState(
+    localStorage.getItem("isBlindPostId") === postId,
+  );
 
   const {
     isOpen: isModalOpenOfDelete,
@@ -101,6 +105,7 @@ export function PostView() {
   useEffect(() => {
     axios.get(`/api/post/${postId}/place`).then((res) => {
       setPlace(res.data);
+      setIsBlind(localStorage.getItem("isBlindPostId") === postId);
     });
   }, []);
 
@@ -169,196 +174,26 @@ export function PostView() {
     console.log(place);
   }
 
+  function toggleBlind() {
+    if (isBlind) {
+      setIsBlind(false);
+      localStorage.removeItem("isBlindPostId");
+    } else {
+      setIsBlind(true);
+      localStorage.setItem("isBlindPostId", postId);
+    }
+  }
+
   return (
-    <Box
-      w={{ base: "720px", sm: "640px", lg: "960px" }}
-      p={"1rem"}
-      border={"1px solid #D8B7E5"}
-      borderRadius={"1rem"}
-    >
-      <HeadingVariant>{post.title}</HeadingVariant>
-      <Divider my={{ base: "1rem", sm: "8px", lg: "1rem" }} />
-      <Flex direction="column" align="center">
-        <Flex direction="column" align="center" w={"100%"}>
-          <Flex w={"100%"}>
-            <Flex>
-              <Avatar
-                src={post.profileName}
-                onClick={() => navigate(`/member/${post.memberId}`)}
-                cursor="pointer"
-              />
-            </Flex>
-            <Flex direction={"column"} w={"100%"}>
-              <Flex pl={"1rem"}>
-                <Text
-                  onClick={() => navigate(`/member/${post.memberId}`)}
-                  cursor="pointer"
-                  fontWeight={"bold"}
-                >
-                  {post.nickName}
-                </Text>
-              </Flex>
-              <Flex pl={"1rem"} w={"100%"} justify={"space-between"}>
-                <Flex>
-                  <Text mr={1}>
-                    <FontAwesomeIcon
-                      icon={faHeart}
-                      style={{ color: "#D8B7E5" }}
-                      size="sm"
-                    />
-                  </Text>
-                  <Text fontSize="sm">{like.count}</Text>
-                  <Text mr={1} ml={2}>
-                    <FontAwesomeIcon
-                      icon={faEye}
-                      size="sm"
-                      style={{ color: "#D8B7E5" }}
-                    />
-                  </Text>
-                  <Text fontSize="sm">{post.view}</Text>
-                </Flex>
-                <Flex>
-                  <Text>{post.createDate}</Text>
-                </Flex>
-              </Flex>
-            </Flex>
-          </Flex>
-
-          <Box
-            w={{ base: "640px", sm: "540px", lg: "640px" }}
-            h={{ base: "400px", sm: "360px", lg: "400px" }}
-            my={"2rem"}
-            borderRadius={"1rem"}
-          >
-            <MapView />
-          </Box>
-
-          <Flex alignItems={"center"} gap={"1rem"}>
-            <ButtonOutline onClick={handleMoveLeft}>
-              <FontAwesomeIcon icon={faChevronLeft} />
-            </ButtonOutline>
-            <Flex w={"520px"} h={"160px"}>
-              <Flex
-                overflow={"hidden"}
-                alignItems={"center"}
-                borderRadius={"1rem"}
-                border={"1px solid #D8B7E5"}
-              >
-                <Flex
-                  ref={dataRef}
-                  sx={{
-                    transform: `translateX(${positionX}px)`,
-                    transition: "transform 0.5s ease",
-                  }}
-                >
-                  {place.map((place, index) => (
-                    <Box
-                      w={"100%"}
-                      key={index}
-                      onMouseEnter={() => handleSelectInfo(place, index)}
-                    >
-                      <Link
-                        href={place.placeUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Flex
-                          w={"520px"}
-                          justifyContent={"center"}
-                          align={"center"}
-                        >
-                          <Box w={"160px"} h={"160px"} alignContent={"center"}>
-                            <Image
-                              src={place.picurl || defaultImage}
-                              objectFit={"cover"}
-                              w={"100%"}
-                              h={"100%"}
-                            />
-                          </Box>
-                          <Flex
-                            w={"360px"}
-                            h={"160px"}
-                            direction={"column"}
-                            p={3}
-                          >
-                            <HeadingVariant
-                              overflow={"hidden"}
-                              textOverflow={"ellipsis"}
-                              whiteSpace={"nowrap"}
-                            >
-                              {index + 1}번 장소
-                            </HeadingVariant>
-                            <Box
-                              overflow={"hidden"}
-                              textOverflow={"ellipsis"}
-                              whiteSpace={"nowrap"}
-                              fontWeight={"bold"}
-                            >
-                              {place.placeName}
-                            </Box>
-                            <Box
-                              overflow={"hidden"}
-                              textOverflow={"ellipsis"}
-                              whiteSpace={"nowrap"}
-                            >
-                              {place.address}
-                            </Box>
-                            <Spacer />
-                            <Box>
-                              장소가 등록 된 게시글 수 : {place.countPlace} 개
-                            </Box>
-                          </Flex>
-                        </Flex>
-                      </Link>
-                    </Box>
-                  ))}
-                </Flex>
-              </Flex>
-            </Flex>
-            <ButtonOutline onClick={handleMoveRight}>
-              <FontAwesomeIcon icon={faChevronRight} />
-            </ButtonOutline>
-          </Flex>
-        </Flex>
-        <Box
-          maxW={"720px"}
-          w={"100%"}
-          p={"1rem"}
-          whiteSpace={"pre-wrap"}
-          borderRadius={"1rem"}
-          bgColor={navColor}
-          mt={"2rem"}
-        >
-          <div dangerouslySetInnerHTML={{ __html: post.content }} />
-        </Box>
-
-        <Divider
-          border={"1px solid lightGray"}
-          maxW={"720px"}
-          w="100%"
-          my={"2rem"}
-        />
-        {/* 좋아요 & 수정/삭제/목록 버튼 */}
-        <Flex maxW={"720px"} w={"100%"} h={"4rem"} align={"center"}>
-          {/* 좋아요 */}
-          <ButtonOutline variant={"RecMedium"} onClick={handleLikeCount}>
-            <Flex align={"center"} gap={1}>
-              <Text>
-                {like.like && <FontAwesomeIcon icon={emptyHeart} />}
-                {like.like || <FontAwesomeIcon icon={fullHeart} />}
-              </Text>
-
-              <Text>{like.count}</Text>
-            </Flex>
-          </ButtonOutline>
-          <ButtonOutline variant={"RecMedium"} onClick={onModalOpenOfReport}>
-            <FontAwesomeIcon icon={faTriangleExclamation} />
-          </ButtonOutline>
-          <Spacer />
-          {/* 수정 및 삭제 버튼 */}
-          {(account.hasAccessMemberId(post.memberId) || account.isAdmin()) && (
+    <Box>
+      {isBlind ? (
+        <Center h="100vh" flexDir="column">
+          {account.hasAccessMemberId(post.memberId) || account.isAdmin() ? (
             <Box>
-              <Box align={"left"} my={10}>
+              <Text fontSize="xl" fontWeight="bold" textAlign="center">
+                관리자에 의해 블라인드 처리되었습니다. 게시글을 수정해주세요.
+              </Text>
+              <Center>
                 <ButtonOutline
                   variant={"RecMedium"}
                   onClick={() => navigate(`/post/${postId}/edit`)}
@@ -368,69 +203,315 @@ export function PostView() {
                     수정
                   </Text>
                 </ButtonOutline>
-                <ButtonOutline
-                  variant={"RecMedium"}
-                  onClick={onModalOpenOfDelete}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                  <Text display={{ base: "none", lg: "block" }} ml={1}>
-                    삭제
-                  </Text>
-                </ButtonOutline>
-              </Box>
+                {account.isAdmin() && (
+                  <ButtonOutline onClick={toggleBlind}>
+                    <FontAwesomeIcon icon={faEyeSlash} />
+                  </ButtonOutline>
+                )}
+              </Center>
+            </Box>
+          ) : (
+            <Box>
+              <Text fontSize="xl" fontWeight="bold" textAlign="center">
+                관리자에 의해 블라인드 처리되었습니다.
+              </Text>
             </Box>
           )}
-
-          {/* 목록 */}
-          {authType === "user" ? (
-            <ButtonOutline
-              variant={"RecMedium"}
-              onClick={() => navigate("/post/list")}
-            >
-              <FontAwesomeIcon icon={faList} />
-              <Text display={{ base: "none", lg: "block" }} ml={1}>
-                목록
-              </Text>
-            </ButtonOutline>
-          ) : authType === "admin" ? (
-            <ButtonOutline
-              variant={"RecMedium"}
-              onClick={() => navigate("/post/mdList")}
-            >
-              <FontAwesomeIcon icon={faList} />
-              <Text display={{ base: "none", lg: "block" }} ml={1}>
-                목록
-              </Text>
-            </ButtonOutline>
-          ) : null}
-        </Flex>
-        {/*댓글*/}
-        <Center w={"100%"}>
-          <CommentComponent
-            postId={post.postId}
-            isTransition={isTransition}
-            setIsTransition={setIsTransition}
-          />
         </Center>
+      ) : (
+        <>
+          <Box className={isBlind ? "blurred" : ""}>
+            <Box
+              w={{ base: "720px", sm: "640px", lg: "960px" }}
+              p={"1rem"}
+              border={"1px solid #D8B7E5"}
+              borderRadius={"1rem"}
+            >
+              <Flex justify={"space-between"}>
+                <HeadingVariant>{post.title}</HeadingVariant>
+                {account.isAdmin() && (
+                  <ButtonOutline onClick={toggleBlind}>
+                    <FontAwesomeIcon icon={faEyeSlash} />
+                  </ButtonOutline>
+                )}
+              </Flex>
+              <Divider my={{ base: "1rem", sm: "8px", lg: "1rem" }} />
 
-        <Modal isOpen={isModalOpenOfDelete} onClose={onModalCloseOfDelete}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>게시글 삭제</ModalHeader>
-            <ModalBody>게시글을 삭제하시겠습니까?</ModalBody>
-            <ModalFooter>
-              <Button onClick={handleClickDelete}>삭제</Button>
-              <Button onClick={onModalCloseOfDelete}>취소</Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-        <ReportModal
-          postId={post.postId}
-          onOpen={onModalOpenOfReport}
-          isOpen={isModalOpenOfReport}
-          onClose={onModalCloseOfReport}
-        ></ReportModal>
-      </Flex>
+              <Flex direction="column" align="center">
+                <Flex direction="column" align="center" w={"100%"}>
+                  <Flex w={"100%"}>
+                    <Flex>
+                      <Avatar
+                        src={post.profileName}
+                        onClick={() => navigate(`/member/${post.memberId}`)}
+                        cursor="pointer"
+                      />
+                    </Flex>
+                    <Flex direction={"column"} w={"100%"}>
+                      <Flex pl={"1rem"}>
+                        <Text
+                          onClick={() => navigate(`/member/${post.memberId}`)}
+                          cursor="pointer"
+                          fontWeight={"bold"}
+                        >
+                          {post.nickName}
+                        </Text>
+                      </Flex>
+                      <Flex pl={"1rem"} w={"100%"} justify={"space-between"}>
+                        <Flex>
+                          <Text mr={1}>
+                            <FontAwesomeIcon
+                              icon={faHeart}
+                              style={{ color: "#D8B7E5" }}
+                              size="sm"
+                            />
+                          </Text>
+                          <Text fontSize="sm">{like.count}</Text>
+                          <Text mr={1} ml={2}>
+                            <FontAwesomeIcon
+                              icon={faEye}
+                              size="sm"
+                              style={{ color: "#D8B7E5" }}
+                            />
+                          </Text>
+                          <Text fontSize="sm">{post.view}</Text>
+                        </Flex>
+                        <Flex>
+                          <Text>{post.createDate}</Text>
+                        </Flex>
+                      </Flex>
+                    </Flex>
+                  </Flex>
+
+                  <Box
+                    w={{ base: "640px", sm: "540px", lg: "640px" }}
+                    h={{ base: "400px", sm: "360px", lg: "400px" }}
+                    my={"2rem"}
+                    borderRadius={"1rem"}
+                  >
+                    <MapView />
+                  </Box>
+
+                  <Flex alignItems={"center"} gap={"1rem"}>
+                    <ButtonOutline onClick={handleMoveLeft}>
+                      <FontAwesomeIcon icon={faChevronLeft} />
+                    </ButtonOutline>
+                    <Flex w={"520px"} h={"160px"}>
+                      <Flex
+                        overflow={"hidden"}
+                        alignItems={"center"}
+                        borderRadius={"1rem"}
+                        border={"1px solid #D8B7E5"}
+                      >
+                        <Flex
+                          ref={dataRef}
+                          sx={{
+                            transform: `translateX(${positionX}px)`,
+                            transition: "transform 0.5s ease",
+                          }}
+                        >
+                          {place.map((place, index) => (
+                            <Box
+                              w={"100%"}
+                              key={index}
+                              onMouseEnter={() =>
+                                handleSelectInfo(place, index)
+                              }
+                            >
+                              <Link
+                                href={place.placeUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Flex
+                                  w={"520px"}
+                                  justifyContent={"center"}
+                                  align={"center"}
+                                >
+                                  <Box
+                                    w={"160px"}
+                                    h={"160px"}
+                                    alignContent={"center"}
+                                  >
+                                    <Image
+                                      src={place.picurl || defaultImage}
+                                      objectFit={"cover"}
+                                      w={"100%"}
+                                      h={"100%"}
+                                    />
+                                  </Box>
+                                  <Flex
+                                    w={"360px"}
+                                    h={"160px"}
+                                    direction={"column"}
+                                    p={3}
+                                  >
+                                    <HeadingVariant
+                                      overflow={"hidden"}
+                                      textOverflow={"ellipsis"}
+                                      whiteSpace={"nowrap"}
+                                    >
+                                      {index + 1}번 장소
+                                    </HeadingVariant>
+                                    <Box
+                                      overflow={"hidden"}
+                                      textOverflow={"ellipsis"}
+                                      whiteSpace={"nowrap"}
+                                      fontWeight={"bold"}
+                                    >
+                                      {place.placeName}
+                                    </Box>
+                                    <Box
+                                      overflow={"hidden"}
+                                      textOverflow={"ellipsis"}
+                                      whiteSpace={"nowrap"}
+                                    >
+                                      {place.address}
+                                    </Box>
+                                    <Spacer />
+                                    <Box>
+                                      장소가 등록 된 게시글 수 :{" "}
+                                      {place.countPlace} 개
+                                    </Box>
+                                  </Flex>
+                                </Flex>
+                              </Link>
+                            </Box>
+                          ))}
+                        </Flex>
+                      </Flex>
+                    </Flex>
+                    <ButtonOutline onClick={handleMoveRight}>
+                      <FontAwesomeIcon icon={faChevronRight} />
+                    </ButtonOutline>
+                  </Flex>
+                </Flex>
+                <Box
+                  maxW={"720px"}
+                  w={"100%"}
+                  p={"1rem"}
+                  whiteSpace={"pre-wrap"}
+                  borderRadius={"1rem"}
+                  bgColor={navColor}
+                  mt={"2rem"}
+                >
+                  <div dangerouslySetInnerHTML={{ __html: post.content }} />
+                </Box>
+
+                <Divider
+                  border={"1px solid lightGray"}
+                  maxW={"720px"}
+                  w="100%"
+                  my={"2rem"}
+                />
+                {/* 좋아요 & 수정/삭제/목록 버튼 */}
+                <Flex maxW={"720px"} w={"100%"} h={"4rem"} align={"center"}>
+                  {/* 좋아요 */}
+                  <ButtonOutline
+                    variant={"RecMedium"}
+                    onClick={handleLikeCount}
+                  >
+                    <Flex align={"center"} gap={1}>
+                      <Text>
+                        {like.like && <FontAwesomeIcon icon={emptyHeart} />}
+                        {like.like || <FontAwesomeIcon icon={fullHeart} />}
+                      </Text>
+
+                      <Text>{like.count}</Text>
+                    </Flex>
+                  </ButtonOutline>
+                  <ButtonOutline
+                    variant={"RecMedium"}
+                    onClick={onModalOpenOfReport}
+                  >
+                    <FontAwesomeIcon icon={faTriangleExclamation} />
+                  </ButtonOutline>
+                  <Spacer />
+                  {/* 수정 및 삭제 버튼 */}
+                  {(account.hasAccessMemberId(post.memberId) ||
+                    account.isAdmin()) && (
+                    <Box>
+                      <Box align={"left"} my={10}>
+                        <ButtonOutline
+                          variant={"RecMedium"}
+                          onClick={() => navigate(`/post/${postId}/edit`)}
+                        >
+                          <FontAwesomeIcon icon={faPenToSquare} />
+                          <Text display={{ base: "none", lg: "block" }} ml={1}>
+                            수정
+                          </Text>
+                        </ButtonOutline>
+                        <ButtonOutline
+                          variant={"RecMedium"}
+                          onClick={onModalOpenOfDelete}
+                        >
+                          <FontAwesomeIcon icon={faTrash} />
+                          <Text display={{ base: "none", lg: "block" }} ml={1}>
+                            삭제
+                          </Text>
+                        </ButtonOutline>
+                      </Box>
+                    </Box>
+                  )}
+
+                  {/* 목록 */}
+                  {authType === "user" ? (
+                    <ButtonOutline
+                      variant={"RecMedium"}
+                      onClick={() => navigate("/post/list")}
+                    >
+                      <FontAwesomeIcon icon={faList} />
+                      <Text display={{ base: "none", lg: "block" }} ml={1}>
+                        목록
+                      </Text>
+                    </ButtonOutline>
+                  ) : authType === "admin" ? (
+                    <ButtonOutline
+                      variant={"RecMedium"}
+                      onClick={() => navigate("/post/mdList")}
+                    >
+                      <FontAwesomeIcon icon={faList} />
+                      <Text display={{ base: "none", lg: "block" }} ml={1}>
+                        목록
+                      </Text>
+                    </ButtonOutline>
+                  ) : null}
+                </Flex>
+
+                {/*댓글*/}
+                <Center w={"100%"}>
+                  <CommentComponent
+                    postId={post.postId}
+                    isTransition={isTransition}
+                    setIsTransition={setIsTransition}
+                  />
+                </Center>
+
+                <Modal
+                  isOpen={isModalOpenOfDelete}
+                  onClose={onModalCloseOfDelete}
+                >
+                  <ModalOverlay />
+                  <ModalContent>
+                    <ModalHeader>게시글 삭제</ModalHeader>
+                    <ModalBody>게시글을 삭제하시겠습니까?</ModalBody>
+                    <ModalFooter>
+                      <Button onClick={handleClickDelete}>삭제</Button>
+                      <Button onClick={onModalCloseOfDelete}>취소</Button>
+                    </ModalFooter>
+                  </ModalContent>
+                </Modal>
+                <ReportModal
+                  postId={post.postId}
+                  onOpen={onModalOpenOfReport}
+                  isOpen={isModalOpenOfReport}
+                  onClose={onModalCloseOfReport}
+                ></ReportModal>
+              </Flex>
+            </Box>
+          </Box>
+        </>
+      )}
     </Box>
   );
 }

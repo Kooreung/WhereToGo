@@ -1,14 +1,29 @@
 import {
   Box,
+  Button,
   Center,
+  Flex,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Radio,
+  RadioGroup,
+  Stack,
   Table,
   TableContainer,
   Tbody,
   Td,
+  Text,
+  Textarea,
   Th,
   Thead,
   Tr,
   useColorModeValue,
+  useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import HeadingVariant from "../../components/ui/Heading/HeadingVariant.jsx";
 import React, { useEffect, useState } from "react";
@@ -26,12 +41,16 @@ import {
 export function ReportList() {
   const navigate = useNavigate();
   const [reportList, setReportList] = useState([]);
+  const [selectedReport, setSelectedReport] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const [pageInfo, setPageInfo] = useState({});
   const hColor = useColorModeValue(
     "rgba(216, 183, 229, 0.2)",
     "rgba(131, 96, 145, 0.2)",
   );
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const [processYn, setProcessYn] = useState();
+  const toast = useToast();
 
   useEffect(() => {
     axios.get(`/api/report/recordlist?${searchParams}`).then((res) => {
@@ -59,6 +78,46 @@ export function ReportList() {
     whiteSpace: "nowrap",
   };
 
+  const handleRowClick = (report) => {
+    setSelectedReport(report);
+    onOpen();
+  };
+
+  function handleSubmitProcess() {
+    const selectProcess =
+      processYn === "1"
+        ? "N"
+        : processYn === "2"
+          ? "P"
+          : processYn === "3"
+            ? "Y"
+            : null;
+    axios
+      .put("/api/report/reportprocess", {
+        reportId: selectedReport.reportId,
+        processYn: selectProcess,
+      })
+      .then((res) => {
+        toast({
+          status: "success",
+          position: "bottom",
+          isClosable: true,
+          description: "처리 완료",
+        });
+        onClose();
+        navigate(`/post/${selectedReport.postId}`);
+      })
+      .catch(() => {
+        toast({
+          status: "error",
+          isClosable: true,
+          position: "bottom",
+          description: "처리 실패",
+        });
+        onClose();
+      });
+  }
+
   return (
     <>
       <Box mb={"2rem"}>
@@ -73,16 +132,18 @@ export function ReportList() {
           <Table>
             <Thead>
               <Tr>
-                <Th w={"20%"}>게시판 제목</Th>
+                <Th w={"10%"}>#</Th>
+                <Th w={"20%"}>게시글 제목</Th>
                 <Th w={"20%"}>신고사유</Th>
                 <Th w={"20%"}>상세사유</Th>
                 <Th w={"10%"}>신고자</Th>
                 <Th w={"10%"}>처리여부</Th>
+                <Th w={"10%"}>처리자</Th>
                 <Th w={"20%"}>신고일자</Th>
               </Tr>
             </Thead>
             <Tbody>
-              {reportList.map((report) => (
+              {reportList.map((report, index) => (
                 <Tr
                   cursor={"pointer"}
                   sx={{
@@ -90,7 +151,10 @@ export function ReportList() {
                       backgroundColor: hColor,
                     },
                   }}
+                  onClick={() => handleRowClick(report)}
+                  key={index}
                 >
+                  <Td w={"10%"}>{report.reportId}</Td>
                   <Td w={"20%"} sx={tdCellStyle}>
                     {report.titleName
                       ? report.titleName
@@ -102,13 +166,14 @@ export function ReportList() {
                   </Td>
                   <Td w={"10%"}>{report.creatorName}</Td>
                   <Td w={"10%"}>{report.processYn}</Td>
+                  <Td w={"10%"}>{report.processorId}</Td>
                   <Td w={"20%"}>{report.creatDate}</Td>
                 </Tr>
               ))}
             </Tbody>
           </Table>
           {/*페이징*/}
-          <Box>
+          <Box mt={4}>
             <Center>
               {pageInfo.prevPageNumber && (
                 <>
@@ -153,6 +218,82 @@ export function ReportList() {
             </Center>
           </Box>
         </TableContainer>
+      )}
+
+      {/* 모달 */}
+      {selectedReport && (
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>
+              <Flex justify="space-between" align="center" w="100%">
+                <Text>신고 상세 정보</Text>
+                <Button
+                  size="xs"
+                  variant="outline"
+                  color="#836091"
+                  onClick={() => navigate(`/post/${selectedReport.postId}`)}
+                >
+                  이동하기
+                </Button>
+              </Flex>
+            </ModalHeader>
+            <ModalBody>
+              <Flex mb={2}>
+                <Text fontWeight={"bolder"} mr={2}>
+                  신고 번호:
+                </Text>
+                <Text>{selectedReport.reportId}</Text>
+              </Flex>
+              <Box mb={2}>
+                <Text fontWeight={"bolder"}>게시글 제목:</Text>
+                <Text whiteSpace="pre-wrap">
+                  {selectedReport.titleName
+                    ? selectedReport.titleName
+                    : "삭제된 게시물 입니다."}
+                </Text>
+              </Box>
+              <Flex mb={2}>
+                <Text fontWeight={"bolder"} mr={2}>
+                  신고 사유:
+                </Text>
+                <Text>{selectedReport.reportReason}</Text>
+              </Flex>
+              <Box mb={2}>
+                <Text fontWeight={"bolder"}>처리 여부:</Text>
+                <RadioGroup defaultValue={processYn} onChange={setProcessYn}>
+                  <Stack direction="row">
+                    <Radio colorScheme="purple" value="1">
+                      미완료
+                    </Radio>
+                    <Radio colorScheme="purple" value="2">
+                      진행
+                    </Radio>
+                    <Radio colorScheme="purple" value="3">
+                      완료
+                    </Radio>
+                  </Stack>
+                </RadioGroup>
+              </Box>
+              <Box>
+                <Text fontWeight={"bolder"}>상세 사유:</Text>
+                <Textarea
+                  readOnly={true}
+                  value={selectedReport.reportDetailReason}
+                />
+              </Box>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                // onClick={() => navigate(`/post/${selectedReport.postId}`)}
+                onClick={handleSubmitProcess}
+              >
+                확인
+              </Button>
+              <Button onClick={onClose}>취소</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       )}
     </>
   );

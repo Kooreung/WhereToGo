@@ -65,4 +65,9 @@ public class ReportService {
             return true;
         }
     }
+
+    public void processmodify(Report report, Authentication authentication) {
+        report.setProcessorId(Integer.valueOf(authentication.getName()));
+        reportMapper.updateReport(report);
+    }
 }

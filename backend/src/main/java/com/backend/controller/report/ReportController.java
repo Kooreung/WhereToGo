@@ -15,6 +15,7 @@ public class ReportController {
 
     private final ReportService reportService;
 
+    //신고하기
     @PostMapping("add")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity getComment(@RequestBody Report report, Authentication authentication) {
@@ -44,5 +45,12 @@ public class ReportController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("서버에러 ㅋㅋ");
         }
+    }
+
+    @PutMapping("reportprocess")
+    public void reportProcess(@RequestBody Report report, Authentication authentication) {
+        System.out.println("report = " + report);
+        reportService.processmodify(report, authentication);
+
     }
 }
