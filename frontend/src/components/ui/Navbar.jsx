@@ -21,11 +21,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import homeLogo from "../../assets/img/logo.png";
 import { faAddressCard } from "@fortawesome/free-regular-svg-icons";
-import ChatWebSocket from "../../component/Chat/ChatWebSocket.jsx";
+import ChatWebSocket from "../Chat/ChatWebSocket.jsx";
 import { LoginContext } from "./LoginProvider.jsx";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { useNotifications } from "../../component/Chat/NotificationProvider.jsx";
+import { useNotifications } from "../Chat/NotificationProvider.jsx";
 import { ChatIcon, CloseIcon } from "@chakra-ui/icons";
 
 function Navbar() {

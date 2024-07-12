@@ -1,8 +1,8 @@
 import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { EventSubscriber } from "../../component/Chat/EventSubscriber.jsx";
-import { NotificationProvider } from "../../component/Chat/NotificationProvider.jsx";
+import { EventSubscriber } from "../Chat/EventSubscriber.jsx";
+import { NotificationProvider } from "../Chat/NotificationProvider.jsx";
 
 export const LoginContext = createContext(null);
 
