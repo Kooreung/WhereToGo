@@ -251,7 +251,7 @@ public interface MemberMapper {
     // 인증 링크 누르면 권한 바꾸기
     @Update("""
             UPDATE authority
-            SET authtype='admin'
+            SET authtype='certifyUser'
             WHERE memberid=#{memberId}
             """)
     int authCertify(Integer memberId);

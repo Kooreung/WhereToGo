@@ -133,7 +133,7 @@ public class EmailSenderService {
             memberMapper.tokenUpdate(memberId, token);
         }
 
-        String certifyLink = "http://localhost:5173/api/member/tokencertify?token=" + token;
+        String certifyLink = "http://localhost:5173/tokenCertify?token=" + token;
 
         certifyMail.setToEmail(email);
         certifyMail.setMailTitle("2차 인증 이메일입니다.");

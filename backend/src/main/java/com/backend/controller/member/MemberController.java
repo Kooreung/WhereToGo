@@ -112,20 +112,22 @@ public class MemberController {
     }
 
     // 2차 인증 이메일에서 인증 링크 누르면
-    @GetMapping("tokencertify")
+    @GetMapping("tokenCertify")
     public ResponseEntity<String> tokenCertify(@RequestParam("token") String token) {
+        System.out.println(token);
         Integer memberId = service.getMemberIdByToken(token);
-
-        // 토큰 만료시간을 현재 시간과 비교
-        if(service.isTokenExpired(memberId)) {
-            return ResponseEntity.notFound().build();
-        }
 
         if(memberId == null) {
             return ResponseEntity.notFound().build();
         } else {
             service.authCertify(memberId);
         }
+
+        // 토큰 만료시간을 현재 시간과 비교
+        if(service.isTokenExpired(memberId)) {
+            return ResponseEntity.notFound().build();
+        }
+
         return ResponseEntity.ok().build();
     }
 
