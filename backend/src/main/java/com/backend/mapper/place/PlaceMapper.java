@@ -9,8 +9,8 @@ import org.apache.ibatis.annotations.Options;
 @Mapper
 public interface PlaceMapper {
     @Insert("""
-            INSERT INTO place (placeName, placeUrl, address, category, latitude, longitude, postid)
-            VALUES (#{placeName}, #{placeUrl}, #{address}, #{category}, #{latitude}, #{longitude}, #{postId})
+            INSERT INTO place (placeName, placeUrl, address, category, latitude, longitude, postid, addressCode, placeIndex)
+            VALUES (#{placeName}, #{placeUrl}, #{address}, #{category}, #{latitude}, #{longitude}, #{postId}, #{addressCode}, #{placeIndex})
             """)
     @Options(useGeneratedKeys = true, keyProperty = "placeId")
     int insert(Place place);
@@ -21,6 +21,4 @@ public interface PlaceMapper {
             """)
     @Options(useGeneratedKeys = true, keyProperty = "picid")
     int insertPlacePicture(Integer placeId, String placeName, String picUrl);
-
-
 }

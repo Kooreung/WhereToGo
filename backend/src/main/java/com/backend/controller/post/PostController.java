@@ -5,6 +5,8 @@ import com.backend.domain.post.Banner;
 import com.backend.domain.post.Post;
 import com.backend.service.post.PostService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +23,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PostController {
 
+    private static final Logger log = LoggerFactory.getLogger(PostController.class);
     private final PostService postService;
 
     // 게시글 추가 | 작성 Controller
@@ -38,7 +41,7 @@ public class PostController {
 
     // 게시글 조회 Controller
     @GetMapping("{postId}")
-    public ResponseEntity postRead(@PathVariable Integer postId, Authentication authentication) {
+    public ResponseEntity<Object> postRead(@PathVariable Integer postId, Authentication authentication) {
         Map<String, Object> result = postService.getPostInfo(postId, authentication);
         if (result.get("post") == null) {
             return ResponseEntity.notFound().build();
@@ -50,11 +53,15 @@ public class PostController {
     @GetMapping("list")
     public Map<String, Object> postList(
             @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(value = "listSlider") String listSlider,
             @RequestParam(value = "type", required = false) String searchType,
-            @RequestParam(value = "keyword", defaultValue = "") String searchKeyword) {
-        return postService.getPostList(page, searchType, searchKeyword);
-    }
+            @RequestParam(value = "keyword", defaultValue = "") String searchKeyword,
+            @RequestParam(value = "region", defaultValue = "") String searchReg,
+            @RequestParam(value = "lat", required = false) Double latitude,
+            @RequestParam(value = "lng", required = false) Double longitude) {
 
+        return postService.getPostList(page, listSlider, searchType, searchKeyword, searchReg, latitude, longitude);
+    }
 
     // 게시글 MD추천 목록 Controller
     @GetMapping("mdList")
@@ -87,8 +94,7 @@ public class PostController {
     public ResponseEntity<Map<String, Object>> getLikeList(
             @PathVariable Integer memberId,
             @RequestParam(defaultValue = "1") Integer page, @RequestParam(value = "type", required = false) String searchType,
-                                                           @RequestParam(value = "keyword", defaultValue = "") String searchKeyword) {
-        System.out.println("searchKeyword = " + searchKeyword);
+            @RequestParam(value = "keyword", defaultValue = "") String searchKeyword) {
         Map<String, Object> likedPosts = postService.getLikeAllList(memberId, page, searchType, searchKeyword);
         return ResponseEntity.ok(likedPosts);
     }
@@ -132,7 +138,6 @@ public class PostController {
     // 내 게시물 목록 Controller
     @GetMapping("myList/{memberId}")
     public Map<String, Object> myList(@PathVariable Integer memberId, @RequestParam(defaultValue = "1") Integer page) {
-        System.out.println("페이지" + page);
         return postService.myList(memberId, page);
     }
 

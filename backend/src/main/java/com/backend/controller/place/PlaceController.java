@@ -4,6 +4,8 @@ import com.backend.Crawler.PlaceResponse;
 import com.backend.domain.place.Place;
 import com.backend.service.place.PlaceService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/api/place")
 public class PlaceController {
+    private static final Logger log = LoggerFactory.getLogger(PlaceController.class);
     private final PlaceService service;
 
     @PostMapping("/add")

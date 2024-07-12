@@ -19,6 +19,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.1",
+    "@stomp/stompjs": "^7.0.0",
     "axios": "^1.7.1",
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",

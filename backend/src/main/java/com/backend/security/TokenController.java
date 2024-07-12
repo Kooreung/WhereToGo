@@ -43,7 +43,7 @@ public class TokenController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid Refresh Token");
         }
 
-        // 리프레시 토큰으로부터 사용자 정보 추출
+
         Member member = memberMapper.selectMemberByMemberId(memberId);
 
         // 새로운 엑세스 토큰 생성
@@ -83,11 +83,6 @@ class JwtTokenUtil {
         }
     }
 
-    public String getUsernameFromToken(String token) {
-        Jwt jwt = jwtDecoder.decode(token);
-        System.out.println("name? : " + jwt);
-        return (String) jwt.getClaims().get("email");
-    }
 
     public String generateToken(Member member) {
         Instant now = Instant.now();

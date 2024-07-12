@@ -29,30 +29,41 @@ public interface PostMapper {
                      JOIN member m ON p.memberid = m.memberid
                      LEFT JOIN comment c ON p.postid = c.postid
                      LEFT JOIN likes l ON p.postid = l.postid
-                        WHERE p.postid = #{postId}
-                        """)
+            WHERE p.postid = #{postId}
+            """)
     Post selectByPostId(Integer postId);
 
-    // 게시글 목록 매퍼
+    // 게시글 목록 매퍼 감차2
     @Select("""
             <script>
             SELECT p.postid, p.title, p.content, p.createdate, p.view,
                    m.nickname, m.memberid,
-                   plpic.picurl,
+                   pl.addresscode,
+                   (SELECT plpic.picurl
+                      FROM placepic plpic
+                      WHERE plpic.placeid = pl.placeid
+                      ORDER BY plpic.placeid ASC
+                      LIMIT 1) AS picurl,
                    COUNT(DISTINCT c.commentid) commentCount,
-                   COUNT(DISTINCT l.memberid) likeCount
+                   COUNT(DISTINCT l.memberid) likeCount,
+                   (6371 * acos(cos(radians(#{latitude})) * cos(radians(pl.latitude)) * cos(radians(pl.longitude) - radians(#{longitude})) + sin(radians(#{latitude})) * sin(radians(pl.latitude)))) distance
             FROM post p JOIN member m ON p.memberid = m.memberid
                         JOIN authority a ON p.memberid = a.memberid
                         LEFT JOIN comment c ON p.postid = c.postid
                         LEFT JOIN likes l ON p.postid = l.postid
                         LEFT JOIN place pl ON p.postid = pl.postid
-                        LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
-             <where>
-            a.authtype != 'admin'
-                    <if test="searchType != null">
+                    
+            <where>
+                a.authtype != 'admin'
+                <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
+                    <bind name="region" value="'%' + searchReg + '%'"/>
                     <if test="searchType == 'all'">
-                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern}  OR pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
+                        AND (p.title LIKE #{pattern}
+                            OR p.content LIKE #{pattern}
+                            OR m.nickname LIKE #{pattern}
+                            OR pl.address LIKE #{pattern}
+                            OR pl.placename LIKE #{pattern})
                     </if>
                     <if test="searchType == 'titleAndContent'">
                         AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
@@ -61,19 +72,33 @@ public interface PostMapper {
                         AND m.nickname LIKE #{pattern}
                     </if>
                     <if test="searchType == 'placeName'">
-                        AND (pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
+                        AND (OR pl.placename LIKE #{pattern})
                     </if>
                     <if test="searchType == 'address'">
-                        AND (pl.address LIKE #{pattern} OR pl.address LIKE #{pattern})
+                        AND (pl.address LIKE #{pattern})
+                    </if>
+                    <if test="searchType == 'all'">
+                        AND (pl.addresscode LIKE #{region})
                     </if>
                 </if>
-                </where>
+            </where>
             GROUP BY p.postid
-            ORDER BY p.postid DESC
+            <choose>
+                <when test="listSlider == 'closely'">
+                    ORDER BY distance ASC, p.postid DESC
+                </when>
+                <when test="listSlider == 'recently'">
+                    ORDER BY p.postid DESC
+                </when>
+                <otherwise>
+                    ORDER BY p.postid DESC
+                </otherwise>
+            </choose>
             LIMIT #{offset}, 5
             </script>
             """)
-    List<Post> selectAllPost(Integer offset, String searchType, String searchKeyword);
+    List<Post> selectAllPost(Integer offset, String listSlider, String searchType, String searchKeyword, String searchReg,
+                             Double latitude, Double longitude);
 
     // 게시글 목록 카운트 매퍼
     @Select("""
@@ -86,28 +111,37 @@ public interface PostMapper {
                a.authtype != 'admin'
                        <if test="searchType != null">
                        <bind name="pattern" value="'%' + searchKeyword + '%'"/>
-                       <if test="searchType == 'all'">
-                           AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern}  OR pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
-                       </if>
-                       <if test="searchType == 'titleAndContent'">
-                           AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
-                       </if>
-                       <if test="searchType == 'nickName'">
-                           AND m.nickname LIKE #{pattern}
-                       </if>
-                       <if test="searchType == 'placeName'">
-                           AND (pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
-                       </if>
-                       <if test="searchType == 'address'">
-                           AND (pl.address LIKE #{pattern} OR pl.address LIKE #{pattern})
-                       </if>
+                       <bind name="region" value="'%' + searchReg + '%'"/>
+                        <if test="searchType == 'all'">
+                            AND (p.title LIKE #{pattern} 
+                                OR p.content LIKE #{pattern} 
+                                OR m.nickname LIKE #{pattern} 
+                                OR pl.address LIKE #{pattern} 
+                                OR pl.placename LIKE #{pattern})
+                        </if>
+                        <if test="searchType == 'titleAndContent'">
+                            AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
+                        </if>
+                        <if test="searchType == 'nickName'">
+                            AND m.nickname LIKE #{pattern}
+                        </if>
+                        <if test="searchType == 'placeName'">
+                            AND (pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
+                        </if>
+                        <if test="searchType == 'address'">
+                            AND (pl.address LIKE #{pattern} OR pl.address LIKE #{pattern})
+                        </if>
+                        <if test="searchType == 'all'">
+                            AND (pl.addresscode LIKE #{region})
+                        </if>
                    </if>
                    </where>
             </script>
             """)
-    Integer countAllpost(String searchType, String searchKeyword);
+    Integer countAllpost(String searchType, String listSlider, String searchKeyword, String searchReg,
+                         @Param("latitude") Double latitude, @Param("longitude") Double longitude);
 
-    // 게시글 Top 3 인기글 목록 매퍼
+    // 게시글 Top 3 인기글 목록 매퍼 감차
     @Select("""
               SELECT p.postid, p.title, p.content, p.view, p.createDate,
                      m.nickName,
@@ -135,6 +169,7 @@ public interface PostMapper {
             SELECT p.postid,
                    pl.placename,
                    pl.address,
+                   pl.addresscode,
                    pl.placeurl,
                    pl.latitude,
                    pl.longitude,
@@ -144,8 +179,9 @@ public interface PostMapper {
                     WHERE pl_inner.placeurl = pl.placeurl) countPlace
             FROM post p
                      JOIN place pl ON p.postid = pl.postid
-                     LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
+                     LEFT JOIN placepic plpic ON pl.placename = plpic.placename
             WHERE p.postid = #{postId}
+            order by pl.placeIndex;
             """)
     List<Place> selectPlaceList(Integer postId);
 
@@ -240,7 +276,7 @@ public interface PostMapper {
                  <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
                     <if test="searchType == 'all'">
-                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern}  OR pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
+                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern} OR pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
                     </if>
                     <if test="searchType == 'titleAndContent'">
                         AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})
@@ -281,7 +317,7 @@ public interface PostMapper {
                <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
                     <if test="searchType == 'all'">
-                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern}  OR pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
+                        AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern} OR m.nickname LIKE #{pattern} OR pl.address LIKE #{pattern} OR pl.placename LIKE #{pattern})
                     </if>
                     <if test="searchType == 'titleAndContent'">
                         AND (p.title LIKE #{pattern} OR p.content LIKE #{pattern})

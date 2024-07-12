@@ -212,3 +212,16 @@ SELECT a.authtype
 from authority a
          join post p on p.memberid = a.memberid
 where p.postid = 1240;
+
+CREATE TABLE `Reply`
+(
+    `replyId`      INT(11)       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `commentid`    INT(11)       NOT NULL,
+    `postid`       INT(11)       NOT NULL,
+    `memberid`     INT(11)       NOT NULL,
+    `replyComment` VARCHAR(1000) NOT NULL,
+    `createdate`   DATE          NOT NULL
+);
+
+DESC commentreply;
+DESC comment;
