@@ -33,13 +33,17 @@ public interface PostMapper {
             """)
     Post selectByPostId(Integer postId);
 
-    // 게시글 목록 매퍼
+    // 게시글 목록 매퍼 감차2
     @Select("""
             <script>
             SELECT p.postid, p.title, p.content, p.createdate, p.view,
                    m.nickname, m.memberid,
                    pl.addresscode,
-                   plpic.picurl,
+                   (SELECT plpic.picurl
+                      FROM placepic plpic
+                      WHERE plpic.placeid = pl.placeid
+                      ORDER BY plpic.placeid ASC
+                      LIMIT 1) AS picurl,
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l.memberid) likeCount,
                    (6371 * acos(cos(radians(#{latitude})) * cos(radians(pl.latitude)) * cos(radians(pl.longitude) - radians(#{longitude})) + sin(radians(#{latitude})) * sin(radians(pl.latitude)))) distance
@@ -48,7 +52,7 @@ public interface PostMapper {
                         LEFT JOIN comment c ON p.postid = c.postid
                         LEFT JOIN likes l ON p.postid = l.postid
                         LEFT JOIN place pl ON p.postid = pl.postid
-                        LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
+                    
             <where>
                 a.authtype != 'admin'
                 <if test="searchType != null">
@@ -137,7 +141,7 @@ public interface PostMapper {
     Integer countAllpost(String searchType, String listSlider, String searchKeyword, String searchReg,
                          @Param("latitude") Double latitude, @Param("longitude") Double longitude);
 
-    // 게시글 Top 3 인기글 목록 매퍼
+    // 게시글 Top 3 인기글 목록 매퍼 감차
     @Select("""
               SELECT p.postid, p.title, p.content, p.view, p.createDate,
                      m.nickName,
