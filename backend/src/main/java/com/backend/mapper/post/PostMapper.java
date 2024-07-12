@@ -42,7 +42,7 @@ public interface PostMapper {
                    plpic.picurl,
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l.memberid) likeCount,
-                   (6371 * acos(cos(radians(#{latitude})) * cos(radians(pl.latitude)) * cos(radians(pl.longitude) - radians(#{longitude})) + sin(radians(#{latitude})) * sin(radians(pl.latitude)))) AS distance
+                   (6371 * acos(cos(radians(#{latitude})) * cos(radians(pl.latitude)) * cos(radians(pl.longitude) - radians(#{longitude})) + sin(radians(#{latitude})) * sin(radians(pl.latitude)))) distance
             FROM post p JOIN member m ON p.memberid = m.memberid
                         JOIN authority a ON p.memberid = a.memberid
                         LEFT JOIN comment c ON p.postid = c.postid
@@ -80,11 +80,14 @@ public interface PostMapper {
             </where>
             GROUP BY p.postid
             <choose>
+                <when test="listSlider == 'closely'">
+                    ORDER BY distance ASC, p.postid DESC
+                </when>
                 <when test="listSlider == 'recently'">
                     ORDER BY p.postid DESC
                 </when>
                 <otherwise>
-                    ORDER BY distance ASC, p.postid DESC
+                    ORDER BY p.postid DESC
                 </otherwise>
             </choose>
             LIMIT #{offset}, 5

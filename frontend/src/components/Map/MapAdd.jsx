@@ -229,7 +229,6 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
     const callback = (result, status) => {
       if (status === window.kakao.maps.services.Status.OK) {
         setPlaces(result);
-        console.log(result);
       } else {
         alert("검색 결과가 존재하지 않습니다.");
       }
@@ -376,7 +375,7 @@ const KakaoMapSearch = ({ selectedPlaces, setSelectedPlaces }) => {
             검색
           </ButtonOutline>
         </Flex>
-        {places.map && (
+        {places.length > 0 && (
           <Box
             maxH={"214px"}
             overflowY={"auto"}

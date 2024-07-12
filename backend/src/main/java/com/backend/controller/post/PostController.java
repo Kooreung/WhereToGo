@@ -53,7 +53,7 @@ public class PostController {
     @GetMapping("list")
     public Map<String, Object> postList(
             @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(value = "listSlider", defaultValue = "closely") String listSlider,
+            @RequestParam(value = "listSlider") String listSlider,
             @RequestParam(value = "type", required = false) String searchType,
             @RequestParam(value = "keyword", defaultValue = "") String searchKeyword,
             @RequestParam(value = "region", defaultValue = "") String searchReg,
