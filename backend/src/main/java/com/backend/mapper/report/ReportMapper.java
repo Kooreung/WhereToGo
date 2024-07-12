@@ -54,7 +54,8 @@ public interface ReportMapper {
                      r.createId, 
                      r.creatDate,
                      p.title as titlename,
-                     creator.nickName as creatorname
+                     creator.nickName as creatorname,
+                     processor.nickName as processorname
             FROM report r
             LEFT JOIN post p ON p.postId = r.postId
             LEFT JOIN comment c ON c.commentId = r.commentId

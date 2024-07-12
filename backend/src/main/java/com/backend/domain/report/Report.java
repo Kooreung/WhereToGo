@@ -22,6 +22,7 @@ public class Report {
 
     private String titleName;
     private String creatorName;
+    private String processorName;
 //    private Post post;
 //    private Member creator;
 //    private Member processor;

@@ -194,20 +194,33 @@ export function PostView() {
                 관리자에 의해 블라인드 처리되었습니다. 게시글을 수정해주세요.
               </Text>
               <Center>
-                <ButtonOutline
-                  variant={"RecMedium"}
-                  onClick={() => navigate(`/post/${postId}/edit`)}
-                >
-                  <FontAwesomeIcon icon={faPenToSquare} />
-                  <Text display={{ base: "none", lg: "block" }} ml={1}>
-                    수정
-                  </Text>
-                </ButtonOutline>
+                {account.hasAccessMemberId(post.memberId) && (
+                  <ButtonOutline
+                    variant={"RecMedium"}
+                    onClick={() => navigate(`/post/${postId}/edit`)}
+                  >
+                    <FontAwesomeIcon icon={faPenToSquare} />
+                    <Text display={{ base: "none", lg: "block" }} ml={1}>
+                      수정
+                    </Text>
+                  </ButtonOutline>
+                )}
                 {account.isAdmin() && (
                   <ButtonOutline onClick={toggleBlind}>
                     <FontAwesomeIcon icon={faEyeSlash} />
                   </ButtonOutline>
                 )}
+                <Text
+                  cursor={"pointer"}
+                  onClick={() => navigate("/post/list")}
+                  sx={{
+                    "&:hover": {
+                      color: navColor,
+                    },
+                  }}
+                >
+                  돌아가기
+                </Text>
               </Center>
             </Box>
           ) : (
@@ -215,6 +228,19 @@ export function PostView() {
               <Text fontSize="xl" fontWeight="bold" textAlign="center">
                 관리자에 의해 블라인드 처리되었습니다.
               </Text>
+              <Center>
+                <Text
+                  cursor={"pointer"}
+                  onClick={() => navigate("/post/list")}
+                  sx={{
+                    "&:hover": {
+                      color: `purple`,
+                    },
+                  }}
+                >
+                  돌아가기
+                </Text>
+              </Center>
             </Box>
           )}
         </Center>
@@ -406,7 +432,7 @@ export function PostView() {
                 />
                 {/* 좋아요 & 수정/삭제/목록 버튼 */}
                 <Flex maxW={"720px"} w={"100%"} h={"4rem"} align={"center"}>
-                  {/* 좋아요 */}
+                  {/* 좋아요 ,신고*/}
                   <ButtonOutline
                     variant={"RecMedium"}
                     onClick={handleLikeCount}
@@ -420,12 +446,14 @@ export function PostView() {
                       <Text>{like.count}</Text>
                     </Flex>
                   </ButtonOutline>
-                  <ButtonOutline
-                    variant={"RecMedium"}
-                    onClick={onModalOpenOfReport}
-                  >
-                    <FontAwesomeIcon icon={faTriangleExclamation} />
-                  </ButtonOutline>
+                  {account.hasAccessMemberId(post.memberId) || (
+                    <ButtonOutline
+                      variant={"RecMedium"}
+                      onClick={onModalOpenOfReport}
+                    >
+                      <FontAwesomeIcon icon={faTriangleExclamation} />
+                    </ButtonOutline>
+                  )}
                   <Spacer />
                   {/* 수정 및 삭제 버튼 */}
                   {(account.hasAccessMemberId(post.memberId) ||

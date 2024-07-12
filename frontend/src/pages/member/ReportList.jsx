@@ -85,13 +85,7 @@ export function ReportList() {
 
   function handleSubmitProcess() {
     const selectProcess =
-      processYn === "1"
-        ? "N"
-        : processYn === "2"
-          ? "P"
-          : processYn === "3"
-            ? "Y"
-            : null;
+      processYn === "1" ? "P" : processYn === "2" ? "Y" : null;
     axios
       .put("/api/report/reportprocess", {
         reportId: selectedReport.reportId,
@@ -121,7 +115,7 @@ export function ReportList() {
   return (
     <>
       <Box mb={"2rem"}>
-        <HeadingVariant variant={"large"}>신고 목록</HeadingVariant>
+        <HeadingVariant variant={"large"}>게시글 신고 목록</HeadingVariant>
       </Box>
       {reportList.length === 0 && <Center>조회 결과가 없습니다.</Center>}
       {reportList.length > 0 && (
@@ -135,11 +129,9 @@ export function ReportList() {
                 <Th w={"10%"}>#</Th>
                 <Th w={"20%"}>게시글 제목</Th>
                 <Th w={"20%"}>신고사유</Th>
-                <Th w={"20%"}>상세사유</Th>
                 <Th w={"10%"}>신고자</Th>
                 <Th w={"10%"}>처리여부</Th>
                 <Th w={"10%"}>처리자</Th>
-                <Th w={"20%"}>신고일자</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -161,13 +153,10 @@ export function ReportList() {
                       : "삭제된 게시글입니다"}
                   </Td>
                   <Td w={"20%"}>{report.reportReason}</Td>
-                  <Td w={"20%"} sx={tdCellStyle}>
-                    {report.reportDetailReason}
-                  </Td>
+
                   <Td w={"10%"}>{report.creatorName}</Td>
                   <Td w={"10%"}>{report.processYn}</Td>
-                  <Td w={"10%"}>{report.processorId}</Td>
-                  <Td w={"20%"}>{report.creatDate}</Td>
+                  <Td w={"10%"}>{report.processorName}</Td>
                 </Tr>
               ))}
             </Tbody>
@@ -234,7 +223,7 @@ export function ReportList() {
                   color="#836091"
                   onClick={() => navigate(`/post/${selectedReport.postId}`)}
                 >
-                  이동하기
+                  게시글 확인
                 </Button>
               </Flex>
             </ModalHeader>
@@ -244,6 +233,12 @@ export function ReportList() {
                   신고 번호:
                 </Text>
                 <Text>{selectedReport.reportId}</Text>
+              </Flex>
+              <Flex mb={2}>
+                <Text fontWeight={"bolder"} mr={2}>
+                  신고 일자:
+                </Text>
+                <Text>{selectedReport.creatDate}</Text>
               </Flex>
               <Box mb={2}>
                 <Text fontWeight={"bolder"}>게시글 제목:</Text>
@@ -264,12 +259,9 @@ export function ReportList() {
                 <RadioGroup defaultValue={processYn} onChange={setProcessYn}>
                   <Stack direction="row">
                     <Radio colorScheme="purple" value="1">
-                      미완료
+                      블라인드
                     </Radio>
                     <Radio colorScheme="purple" value="2">
-                      진행
-                    </Radio>
-                    <Radio colorScheme="purple" value="3">
                       완료
                     </Radio>
                   </Stack>

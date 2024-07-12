@@ -22,11 +22,11 @@ export function ReportModal({ isOpen, onClose, onOpen, postId }) {
   function handleSubmitReport() {
     const reason =
       reportReason === "1"
-        ? "ABUSE"
+        ? "부적절한 언어 사용"
         : reportReason === "2"
-          ? "PERSONAL_INFORMATION"
+          ? "개인정보 노출"
           : reportReason === "3"
-            ? "NOT_FIT_THE_LOCATION"
+            ? "위치에 맞지 않는 게시물"
             : null;
     if (!reason) {
       alert("신고 이유를 선택해주세요.");
