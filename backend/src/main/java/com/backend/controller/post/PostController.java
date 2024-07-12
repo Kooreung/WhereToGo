@@ -41,7 +41,7 @@ public class PostController {
 
     // 게시글 조회 Controller
     @GetMapping("{postId}")
-    public ResponseEntity postRead(@PathVariable Integer postId, Authentication authentication) {
+    public ResponseEntity<Object> postRead(@PathVariable Integer postId, Authentication authentication) {
         Map<String, Object> result = postService.getPostInfo(postId, authentication);
         if (result.get("post") == null) {
             return ResponseEntity.notFound().build();
