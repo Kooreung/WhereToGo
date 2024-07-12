@@ -54,11 +54,15 @@ public interface ChatMapper {
 
 
     @Select("""
-                      SELECT c.chatRoomId, c.memberId, c.memberNickName,
-                   (SELECT COUNT(*) FROM chatmessage WHERE chatRoomId = c.chatRoomId AND userRead = 0) AS unreadMessagesCount
+            SELECT c.chatRoomId, c.memberId, c.memberNickName,
+                   (SELECT COUNT(*) 
+                    FROM chatmessage m
+                    WHERE m.chatRoomId = c.chatRoomId 
+                      AND m.userRead = 0 
+                      AND m.memberId <> #{adminId}) AS unreadMessagesCount
             FROM chatroom c
             WHERE c.AssignedAdminId = #{adminId}
-                      """)
+            """)
     List<ChatRoom> getChatRoomWithAssignedAdmin(Integer adminId);
 
 

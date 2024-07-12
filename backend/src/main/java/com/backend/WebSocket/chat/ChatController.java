@@ -58,6 +58,9 @@ public class ChatController {
             String adminExist = chatMapper.getAssignedAdminId(chat.getChatRoomId());
             if (adminExist.equals("none")) {
                 chatMapper.updateAssignedAdmin(chat.getChatRoomId(), chat.getMemberId());
+                chatService.updateAdminOnline(chat.getChatRoomId());
+                chatService.messageRead(chat.getChatRoomId(), chat.getMemberId());
+                notificationController.sendState(chat.getMemberId(), "선택완료");
             } else {
                 chatService.updateAdminOnline(chat.getChatRoomId());
                 chatService.messageRead(chat.getChatRoomId(), chat.getMemberId());
@@ -104,10 +107,11 @@ public class ChatController {
 //                Map<String, Integer> map = new HashMap<>();
 //                map.put("state", 1);
 //                template.convertAndSend(url, map);
-                notificationController.sendState(chatRoom.getChatRoomId(),"어드민 온라인");
+                notificationController.sendState(chatRoom.getChatRoomId(), "어드민 온라인");
             }
 
         } else {
+            System.out.println("안와?>??");
             chatService.updateUserOnline(chatRoom);
             chatService.messageRead(chatRoom.getChatRoomId(), chatRoom.getMemberId());
             Integer id = Integer.valueOf(chatMapper.getAssignedAdminId(chatRoom.getChatRoomId()));
@@ -115,7 +119,7 @@ public class ChatController {
 //            Map<String, Integer> map = new HashMap<>();
 //            map.put("state", 1);
 //            template.convertAndSend(url, map);
-            notificationController.sendState(id,"어드민 온라인");
+            notificationController.sendState(id, "유저 온라인");
         }
 
     }

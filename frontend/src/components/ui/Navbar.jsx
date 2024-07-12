@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Center,
@@ -26,6 +26,7 @@ import { LoginContext } from "./LoginProvider.jsx";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useNotifications } from "../../component/Chat/NotificationProvider.jsx";
+import { ChatIcon, CloseIcon } from "@chakra-ui/icons";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -34,6 +35,19 @@ function Navbar() {
   const account = useContext(LoginContext);
   const {} = useNotifications();
   const [roominfo, setRoomInfo] = useState([]);
+  const [newMessage, setNewMessage] = useState(false);
+  const { notifications, addNotification, removeNotification } =
+    useNotifications();
+
+  useEffect(() => {
+    // notifications 배열의 변화를 감지합니다.
+    notifications.forEach((notification) => {
+      // AdminChatList에서 해당 notification.userId와 일치하는 chatRoomId를 찾습니다.
+      if (notification.senderId > 0) {
+        setNewMessage(true);
+      }
+    });
+  }, [notifications]); // notifications 배열이 변경될 때마다 이 효과를 실행합니다.
 
   const navColor = useColorModeValue(
     "rgba(131, 96, 145, 1)",
@@ -45,7 +59,8 @@ function Navbar() {
   );
 
   function openChat() {
-    console.log("나 어드민인데");
+    removeNotification();
+    setNewMessage(false);
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
       // 토큰이 존재할 때만 API 요청을 보냅니다.
@@ -211,34 +226,57 @@ function Navbar() {
       {!account.isAdmin() && ( // 관리자가 아닐 때만 고정 상자를 표시합니다.
         <Box
           position="fixed"
-          bottom="10"
+          bottom="0"
           right="10"
-          w="100px" // 'width' 대신 'w'를 사용합니다.
-          h="100px" // 'height' 대신 'h'를 사용합니다.
-          bgColor="#f9f9f9" // 'background-color' 대신 'bgColor'를 사용합니다.
-          border="1px solid #ccc" // 오타 수정: 'soild' -> 'solid'
           p="10px" // 'padding' 대신 'p'를 사용합니다.
           zIndex={2}
           cursor={"pointer"}
           onClick={openChat}
+          color="BlackAlpha 500"
         >
-          <Box>NEW</Box>
+          <ChatIcon w={100} h={100} color={navColor} position="relative" />
+          {newMessage ? (
+            <Center position="relative" zIndex={2} bottom="70px">
+              <Text>새로온 메세지</Text>
+            </Center>
+          ) : (
+            <Center position="relative" zIndex={2} bottom="70px">
+              <Text>1:1 문의</Text>
+            </Center>
+          )}
         </Box>
       )}
       {showChat && (
-        <Box
-          position="fixed"
-          bottom="120px"
-          right="10px"
-          w="300px"
-          h="483px"
-          bgColor="white"
-          border="1px solid #ccc"
-          p="10px"
-          zIndex={3}
-        >
-          <ChatWebSocket roomInfo={roominfo} />{" "}
-          {/* 채팅 컴포넌트를 상자에 추가합니다. */}
+        <Box>
+          <CloseIcon
+            color={navColor}
+            w="30px"
+            h="30px"
+            position="fixed"
+            top="calc(99.5vh - 540px)"
+            left="0px"
+            zIndex={4}
+            onClick={() => {
+              setShowChat(false);
+            }}
+          />
+          <Box
+            position="fixed"
+            bottom="50px"
+            right="50px"
+            w="300px"
+            h="475px"
+            bgColor="white"
+            border="1px solid #ccc"
+            zIndex={3}
+          >
+            <ChatWebSocket
+              roomInfo={roominfo}
+              maxHeight="400px"
+              width="100%"
+              autoScroll={false}
+            />
+          </Box>
         </Box>
       )}
     </Box>

@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useNotifications } from "./NotificationProvider.jsx";
 
-export function ChatWebSocket({ roomInfo }) {
+export function ChatWebSocket({ roomInfo, maxHeight, width }) {
   //웹소켓 연결 객체
   const stompClient = useRef(null);
   // 메시지 리스트
@@ -26,6 +26,7 @@ export function ChatWebSocket({ roomInfo }) {
   const [isNewMessage, setIsNewMessage] = useState(false);
   const [newMessage, setNewMessage] = useState("");
   const [myMessage, setMyMessage] = useState("");
+  const [senderName, setSenderName] = useState("");
 
   const { notifications, addNotification, removeNotification } =
     useNotifications();
@@ -43,11 +44,13 @@ export function ChatWebSocket({ roomInfo }) {
           const nowMessage = JSON.parse(message.body);
           setNewMessage(message.body);
           setMyMessage(message.body);
-          console.log("dsd" + nowMessage.memberId);
+          console.log("dsd" + nowMessage.name);
           setMessages((prevMessages) => [...prevMessages, nowMessage]);
           if (nickName === nowMessage.name) {
             setIsNewMessage(false);
           } else {
+            setSenderName(nowMessage.name);
+            console.log("qqqqqqqqqqq=" + nowMessage.name);
             setIsNewMessage(true);
           }
         },
@@ -125,13 +128,24 @@ export function ChatWebSocket({ roomInfo }) {
     });
   }, [roomInfo]);
 
-  const Message = ({ userRead, message, isOwnMessage }) => {
+  const Message = ({ userRead, message, isOwnMessage, nickName2 }) => {
     const align = isOwnMessage ? "flex-end" : "flex-start";
     const bg = useColorModeValue("blue.100", "blue.700");
-    return (
+    return isOwnMessage ? (
       <Flex justifyContent={align} w="100%">
-        <Box ml={2} mr={2} bg={bg} borderRadius="lg" p={2}>
-          <Text color={isOwnMessage ? "white" : "black"}>{message}</Text>
+        {!userRead && (
+          <Text fontSize="sm" color="gray.500">
+            안읽음
+          </Text>
+        )}
+        <Box ml={2} mr={2} bg={bg} borderRadius="lg" p={2} maxW="80%">
+          <Text color="white">{message}</Text>
+        </Box>
+      </Flex>
+    ) : (
+      <Flex justifyContent={align} w="100%">
+        <Box ml={2} mr={2} bg={bg} borderRadius="lg" p={2} maxW="80%">
+          <Text color="white">{message}</Text>
         </Box>
         {!userRead && (
           <Text fontSize="sm" color="gray.500">
@@ -148,10 +162,19 @@ export function ChatWebSocket({ roomInfo }) {
 
   // 스크롤을 아래로 이동시키는 함수
   const scrollToBottom = (type) => {
-    if (type == "s") {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    } else {
-      messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+    if (chatBoxRef.current) {
+      const scrollHeight = chatBoxRef.current.scrollHeight;
+      const height = chatBoxRef.current.clientHeight;
+      const maxScrollTop = scrollHeight - height;
+
+      if (type === "s") {
+        chatBoxRef.current.scrollTo({
+          top: maxScrollTop,
+          behavior: "smooth",
+        });
+      } else {
+        chatBoxRef.current.scrollTop = maxScrollTop;
+      }
     }
     setShowScrollButton(false);
   };
@@ -191,15 +214,18 @@ export function ChatWebSocket({ roomInfo }) {
   //----------------------------------------
 
   return (
-    <Box h="100%">
+    <Box h="100%" w={width}>
       <Box
-        maxH="400px"
-        overflowY="auto"
-        position="absolute"
-        right={0}
-        width="100%"
-        onScroll={handleScroll}
         ref={chatBoxRef}
+        maxH={maxHeight}
+        h={maxHeight}
+        overflowY="auto"
+        position="relative"
+        bottom="0px"
+        right="0px"
+        width="100%"
+        pb={2}
+        onScroll={handleScroll}
       >
         {/* 메시지 리스트 */}
         <VStack spacing={4} align="stretch">
@@ -209,38 +235,37 @@ export function ChatWebSocket({ roomInfo }) {
                 userRead={item.userRead}
                 message={item.message}
                 isOwnMessage={item.memberId == memberId}
+                nickName2={item.name}
               />
             </Box>
           ))}
-          {/* 스크롤을 위한 더미 div */}
-          <div ref={messagesEndRef} />
         </VStack>
       </Box>
       {showScrollButton && (
         <Button
           position="absolute"
           bottom="80px"
-          right="95px"
-          onClick={scrollToBottom("s")}
+          right="10px"
+          onClick={() => scrollToBottom("s")}
         >
           새 메시지 보기
         </Button>
       )}
       {/* 입력 필드와 버튼 */}
       <Flex
-        position="absolute" // 화면 하단에 고정
-        bottom="0" // 하단에 위치
-        left="0" // 왼쪽에 위치
-        right="0" // 오른쪽에 위치
-        p={4} // 패딩 설정
-        bg="white" // 배경색 설정
-        boxShadow="0 -2px 10px rgba(0, 0, 0, 0.1)" // 상단 그림자 효과
+        position="relative"
+        bottom="px"
+        left="0"
+        right="0"
+        p={4}
+        bg="white"
+        boxShadow="0 -2px 10px rgba(0, 0, 0, 0.1)"
       >
         <Input
           type="text"
           value={inputValue}
           onChange={handleInputChange}
-          onKeyDown={handleKeyDown} // 엔터 키 입력 감지
+          onKeyDown={handleKeyDown}
           placeholder="메시지를 입력하세요..."
         />
         <Button ml={2} onClick={sendMessage} colorScheme="blue">

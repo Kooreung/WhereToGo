@@ -16,12 +16,8 @@ export function NotificationProvider({ children }) {
   };
 
   // 알림을 제거하는 함수입니다.
-  const removeNotification = (notificationId) => {
-    setNotifications((prevNotifications) =>
-      prevNotifications.filter(
-        (notification) => notification.id !== notificationId,
-      ),
-    );
+  const removeNotification = () => {
+    setNotifications([]);
   };
 
   // Context의 value로 상태와 함수들을 제공합니다.
