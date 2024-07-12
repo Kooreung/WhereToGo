@@ -10,6 +10,7 @@ import java.util.List;
 
 @Mapper
 public interface ReportMapper {
+    //    신고하기
     @Insert("""
             INSERT INTO report (postId, commentId, reportReason, reportDetailReason, processDate, processorId, createId)
             VALUES (#{postId}, #{commentId}, #{reportReason}, #{reportDetailReason}, #{processDate}, #{processorId}, #{createId})
@@ -39,6 +40,7 @@ public interface ReportMapper {
             """)
     Report selectByReportId(int reportId);
 
+    //신고목록 불러오기
     @Select("""
             SELECT 
                     r.reportId, 
@@ -63,6 +65,7 @@ public interface ReportMapper {
             """)
     List<Report> select(Integer page, Integer offset);
 
+    //신고목록 카운트
     @Select("""
             SELECT COUNT(DISTINCT r.reportId)
             FROM report r
@@ -73,6 +76,7 @@ public interface ReportMapper {
             """)
     Integer countAllSelect();
 
+    //신고 진행여부 업데이트
     @Update("""
             UPDATE report
             SET processYn= #{processYn}, processorId= #{processorId}

@@ -47,9 +47,9 @@ public class ReportController {
         }
     }
 
+    // 신고 진행여부 Controller
     @PutMapping("reportprocess")
     public void reportProcess(@RequestBody Report report, Authentication authentication) {
-        System.out.println("report = " + report);
         reportService.processmodify(report, authentication);
 
     }

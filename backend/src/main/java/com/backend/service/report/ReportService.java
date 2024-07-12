@@ -18,6 +18,7 @@ public class ReportService {
 
     private final ReportMapper reportMapper;
 
+    //신고 게시글 목록 ,페이징
     public Map<String, Object> getReportList(Integer page) {
         Map pageInfo = new HashMap();
 
@@ -53,11 +54,13 @@ public class ReportService {
         return reportMapper.selectByReportId(reportId);
     }
 
+    //신고 하기
     public void saveReport(Report report, Authentication authentication) {
         report.setCreateId(Integer.valueOf(authentication.getName()));
         reportMapper.insertReport(report);
     }
 
+    //신고절차
     public boolean validate(Report report) {
         if (report.getPostId() == null) {
             return false;
@@ -66,6 +69,7 @@ public class ReportService {
         }
     }
 
+    //신고 진행 여부 수정
     public void processmodify(Report report, Authentication authentication) {
         report.setProcessorId(Integer.valueOf(authentication.getName()));
         reportMapper.updateReport(report);
