@@ -261,38 +261,42 @@ export function MemberInfo(props) {
           </ButtonGroup>
         </CardFooter>
       </Card>
-      <Text
-        onClick={onCertifyOpen}
-        cursor={"pointer"}
-        style={{
-          textDecoration: "underline",
-          color: "dodgerblue",
-          textAlign: "right",
-        }}
-      >
-        이메일로 본인인증 하기
-        <Modal isOpen={isCertifyOpen} onClose={onCertifyClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>2차 인증</ModalHeader>
-            <ModalBody>
-              <FormControl>
-                <FormLabel>2차 인증을 위한 이메일을 보내시겠습니까?</FormLabel>
-              </FormControl>
-            </ModalBody>
-            <ModalFooter>
-              <Button
-                isLoading={isLoading}
-                colorScheme={"red"}
-                onClick={handleCertify}
-              >
-                확인
-              </Button>
-              <Button onClick={onCertifyClose}>취소</Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </Text>
+      {!account.isAdmin() && !account.isCertifyUser() && (
+        <Text
+          onClick={onCertifyOpen}
+          cursor={"pointer"}
+          style={{
+            textDecoration: "underline",
+            color: "dodgerblue",
+            textAlign: "right",
+          }}
+        >
+          이메일로 본인인증 하기
+          <Modal isOpen={isCertifyOpen} onClose={onCertifyClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>2차 인증</ModalHeader>
+              <ModalBody>
+                <FormControl>
+                  <FormLabel>
+                    2차 인증을 위한 이메일을 보내시겠습니까?
+                  </FormLabel>
+                </FormControl>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  isLoading={isLoading}
+                  colorScheme={"red"}
+                  onClick={handleCertify}
+                >
+                  확인
+                </Button>
+                <Button onClick={onCertifyClose}>취소</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        </Text>
+      )}
     </Box>
   );
 }
