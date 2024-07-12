@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Box, Text, UnorderedList } from "@chakra-ui/react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -27,14 +27,14 @@ const loadKakaoMapScript = (appKey, libraries = []) => {
   });
 };
 
-const KakaoMapSearch = () => {
+const KakaoMapSearch = ({ selectedPlace }) => {
   const { postId } = useParams();
   const mapRef = useRef(null);
   const kakaoMapAppKey = import.meta.env.VITE_KAKAO_MAP_APP_KEY;
   const [places, setPlaces] = useState([]);
   const [map, setMap] = useState(null);
   const [ps, setPs] = useState(null);
-
+  const [selected, setSelected] = useState(selectedPlace);
   const [markers, setMarkers] = useState([]);
   const [polylines, setPolylines] = useState([]);
   const [distanceOverlay, setDistanceOverlay] = useState(null);
@@ -78,9 +78,16 @@ const KakaoMapSearch = () => {
   // 선택한 장소에 따른 커스텀 오버레이 생성
   useEffect(() => {
     if (map !== null && places.length > 0) {
+      markers.forEach((marker) => marker.setMap(null));
       const bounds = new window.kakao.maps.LatLngBounds();
       const postMarkers = places.map((place, index) => {
-        let content = renderToString(<PostSelectedPlaceMarker index={index} />);
+        const content = renderToString(
+          <PostSelectedPlaceMarker
+            index={index}
+            selected={index === selectedPlace}
+          />,
+        );
+
         const customMarker = new window.kakao.maps.CustomOverlay({
           position: new window.kakao.maps.LatLng(
             place.latitude,
@@ -98,12 +105,32 @@ const KakaoMapSearch = () => {
     }
   }, [map, places]);
 
+  // 선택된 장소에 따라 스타일 및 바운드 업데이트
+  useEffect(() => {
+    if (map !== null && markers.length > 0) {
+      markers.forEach((marker, index) => {
+        const content = renderToString(
+          <PostSelectedPlaceMarker
+            index={index}
+            selected={index === selectedPlace}
+          />,
+        );
+        marker.setContent(content);
+      });
+
+      if (selectedPlace !== null && markers[selectedPlace]) {
+        const bounds = new window.kakao.maps.LatLngBounds();
+        bounds.extend(markers[selectedPlace].getPosition());
+        map.setBounds(bounds);
+      }
+    }
+  }, [selectedPlace]);
+
   // 선택한 장소에 따른 폴리라인과 선의 거리 계산 해주는 오버레이 표기
   useEffect(() => {
     if (map) {
       polylines.forEach((polyline) => polyline.setMap(null));
 
-      const bounds = new window.kakao.maps.LatLngBounds();
       const newPolylines = places.map((place, index) => {
         if (index === places.length - 1) return null;
         const path = [
@@ -134,9 +161,6 @@ const KakaoMapSearch = () => {
         );
         showPartDistance(partContent, path[1]);
 
-        bounds.extend(path[0]);
-        bounds.extend(path[1]);
-
         if (index === places.length - 2) {
           const content = renderToString(<DistanceInfo distance={distance} />);
           showDistance(content, path[1]);
@@ -145,7 +169,6 @@ const KakaoMapSearch = () => {
       });
 
       setPolylines(newPolylines.filter((polyline) => polyline !== null));
-      map.setBounds(bounds);
     }
   }, [map, places]);
 
@@ -227,21 +250,20 @@ const KakaoMapSearch = () => {
   }
 
   // 해당 인덱스의 마커
-  function PostSelectedPlaceMarker({ index }) {
-    return (
-      <Box
-        style={{
-          borderRadius: "100%",
-          backgroundColor: "white",
-          color: "black",
-          paddingLeft: "8px",
-          paddingRight: "8px",
-          boxShadow: "0 0 0 4px #836091, 0 0 0 8px #D8B7E5",
-        }}
-      >
-        {index + 1}
-      </Box>
+  function PostSelectedPlaceMarker({ index, selected }) {
+    const markerStyle = useMemo(
+      () => ({
+        borderRadius: "100%",
+        paddingLeft: "8px",
+        paddingRight: "8px",
+        boxShadow: "0 0 0 4px #836091, 0 0 0 8px #D8B7E5",
+        backgroundColor: selected ? "#ffdc91" : "white",
+        color: selected ? "#836091" : "black",
+        transform: selected ? "scale(1.2)" : "scale(1.0)",
+      }),
+      [selected],
     );
+    return <Box style={markerStyle}>{index + 1}</Box>;
   }
 
   function DistanceInfo({ distance }) {

@@ -117,6 +117,7 @@ public class PostService {
         }
     }
 
+    // 게시글 목록 서비스 전 위치 값 전송
     public Map<String, Object> getPostListByLocation(Double latitude, Double longitude) {
         Map<String, Object> pageInfo = new HashMap<>();
         List<Post> posts = postMapper.selectAllPost(0, null, null, null, null, latitude, longitude);
@@ -225,7 +226,6 @@ public class PostService {
         Map pageInfo = new HashMap();
 
         Integer countAllPost = postMapper.countAllLikePost(memberId, searchType, searchKeyword);
-        System.out.println(countAllPost);
         Integer offset = (page - 1) * 5;
         Integer lastPageNumber = (countAllPost - 1) / 5 + 1;
         Integer leftPageNumber = (page - 1) / 10 * 10 + 1;

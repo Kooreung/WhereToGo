@@ -63,7 +63,6 @@ public class WebCrawlerService {
                         if (!entryIframes.isEmpty()) {
                             // entryIframe이 있으면 해당 프레임으로 전환
                             wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("entryIframe"));
-                            System.out.println("엔트리야~");
 
                             WebElement imgElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.fNygA > a.place_thumb img")));
                             String imgSrcValue = imgElement.getAttribute("src");
@@ -81,7 +80,6 @@ public class WebCrawlerService {
                             if (!searchIframes.isEmpty()) {
                                 // searchIframe이 있으면 해당 프레임으로 전환
                                 wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt("searchIframe"));
-                                System.out.println("서치야~");
 
                                 WebElement imgElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("ul > li:first-child a.place_thumb img")));
                                 String imgSrcValue = imgElement.getAttribute("src");

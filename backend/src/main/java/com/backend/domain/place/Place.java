@@ -19,7 +19,6 @@ public class Place {
     private Integer postId;
     private String picurl;
     private Integer countPlace;
-    private String addressCountry;
-    private String addressCity;
+    private String addressCode;
 }
 

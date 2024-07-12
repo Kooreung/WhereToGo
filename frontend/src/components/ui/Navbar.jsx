@@ -27,23 +27,17 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
 function Navbar() {
-  const navigate = useNavigate();
-  const { colorMode, toggleColorMode } = useColorMode();
-  const [showChat, setShowChat] = useState(false); //
   const account = useContext(LoginContext);
+  const navigate = useNavigate();
+  const [showChat, setShowChat] = useState(false); //
   const [roominfo, setRoomInfo] = useState([]);
-
+  const { colorMode, toggleColorMode } = useColorMode();
   const navColor = useColorModeValue(
     "rgba(131, 96, 145, 1)",
     "rgba(216, 183, 229, 1)",
   );
-  const hColor = useColorModeValue(
-    "rgba(216, 183, 229, 0.2)",
-    "rgba(131, 96, 145, 0.2)",
-  );
 
   function openChat() {
-    console.log("나 어드민인데");
     const accessToken = localStorage.getItem("accessToken");
     if (accessToken) {
       // 토큰이 존재할 때만 API 요청을 보냅니다.

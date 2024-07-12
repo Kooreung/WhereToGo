@@ -43,26 +43,27 @@ export function PostEdit() {
     onClose: onModalCloseOfCancel,
   } = useDisclosure();
 
-  useEffect(() => {
-    axios.get(`/api/post/${postId}`).then((res) => {
+  const fetchPostData = async () => {
+    try {
+      const res = await axios.get(`/api/post/${postId}`);
       setPost(res.data.post);
-    });
-  }, []);
+    } catch (error) {
+      console.error("Failed to fetch post data", error);
+    }
+  };
 
-  // 게시글 번호 확인
-  if (post === null || post === undefined) {
-    return <Spinner />;
-  }
+  useEffect(() => {
+    fetchPostData();
+  }, [postId]);
 
-  // 저장 버튼 클릭 시
-  function handleClickSave() {
+  const validatePost = () => {
     if (post.title.trim().length === 0) {
       toast({
         status: "error",
         position: "bottom",
         description: "제목을 다시 확인해주세요.",
       });
-      return;
+      return false;
     }
     if (post.content.trim().length <= 7) {
       toast({
@@ -70,51 +71,52 @@ export function PostEdit() {
         position: "bottom",
         description: "내용을 다시 확인해주세요.",
       });
-      return;
+      return false;
     }
+    return true;
+  };
+
+  // 저장 버튼 클릭 시
+  const handleClickSave = async () => {
+    if (!validatePost()) return;
+
     setLoading(true);
-    axios
-      .putForm(`/api/post/edit`, {
+    try {
+      await axios.putForm(`/api/post/edit`, {
         postId: post.postId,
         title: post.title,
         content: post.content,
-      })
-      .then(() => {
-        navigate(`/post/${postId}`);
+      });
+      navigate(`/post/${postId}`);
+      toast({
+        status: "success",
+        position: "bottom",
+        description: "게시글이 수정되었습니다.",
+      });
+    } catch (err) {
+      const status = err.response?.status;
+      if (status === 400 || status === 401) {
         toast({
-          status: "success",
+          status: "error",
           position: "bottom",
-          description: "게시글이 수정되었습니다.",
+          description: "게시글 수정에 실패하였습니다.",
         });
-      })
-      .catch((err) => {
-        if (err.response.status === 400) {
-          toast({
-            status: "error",
-            position: "bottom",
-            description: "게시글 수정에 실패하였습니다.",
-          });
-        }
-        if (err.response.status === 401) {
-          toast({
-            status: "error",
-            position: "bottom",
-            description: "게시글 수정에 실패하였습니다.",
-          });
-        }
-      })
-      .finally(() => onModalCloseOfSave(), setLoading(false));
-  }
+      }
+    } finally {
+      setLoading(false);
+      onModalCloseOfSave();
+    }
+  };
 
   // 취소 버튼 클릭 시
-  function handleClickCancel() {
+  const handleClickCancel = () => {
     navigate(`/post/${postId}`);
     toast({
       status: "info",
       position: "bottom",
       description: "게시글 수정이 취소되었습니다.",
     });
-  }
+  };
 
   const handleContentChange = (content) => {
     setPost({ ...post, content });
@@ -126,6 +128,10 @@ export function PostEdit() {
         <Lobby />;
       </Box>
     );
+  }
+  // 게시글 번호 확인
+  if (post === null || post === undefined) {
+    return <Spinner />;
   }
 
   return (

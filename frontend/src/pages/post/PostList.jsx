@@ -38,24 +38,14 @@ import defaultImage from "../../assets/img/unknownImage.png";
 import HeadingVariant from "../../components/ui/Heading/HeadingVariant.jsx";
 import ContentParser from "../../utils/ContentParser.jsx";
 import ButtonCircle from "../../components/ui/Button/ButtonCircle.jsx";
-import { faComment } from "@fortawesome/free-regular-svg-icons";
 import ButtonOutline from "../../components/ui/Button/ButtonOutline.jsx";
+import { faComment } from "@fortawesome/free-regular-svg-icons";
 
 function PostList() {
   const navigate = useNavigate();
   const account = useContext(LoginContext);
-  const [error, setError] = useState(null);
   const [postList, setPostList] = useState([]);
   const [pageInfo, setPageInfo] = useState({});
-  const [selectList, setSelectList] = useState("가까운순");
-  const listSlider =
-    selectList === "가까운순"
-      ? "closely"
-      : selectList === "최신순"
-        ? "recently"
-        : [];
-  const [nowLatitude, setNowLatitude] = useState(37.52499981233085);
-  const [nowLongitude, setNowLongitude] = useState(126.70531779795746);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchParams] = useSearchParams();
   const [searchType, setSearchType] = useState("all");
@@ -71,50 +61,49 @@ function PostList() {
     "rgba(131, 96, 145, 0.2)",
   );
 
+  const fetchPosts = async (latitude, longitude) => {
+    try {
+      const response = await axios.get(`/api/post/list`, {
+        params: {
+          page: searchParams.get("page") || 1,
+          listSlider: searchParams.get("listSlider") || "closely",
+          type: searchParams.get("type") || "all",
+          keyword: searchParams.get("keyword") || "",
+          region: searchParams.get("region") || "",
+          lat: latitude,
+          lng: longitude,
+        },
+      });
+      // 서버에서 받은 데이터 설정
+      setPostList(response.data.postList);
+      setPageInfo(response.data.pageInfo);
+    } catch (error) {
+      console.error("요청 오류 발생", error);
+    }
+  };
+
+  const updateSearchSettings = () => {
+    setSearchType(searchParams.get("type") || "all");
+    setSearchKeyword(searchParams.get("keyword") || "");
+    setSearchRegion(searchParams.get("region") || "");
+  };
+
   useEffect(() => {
     // 위치 정보 가져오기
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
-
-        // 위치 정보 설정
-        setNowLatitude(latitude);
-        setNowLongitude(longitude);
-
-        // axios 요청 보내기
-        const fetchPosts = async () => {
-          try {
-            const response = await axios.get(`/api/post/list`, {
-              params: {
-                page: searchParams.get("page") || 1,
-                listSlider: searchParams.get("listSlider") || "closely",
-                type: searchParams.get("type") || "all",
-                keyword: searchParams.get("keyword") || "",
-                region: searchParams.get("region") || "",
-                lat: nowLatitude,
-                lng: nowLongitude,
-              },
-            });
-            // 서버에서 받은 데이터 설정
-            setPostList(response.data.postList);
-            setPageInfo(response.data.pageInfo);
-          } catch (error) {
-            console.error("Error fetching posts:", error);
-          }
-        };
-
-        fetchPosts();
+        fetchPosts(latitude, longitude);
       },
-      (error) => {
-        setError(error.message);
+      () => {
+        const defaultLatitude = 37.52499981233085;
+        const defaultLongitude = 126.70531779795746;
+        fetchPosts(defaultLatitude, defaultLongitude);
       },
     );
 
-    // searchParams 변경에 따라 setSearchType, setSearchKeyword 설정
-    setSearchType(searchParams.get("type") || "all");
-    setSearchKeyword(searchParams.get("keyword") || "");
-    setSearchRegion(searchParams.get("region") || "");
+    updateSearchSettings();
   }, [searchParams, setCurrentPage]);
 
   // 페이지 수
@@ -128,28 +117,36 @@ function PostList() {
     if (!searchKeyword.trim()) {
       return;
     }
-    navigate(`/post/list?type=${searchType}&keyword=${searchKeyword}`);
+    navigateToSearchResults();
   }
 
   // 검색 창 Enter 시 URL
   function handleSearchKeyDown(e) {
-    if (e.key === "Enter") {
-      if (!searchKeyword.trim()) {
-        return;
-      }
-      navigate(`/post/list?type=${searchType}&keyword=${searchKeyword}`);
+    if (e.key === "Enter" && searchKeyword.trim()) {
+      navigateToSearchResults();
     }
   }
 
   // 페이지 버튼 클릭 시
   function handlePageButtonClick(pageNumber) {
     searchParams.set("page", pageNumber);
-    navigate(`/post/list?${searchParams}`);
+    navigateWithSearchParams();
   }
 
+  // 슬라이더 선택 시
   function handleSelectList(selectListStyle) {
     searchParams.set("listSlider", selectListStyle);
-    navigate(`/post/list?${searchParams}`);
+    navigateWithSearchParams();
+  }
+
+  // 검색 결과로 이동
+  function navigateToSearchResults() {
+    navigate(`/post/list?type=${searchType}&keyword=${searchKeyword}`);
+  }
+
+  // searchParams를 사용하여 페이지 이동
+  function navigateWithSearchParams() {
+    navigate(`/post/list?${searchParams.toString()}`);
   }
 
   return (

@@ -44,57 +44,118 @@ import HeadingVariant from "../../components/ui/Heading/HeadingVariant.jsx";
 import Lobby from "../lobby/Lobby.jsx";
 
 export function PostView() {
+  const account = useContext(LoginContext);
+  const [authType, setAuthType] = useState("");
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const [place, setPlace] = useState([]);
   const [like, setLike] = useState({ like: false, count: 0 });
   const [comment, setComment] = useState({ count: 0 });
+  const [isLikeLoading, setIsLikeLoading] = useState(false);
+  const [isTransition, setIsTransition] = useState(false);
+  const [positionX, setPositionX] = useState(0);
+  const [selectedPlace, setSelectedPlace] = useState(0);
+  const navigate = useNavigate();
+  const toast = useToast();
+  const dataRef = useRef(null);
   const navColor = useColorModeValue(
     "rgba(216, 183, 229, 1)",
     "rgba(131, 96, 145, 1)",
   );
-
-  const [isLikeLoading, setIsLikeLoading] = useState(false);
-  const [isTransition, setIsTransition] = useState(false);
-  const account = useContext(LoginContext);
-  const navigate = useNavigate();
-  const dataRef = useRef(null);
-  const [positionX, setPositionX] = useState(0);
-  const [authType, setAuthType] = useState("");
-  const toast = useToast();
-
   const {
     isOpen: isModalOpenOfDelete,
     onOpen: onModalOpenOfDelete,
     onClose: onModalCloseOfDelete,
   } = useDisclosure();
 
+  const fetchPostData = async () => {
+    try {
+      const res = await axios.get(`/api/post/${postId}`);
+      setPost(res.data.post);
+      setLike(res.data.like);
+      setComment({ count: res.data.commentCount });
+      setAuthType(res.data.author);
+    } catch (err) {
+      navigate("/post/list");
+      if (err.response?.status === 404) {
+        toast({
+          status: "error",
+          description: "해당 게시물이 존재하지 않습니다.",
+          position: "bottom",
+        });
+      }
+    }
+  };
+
+  const fetchPlaceData = async () => {
+    try {
+      const res = await axios.get(`/api/post/${postId}/place`);
+      setPlace(res.data);
+    } catch (error) {
+      console.error("Failed to fetch place data", error);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get(`/api/post/${postId}`)
-      .then((res) => {
-        setPost(res.data.post);
-        setLike(res.data.like);
-        setComment({ count: res.data.commentCount });
-        setAuthType(res.data.author);
-      })
-      .catch((err) => {
-        navigate("/post/list");
-        if (err.response.status === 404) {
-          toast({
-            status: "error",
-            description: "해당 게시물이 존재하지 않습니다.",
-            position: "bottom",
-          });
-        }
-      });
+    fetchPostData();
   }, [isLikeLoading, isTransition]);
 
   useEffect(() => {
-    axios.get(`/api/post/${postId}/place`).then((res) => {
-      setPlace(res.data);
-    });
+    fetchPlaceData();
   }, []);
+
+  // 게시글 좋아요 클릭 시
+  const handleLikeCount = async () => {
+    if (!account.isLoggedIn()) {
+      return;
+    }
+    setIsLikeLoading(true);
+    try {
+      const res = await axios.put("/api/post/like", { postId: post.postId });
+      setLike(res.data);
+    } catch (error) {
+      console.error("Failed to like post", error);
+    } finally {
+      setIsLikeLoading(false);
+    }
+  };
+
+  // 게시글 삭제 클릭 시
+  const handleClickDelete = async () => {
+    try {
+      await axios.delete(`/api/post/${postId}`);
+      navigate(`/post/list`);
+      toast({
+        status: "success",
+        position: "bottom",
+        description: "게시글이 삭제되었습니다.",
+      });
+    } catch (error) {
+      toast({
+        status: "error",
+        position: "bottom",
+        description: "게시글 삭제를 실패하였습니다.",
+      });
+    } finally {
+      onModalCloseOfDelete();
+    }
+  };
+
+  const handleMoveLeft = () => {
+    setPositionX((prev) => Math.min(prev + 520, 0));
+    if (selectedPlace > 0) {
+      setSelectedPlace(selectedPlace - 1);
+    }
+  };
+
+  const handleMoveRight = () => {
+    const flexWidth = dataRef.current.scrollWidth;
+    const containerWidth = dataRef.current.parentElement.offsetWidth;
+    setPositionX((prev) => Math.max(prev - 520, containerWidth - flexWidth));
+    if (selectedPlace < place.length - 1) {
+      setSelectedPlace(selectedPlace + 1);
+    }
+  };
 
   // 게시글 번호 확인
   if (post === null || post === undefined) {
@@ -103,62 +164,6 @@ export function PostView() {
 
   if (post.postId === null) {
     return <Lobby />;
-  }
-
-  // 게시글 좋아요 클릭 시
-  function handleLikeCount() {
-    if (!account.isLoggedIn()) {
-      return;
-    }
-    setIsLikeLoading(true);
-    axios
-      .put("/api/post/like", { postId: post.postId })
-      .then((res) => {
-        setLike(res.data);
-      })
-      .catch(() => {})
-      .finally(() => {
-        setIsLikeLoading(false);
-      });
-  }
-
-  // 게시글 삭제 클릭 시
-  function handleClickDelete() {
-    axios
-      .delete(`/api/post/${postId}`)
-      .then(() => {
-        navigate(`/post/list`);
-        toast({
-          status: "success",
-          position: "bottom",
-          description: "게시글이 삭제되었습니다.",
-        });
-      })
-      .catch(() => {
-        toast({
-          status: "error",
-          position: "bottom",
-          description: "게시글 삭제를 실패하였습니다.",
-        });
-      })
-      .finally(() => {
-        onModalCloseOfDelete();
-      });
-  }
-
-  function handleMoveLeft() {
-    setPositionX((prev) => Math.min(prev + 520, 0));
-  }
-
-  function handleMoveRight() {
-    const flexWidth = dataRef.current.scrollWidth;
-    const containerWidth = dataRef.current.parentElement.offsetWidth;
-    setPositionX((prev) => Math.max(prev - 520, containerWidth - flexWidth));
-  }
-
-  function handleSelectInfo(place, index) {
-    console.log(index);
-    console.log(place);
   }
 
   return (
@@ -222,7 +227,7 @@ export function PostView() {
             my={"2rem"}
             borderRadius={"1rem"}
           >
-            <MapView />
+            <MapView selectedPlace={selectedPlace} />
           </Box>
 
           <Flex alignItems={"center"} gap={"1rem"}>
@@ -244,11 +249,7 @@ export function PostView() {
                   }}
                 >
                   {place.map((place, index) => (
-                    <Box
-                      w={"100%"}
-                      key={index}
-                      onMouseEnter={() => handleSelectInfo(place, index)}
-                    >
+                    <Box w={"100%"} key={index}>
                       <Link
                         href={place.placeUrl}
                         target="_blank"
