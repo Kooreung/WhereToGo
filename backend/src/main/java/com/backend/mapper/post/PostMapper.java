@@ -40,6 +40,7 @@ public interface PostMapper {
                    m.nickname, m.memberid,
                    pl.addresscode,
                    plpic.picurl,
+                r.processYn,r.reportdetailreason,
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l.memberid) likeCount,
                    (6371 * acos(cos(radians(#{latitude})) * cos(radians(pl.latitude)) * cos(radians(pl.longitude) - radians(#{longitude})) + sin(radians(#{latitude})) * sin(radians(pl.latitude)))) AS distance
@@ -49,6 +50,7 @@ public interface PostMapper {
                         LEFT JOIN likes l ON p.postid = l.postid
                         LEFT JOIN place pl ON p.postid = pl.postid
                         LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
+                                        LEFT JOIN report r ON r.postid=p.postid
             <where>
                 a.authtype != 'admin'
                 <if test="searchType != null">

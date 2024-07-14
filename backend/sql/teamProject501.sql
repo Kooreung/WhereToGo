@@ -282,3 +282,18 @@ FROM report r
          LEFT JOIN comment c ON c.commentId = r.commentId
          LEFT JOIN member creator ON creator.memberId = r.createId
          LEFT JOIN member processor ON processor.memberId = r.processorId;
+
+SELECT p.postid, p.title, p.content, p.createdate, p.view,
+       m.nickname, m.memberid,
+       pl.addresscode,
+       plpic.picurl,r.processYn,r.repostdetailreason
+
+FROM post p JOIN member m ON p.memberid = m.memberid
+            JOIN authority a ON p.memberid = a.memberid
+            LEFT JOIN comment c ON p.postid = c.postid
+            LEFT JOIN likes l ON p.postid = l.postid
+            LEFT JOIN place pl ON p.postid = pl.postid
+            LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
+            JOIN report r ON r.postid=p.postid
+WHERE a.authtype != 'admin'
+GROUP BY p.postid;
