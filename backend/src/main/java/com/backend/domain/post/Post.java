@@ -23,5 +23,5 @@ public class Post {
     private String banner;
     private String profileName;
     private String processYn;
-    private String reportDetailReason;
+    private String reportReason;
 }

@@ -21,15 +21,24 @@ public interface PostMapper {
 
     // 게시글 조회 매퍼
     @Select("""
-            SELECT p.postid,p.title,p.content,p.createdate,p.view,p.memberid,p.mdpick,
-                   m.nickname,
-                   COUNT(DISTINCT c.commentid) commentCount,
-                   COUNT(DISTINCT l.memberid)  likeCount
-            FROM post p
-                     JOIN member m ON p.memberid = m.memberid
-                     LEFT JOIN comment c ON p.postid = c.postid
-                     LEFT JOIN likes l ON p.postid = l.postid
-            WHERE p.postid = #{postId}
+                        SELECT p.postid,p.title,p.content,p.createdate,p.view,p.memberid,p.mdpick,
+                               m.nickname, r.processYn,r.reportReason,
+                               COUNT(DISTINCT c.commentid) commentCount,
+                               COUNT(DISTINCT l.memberid)  likeCount
+                        FROM post p
+                                 JOIN member m ON p.memberid = m.memberid
+                                 LEFT JOIN comment c ON p.postid = c.postid
+                                 LEFT JOIN likes l ON p.postid = l.postid
+            LEFT JOIN (
+                SELECT r1.*
+                FROM report r1
+                         INNER JOIN (
+                    SELECT postid, MAX(reportid) AS max_reportid
+                    FROM report
+                    GROUP BY postid
+                ) r2 ON r1.postid = r2.postid AND r1.reportid = r2.max_reportid
+            ) r ON p.postid = r.postid
+                        WHERE p.postid = #{postId}
             """)
     Post selectByPostId(Integer postId);
 
@@ -40,17 +49,26 @@ public interface PostMapper {
                    m.nickname, m.memberid,
                    pl.addresscode,
                    plpic.picurl,
-                r.processYn,r.reportdetailreason,
+                r.processYn,r.reportReason,
                    COUNT(DISTINCT c.commentid) commentCount,
                    COUNT(DISTINCT l.memberid) likeCount,
                    (6371 * acos(cos(radians(#{latitude})) * cos(radians(pl.latitude)) * cos(radians(pl.longitude) - radians(#{longitude})) + sin(radians(#{latitude})) * sin(radians(pl.latitude)))) AS distance
-            FROM post p JOIN member m ON p.memberid = m.memberid
-                        JOIN authority a ON p.memberid = a.memberid
-                        LEFT JOIN comment c ON p.postid = c.postid
-                        LEFT JOIN likes l ON p.postid = l.postid
-                        LEFT JOIN place pl ON p.postid = pl.postid
-                        LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
-                                        LEFT JOIN report r ON r.postid=p.postid
+            FROM post p
+                     JOIN member m ON p.memberid = m.memberid
+                     JOIN authority a ON p.memberid = a.memberid
+                     LEFT JOIN comment c ON p.postid = c.postid
+                     LEFT JOIN likes l ON p.postid = l.postid
+                     LEFT JOIN place pl ON p.postid = pl.postid
+                     LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
+                     LEFT JOIN (
+                SELECT r1.*
+                FROM report r1
+                         INNER JOIN (
+                    SELECT postid, MAX(reportid) AS max_reportid
+                    FROM report
+                    GROUP BY postid
+                ) r2 ON r1.postid = r2.postid AND r1.reportid = r2.max_reportid
+            ) r ON p.postid = r.postid
             <where>
                 a.authtype != 'admin'
                 <if test="searchType != null">
