@@ -105,7 +105,7 @@ export function ReportList() {
           status: "success",
           position: "bottom",
           isClosable: true,
-          description: "처리 완료",
+          description: "처리완료",
         });
         onClose();
         navigate(`/post/${selectedReport.postId}`);
@@ -115,7 +115,7 @@ export function ReportList() {
           status: "error",
           isClosable: true,
           position: "bottom",
-          description: "처리 실패",
+          description: "처리실패",
         });
         onClose();
       });

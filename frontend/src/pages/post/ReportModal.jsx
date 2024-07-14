@@ -11,6 +11,7 @@ import {
   RadioGroup,
   Stack,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import axios from "axios";
@@ -18,6 +19,7 @@ import axios from "axios";
 export function ReportModal({ isOpen, onClose, onOpen, postId }) {
   const [reportReason, setReportReason] = useState("1"); // 기본값 설정
   const [detailReason, setDetailReason] = useState("");
+  const toast = useToast();
 
   function handleSubmitReport() {
     const reason =
@@ -40,12 +42,21 @@ export function ReportModal({ isOpen, onClose, onOpen, postId }) {
         reportDetailReason: detailReason,
       })
       .then((response) => {
-        console.log("신고가 접수되었습니다.");
+        toast({
+          status: "success",
+          position: "bottom",
+          isClosable: true,
+          description: "신고완료",
+        });
         onClose(); // 모달 닫기
       })
       .catch((error) => {
-        console.error("신고 접수 중 오류가 발생했습니다.", error);
-        // 오류 처리 로직 추가
+        toast({
+          status: "error",
+          isClosable: true,
+          description: "신고실패",
+          position: "bottom",
+        });
       });
   }
 
