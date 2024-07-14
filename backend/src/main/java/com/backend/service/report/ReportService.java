@@ -74,4 +74,8 @@ public class ReportService {
         report.setProcessorId(Integer.valueOf(authentication.getName()));
         reportMapper.updateReport(report);
     }
+
+    public void deleteByReportId(Integer reportId) {
+        reportMapper.deleteReport(reportId);
+    }
 }

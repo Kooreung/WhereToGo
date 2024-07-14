@@ -39,7 +39,7 @@ public class CommentController {
         if (service.hasMemberIdAccess(comment, authentication)) {
             service.commentEdit(comment);
         } else {
-            throw new AccessDeniedException("Access denied");
+            throw new AccessDeniedException("실패");
         }
     }
 

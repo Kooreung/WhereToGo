@@ -36,12 +36,15 @@ import {
   faAngleRight,
   faAnglesLeft,
   faAnglesRight,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
+import ButtonCircle from "../../components/ui/Button/ButtonCircle.jsx";
 
 export function ReportList() {
   const navigate = useNavigate();
   const [reportList, setReportList] = useState([]);
   const [selectedReport, setSelectedReport] = useState(null);
+  const [reportIdToDelete, setReportIdToDelete] = useState(null); // 삭제할 리포트 ID 상태 추가
   const [searchParams, setSearchParams] = useSearchParams();
   const [pageInfo, setPageInfo] = useState({});
   const hColor = useColorModeValue(
@@ -51,6 +54,11 @@ export function ReportList() {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [processYn, setProcessYn] = useState();
   const toast = useToast();
+  const {
+    isOpen: isDeleteReportModalOpen,
+    onOpen: onDeleteReportModalOpen,
+    onClose: onDeleteReportModalClose,
+  } = useDisclosure();
 
   useEffect(() => {
     axios.get(`/api/report/recordlist?${searchParams}`).then((res) => {
@@ -78,6 +86,7 @@ export function ReportList() {
     whiteSpace: "nowrap",
   };
 
+  //신고 사유 모달 보기
   const handleRowClick = (report) => {
     setSelectedReport(report);
     onOpen();
@@ -112,6 +121,33 @@ export function ReportList() {
       });
   }
 
+  //신고 삭제
+  function handleReportDelete(reportId) {
+    axios
+      .delete(`/api/report/${reportId}`)
+      .then((res) => {
+        setReportList(
+          reportList.filter((report) => report.reportId !== reportId),
+        );
+        toast({
+          status: "success",
+          position: "bottom",
+          isClosable: true,
+          description: "삭제 완료",
+        });
+        onDeleteReportModalClose();
+      })
+      .catch(() => {
+        toast({
+          status: "error",
+          isClosable: true,
+          position: "bottom",
+          description: "삭제 실패",
+        });
+        onDeleteReportModalClose();
+      });
+  }
+
   return (
     <>
       <Box mb={"2rem"}>
@@ -132,6 +168,7 @@ export function ReportList() {
                 <Th w={"10%"}>신고자</Th>
                 <Th w={"10%"}>처리여부</Th>
                 <Th w={"10%"}>처리자</Th>
+                <Th w={"10%"}>관리</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -153,14 +190,40 @@ export function ReportList() {
                       : "삭제된 게시글입니다"}
                   </Td>
                   <Td w={"20%"}>{report.reportReason}</Td>
-
                   <Td w={"10%"}>{report.creatorName}</Td>
                   <Td w={"10%"}>{report.processYn}</Td>
                   <Td w={"10%"}>{report.processorName}</Td>
+                  <Td w={"10%"}>
+                    <ButtonCircle
+                      onClick={(e) => {
+                        e.stopPropagation(); // 이벤트 버블링 방지
+                        onDeleteReportModalOpen();
+                        setReportIdToDelete(report.reportId);
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </ButtonCircle>
+                  </Td>
                 </Tr>
               ))}
             </Tbody>
           </Table>
+          <Modal
+            isOpen={isDeleteReportModalOpen}
+            onClose={onDeleteReportModalClose}
+          >
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>삭제 확인</ModalHeader>
+              <ModalBody>삭제하시겠습니까?</ModalBody>
+              <ModalFooter>
+                <Button onClick={() => handleReportDelete(reportIdToDelete)}>
+                  확인
+                </Button>
+                <Button onClick={onDeleteReportModalClose}>취소</Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
           {/*페이징*/}
           <Box mt={4}>
             <Center>

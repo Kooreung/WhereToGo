@@ -1,10 +1,7 @@
 package com.backend.mapper.report;
 
 import com.backend.domain.report.Report;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -84,4 +81,9 @@ public interface ReportMapper {
             WHERE reportId= #{reportId}
             """)
     void updateReport(Report report);
+
+    @Delete("""
+            DELETE FROM report WHERE reportId= #{reportId}
+            """)
+    void deleteReport(Integer reportId);
 }

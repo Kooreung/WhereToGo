@@ -51,6 +51,11 @@ public class ReportController {
     @PutMapping("reportprocess")
     public void reportProcess(@RequestBody Report report, Authentication authentication) {
         reportService.processmodify(report, authentication);
+    }
 
+    @DeleteMapping("{reportId}")
+    public void deleteById(@PathVariable Integer reportId) {
+        reportService.deleteByReportId(reportId);
+        System.out.println("reportId = " + reportId);
     }
 }
