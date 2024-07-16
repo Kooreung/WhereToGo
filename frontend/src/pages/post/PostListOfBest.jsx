@@ -70,7 +70,9 @@ export function PostListOfBest() {
                   textOverflow={"ellipsis"}
                   whiteSpace={"nowrap"}
                 >
-                  {post.title}
+                  {post.processYn === "P"
+                    ? "블라인드 처리된 게시글"
+                    : post.title}
                 </HeadingVariant>
               </Box>
               <Flex justifyContent={"space-between"} mt={"1rem"}>
@@ -135,7 +137,9 @@ export function PostListOfBest() {
                   textOverflow={"ellipsis"}
                   whiteSpace={"nowrap"}
                 >
-                  {post.title}
+                  {post.processYn === "P"
+                    ? "블라인드 처리된 게시글"
+                    : post.title}
                 </HeadingVariant>
               </Box>
             </Box>
