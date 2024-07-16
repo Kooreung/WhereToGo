@@ -45,7 +45,7 @@ function Footer() {
                 },
               }}
             >
-              회원 & 배너 관리
+              관리메뉴
             </Box>
           )}
         </Flex>

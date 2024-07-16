@@ -13,11 +13,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faComments,
   faMoon,
   faRightFromBracket,
   faRightToBracket,
   faSun,
   faUserPlus,
+  faUsersGear,
 } from "@fortawesome/free-solid-svg-icons";
 import homeLogo from "../../assets/img/logo.png";
 import { faAddressCard } from "@fortawesome/free-regular-svg-icons";
@@ -25,7 +27,7 @@ import ChatWebSocket from "../Chat/ChatWebSocket.jsx";
 import { LoginContext } from "./LoginProvider.jsx";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { useNotifications } from "../../component/Chat/NotificationProvider.jsx";
+import { useNotifications } from "../Chat/NotificationProvider.jsx";
 import { ChatIcon, CloseIcon } from "@chakra-ui/icons";
 
 function Navbar() {
@@ -104,19 +106,24 @@ function Navbar() {
             >
               <Flex gap={{ base: "1.5rem", lg: "1.5rem", sm: "1rem" }}>
                 {account.isAdmin() && (
-                  <Center>
-                    <Text
-                      onClick={() => navigate("/chatList")}
-                      cursor={"pointer"}
-                    >
-                      문의채팅 리스트
+                  <Center
+                    onClick={() => navigate("/chatList")}
+                    cursor={"pointer"}
+                  >
+                    <FontAwesomeIcon icon={faComments} size={"lg"} />
+                    <Text display={{ base: "none", lg: "block" }} ml={"1"}>
+                      문의채팅
                     </Text>
-
-                    <Text
-                      onClick={() => navigate("/memberAdminPage")}
-                      cursor={"pointer"}
-                    >
-                      관리자 메뉴
+                  </Center>
+                )}
+                {account.isAdmin() && (
+                  <Center
+                    onClick={() => navigate("/memberAdminPage")}
+                    cursor={"pointer"}
+                  >
+                    <FontAwesomeIcon icon={faUsersGear} size={"lg"} />
+                    <Text display={{ base: "none", lg: "block" }} ml={"1"}>
+                      관리메뉴
                     </Text>
                   </Center>
                 )}
