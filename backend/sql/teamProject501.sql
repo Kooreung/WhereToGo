@@ -225,6 +225,7 @@ CREATE TABLE `Reply`
 
 DESC commentreply;
 DESC comment;
+
 DESC report;
 
 
@@ -321,3 +322,14 @@ FROM post p
 ) r ON p.postid = r.postid
 WHERE a.authtype != 'admin'
 GROUP BY p.postid, r.processYn, r.reportdetailreason;
+
+select *
+from authority
+where memberid = 39;
+
+select *
+from member;
+
+update authority
+set authtype = 'user'
+where memberid = 39;

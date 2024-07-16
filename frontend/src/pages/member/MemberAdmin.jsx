@@ -666,17 +666,21 @@ export function MemberAdmin() {
                             <MenuButton
                               as={Button}
                               rightIcon={<ChevronDownIcon />}
-                              w={"100px"}
+                              w={"140px"}
                               color={"black.alpha.900"}
                             >
                               {member.authType}
                             </MenuButton>
                             <MenuList>
-                              {member.authType === "user" ? (
+                              {member.authType === "user" ||
+                              member.authType === "certifyUser" ? (
                                 <MenuItem
+                                  isDisabled={member.authType === "user"}
                                   onClick={(e) => {
                                     e.stopPropagation(); // 이벤트 버블링 방지
-                                    authTypeChange("admin", member.memberId);
+                                    if (member.authType !== "user") {
+                                      authTypeChange("admin", member.memberId);
+                                    }
                                   }}
                                 >
                                   admin

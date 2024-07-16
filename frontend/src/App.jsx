@@ -18,7 +18,8 @@ import MemberInfoAdmin from "./pages/member/MemberInfoAdmin.jsx";
 import { PostLikeList } from "./pages/post/PostLikeList.jsx";
 import { PostMdList } from "./pages/post/PostMdList.jsx"; // axios interceptor 설정
 import ChatWebSocket from "./components/Chat/ChatWebSocket.jsx";
-import ChatListPage from "./components/Chat/ChatListPage.jsx"; // axios interceptor 설정
+import ChatListPage from "./components/Chat/ChatListPage.jsx";
+import { MemberCertify } from "./pages/member/MemberCertify.jsx";
 
 // axios interceptor 설정
 axios.interceptors.request.use((config) => {
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
       { path: "member/edit", element: <MemberEdit /> },
       { path: "memberAdminPage", element: <MemberAdmin /> },
       { path: "member/:memberId", element: <MemberInfoAdmin /> },
+      { path: "tokenCertify", element: <MemberCertify /> },
       // 게시글 페이지
       { path: "post/write", element: <PostWrite /> },
       { path: "post/:postId", element: <PostView /> },

@@ -28,7 +28,7 @@ public class PostController {
 
     // 게시글 추가 | 작성 Controller
     @PostMapping("add")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('SCOPE_certifyUser')||hasAuthority('SCOPE_admin')")
     public ResponseEntity<Integer> postAdd(Post post, Authentication authentication) {
         if (postService.validate(post)) {
             Integer result = postService.savePost(post, authentication);

@@ -2,12 +2,17 @@ package com.backend.service.member;
 
 import com.backend.domain.member.MemberMail;
 import com.backend.mapper.member.MemberMapper;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +21,7 @@ public class EmailSenderService {
     private final JavaMailSender mailSender;
     private final BCryptPasswordEncoder passwordEncoder;
     private final MemberMapper mapper;
+    private final MemberMapper memberMapper;
 
     @Value("${spring.mail.username}")
     String senderEmail;
@@ -98,5 +104,41 @@ public class EmailSenderService {
             tempCode.append(charSet[idx]);
         }
         return tempCode.toString();
+    }
+
+
+    public void sendHtmlEmail(MemberMail passwordMail) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        helper.setFrom(senderEmail);
+        helper.setTo(passwordMail.getToEmail());
+        helper.setSubject(passwordMail.getMailTitle());
+        helper.setText(passwordMail.getMailContent(), true); // true를 전달하여 HTML 포맷을 사용
+
+        mailSender.send(message);
+    }
+
+
+    public void createCertify(String email, Integer memberId) throws MessagingException {
+        MemberMail certifyMail = new MemberMail();
+
+        String token = UUID.randomUUID().toString();
+
+        Integer getMemberId = memberMapper.getCertifyMemberId(memberId);
+
+        if(getMemberId == null) {
+            memberMapper.tokenSave(memberId, token);
+        } else {
+            memberMapper.tokenUpdate(memberId, token);
+        }
+
+        String certifyLink = "http://localhost:5173/tokenCertify?token=" + token;
+
+        certifyMail.setToEmail(email);
+        certifyMail.setMailTitle("2차 인증 이메일입니다.");
+        certifyMail.setMailContent("안녕하세요. 2차 인증을 위한 이메일입니다.<br/>인증을 완료하려면 아래 링크를 클릭해주세요:<br/><br/><a href=\"" + certifyLink + "\">인증하기</a>");
+
+        sendHtmlEmail(certifyMail);
     }
 }
