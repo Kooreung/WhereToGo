@@ -6,6 +6,9 @@ npm run build
 cd ../../teamProject501/backend
 rm -rf src/main/resources/static
 mv ../../teamProject501/frontend/dist src/main/resources/static
+mkdir src/main/resources/static/src
+mkdir src/main/resources/static/src/assets
+cp -r ../frontend/src/assets/* src/main/resources/static/src/assets/
 
 # spring project build
 ./gradlew bootJar
