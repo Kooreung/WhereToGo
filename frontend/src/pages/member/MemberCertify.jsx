@@ -77,6 +77,7 @@ export function MemberCertify() {
 
   function handelHome() {
     navigate("/");
+    window.location.reload();
   }
 
   return (
