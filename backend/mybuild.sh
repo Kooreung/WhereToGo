@@ -29,3 +29,5 @@ ssh -i src/main/resources/secret/keykooreung.pem ubuntu@43.201.95.101 'docker rm
 ssh -i src/main/resources/secret/keykooreung.pem ubuntu@43.201.95.101 'docker pull kooreung/wheretogo'
 # 컨테이너 실행
 ssh -i src/main/resources/secret/keykooreung.pem ubuntu@43.201.95.101 'docker run -d -p 8080:8080 --restart always --name wheretogo kooreung/wheretogo'
+# 불필요한 이미지 삭제
+ssh -i src/main/resources/secret/keykooreung.pem ubuntu@43.201.95.101 'docker image prune -f'
