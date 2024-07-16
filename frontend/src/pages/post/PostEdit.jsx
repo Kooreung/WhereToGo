@@ -122,7 +122,7 @@ export function PostEdit() {
     setPost({ ...post, content });
   };
 
-  if (!account.isLoggedIn()) {
+  if (!account.isLoggedIn() || !account.isAdmin() || !account.isCertifyUser()) {
     return (
       <Box>
         <Lobby />;

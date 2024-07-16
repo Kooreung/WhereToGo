@@ -81,6 +81,14 @@ export function LoginProvider({ children }) {
     return authority.includes("admin");
   }
 
+  function isCertifyUser() {
+    return authority.includes("certifyUser");
+  }
+
+  function isUser() {
+    return authority.includes("user");
+  }
+
   function login(token) {
     localStorage.setItem("accessToken", token.accessToken);
     localStorage.setItem("refreshToken", token.refreshToken);
@@ -110,6 +118,8 @@ export function LoginProvider({ children }) {
         hasAccessEmail,
         hasAccessMemberId,
         isAdmin,
+        isCertifyUser,
+        isUser,
       }}
     >
       {children}

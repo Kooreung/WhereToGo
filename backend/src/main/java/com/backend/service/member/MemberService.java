@@ -24,6 +24,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
+import java.security.Timestamp;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -320,17 +321,19 @@ public class MemberService {
         return true;
     }
 
-    public Map<String, Object> getToken(Member member) {
+    public Map<String, Object> getToken(Member member, String token) {
 
         Map<String, Object> result = null;
 
         // db 에서 해당 email 가져와서
         Member db = mapper.selectByEmail(member.getEmail());
+        String dbToken = mapper.getByToken(member.getMemberId());
 
         // 해당 email 이 null 이 아니면 실행
         if (db != null) {
             // db 에 저장된 password 와 사용자가 입력한 password 를 비교해서 같으면 실행
-            if (passwordEncoder.matches(member.getPassword(), db.getPassword())) {
+            if (passwordEncoder.matches(member.getPassword(), db.getPassword()) || token.equals(dbToken)) {
+                System.out.println("실행됨?");
                 result = new HashMap<>();
                 String accessToken = "";
                 String refreshToken = "";
@@ -390,5 +393,23 @@ public class MemberService {
 
     public void hardDeleteMember(Integer memberId) {
         mapper.hardDeleteByMemberId(memberId);
+    }
+
+    public Integer getMemberIdByToken(String token) {
+        return mapper.getMemberIdByToken(token);
+    }
+
+    // 인증 링크 누르면 권한 바꾸기
+    public void authCertify(Integer memberId) {
+        mapper.authCertify(memberId);
+    }
+
+    // 현재시간과 토큰 만료시간 비교해서 true, false 값 리턴
+    public boolean isTokenExpired(Integer memberId) {
+        return mapper.isTokenExpired(memberId);
+    }
+
+    public Member getMemberById(Integer memberId) {
+        return mapper.getMemberById(memberId);
     }
 }

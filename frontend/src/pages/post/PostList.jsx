@@ -184,15 +184,16 @@ function PostList() {
             </MenuItem>
           </MenuList>
         </Menu>
-        {account.isLoggedIn() && (
-          <Button
-            onClick={() => navigate(`/post/write`)}
-            ml={{ base: "8px", lg: "1rem", sm: "8px" }}
-            color={"black.alpha.900"}
-          >
-            글쓰기
-          </Button>
-        )}
+        {account.isAdmin() ||
+          (account.isCertifyUser() && (
+            <Button
+              onClick={() => navigate(`/post/write`)}
+              ml={{ base: "8px", lg: "1rem", sm: "8px" }}
+              color={"black.alpha.900"}
+            >
+              글쓰기
+            </Button>
+          ))}
       </Flex>
       {/* 회원 게시글 페이지 */}
       {postList.length === 0 && <Center>조회 결과가 없습니다.</Center>}
