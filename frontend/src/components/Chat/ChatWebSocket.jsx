@@ -44,13 +44,11 @@ export function ChatWebSocket({ roomInfo, maxHeight, width }) {
           const nowMessage = JSON.parse(message.body);
           setNewMessage(message.body);
           setMyMessage(message.body);
-          console.log("dsd" + nowMessage.name);
           setMessages((prevMessages) => [...prevMessages, nowMessage]);
           if (nickName === nowMessage.name) {
             setIsNewMessage(false);
           } else {
             setSenderName(nowMessage.name);
-            console.log("qqqqqqqqqqq=" + nowMessage.name);
             setIsNewMessage(true);
           }
         },
