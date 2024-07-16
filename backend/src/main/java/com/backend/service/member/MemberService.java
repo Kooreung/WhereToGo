@@ -24,7 +24,6 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
-import java.security.Timestamp;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -333,7 +332,6 @@ public class MemberService {
         if (db != null) {
             // db 에 저장된 password 와 사용자가 입력한 password 를 비교해서 같으면 실행
             if (passwordEncoder.matches(member.getPassword(), db.getPassword()) || token.equals(dbToken)) {
-                System.out.println("실행됨?");
                 result = new HashMap<>();
                 String accessToken = "";
                 String refreshToken = "";

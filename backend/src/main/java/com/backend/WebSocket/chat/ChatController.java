@@ -111,7 +111,6 @@ public class ChatController {
             }
 
         } else {
-            System.out.println("안와?>??");
             chatService.updateUserOnline(chatRoom);
             chatService.messageRead(chatRoom.getChatRoomId(), chatRoom.getMemberId());
             Integer id = Integer.valueOf(chatMapper.getAssignedAdminId(chatRoom.getChatRoomId()));

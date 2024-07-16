@@ -31,7 +31,6 @@ public class NotificationController {
 
     // 메시지가 도착했을 때 호출되는 메서드
     public void sendMessageToUser(Integer userId, Integer senderId, String message) {
-        System.out.println("보냈구나");
         Map<String, Object> data = new HashMap<>();
         data.put("userId", userId);
         data.put("senderId", senderId);
