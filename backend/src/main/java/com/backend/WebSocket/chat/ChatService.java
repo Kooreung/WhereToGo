@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,16 +22,15 @@ public class ChatService {
         int exist = chatMapper.foundChatRoom(memberId);
         Member member = memberMapper.selectMemberByMemberId(memberId);
         if (exist == 0) {
-            chatMapper.insertChatRoom(memberId,member.getNickName() );
+            chatMapper.insertChatRoom(memberId, member.getNickName());
             ChatRoom chatRoom = chatMapper.getChatRoomByMemberId(memberId);
             return ResponseEntity.ok().body(chatRoom);
         }
-            ChatRoom chatRoom = chatMapper.getChatRoomByMemberId(memberId);
-            return ResponseEntity.ok().body(chatRoom);
+        ChatRoom chatRoom = chatMapper.getChatRoomByMemberId(memberId);
+        return ResponseEntity.ok().body(chatRoom);
 
 
     }
-
 
 
     public ResponseEntity getMessage(Integer roomId) {
@@ -46,16 +44,47 @@ public class ChatService {
 
 
     public void saveChat(ChatMessage chat) {
-
         chatMapper.insertChat(chat);
     }
 
 
-    public ResponseEntity getChatRoomList() {
+    public List<ChatRoom> getChatRoomList() {
         List<ChatRoom> rooms = chatMapper.getChatRoomList();
-        if(rooms != null){
-            return ResponseEntity.ok().body(rooms);
+        if (rooms != null) {
+            return rooms;
         }
-        return ResponseEntity.ok().body(List.of());
+        return List.of();
+    }
+
+    public void updateAdminOnline(Integer chatRoomId) {
+        chatMapper.updateAdminOnline(chatRoomId);
+    }
+
+    public void updateAdminOffline(ChatRoom chatRoom) {
+        chatMapper.updateAdminOffline(chatRoom);
+    }
+
+    public void updateUserOnline(ChatRoom chatRoom) {
+        chatMapper.updateUserOnline(chatRoom);
+    }
+
+    public void updateUserOffnline(ChatRoom chatRoom) {
+        chatMapper.updateUserOffline(chatRoom);
+    }
+
+    public void messageRead(Integer chatRoomId, Integer memberId) {
+        chatMapper.updateMessageRead(chatRoomId, memberId);
+    }
+
+    public void assignedAdminId(Integer chatRoomid, Integer adminId) {
+        chatMapper.updateAssignedAdmin(chatRoomid, adminId);
+    }
+
+    public List<ChatRoom> getChatRoomWithAssignedAdmin(Integer adminId) {
+        List<ChatRoom> rooms = chatMapper.getChatRoomWithAssignedAdmin(adminId);
+        if (rooms != null) {
+            return rooms;
+        }
+        return List.of();
     }
 }
