@@ -1,16 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { EventSubscriber } from "../../component/Chat/EventSubscriber.jsx";
+import { NotificationProvider } from "../../component/Chat/NotificationProvider.jsx";
 
 export const LoginContext = createContext(null);
-
-export function useAuth() {
-  const context = useContext(LoginContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within a LoginProvider");
-  }
-  return context;
-}
 
 export function LoginProvider({ children }) {
   const [memberId, setMemberId] = useState(0);
@@ -112,7 +106,10 @@ export function LoginProvider({ children }) {
         isAdmin,
       }}
     >
-      {children}
+      <NotificationProvider>
+        {isLoggedIn() && <EventSubscriber />}
+        {children}
+      </NotificationProvider>
     </LoginContext.Provider>
   );
 }
