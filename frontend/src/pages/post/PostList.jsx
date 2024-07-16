@@ -231,7 +231,9 @@ function PostList() {
               >
                 <Flex mb={"8px"}>
                   <HeadingVariant overflow={"hidden"} textOverflow={"ellipsis"}>
-                    {post.title}
+                    {post.processYn === "P"
+                      ? "블라인드 처리된 게시글"
+                      : post.title}
                   </HeadingVariant>
                 </Flex>
                 <Flex
@@ -246,7 +248,13 @@ function PostList() {
                     whiteSpace: "pre-wrap",
                   }}
                 >
-                  <ContentParser content={post.content} />
+                  <ContentParser
+                    content={
+                      post.processYn === "P"
+                        ? "블라인드 처리된 게시글"
+                        : post.content
+                    }
+                  />
                 </Flex>
                 <Spacer />
                 <Flex w={"100%"} h={"32px"} alignItems={"center"}>

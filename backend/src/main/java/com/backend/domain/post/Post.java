@@ -22,4 +22,6 @@ public class Post {
     private String picurl;
     private String banner;
     private String profileName;
+    private String processYn;
+    private String reportReason;
 }

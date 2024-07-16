@@ -61,9 +61,9 @@ import ContentParser from "../../utils/ContentParser.jsx";
 
 import ButtonOutline from "../../components/ui/Button/ButtonOutline.jsx";
 import ButtonCircle from "../../components/ui/Button/ButtonCircle.jsx";
-import { ChevronDownIcon, WarningIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import HeadingVariant from "../../components/ui/Heading/HeadingVariant.jsx";
-import { WaringList } from "./WaringList.jsx";
+import { ReportList } from "./ReportList.jsx";
 
 export function MemberAdmin() {
   const [memberList, setMemberList] = useState([]);
@@ -954,8 +954,7 @@ export function MemberAdmin() {
           </TabPanel>
           <TabPanel>
             <Box>
-              <WarningIcon />
-              <WaringList />
+              <ReportList />
             </Box>
           </TabPanel>
         </TabPanels>

@@ -225,3 +225,99 @@ CREATE TABLE `Reply`
 
 DESC commentreply;
 DESC comment;
+DESC report;
+
+
+CREATE TABLE report (
+    reportid INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    postid INT(11),
+    commentid INT(11),
+    reportreason varchar(20),
+    repostdetailreason text,
+    processyn char(1),
+    processdate timestamp,
+    processorid int(11),
+    createid   int(11),
+    creatdate timestamp
+);
+
+    id
+    게시판 id
+    댓글 id
+    신고사유 enum
+    신고상세사유
+    처리여부
+    처리일자
+    처리한사람
+    생성한사람
+    생성일자
+
+SELECT
+    r.reportId,
+    r.postId,
+    r.commentId,
+    r.reportReason,
+    r.reportDetailReason,
+    r.processYn,
+    r.processDate,
+    r.processorId,
+    r.createId,
+    r.creatDate,
+    p.title as titlename,
+    creator.nickName as creatorname
+FROM report r
+         LEFT JOIN post p ON p.postId = r.postId
+         LEFT JOIN comment c ON c.commentId = r.commentId
+         LEFT JOIN member creator ON creator.memberId = r.createId
+         LEFT JOIN member processor ON processor.memberId = r.processorId;
+ALTER TABLE report
+    MODIFY COLUMN processYn CHAR(1) DEFAULT 'N';
+
+ALTER TABLE report
+    MODIFY COLUMN processYn VARCHAR(5) DEFAULT 'N';
+
+SELECT COUNT(DISTINCT r.reportId)
+FROM report r
+         LEFT JOIN post p ON p.postId = r.postId
+         LEFT JOIN comment c ON c.commentId = r.commentId
+         LEFT JOIN member creator ON creator.memberId = r.createId
+         LEFT JOIN member processor ON processor.memberId = r.processorId;
+
+SELECT p.postid, p.title, p.content, p.createdate, p.view,
+       m.nickname, m.memberid,
+       pl.addresscode,
+       plpic.picurl,r.processYn,r.reportdetailreason
+
+FROM post p JOIN member m ON p.memberid = m.memberid
+            JOIN authority a ON p.memberid = a.memberid
+            LEFT JOIN comment c ON p.postid = c.postid
+            LEFT JOIN likes l ON p.postid = l.postid
+            LEFT JOIN place pl ON p.postid = pl.postid
+            LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
+             LEFT JOIN  report r ON r.postid=p.postid
+WHERE a.authtype != 'admin'
+GROUP BY p.postid;
+
+SELECT p.postid, p.title, p.content, p.createdate, p.view,
+       m.nickname, m.memberid,
+       pl.addresscode,
+       plpic.picurl,
+       r.processYn, r.reportdetailreason
+FROM post p
+         JOIN member m ON p.memberid = m.memberid
+         JOIN authority a ON p.memberid = a.memberid
+         LEFT JOIN comment c ON p.postid = c.postid
+         LEFT JOIN likes l ON p.postid = l.postid
+         LEFT JOIN place pl ON p.postid = pl.postid
+         LEFT JOIN placepic plpic ON pl.placeid = plpic.placeid
+         LEFT JOIN (
+    SELECT r1.*
+    FROM report r1
+             INNER JOIN (
+        SELECT postid, MAX(reportid) AS max_reportid
+        FROM report
+        GROUP BY postid
+    ) r2 ON r1.postid = r2.postid AND r1.reportid = r2.max_reportid
+) r ON p.postid = r.postid
+WHERE a.authtype != 'admin'
+GROUP BY p.postid, r.processYn, r.reportdetailreason;
