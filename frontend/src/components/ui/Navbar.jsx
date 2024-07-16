@@ -21,14 +21,14 @@ import {
   faUserPlus,
   faUsersGear,
 } from "@fortawesome/free-solid-svg-icons";
+import { faAddressCard, faMessage } from "@fortawesome/free-regular-svg-icons";
+import { CloseIcon } from "@chakra-ui/icons";
 import homeLogo from "../../assets/img/logo.png";
-import { faAddressCard } from "@fortawesome/free-regular-svg-icons";
 import ChatWebSocket from "../Chat/ChatWebSocket.jsx";
 import { LoginContext } from "./LoginProvider.jsx";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { useNotifications } from "../Chat/NotificationProvider.jsx";
-import { ChatIcon, CloseIcon } from "@chakra-ui/icons";
 
 function Navbar() {
   const account = useContext(LoginContext);
@@ -40,6 +40,14 @@ function Navbar() {
   const [newMessage, setNewMessage] = useState(false);
   const { notifications, addNotification, removeNotification } =
     useNotifications();
+  const navColor = useColorModeValue(
+    "rgba(131, 96, 145, 1)",
+    "rgba(216, 183, 229, 1)",
+  );
+  const hColor = useColorModeValue(
+    "rgba(216, 183, 229, 0.2)",
+    "rgba(131, 96, 145, 0.2)",
+  );
 
   useEffect(() => {
     // notifications 배열의 변화를 감지합니다.
@@ -50,11 +58,6 @@ function Navbar() {
       }
     });
   }, [notifications]); // notifications 배열이 변경될 때마다 이 효과를 실행합니다.
-
-  const navColor = useColorModeValue(
-    "rgba(131, 96, 145, 1)",
-    "rgba(216, 183, 229, 1)",
-  );
 
   function openChat() {
     removeNotification();
@@ -227,27 +230,29 @@ function Navbar() {
         </Flex>
       </Box>
       {!account.isAdmin() && ( // 관리자가 아닐 때만 고정 상자를 표시합니다.
-        <Box
+        <Flex
           position="fixed"
-          bottom="0"
+          bottom="10"
           right="10"
-          p="10px" // 'padding' 대신 'p'를 사용합니다.
           zIndex={2}
           cursor={"pointer"}
           onClick={openChat}
-          color="BlackAlpha 500"
+          p={"1rem"}
+          bgColor={hColor}
+          borderRadius={"1rem"}
+          align={"center"}
         >
-          <ChatIcon w={100} h={100} color={navColor} position="relative" />
+          <FontAwesomeIcon icon={faMessage} color={navColor} size={"xl"} />
           {newMessage ? (
-            <Center position="relative" zIndex={2} bottom="70px">
+            <Center>
               <Text>새로온 메세지</Text>
             </Center>
           ) : (
-            <Center position="relative" zIndex={2} bottom="70px">
+            <Center fontSize={"1rem"} ml={1}>
               <Text>1:1 문의</Text>
             </Center>
           )}
-        </Box>
+        </Flex>
       )}
       {showChat && (
         <Box>
