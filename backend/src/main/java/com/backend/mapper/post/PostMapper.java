@@ -72,7 +72,7 @@ public interface PostMapper {
                         ) r2 ON r1.postid = r2.postid AND r1.reportid = r2.max_reportid
                     ) r ON p.postid = r.postid
             <where>
-                a.authtype != 'admin'
+                a.authtype != 'admin' AND (r.processYn IS NULL OR r.processYn != 'P')
                 <if test="searchType != null">
                     <bind name="pattern" value="'%' + searchKeyword + '%'"/>
                     <bind name="region" value="'%' + searchReg + '%'"/>
@@ -125,8 +125,17 @@ public interface PostMapper {
             FROM post p JOIN member m ON p.memberid = m.memberid
                         JOIN authority a ON p.memberid = a.memberid
                         LEFT JOIN place pl ON p.postid = pl.postid
+                        LEFT JOIN (
+                            SELECT r1.*
+                            FROM report r1
+                                INNER JOIN (
+                                    SELECT postid, MAX(reportid) AS max_reportid
+                                    FROM report
+                                    GROUP BY postid
+                                ) r2 ON r1.postid = r2.postid AND r1.reportid = r2.max_reportid
+                        ) r ON p.postid = r.postid
                 <where>
-               a.authtype != 'admin'
+               a.authtype != 'admin' AND (r.processYn IS NULL OR r.processYn != 'P')
                        <if test="searchType != null">
                        <bind name="pattern" value="'%' + searchKeyword + '%'"/>
                        <bind name="region" value="'%' + searchReg + '%'"/>
@@ -187,6 +196,7 @@ public interface PostMapper {
                        GROUP BY postid
                    ) r2 ON r1.postid = r2.postid AND r1.reportid = r2.max_reportid
                ) r ON p.postid = r.postid
+                 WHERE r.processYn IS NULL OR r.processYn != 'P'
                  GROUP BY p.postid, p.title, p.view, m.nickName, p.content
                  LIMIT 3
                """)
