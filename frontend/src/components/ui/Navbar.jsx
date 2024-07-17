@@ -7,6 +7,7 @@ import {
   GridItem,
   Image,
   Text,
+  Tooltip,
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -242,32 +243,34 @@ function Navbar() {
           borderRadius={"1rem"}
           align={"center"}
         >
-          <FontAwesomeIcon icon={faMessage} color={navColor} size={"xl"} />
-          {newMessage ? (
-            <Center>
-              <Text>새로온 메세지</Text>
-            </Center>
-          ) : (
-            <Center fontSize={"1rem"} ml={1}>
-              <Text>1:1 문의</Text>
-            </Center>
-          )}
+          <Tooltip
+            label={
+              !account.isLoggedIn()
+                ? "로그인 후 사용 가능합니다"
+                : newMessage
+                  ? "새로운 메시지가 있습니다"
+                  : "1:1 문의하기"
+            }
+            placement="top"
+            hasArrow
+          >
+            <Box display="flex" alignItems="center">
+              <FontAwesomeIcon icon={faMessage} color={navColor} size="xl" />
+              {newMessage ? (
+                <Center ml={1}>
+                  <Text fontSize="1rem">새로운 메시지</Text>
+                </Center>
+              ) : (
+                <Center fontSize="1rem" ml={1}>
+                  <Text>1:1 문의</Text>
+                </Center>
+              )}
+            </Box>
+          </Tooltip>
         </Flex>
       )}
       {showChat && (
         <Box>
-          <CloseIcon
-            color={navColor}
-            w="30px"
-            h="30px"
-            position="fixed"
-            top="calc(99.5vh - 540px)"
-            left="0px"
-            zIndex={4}
-            onClick={() => {
-              setShowChat(false);
-            }}
-          />
           <Box
             position="fixed"
             bottom="50px"
@@ -275,9 +278,38 @@ function Navbar() {
             w="300px"
             h="475px"
             bgColor="white"
-            border="1px solid #ccc"
+            border="1px solid"
+            borderColor={navColor}
             zIndex={3}
           >
+            <Flex
+              bgColor={hColor}
+              w={"2rem"}
+              h={"2rem"}
+              position="absolute"
+              right={"1rem"}
+              zIndex={4}
+              alignItems={"center"}
+              justify={"center"}
+              cursor={"pointer"}
+              transform={"scale(0.9)"}
+              sx={{
+                transition: "transform 0.1s ease",
+                "&:hover": {
+                  transform: "scale(0.95)",
+                  filter: "brightness(1.5)",
+                },
+              }}
+            >
+              <CloseIcon
+                color={navColor}
+                w={"2rem"}
+                h={"2rem"}
+                onClick={() => {
+                  setShowChat(false);
+                }}
+              />
+            </Flex>
             <ChatWebSocket
               roomInfo={roominfo}
               maxHeight="400px"
