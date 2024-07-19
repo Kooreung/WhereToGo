@@ -1,4 +1,5 @@
 ## 어디가지!? 🍆
+<hr>
 
 ### 서비스 소개
 우리는 선택지 포화의 시대에 살고 있습니다.<br/>
@@ -16,9 +17,29 @@
 ##### 📓 재미있는 하루를 보낸 일정 코스를 다른 사람들과 공유해보세요.
 ##### ❤️ 마음에 든 코스를 저장하고 따라서 체험해보세요!
 ##### 🔎 내가 있는 지역 먼저 코스를 확인해보세요! 내 주변에 없다면 먼저 추천해보아요!
-<br/>
+
 <hr/>
-<br/>
+<table>
+        <tr>
+            <th>프로젝트 노션 페이지</th>
+            <td>
+                <a href="https://idealcreator38.notion.site/Project-page-9dc767f208944f45980bfbb083abdb78?pvs=4" target="_blank">
+                    <img src="https://img.shields.io/badge/Project Page-D8B7E5?style=flat-square&logo=Notion&logoColor=white" 
+                        height="24px"/>
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <th>프로젝트 발표 자료</th>
+            <td>
+                <a href="https://docs.google.com/presentation/d/1Mz2NBWG4snDl4YCmzKEITmvWz_f3ZjrH3Zrt7g459g8/edit?usp=sharing">
+                    <img src="https://img.shields.io/badge/Project PPT-836091?style=flat-square&logo=GoogleSlides&logoColor=white" 
+                        height="24px"/>
+                </a>
+            </td>
+        </tr>
+    </table>
+<hr>
 
 ### 팀원 소개
 <table style="width:100%">
@@ -53,7 +74,124 @@
       Draft Editor
     </td>  
     </tr>
-    
   </tr>
 </table>
-<div>https://www.notion.so/idealcreator38/Project-page-9dc767f208944f45980bfbb083abdb78?pvs=4</div>
+
+<hr>
+
+### 서비스 기능
+<details>
+  <summary><strong>🧑유저 관리</strong></summary>
+  <details>
+    <summary>회원 가입</summary>
+    <p>이미지</p>
+  </details>
+  <details>
+    <summary>로그인 및 로그아웃</summary>
+    <p>이미지</p>
+  </details>
+  <details>
+    <summary>마이 페이지</summary>
+    <p>이미지</p>
+  </details>
+  <details>
+    <summary>회원 정보 수정</summary>
+    <p>이미지</p>
+  </details>
+  <details>
+    <summary>회원 탈퇴</summary>
+    <p>이미지</p>
+  </details>
+  <details>
+    <summary>본인 인증</summary>
+    <p>이미지</p>
+  </details>
+  <details>
+    <summary>비밀번호 찾기</summary>
+    <p>이미지</p>
+  </details>
+</details>
+
+<details>
+  <summary><strong>📓커뮤니티</strong></summary>
+  <details>
+    <summary>게시물 작성</summary>
+    <p>이미지</p>
+  </details>
+  <details>
+    <summary>게시물 수정 및 삭제</summary>
+    <p>이미지</p>
+  </details>
+  <details>
+    <summary>게시물 조회</summary>
+    <p>
+      (메인 페이지 지역 별 게시물 조회)
+      (인기 게시물 조회)
+      (MD 게시물 조회)
+    </p>
+  </details>
+  <details>
+    <summary>게시물 좋아요</summary>
+    <p>이미지</p>
+  </details>
+  <details>
+    <summary>댓글 작성, 수정 및 삭제</summary>
+    <p>이미지</p>
+  </details>
+  <details>
+    <summary>대댓글 작성, 수정 및 삭제</summary>
+    <p>이미지</p>
+  </details>
+  <details>
+    <summary>게시물 검색</summary>
+    <p>이미지</p>
+  </details>
+  <details>
+    <summary>게시물 정렬</summary>
+    <p>이미지</p>
+  </details>
+  <details>
+    <summary>게시물 신고</summary>
+    <p>이미지</p>
+  </details>
+</details>
+
+<details>
+  <summary><strong>⚒️관리자 메뉴</strong></summary>
+  <details>
+    <summary>회원 관리</summary>
+    <p>이미지</p>
+  </details>
+  <details>
+    <summary>탈퇴한 회원 관리</summary>
+    <p>이미지</p>
+  </details>
+  <details>
+    <summary>배너 관리</summary>
+    <p>이미지</p>
+  </details>
+  <details>
+    <summary>신고 관리</summary>
+    <p>이미지</p>
+  </details>
+</details>
+
+<hr>
+
+### 개발 기간
+#### 총 기간 : 24.06.04 - 24.07.12 (총 39일)
+- 06.04 - 06.07 : 프로젝트 설계 (와이어 프레임 , ERD , API , R&R 분배 , 워크 스페이스 개설)
+- 06.10 - 06.20 : 서버 구현
+- 06.21 - 06.30 : 세부 서버 구현
+- 06.31 - 07.05 : UI 구현 및 디자인 , 단위 테스트 및 보완
+- 07.06 - 07.12 : 단위 테스트 및 보완
+
+<hr>
+
+### 기술 스택
+![Tech Stack](https://github.com/user-attachments/assets/915a8251-6c75-4816-9f8a-2f17fa10b152)
+
+<hr>
+
+### ERD
+![ERD](https://github.com/user-attachments/assets/c0372540-49a8-423e-95b6-b9901ad76249)
