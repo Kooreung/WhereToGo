@@ -194,7 +194,7 @@
 <hr>
 
 ### 기술 스택
-![Tech Stack](https://github.com/user-attachments/assets/915a8251-6c75-4816-9f8a-2f17fa10b152)
+![Tech Stack](https://github.com/user-attachments/assets/de7739b5-ef99-4946-a17b-54753a3411ee)
 
 <hr>
 
