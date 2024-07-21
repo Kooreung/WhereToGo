@@ -51,19 +51,20 @@
     <td>고현진</td>
     <td>
       PL / DBA / QA / CSS 총괄 / AWS 관리 <br>
-      지도 검색, 마커, 연결 <br>
+      지도 검색, 마커, 연결 / 위치 기반 연결 <br>
       메인 페이지 / 글로벌 컴포넌트 / 게시글 CRUD / 게시판 검색, 페이징, 정렬
     </td>
     <tr>
     <td>심성환</td>
     <td>
-      댓글 CRUD / 좋아요 CRUD / 지도 정보 저장 / 글로벌 CSS
+        댓글, 답글 CRUD / 좋아요 CRUD / 게시물 신고, 처리 <br>
+        지도 정보 저장 / 글로벌 CSS
     </td>  
     </tr>
     <tr>
     <td>안우민</td>
     <td>
-      회원가입 / 로그인-아웃 / 권한 / 비밀번호 찾기 <br>
+      회원가입 / 로그인-아웃 / 권한 / 비밀번호 찾기 / 2차 인증 <br>
       회원 검색, 페이징 / 회원 정보 페이지
     </td>  
     </tr>
@@ -71,7 +72,7 @@
     <td>원민재</td>
     <td>
       마이 페이지 / 이미지 크롤링 / 관리자 페이지 / 프로필사진 CRUD <br>
-      Draft Editor
+      Draft Editor / WebSocket 문의채팅 / RefreshToken
     </td>  
     </tr>
   </tr>
@@ -152,6 +153,10 @@
   </details>
   <details>
     <summary>게시물 신고</summary>
+    <p>이미지</p>
+  </details>
+  <details>
+    <summary>문의 채팅</summary>
     <p>이미지</p>
   </details>
 </details>
