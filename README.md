@@ -164,19 +164,23 @@
   <summary><strong>⚒️관리자 메뉴</strong></summary>
   <details>
     <summary>회원 관리</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/e59cce7f-82fc-4196-85a8-c5b256d61b74" /></p>
   </details>
   <details>
     <summary>탈퇴한 회원 관리</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/767e2fea-c4b3-4c1d-b839-54630bc93999" /></p>
   </details>
   <details>
     <summary>배너 관리</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/a4947def-0eeb-49d7-aaa8-4e8e3026aaed" /></p>
   </details>
   <details>
     <summary>신고 관리</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/5db36adc-3552-4aff-add9-a3ce68ff9d16" /></p>
+  </details>
+  <details>
+    <summary>문의 답변</summary>
+    <p><img src="https://github.com/user-attachments/assets/da57055e-9fa0-44e9-8f9d-21c8e89e7ac6" /></p>
   </details>
 </details>
 
