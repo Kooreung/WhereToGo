@@ -122,16 +122,17 @@ export function PostEdit() {
     setPost({ ...post, content });
   };
 
-  if (!account.isLoggedIn() || !account.isAdmin() || !account.isCertifyUser()) {
+  // 게시글 번호 확인
+  if (post === null || post === undefined) {
+    return <Spinner />;
+  }
+
+  if (!account.isLoggedIn() || !account.hasAccessMemberId(post.memberId)) {
     return (
       <Box>
         <Lobby />;
       </Box>
     );
-  }
-  // 게시글 번호 확인
-  if (post === null || post === undefined) {
-    return <Spinner />;
   }
 
   return (
