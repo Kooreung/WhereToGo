@@ -85,23 +85,23 @@
   <summary><strong>🧑유저 관리</strong></summary>
   <details>
     <summary>회원 가입</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/6fdfb721-1b7c-48b7-93c8-55d55c06680f"/></p>
   </details>
   <details>
     <summary>로그인 및 로그아웃</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/63ab5d4e-5f5c-49d6-9e89-59a17491f86b" /></p>
   </details>
   <details>
     <summary>마이 페이지</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/3609a10b-83fc-47dc-9103-f2c2ae214b66" /></p>
   </details>
   <details>
     <summary>회원 정보 수정</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/faf0381f-cb96-44f8-9343-a5062ecc49d5" /></p>
   </details>
   <details>
     <summary>회원 탈퇴</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/8ba07785-cb07-459d-bf95-eb688131b55e" /></p>
   </details>
   <details>
     <summary>본인 인증</summary>
@@ -109,7 +109,7 @@
   </details>
   <details>
     <summary>비밀번호 찾기</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/fd0fa3cf-7807-4b27-8bb6-f1c215993ca0" /></p>
   </details>
 </details>
 
