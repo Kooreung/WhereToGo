@@ -117,47 +117,46 @@
   <summary><strong>📓커뮤니티</strong></summary>
   <details>
     <summary>게시물 작성</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/c67a7a31-8345-4b65-a943-257132ea9c00" /></p>
   </details>
   <details>
     <summary>게시물 수정 및 삭제</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/9163fd70-a8f5-4105-90c6-7e8f913bb0fd" /></p>
   </details>
   <details>
     <summary>게시물 조회</summary>
-    <p>
-      (메인 페이지 지역 별 게시물 조회)
-      (인기 게시물 조회)
-      (MD 게시물 조회)
-    </p>
+    <p>메인 페이지 지역 별 게시물 조회</p>
+    <p><img src="https://github.com/user-attachments/assets/e9a9f74a-866d-40f6-aef9-e79104c5e6ca" /></p>
+    <p>MD 게시물 조회</p>
+    <p><img src="https://github.com/user-attachments/assets/a021b490-cb68-4c29-b356-a21cc1133d55" /></p>
   </details>
   <details>
     <summary>게시물 좋아요</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/93b16a4a-03cf-4335-a72f-3cfbb36d5167" /></p>
   </details>
   <details>
     <summary>댓글 작성, 수정 및 삭제</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/9556ef78-96f3-4a94-89c6-d36781dd92cb" /></p>
   </details>
   <details>
-    <summary>대댓글 작성, 수정 및 삭제</summary>
-    <p>이미지</p>
+    <summary>답글 작성, 수정 및 삭제</summary>
+    <p><img src="https://github.com/user-attachments/assets/e0a12818-8918-4ff6-9881-221bca066798" /></p>
   </details>
   <details>
     <summary>게시물 검색</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/6294d84b-6227-4a43-b6b8-660753550012" /></p>
   </details>
   <details>
     <summary>게시물 정렬</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/9f83bed1-abe5-4af7-8628-2c3661fbf4d7" /></p>
   </details>
   <details>
     <summary>게시물 신고</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/9a700eb4-94f7-4958-9bf5-e7163f8977c8" /></p>
   </details>
   <details>
     <summary>문의 채팅</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/eef010b8-c365-4109-a08a-0a0139d165d2" /></p>
   </details>
 </details>
 
