@@ -214,6 +214,8 @@ public class MemberService {
 
     //개인정보 수정코드
     public Map<String, Object> modifyMemberInfo(Member member, Authentication authentication, MultipartFile newProfile) throws IOException {
+        Map<String, Object> result = null;
+
         if (member.getPassword() != null && member.getPassword().length() > 0) {
             // 패스워드가 입력되었으니 바꾸기
             member.setPassword(passwordEncoder.encode(member.getPassword()));
@@ -247,8 +249,11 @@ public class MemberService {
         }
         //변경사항 업데이트
         mapper.update(member);
-
+        
+        result = new HashMap<>();
         String token = "";
+        String refreshToken = "";
+        Member db = mapper.selectByEmail(member.getEmail());
 
         Jwt jwt = (Jwt) authentication.getPrincipal();
         Map<String, Object> claims = jwt.getClaims();
@@ -258,7 +263,24 @@ public class MemberService {
 
         JwtClaimsSet jwtClaimsSet = jwtClaimsSetBuilder.build();
         token = jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
-        return Map.of("token", token);
+
+        Instant now = Instant.now();
+
+        // 리프레시 토큰 생성
+        JwtClaimsSet refreshClaims = JwtClaimsSet.builder()
+                .issuer("self")
+                .issuedAt(now)
+                .expiresAt(now.plusSeconds(60 * 60 * 24 * 7))
+                .subject(db.getMemberId().toString())
+                .build();
+
+        // 인코딩 된 jwk 변수에 할당
+        refreshToken = jwtEncoder.encode(JwtEncoderParameters.from(refreshClaims)).getTokenValue();
+
+        result.put("accessToken", token);
+        result.put("refreshToken", refreshToken);
+
+        return result;
     }
 
     public void deleteMember(Integer memberId) {

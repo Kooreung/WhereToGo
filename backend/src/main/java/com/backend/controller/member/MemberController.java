@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.security.Timestamp;
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
@@ -119,12 +116,12 @@ public class MemberController {
     public ResponseEntity tokenCertify(@RequestParam("token") String token) {
         Integer memberId = service.getMemberIdByToken(token);
 
-        if(memberId == null) {
+        if (memberId == null) {
             return ResponseEntity.notFound().build();
         }
 
         // 토큰 만료시간을 현재 시간과 비교
-        if(service.isTokenExpired(memberId)) {
+        if (service.isTokenExpired(memberId)) {
             return ResponseEntity.notFound().build();
         }
 
@@ -153,8 +150,6 @@ public class MemberController {
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-//        return ResponseEntity.ok().build();
-
     }
 
 

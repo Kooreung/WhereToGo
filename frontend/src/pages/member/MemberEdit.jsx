@@ -119,7 +119,7 @@ function MemberEdit(props) {
           description: "회원 정보가 수정되었습니다.",
           position: "bottom",
         });
-        account.login(res.data.token);
+        account.login(res.data);
         navigate(`/memberinfo`);
       })
       .catch(() => {
