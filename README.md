@@ -105,7 +105,7 @@
   </details>
   <details>
     <summary>본인 인증</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/3c802100-3fbe-4892-a0e9-85e05fd0ef2b" /></p>
   </details>
   <details>
     <summary>비밀번호 찾기</summary>
@@ -122,6 +122,7 @@
   <details>
     <summary>게시물 수정 및 삭제</summary>
     <p><img src="https://github.com/user-attachments/assets/9163fd70-a8f5-4105-90c6-7e8f913bb0fd" /></p>
+    <p><img src="https://github.com/user-attachments/assets/37687cf0-fa51-499f-976d-dfd071f9243d" /></p>
   </details>
   <details>
     <summary>게시물 조회</summary>
