@@ -289,109 +289,114 @@ export function PostView() {
                   </Flex>
                 </Flex>
 
-          <Box
-            w={{ base: "640px", sm: "540px", lg: "640px" }}
-            h={{ base: "400px", sm: "360px", lg: "400px" }}
-            my={"2rem"}
-            borderRadius={"1rem"}
-          >
-            <MapView selectedPlace={selectedPlace} />
-          </Box>
-
-          <Flex alignItems={"center"} gap={"1rem"}>
-            <ButtonOutline onClick={handleMoveLeft}>
-              <FontAwesomeIcon icon={faChevronLeft} />
-            </ButtonOutline>
-            <Flex w={"520px"} h={"160px"}>
-              <Flex
-                overflow={"hidden"}
-                alignItems={"center"}
-                borderRadius={"1rem"}
-                border={"1px solid #D8B7E5"}
-              >
-                <Flex
-                  ref={dataRef}
-                  sx={{
-                    transform: `translateX(${positionX}px)`,
-                    transition: "transform 0.5s ease",
-                  }}
+                <Box
+                  w={{ base: "640px", sm: "540px", lg: "640px" }}
+                  h={{ base: "400px", sm: "360px", lg: "400px" }}
+                  my={"2rem"}
+                  borderRadius={"1rem"}
                 >
-                  {place.map((place, index) => (
-                    <Box w={"100%"} key={index}>
-                      <Link
-                        href={place.placeUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                  <MapView selectedPlace={selectedPlace} />
+                </Box>
+
+                <Flex alignItems={"center"} gap={"1rem"}>
+                  <ButtonOutline onClick={handleMoveLeft}>
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                  </ButtonOutline>
+                  <Flex w={"520px"} h={"160px"}>
+                    <Flex
+                      overflow={"hidden"}
+                      alignItems={"center"}
+                      borderRadius={"1rem"}
+                      border={"1px solid #D8B7E5"}
+                    >
+                      <Flex
+                        ref={dataRef}
+                        sx={{
+                          transform: `translateX(${positionX}px)`,
+                          transition: "transform 0.5s ease",
+                        }}
                       >
-                        <Flex
-                          w={"520px"}
-                          justifyContent={"center"}
-                          align={"center"}
-                        >
-                          <Box w={"160px"} h={"160px"} alignContent={"center"}>
-                            <Image
-                              src={place.picurl || defaultImage}
-                              objectFit={"cover"}
-                              w={"100%"}
-                              h={"100%"}
-                            />
+                        {place.map((place, index) => (
+                          <Box w={"100%"} key={index}>
+                            <Link
+                              href={place.placeUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <Flex
+                                w={"520px"}
+                                justifyContent={"center"}
+                                align={"center"}
+                              >
+                                <Box
+                                  w={"160px"}
+                                  h={"160px"}
+                                  alignContent={"center"}
+                                >
+                                  <Image
+                                    src={place.picurl || defaultImage}
+                                    objectFit={"cover"}
+                                    w={"100%"}
+                                    h={"100%"}
+                                  />
+                                </Box>
+                                <Flex
+                                  w={"360px"}
+                                  h={"160px"}
+                                  direction={"column"}
+                                  p={3}
+                                >
+                                  <HeadingVariant
+                                    overflow={"hidden"}
+                                    textOverflow={"ellipsis"}
+                                    whiteSpace={"nowrap"}
+                                  >
+                                    {index + 1}번 장소
+                                  </HeadingVariant>
+                                  <Box
+                                    overflow={"hidden"}
+                                    textOverflow={"ellipsis"}
+                                    whiteSpace={"nowrap"}
+                                    fontWeight={"bold"}
+                                  >
+                                    {place.placeName}
+                                  </Box>
+                                  <Box
+                                    overflow={"hidden"}
+                                    textOverflow={"ellipsis"}
+                                    whiteSpace={"nowrap"}
+                                  >
+                                    {place.address}
+                                  </Box>
+                                  <Spacer />
+                                  <Box>
+                                    장소가 등록 된 게시글 수 :{" "}
+                                    {place.countPlace} 개
+                                  </Box>
+                                </Flex>
+                              </Flex>
+                            </Link>
                           </Box>
-                          <Flex
-                            w={"360px"}
-                            h={"160px"}
-                            direction={"column"}
-                            p={3}
-                          >
-                            <HeadingVariant
-                              overflow={"hidden"}
-                              textOverflow={"ellipsis"}
-                              whiteSpace={"nowrap"}
-                            >
-                              {index + 1}번 장소
-                            </HeadingVariant>
-                            <Box
-                              overflow={"hidden"}
-                              textOverflow={"ellipsis"}
-                              whiteSpace={"nowrap"}
-                              fontWeight={"bold"}
-                            >
-                              {place.placeName}
-                            </Box>
-                            <Box
-                              overflow={"hidden"}
-                              textOverflow={"ellipsis"}
-                              whiteSpace={"nowrap"}
-                            >
-                              {place.address}
-                            </Box>
-                            <Spacer />
-                            <Box>
-                              장소가 등록 된 게시글 수 : {place.countPlace} 개
-                            </Box>
-                          </Flex>
-                        </Flex>
-                      </Link>
-                    </Box>
-                  ))}
+                        ))}
+                      </Flex>
+                    </Flex>
+                  </Flex>
+                  <ButtonOutline onClick={handleMoveRight}>
+                    <FontAwesomeIcon icon={faChevronRight} />
+                  </ButtonOutline>
                 </Flex>
               </Flex>
-            </Flex>
-            <ButtonOutline onClick={handleMoveRight}>
-              <FontAwesomeIcon icon={faChevronRight} />
-            </ButtonOutline>
-          </Flex>
-        </Flex>
-        <Box
-          maxW={"720px"}
-          w={"100%"}
-          p={"1rem"}
-          whiteSpace={"pre-wrap"}
-          borderRadius={"1rem"}
-          bgColor={navColor}
-          mt={"2rem"}
-        >
-          <div dangerouslySetInnerHTML={{ __html: post.content }} />
-        </Box>
+              <Box
+                maxW={"720px"}
+                w={"100%"}
+                p={"1rem"}
+                whiteSpace={"pre-wrap"}
+                borderRadius={"1rem"}
+                bgColor={navColor}
+                mt={"2rem"}
+              >
+                <div dangerouslySetInnerHTML={{ __html: post.content }} />
+              </Box>
 
               <Divider
                 border={"1px solid lightGray"}
@@ -449,7 +454,7 @@ export function PostView() {
                 )}
 
                 {/* 목록 */}
-                {authType === "user" ? (
+                {authType === "certifyUser" || "user" ? (
                   <ButtonOutline
                     variant={"RecMedium"}
                     onClick={() => navigate("/post/list")}
