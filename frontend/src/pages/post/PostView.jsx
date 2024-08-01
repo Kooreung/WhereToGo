@@ -454,7 +454,7 @@ export function PostView() {
                 )}
 
                 {/* 목록 */}
-                {authType === "certifyUser" || "user" ? (
+                {authType === "certifyUser" ? (
                   <ButtonOutline
                     variant={"RecMedium"}
                     onClick={() => navigate("/post/list")}
@@ -468,6 +468,16 @@ export function PostView() {
                   <ButtonOutline
                     variant={"RecMedium"}
                     onClick={() => navigate("/post/mdList")}
+                  >
+                    <FontAwesomeIcon icon={faList} />
+                    <Text display={{ base: "none", lg: "block" }} ml={1}>
+                      목록
+                    </Text>
+                  </ButtonOutline>
+                ) : authType === "user" ? (
+                  <ButtonOutline
+                    variant={"RecMedium"}
+                    onClick={() => navigate("/post/list")}
                   >
                     <FontAwesomeIcon icon={faList} />
                     <Text display={{ base: "none", lg: "block" }} ml={1}>
