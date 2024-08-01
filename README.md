@@ -85,31 +85,31 @@
   <summary><strong>🧑유저 관리</strong></summary>
   <details>
     <summary>회원 가입</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/6fdfb721-1b7c-48b7-93c8-55d55c06680f"/></p>
   </details>
   <details>
     <summary>로그인 및 로그아웃</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/63ab5d4e-5f5c-49d6-9e89-59a17491f86b" /></p>
   </details>
   <details>
     <summary>마이 페이지</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/3609a10b-83fc-47dc-9103-f2c2ae214b66" /></p>
   </details>
   <details>
     <summary>회원 정보 수정</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/faf0381f-cb96-44f8-9343-a5062ecc49d5" /></p>
   </details>
   <details>
     <summary>회원 탈퇴</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/8ba07785-cb07-459d-bf95-eb688131b55e" /></p>
   </details>
   <details>
     <summary>본인 인증</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/3c802100-3fbe-4892-a0e9-85e05fd0ef2b" /></p>
   </details>
   <details>
     <summary>비밀번호 찾기</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/fd0fa3cf-7807-4b27-8bb6-f1c215993ca0" /></p>
   </details>
 </details>
 
@@ -117,47 +117,47 @@
   <summary><strong>📓커뮤니티</strong></summary>
   <details>
     <summary>게시물 작성</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/c67a7a31-8345-4b65-a943-257132ea9c00" /></p>
   </details>
   <details>
     <summary>게시물 수정 및 삭제</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/9163fd70-a8f5-4105-90c6-7e8f913bb0fd" /></p>
+    <p><img src="https://github.com/user-attachments/assets/37687cf0-fa51-499f-976d-dfd071f9243d" /></p>
   </details>
   <details>
     <summary>게시물 조회</summary>
-    <p>
-      (메인 페이지 지역 별 게시물 조회)
-      (인기 게시물 조회)
-      (MD 게시물 조회)
-    </p>
+    <p>메인 페이지 지역 별 게시물 조회</p>
+    <p><img src="https://github.com/user-attachments/assets/e9a9f74a-866d-40f6-aef9-e79104c5e6ca" /></p>
+    <p>MD 게시물 조회</p>
+    <p><img src="https://github.com/user-attachments/assets/a021b490-cb68-4c29-b356-a21cc1133d55" /></p>
   </details>
   <details>
     <summary>게시물 좋아요</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/93b16a4a-03cf-4335-a72f-3cfbb36d5167" /></p>
   </details>
   <details>
     <summary>댓글 작성, 수정 및 삭제</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/9556ef78-96f3-4a94-89c6-d36781dd92cb" /></p>
   </details>
   <details>
-    <summary>대댓글 작성, 수정 및 삭제</summary>
-    <p>이미지</p>
+    <summary>답글 작성, 수정 및 삭제</summary>
+    <p><img src="https://github.com/user-attachments/assets/e0a12818-8918-4ff6-9881-221bca066798" /></p>
   </details>
   <details>
     <summary>게시물 검색</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/6294d84b-6227-4a43-b6b8-660753550012" /></p>
   </details>
   <details>
     <summary>게시물 정렬</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/9f83bed1-abe5-4af7-8628-2c3661fbf4d7" /></p>
   </details>
   <details>
     <summary>게시물 신고</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/9a700eb4-94f7-4958-9bf5-e7163f8977c8" /></p>
   </details>
   <details>
     <summary>문의 채팅</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/eef010b8-c365-4109-a08a-0a0139d165d2" /></p>
   </details>
 </details>
 
@@ -165,19 +165,23 @@
   <summary><strong>⚒️관리자 메뉴</strong></summary>
   <details>
     <summary>회원 관리</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/e59cce7f-82fc-4196-85a8-c5b256d61b74" /></p>
   </details>
   <details>
     <summary>탈퇴한 회원 관리</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/767e2fea-c4b3-4c1d-b839-54630bc93999" /></p>
   </details>
   <details>
     <summary>배너 관리</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/a4947def-0eeb-49d7-aaa8-4e8e3026aaed" /></p>
   </details>
   <details>
     <summary>신고 관리</summary>
-    <p>이미지</p>
+    <p><img src="https://github.com/user-attachments/assets/5db36adc-3552-4aff-add9-a3ce68ff9d16" /></p>
+  </details>
+  <details>
+    <summary>문의 답변</summary>
+    <p><img src="https://github.com/user-attachments/assets/da57055e-9fa0-44e9-8f9d-21c8e89e7ac6" /></p>
   </details>
 </details>
 
